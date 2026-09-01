@@ -1,28 +1,378 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SecurePath — تحميل التطبيق</title>
-<style>
-:root{--bg:#07101f;--card:#101c31;--line:#263957;--text:#f7f9fc;--muted:#aebbd0;--accent:#f6b94b;--green:#19b87a}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:linear-gradient(145deg,#050b16,#0d1930);color:var(--text);display:grid;place-items:center;padding:24px}
-.card{width:min(520px,100%);background:rgba(16,28,49,.96);border:1px solid var(--line);border-radius:28px;padding:34px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.35)}
-.logo{width:76px;height:76px;border-radius:22px;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(145deg,#1b355e,#0c1830);border:1px solid #36527b;font-size:38px}
-h1{margin:0 0 8px;font-size:30px}p{color:var(--muted);line-height:1.8;margin:8px 0}
-.btn{display:block;margin:24px auto 12px;padding:16px 22px;border-radius:16px;background:var(--accent);color:#121923;text-decoration:none;font-weight:800;font-size:18px}
-.note{font-size:13px;color:var(--muted)}.meta{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);word-break:break-all}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SecurePath — تحميل التطبيق الرسمي</title>
+  <meta name="description" content="SecurePath — منصة تعريفية وتوعوية لخدمة حاملي وثائق التأمين. حمّل التطبيق الرسمي للأندرويد.">
+  <meta name="theme-color" content="#07101f">
+  <meta name="application-name" content="SecurePath">
+  <meta name="apple-mobile-web-app-title" content="SecurePath">
+
+  <!-- SecurePath icon -->
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+  <!-- Open Graph: controls the preview when the link is shared -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SecurePath">
+  <meta property="og:title" content="SecurePath — تحميل التطبيق الرسمي">
+  <meta property="og:description" content="حمّل تطبيق SecurePath الرسمي للأندرويد — منصة توعوية وخدمية لحاملي وثائق التأمين.">
+  <meta property="og:url" content="https://eslamshahin1087-lab.github.io/securepath-app/">
+  <meta property="og:image" content="https://eslamshahin1087-lab.github.io/securepath-app/icon-512.png">
+  <meta property="og:image:secure_url" content="https://eslamshahin1087-lab.github.io/securepath-app/icon-512.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="SecurePath">
+
+  <!-- X / Twitter preview -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SecurePath — تحميل التطبيق الرسمي">
+  <meta name="twitter:description" content="حمّل تطبيق SecurePath الرسمي للأندرويد.">
+  <meta name="twitter:image" content="https://eslamshahin1087-lab.github.io/securepath-app/icon-512.png">
+  <meta name="twitter:image:alt" content="SecurePath">
+
+  <link rel="canonical" href="https://eslamshahin1087-lab.github.io/securepath-app/">
+
+  <style>
+    :root {
+      --bg-1: #050b16;
+      --bg-2: #0d1930;
+      --card: rgba(16, 28, 49, 0.96);
+      --card-2: rgba(22, 39, 66, 0.82);
+      --line: rgba(117, 145, 184, 0.25);
+      --text: #f7f9fc;
+      --muted: #aebbd0;
+      --gold: #f6b94b;
+      --gold-2: #ffd978;
+      --green: #19b87a;
+      --shadow: rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg-1);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(43, 78, 132, 0.32), transparent 42%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: min(560px, 100%);
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 34px 28px 26px;
+      text-align: center;
+      box-shadow: 0 28px 80px var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -90px;
+      left: 50%;
+      width: 240px;
+      height: 180px;
+      transform: translateX(-50%);
+      background: rgba(246, 185, 75, 0.10);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      width: 92px;
+      height: 92px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.28);
+      background: #0c1830;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: clamp(30px, 8vw, 42px);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+    }
+
+    .tagline {
+      margin: 10px auto 0;
+      max-width: 440px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .release {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 18px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(25, 184, 122, 0.10);
+      border: 1px solid rgba(25, 184, 122, 0.28);
+      color: #a9f0d0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .release-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(25,184,122,0.55);
+    }
+
+    .download-box {
+      position: relative;
+      z-index: 1;
+      margin-top: 28px;
+      padding: 20px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(30, 52, 88, 0.85), rgba(13, 25, 47, 0.92));
+      border: 1px solid var(--line);
+    }
+
+    .download-title {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .download-subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .download-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 18px;
+      padding: 15px 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #111a28;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 800;
+      box-shadow: 0 12px 30px rgba(246, 185, 75, 0.18);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .download-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(246, 185, 75, 0.25);
+    }
+
+    .download-button:active {
+      transform: translateY(0);
+    }
+
+    .android-icon {
+      width: 23px;
+      height: 23px;
+      fill: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .info-item {
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(117,145,184,0.14);
+    }
+
+    .info-label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .note {
+      margin: 18px 2px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(117,145,184,0.16);
+      color: #8392aa;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .footer strong {
+      color: #aebbd0;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 28px 18px 22px;
+        border-radius: 25px;
+      }
+
+      .logo {
+        width: 82px;
+        height: 82px;
+        border-radius: 21px;
+      }
+
+      .tagline {
+        font-size: 14px;
+      }
+
+      .download-box {
+        padding: 16px;
+      }
+
+      .info {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .download-button {
+        transition: none;
+      }
+
+      .download-button:hover {
+        transform: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<main class="card">
-  <div class="logo">🛡️</div>
-  <h1>SecurePath</h1>
-  <p>منصتك التوعوية والخدمية لحاملي وثائق التأمين.</p>
-  <p>حمّل النسخة الرسمية للأندرويد مباشرة.</p>
-  <a class="btn" href="SecurePath-Production.apk" download>تحميل SecurePath للأندرويد</a>
-  <div class="note">قد يطلب Android السماح بتثبيت التطبيقات من هذا المصدر إذا لم يكن التنزيل من Google Play.</div>
-  <div class="meta">الإصدار: 1.0.0<br>SHA-256: aacd0f816b3c206798e61ec0006b20a816fc447183e3a9e97d0562b268d79248</div>
-</main>
+  <main class="page">
+    <section class="card" aria-label="SecurePath download page">
+
+      <header class="brand">
+        <img
+          class="logo"
+          src="./icon-512.png"
+          alt="شعار SecurePath"
+          width="512"
+          height="512"
+        >
+
+        <h1 class="brand-name">SecurePath</h1>
+
+        <p class="tagline">
+          منصة تعريفية وتوعوية لخدمة حاملي وثائق التأمين
+          وتوفير تجربة رقمية سهلة وآمنة.
+        </p>
+
+        <div class="release">
+          <span class="release-dot"></span>
+          الإصدار الرسمي 1.0.0
+        </div>
+      </header>
+
+      <section class="download-box">
+        <h2 class="download-title">تطبيق SecurePath للأندرويد</h2>
+
+        <p class="download-subtitle">
+          حمّل النسخة الرسمية مباشرة على جهاز Android.
+        </p>
+
+        <a
+          class="download-button"
+          href="./SecurePath-Production.apk"
+          download="SecurePath-Production.apk"
+          aria-label="تحميل تطبيق SecurePath للأندرويد"
+        >
+          <svg class="android-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7.2 8.1h9.6v9.4a.9.9 0 0 1-.9.9h-.8v2.2a.9.9 0 0 1-1.8 0v-2.2h-2.6v2.2a.9.9 0 0 1-1.8 0v-2.2h-.8a.9.9 0 0 1-.9-.9V8.1Zm-.8-1.2h11.2a.6.6 0 0 1 0 1.2H6.4a.6.6 0 0 1 0-1.2Zm2-2.8.9-.9a.4.4 0 0 1 .6.6L9 4.7a5.9 5.9 0 0 1 6 0l-.9-.9a.4.4 0 1 1 .6-.6l.9.9c.1.1.1.2.1.3a5.8 5.8 0 0 1 1.8 4.2H6.5a5.8 5.8 0 0 1 1.8-4.2c0-.1 0-.2.1-.3Zm.8 2.5a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm5.6 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z"/>
+          </svg>
+          تحميل SecurePath للأندرويد
+        </a>
+
+        <div class="info">
+          <div class="info-item">
+            <span class="info-label">الإصدار</span>
+            <span class="info-value">1.0.0</span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">المنصة</span>
+            <span class="info-value">Android</span>
+          </div>
+        </div>
+      </section>
+
+      <p class="note">
+        قد يطلب Android السماح بتثبيت التطبيقات من هذا المصدر إذا لم يكن
+        التنزيل من Google Play.
+      </p>
+
+      <footer class="footer">
+        <strong>SecurePath</strong><br>
+        منصة تعريفية وتوعوية تهدف إلى خدمة حاملي وثائق التأمين،
+        ولا تمثل شركة تأمين بعينها.
+      </footer>
+
+    </section>
+  </main>
 </body>
 </html>
