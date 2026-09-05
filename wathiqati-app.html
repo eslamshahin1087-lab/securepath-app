@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- ================================================================
+         FORCE HTTPS
+         Must run before anything else loads. This is a client-side
+         safety net only — the real enforcement belongs at the hosting
+         layer (Firebase Hosting / Netlify / Vercel all force HTTPS and
+         issue free TLS certs automatically once enabled).
+         ================================================================ -->
+    <script>
+        (function () {
+            var host = window.location.hostname;
+            var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+            if (window.location.protocol === 'http:' && !isLocal) {
+                window.location.replace('https://' + window.location.host + window.location.pathname + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
-    <title>SecurePath — Insurance Ecosystem</title>
+    <title id="pageTitle">SecurePath — منصة تعريفية بخدمات وسيط تأمين مرخّص</title>
+    <meta id="metaDescription" name="description" content="SecurePath (وثيقتي) — منصة رقمية تعريفية وتوعوية لحاملي وثائق التأمين، تتيح متابعة وثائقك، رفع مستنداتك، مقارنة العروض والحصول على استشارة من وسيط تأمين حر مرخّص من الهيئة العامة للرقابة المالية FRA.">
+    <meta name="keywords" content="تأمين, وسيط تأمين, وثائق تأمين, SecurePath, تأمين مصر, مقارنة تأمين, استشارة تأمين">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="SecurePath">
+    <link rel="canonical" href="https://securepath.app/">
+    <!-- Open Graph / social preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SecurePath">
+    <meta id="ogTitle" property="og:title" content="SecurePath — منظومتك التأمينية الرقمية">
+    <meta id="ogDescription" property="og:description" content="تابع وثائقك، ارفع مستنداتك، وقارن عروض التأمين مع وسيط تأمين حر مرخّص من الهيئة العامة للرقابة المالية.">
+    <meta property="og:image" content="icon-512.png">
+    <meta property="og:locale" content="ar_EG">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta id="twitterTitle" name="twitter:title" content="SecurePath — منظومتك التأمينية الرقمية">
+    <meta id="twitterDescription" name="twitter:description" content="منصة رقمية لمتابعة وثائق التأمين ومقارنة العروض عبر وسيط تأمين مرخّص.">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0E2A5C">
     <meta name="mobile-web-app-capable" content="yes">
@@ -16,7 +48,7 @@
     <link rel="icon" href="icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
     </script>
@@ -62,8 +94,8 @@
             --radius-lg: 24px;
             --radius-xl: 30px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-ui: "Plus Jakarta Sans", "Tajawal", system-ui, sans-serif;
-            --font-ar: "Tajawal", "Plus Jakarta Sans", system-ui, sans-serif;
+            --font-ui: "Plus Jakarta Sans", "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif;
+            --font-ar: "IBM Plex Sans Arabic", "Tajawal", "Plus Jakarta Sans", system-ui, sans-serif;
         }
 
         html.dark-mode {
@@ -256,6 +288,22 @@
         .nav-item .nav-icon {
             font-size: 20px;
             transition: transform var(--transition);
+        }
+
+        .nav-item.on .nav-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.9) 0%, rgba(242, 189, 99, 0.22) 55%, rgba(242, 189, 99, 0.4) 100%);
+            box-shadow: 0 6px 12px -4px rgba(14, 42, 92, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        html.dark-mode .nav-item.on .nav-icon {
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.08) 0%, rgba(242, 189, 99, 0.14) 55%, rgba(242, 189, 99, 0.22) 100%);
         }
 
         .nav-item span {
@@ -658,6 +706,61 @@
             filter: drop-shadow(0 4px 16px rgba(201, 84, 62, 0.5));
             transform: scale(1.1);
         }
+
+        /* ===== MODERN TYPOGRAPHY ===== */
+        body, button, input, select, textarea {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        html[dir="rtl"] body,
+        html[dir="rtl"] .phone,
+        html[dir="rtl"] .app,
+        html[dir="rtl"] button,
+        html[dir="rtl"] input,
+        html[dir="rtl"] select,
+        html[dir="rtl"] textarea {
+            font-family: var(--font-ar);
+        }
+        .page-top h1, .section-head h2, .points-section-head h3, .driving-card-title,
+        .milestone-item .m-title, .habit-card .habit-name, .points-hero-balance {
+            letter-spacing: -0.15px;
+        }
+        .field input, .field select, .field textarea {
+            font-weight: 500;
+            line-height: 1.55;
+        }
+        /* ===== GPS SAFE-DRIVING ===== */
+        .gps-driving-panel {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background: var(--paper);
+        }
+        .gps-driving-status {
+            display:flex; align-items:center; justify-content:space-between; gap:10px;
+            margin-bottom:10px;
+        }
+        .gps-status-pill {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:5px 9px; border-radius:999px;
+            font-size:10px; font-weight:800; background:var(--card); color:var(--muted); border:1px solid var(--line);
+        }
+        .gps-status-pill.live { color:var(--green); border-color:rgba(22,128,91,.28); background:var(--green-light); }
+        .gps-status-pill.warn { color:#8A5D13; background:#FFF1D2; border-color:#F1D79A; }
+        html.dark-mode .gps-status-pill.warn { background:#2A1E10; color:#E8A23A; border-color:#5B431F; }
+        .gps-speed-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+        .gps-speed-metric { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px 5px; text-align:center; }
+        .gps-speed-metric b { display:block; font-size:15px; color:var(--slate); font-weight:800; }
+        .gps-speed-metric span { display:block; font-size:8.5px; color:var(--muted); margin-top:2px; }
+        .gps-driving-progress { height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:10px; }
+        .gps-driving-progress > span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--green),var(--gold)); transition:width .35s ease; }
+        .gps-driving-note { font-size:9.5px; line-height:1.65; color:var(--muted); margin-top:8px; }
+        .gps-driving-actions { display:flex; gap:7px; margin-top:10px; }
+        .gps-driving-actions button { flex:1; }
+        .gps-driving-actions .secondary { background:var(--card); color:var(--slate); border:1px solid var(--line); box-shadow:none; }
+        @media (max-width:480px) { .gps-speed-metric b{font-size:14px;} .gps-driving-actions{flex-direction:column;} }
 
         /* ===== FIELD ===== */
         .field {
@@ -1760,13 +1863,27 @@
         .quick-card .qicon {
             width: 48px;
             height: 48px;
-            border-radius: var(--radius-md);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all var(--transition);
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 18px -6px rgba(0, 0, 0, 0.22), 0 2px 5px rgba(0, 0, 0, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -4px 8px rgba(0, 0, 0, 0.10);
+        }
+
+        .quick-card .qicon::before {
+            content: '';
+            position: absolute;
+            top: -35%;
+            left: -15%;
+            width: 75%;
+            height: 75%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .quick-card:hover .qicon {
@@ -1776,56 +1893,59 @@
         .quick-card .qicon .app-icon {
             width: 26px;
             height: 26px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.18));
         }
 
         .quick-card .qicon.navy {
-            background: linear-gradient(135deg, #E9F0FA, #D4E0F0);
+            background: linear-gradient(150deg, #F6FAFF 0%, #DCE7F7 45%, #B9CCE8 100%);
             color: var(--navy);
         }
 
         html.dark-mode .quick-card .qicon.navy {
-            background: linear-gradient(135deg, #1A2640, #0E1A2E);
-            color: #8A9FC0;
+            background: linear-gradient(150deg, #2A3B5C 0%, #1A2640 55%, #0B1524 100%);
+            color: #A9BEE0;
         }
 
         .quick-card .qicon.gold {
-            background: linear-gradient(135deg, var(--gold-soft), #FCE8C7);
+            background: linear-gradient(150deg, #FFF8EA 0%, var(--gold-soft) 45%, #F0C878 100%);
             color: #8A6D1B;
         }
 
         html.dark-mode .quick-card .qicon.gold {
-            background: linear-gradient(135deg, #2A2518, #1E1A10);
+            background: linear-gradient(150deg, #3A331E 0%, #2A2518 55%, #171308 100%);
             color: var(--gold);
         }
 
         .quick-card .qicon.green {
-            background: linear-gradient(135deg, #E7F6F0, #C8E8DB);
+            background: linear-gradient(150deg, #F1FBF7 0%, #E7F6F0 45%, #A9DBC4 100%);
             color: var(--green);
         }
 
         html.dark-mode .quick-card .qicon.green {
-            background: linear-gradient(135deg, #0F2A1E, #0A1E14);
-            color: #4CAF8C;
+            background: linear-gradient(150deg, #164632 0%, #0F2A1E 55%, #071710 100%);
+            color: #63C99E;
         }
 
         .quick-card .qicon.purple {
-            background: linear-gradient(135deg, var(--purple-light), #E0D6F5);
+            background: linear-gradient(150deg, #F6F1FD 0%, var(--purple-light) 45%, #CBB2EF 100%);
             color: var(--purple);
         }
 
         html.dark-mode .quick-card .qicon.purple {
-            background: linear-gradient(135deg, #1E1430, #140E24);
-            color: #9A7AC8;
+            background: linear-gradient(150deg, #2C2046 0%, #1E1430 55%, #100A1C 100%);
+            color: #B294DE;
         }
 
         .quick-card .qicon.orange {
-            background: linear-gradient(135deg, #FFF3E6, #FDE8D0);
+            background: linear-gradient(150deg, #FFF9F1 0%, #FFF3E6 45%, #F7C48E 100%);
             color: #D4761A;
         }
 
         html.dark-mode .quick-card .qicon.orange {
-            background: linear-gradient(135deg, #2A1E10, #1E1408);
-            color: #E8923A;
+            background: linear-gradient(150deg, #3A2A16 0%, #2A1E10 55%, #170F06 100%);
+            color: #F0A354;
         }
 
         .quick-card .quick-label {
@@ -1895,7 +2015,7 @@
             font-weight: 800;
             color: #fff;
         }
-        .points-widget-title .app-icon { width: 20px; height: 20px; color: var(--gold-2); }
+        .points-widget-title .app-icon { width: 20px; height: 20px; color: var(--gold-2); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35)); }
         .points-widget-badge {
             background: rgba(242, 189, 99, 0.18);
             border: 1px solid rgba(242, 189, 99, 0.4);
@@ -4700,7 +4820,7 @@
             width: 38px;
             height: 38px;
             border-radius: 11px;
-            box-shadow: 0 4px 10px rgba(14,42,92,.08);
+            box-shadow: 0 8px 14px -4px rgba(14, 42, 92, .22), 0 2px 4px rgba(14, 42, 92, .1), inset 0 1px 1px rgba(255, 255, 255, .7), inset 0 -3px 6px rgba(0, 0, 0, .1);
         }
 
         #home .quick-card .qicon .app-icon {
@@ -4905,210 +5025,657 @@
    Visual/structural layer only. Existing IDs, Firebase bindings,
    state, calculations and click handlers are intentionally preserved.
    ================================================================ */
-#home.screen.active{
-    display:flex;
-    flex-direction:column;
-    min-height:0;
-    overflow-y:auto;
-    overflow-x:hidden;
-    background:linear-gradient(180deg,#f7f9fc 0%,var(--paper) 42%,#f8fafc 100%);
-    padding-bottom:calc(88px + var(--safe-area-bottom));
+#home.screen.active {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: linear-gradient(180deg, #f7f9fc 0%, var(--paper) 42%, #f8fafc 100%);
+    padding-bottom: calc(88px + var(--safe-area-bottom));
 }
-html.dark-mode #home.screen.active{
-    background:linear-gradient(180deg,#0b1120 0%,#101827 46%,#0d1422 100%);
+
+html.dark-mode #home.screen.active {
+    background: linear-gradient(180deg, #0b1120 0%, #101827 46%, #0d1422 100%);
 }
-#home > .home-hero{order:1;flex:0 0 auto;position:relative;z-index:2;}
-#home > .home-quick{order:2;flex:0 0 auto;}
-#home > .home-policies-head{order:3;flex:0 0 auto;}
-#home > .home-policies-list{order:4;flex:0 0 auto;}
-#home > .home-offers{order:5;flex:0 0 auto;}
-#home > .home-points{order:6;flex:0 0 auto;}
-#home > .home-partners{order:7;flex:0 0 auto;}
-#home > .home-whatsapp-fab{order:8;}
+
+#home>.home-hero {
+    order: 1;
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+#home>.home-quick {
+    order: 2;
+    flex: 0 0 auto;
+}
+
+#home>.home-policies-head {
+    order: 3;
+    flex: 0 0 auto;
+}
+
+#home>.home-policies-list {
+    order: 4;
+    flex: 0 0 auto;
+}
+
+#home>.home-offers {
+    order: 5;
+    flex: 0 0 auto;
+}
+
+#home>.home-points {
+    order: 6;
+    flex: 0 0 auto;
+}
+
+#home>.home-partners {
+    order: 7;
+    flex: 0 0 auto;
+}
+
+#home>.home-whatsapp-fab {
+    order: 8;
+}
 
 /* ---------- Hero / identity ---------- */
-#home .pro-topbar{
-    margin:0;
-    padding:calc(20px + var(--safe-area-top)) 16px 16px;
-    border-radius:0 0 24px 24px;
+#home .pro-topbar {
+    margin: 0;
+    padding: calc(20px + var(--safe-area-top)) 16px 16px;
+    border-radius: 0 0 24px 24px;
     background:
-      radial-gradient(circle at 92% 0%,rgba(242,189,99,.22),transparent 34%),
-      radial-gradient(circle at 0% 100%,rgba(53,108,190,.22),transparent 38%),
-      linear-gradient(145deg,#071a3b 0%,#0e2a5c 58%,#173e79 100%);
-    box-shadow:0 14px 34px rgba(7,29,64,.20);
-    overflow:visible;
+        radial-gradient(circle at 92% 0%, rgba(242, 189, 99, .22), transparent 34%),
+        radial-gradient(circle at 0% 100%, rgba(53, 108, 190, .22), transparent 38%),
+        linear-gradient(145deg, #071a3b 0%, #0e2a5c 58%, #173e79 100%);
+    box-shadow: 0 14px 34px rgba(7, 29, 64, .20);
+    overflow: visible;
 }
-#home .pro-topbar::before{opacity:.45;pointer-events:none;}
-#home .topbar-row{min-height:44px;gap:10px;}
-#home .topbar-left .hi{font-size:10px;line-height:1.3;opacity:.72;margin:0 0 2px;}
-#home .topbar-left .name{font-size:19px;line-height:1.2;margin:0;letter-spacing:-.15px;max-width:190px;}
-#home .topbar-right{gap:6px;}
-#home .topbar-right > button,#home .bell{
-    width:35px;height:35px;border-radius:11px;
-    display:flex;align-items:center;justify-content:center;
-    flex:0 0 35px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+
+#home .pro-topbar::before {
+    opacity: .45;
+    pointer-events: none;
 }
-#home .lang-toggle{font-size:9px!important;font-weight:800!important;}
-#home .theme-toggle{font-size:15px!important;}
-#home .bell .bell-symbol .app-icon{width:18px;height:18px;}
-#home .bell .dot{width:7px;height:7px;top:4px;right:4px;border-width:2px;}
+
+#home .topbar-row {
+    min-height: 44px;
+    gap: 10px;
+}
+
+#home .topbar-left .hi {
+    font-size: 10px;
+    line-height: 1.3;
+    opacity: .72;
+    margin: 0 0 2px;
+}
+
+#home .topbar-left .name {
+    font-size: 19px;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -.15px;
+    max-width: 190px;
+}
+
+#home .topbar-right {
+    gap: 6px;
+}
+
+#home .topbar-right>button,
+#home .bell {
+    width: 35px;
+    height: 35px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 35px;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
+    box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.12);
+}
+
+#home .lang-toggle {
+    font-size: 9px !important;
+    font-weight: 800 !important;
+}
+
+#home .theme-toggle {
+    font-size: 15px !important;
+}
+
+#home .bell .bell-symbol .app-icon {
+    width: 18px;
+    height: 18px;
+}
+
+#home .bell .dot {
+    width: 7px;
+    height: 7px;
+    top: 4px;
+    right: 4px;
+    border-width: 2px;
+}
 
 /* Protection card: geometry retained, context improved */
-#home .protection-card{
-    margin-top:13px;
-    min-height:76px;
-    padding:12px 13px;
-    border-radius:17px;
-    border:1px solid rgba(255,255,255,.13);
-    background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.045));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 25px rgba(0,0,0,.10);
-    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+#home .protection-card {
+    margin-top: 13px;
+    min-height: 76px;
+    padding: 12px 13px;
+    border-radius: 17px;
+    border: 1px solid rgba(255, 255, 255, .13);
+    background: linear-gradient(135deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .045));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 10px 25px rgba(0, 0, 0, .10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
-#home .protection-left{min-width:0;}
-#home .protection-left span{font-size:10px;opacity:.74;}
-#home .protection-left strong{font-size:25px;line-height:1.05;margin:2px 0;}
-#home .protection-left small{font-size:9px;opacity:.68;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px;}
-#home .score-ring,#home .score-ring svg{width:56px;height:56px;}
-#home .score-ring{margin-inline-start:8px;}
+
+#home .protection-left {
+    min-width: 0;
+}
+
+#home .protection-left span {
+    font-size: 10px;
+    opacity: .74;
+}
+
+#home .protection-left strong {
+    font-size: 25px;
+    line-height: 1.05;
+    margin: 2px 0;
+}
+
+#home .protection-left small {
+    font-size: 9px;
+    opacity: .68;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+}
+
+#home .score-ring,
+#home .score-ring svg {
+    width: 56px;
+    height: 56px;
+}
+
+#home .score-ring {
+    margin-inline-start: 8px;
+}
 
 /* Compact stats with equal visual weight */
-#home .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px;}
-#home .stat{
-    min-width:0;padding:8px 4px 7px;border-radius:12px;
-    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);
-    box-shadow:none;
+#home .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 9px;
 }
-#home .stat b{font-size:16px;line-height:1.05;}
-#home .stat span{font-size:8px;line-height:1.25;white-space:nowrap;gap:3px;margin-top:3px;display:flex;align-items:center;justify-content:center;}
-#home .stat .app-icon{width:13px;height:13px;flex:0 0 13px;}
+
+#home .stat {
+    min-width: 0;
+    padding: 8px 4px 7px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .055);
+    border: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: none;
+}
+
+#home .stat b {
+    font-size: 16px;
+    line-height: 1.05;
+}
+
+#home .stat span {
+    font-size: 8px;
+    line-height: 1.25;
+    white-space: nowrap;
+    gap: 3px;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#home .stat .app-icon {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 13px;
+}
 
 /* ---------- Shared home section rhythm ---------- */
 #home .home-quick,
-#home .home-policies-head{padding-left:13px;padding-right:13px;}
-#home .home-quick{padding-top:14px;padding-bottom:7px;}
-#home .home-policies-head{padding-top:12px!important;padding-bottom:4px!important;}
-#home .section-head{margin:0 0 8px;min-height:24px;}
-#home .section-head h2{font-size:13px;line-height:1.2;gap:6px;color:var(--navy-3);}
-html.dark-mode #home .section-head h2{color:#f3f6fb;}
-#home .section-head h2 .app-icon{width:17px;height:17px;}
-#home #viewAllLink{font-size:9px!important;font-weight:800!important;padding:5px 8px;border-radius:8px;background:rgba(14,42,92,.055);text-decoration:none;}
-html.dark-mode #home #viewAllLink{background:rgba(255,255,255,.06);color:var(--gold-2)!important;}
+#home .home-policies-head {
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+#home .home-quick {
+    padding-top: 14px;
+    padding-bottom: 7px;
+}
+
+#home .home-policies-head {
+    padding-top: 12px !important;
+    padding-bottom: 4px !important;
+}
+
+#home .section-head {
+    margin: 0 0 8px;
+    min-height: 24px;
+}
+
+#home .section-head h2 {
+    font-size: 13px;
+    line-height: 1.2;
+    gap: 6px;
+    color: var(--navy-3);
+}
+
+html.dark-mode #home .section-head h2 {
+    color: #f3f6fb;
+}
+
+#home .section-head h2 .app-icon {
+    width: 17px;
+    height: 17px;
+}
+
+#home #viewAllLink {
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: rgba(14, 42, 92, .055);
+    text-decoration: none;
+}
+
+html.dark-mode #home #viewAllLink {
+    background: rgba(255, 255, 255, .06);
+    color: var(--gold-2) !important;
+}
 
 /* ---------- Quick access ---------- */
-#home .quick-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
-#home .quick-card{
-    min-width:0;min-height:80px;padding:9px 3px 8px;gap:6px;
-    border-radius:14px;border:1px solid var(--line);
-    background:linear-gradient(180deg,var(--card),var(--paper));
-    box-shadow:0 5px 16px rgba(14,42,92,.055);
-    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+#home .quick-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
 }
-html.dark-mode #home .quick-card{background:linear-gradient(180deg,#151f31,#111a29);}
-#home .quick-card:hover{transform:translateY(-1px);border-color:rgba(242,189,99,.42);box-shadow:0 8px 20px rgba(14,42,92,.10);}
-#home .quick-card:active{transform:scale(.975);}
-#home .quick-card .qicon{
-    width:38px;height:38px;border-radius:11px;flex:0 0 38px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 10px rgba(14,42,92,.08);
+
+#home .quick-card {
+    min-width: 0;
+    min-height: 80px;
+    padding: 9px 3px 8px;
+    gap: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--card), var(--paper));
+    box-shadow: 0 5px 16px rgba(14, 42, 92, .055);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-#home .quick-card .qicon .app-icon{width:20px;height:20px;}
-#home .quick-card .quick-label{
-    font-size:9px;line-height:1.2;font-weight:800;white-space:normal;text-align:center;
-    min-height:21px;display:flex;align-items:center;justify-content:center;
+
+html.dark-mode #home .quick-card {
+    background: linear-gradient(180deg, #151f31, #111a29);
+}
+
+#home .quick-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(242, 189, 99, .42);
+    box-shadow: 0 8px 20px rgba(14, 42, 92, .10);
+}
+
+#home .quick-card:active {
+    transform: scale(.975);
+}
+
+#home .quick-card .qicon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    flex: 0 0 38px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 4px 10px rgba(14, 42, 92, .08);
+}
+
+#home .quick-card .qicon .app-icon {
+    width: 20px;
+    height: 20px;
+}
+
+#home .quick-card .quick-label {
+    font-size: 9px;
+    line-height: 1.2;
+    font-weight: 800;
+    white-space: normal;
+    text-align: center;
+    min-height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Remove decorative icon motion from home. Keep button/card interaction. */
-#home .app-icon.animated,#home .app-icon.float,#home .app-icon.bounce,#home .app-icon.spin,
-#home .quick-card .app-icon{animation:none!important;}
+#home .app-icon.animated,
+#home .app-icon.float,
+#home .app-icon.bounce,
+#home .app-icon.spin,
+#home .quick-card .app-icon {
+    animation: none !important;
+}
 
 /* ---------- Policies ---------- */
-#home .home-policies-list{padding:0 13px 5px;gap:8px;}
-#home .home-policies-list .p-card{
-    min-height:78px;border-radius:14px;border:1px solid var(--line);
-    box-shadow:0 5px 16px rgba(14,42,92,.055);background:var(--card);
+#home .home-policies-list {
+    padding: 0 13px 5px;
+    gap: 8px;
 }
-html.dark-mode #home .home-policies-list .p-card{background:#141d2d;}
-#home .home-policies-list .p-seal{width:58px;min-width:58px;}
-#home .home-policies-list .p-seal .ring{width:36px;height:36px;}
-#home .home-policies-list .p-body{padding:9px 10px;min-width:0;}
-#home .home-policies-list .p-body .top{gap:7px;}
-#home .home-policies-list .p-body h3{font-size:11px;line-height:1.25;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#home .home-policies-list .p-body .co{font-size:9px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#home .home-policies-list .p-foot{font-size:8.5px;gap:8px;margin-top:5px;white-space:nowrap;overflow:hidden;}
-#home .home-policies-list .badge{font-size:7.5px;padding:3px 6px;}
-#home .home-policies-list .empty-state{padding:18px 10px;border-radius:14px;margin-bottom:0;}
+
+#home .home-policies-list .p-card {
+    min-height: 78px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: 0 5px 16px rgba(14, 42, 92, .055);
+    background: var(--card);
+}
+
+html.dark-mode #home .home-policies-list .p-card {
+    background: #141d2d;
+}
+
+#home .home-policies-list .p-seal {
+    width: 58px;
+    min-width: 58px;
+}
+
+#home .home-policies-list .p-seal .ring {
+    width: 36px;
+    height: 36px;
+}
+
+#home .home-policies-list .p-body {
+    padding: 9px 10px;
+    min-width: 0;
+}
+
+#home .home-policies-list .p-body .top {
+    gap: 7px;
+}
+
+#home .home-policies-list .p-body h3 {
+    font-size: 11px;
+    line-height: 1.25;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#home .home-policies-list .p-body .co {
+    font-size: 9px;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#home .home-policies-list .p-foot {
+    font-size: 8.5px;
+    gap: 8px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#home .home-policies-list .badge {
+    font-size: 7.5px;
+    padding: 3px 6px;
+}
+
+#home .home-policies-list .empty-state {
+    padding: 18px 10px;
+    border-radius: 14px;
+    margin-bottom: 0;
+}
 
 /* ---------- Offers ---------- */
-#home .home-offers{
-    margin:7px 13px 0!important;padding:11px 12px!important;min-height:56px;
-    border-radius:15px;gap:10px;box-shadow:0 7px 20px rgba(14,42,92,.075);
+#home .home-offers {
+    margin: 7px 13px 0 !important;
+    padding: 11px 12px !important;
+    min-height: 56px;
+    border-radius: 15px;
+    gap: 10px;
+    box-shadow: 0 7px 20px rgba(14, 42, 92, .075);
 }
-#home .home-offers .offers-banner-icon{width:34px;height:34px;border-radius:10px;}
-#home .home-offers .offers-banner-icon .app-icon{width:19px;height:19px;}
-#home .home-offers .offers-banner-text b{font-size:10.5px;line-height:1.3;}
-#home .home-offers .offers-banner-text span{font-size:8.5px;line-height:1.3;display:block;margin-top:2px;}
-#home .home-offers .offers-banner-count{font-size:9px;padding:3px 7px;}
+
+#home .home-offers .offers-banner-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+}
+
+#home .home-offers .offers-banner-icon .app-icon {
+    width: 19px;
+    height: 19px;
+}
+
+#home .home-offers .offers-banner-text b {
+    font-size: 10.5px;
+    line-height: 1.3;
+}
+
+#home .home-offers .offers-banner-text span {
+    font-size: 8.5px;
+    line-height: 1.3;
+    display: block;
+    margin-top: 2px;
+}
+
+#home .home-offers .offers-banner-count {
+    font-size: 9px;
+    padding: 3px 7px;
+}
 
 /* ---------- Points ---------- */
-#home .home-points{
-    margin:9px 13px 0!important;padding:12px 13px!important;border-radius:16px;
-    box-shadow:0 8px 24px rgba(14,42,92,.11);
+#home .home-points {
+    margin: 9px 13px 0 !important;
+    padding: 12px 13px !important;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(14, 42, 92, .11);
 }
-#home .home-points .points-widget-title{font-size:10px;gap:6px;}
-#home .home-points .points-widget-title .app-icon{width:17px;height:17px;}
-#home .home-points .points-widget-badge{font-size:8px;padding:4px 8px;}
-#home .home-points .points-widget-body{margin-top:7px;}
-#home .home-points .points-widget-balance{font-size:26px;}
-#home .home-points .points-widget-discount span{font-size:8px;}
-#home .home-points .points-widget-discount b{font-size:16px;}
-#home .home-points .points-widget-cta{font-size:8.5px;margin-top:7px;}
+
+#home .home-points .points-widget-title {
+    font-size: 10px;
+    gap: 6px;
+}
+
+#home .home-points .points-widget-title .app-icon {
+    width: 17px;
+    height: 17px;
+}
+
+#home .home-points .points-widget-badge {
+    font-size: 8px;
+    padding: 4px 8px;
+}
+
+#home .home-points .points-widget-body {
+    margin-top: 7px;
+}
+
+#home .home-points .points-widget-balance {
+    font-size: 26px;
+}
+
+#home .home-points .points-widget-discount span {
+    font-size: 8px;
+}
+
+#home .home-points .points-widget-discount b {
+    font-size: 16px;
+}
+
+#home .home-points .points-widget-cta {
+    font-size: 8.5px;
+    margin-top: 7px;
+}
 
 /* ---------- Partners ---------- */
-#home .home-partners{
-    margin-top:10px;min-height:92px;padding:10px 0 9px;
-    background:transparent;border-top:1px solid rgba(14,42,92,.05);border-bottom:0;
-    box-shadow:none;
+#home .home-partners {
+    margin-top: 10px;
+    min-height: 92px;
+    padding: 10px 0 9px;
+    background: transparent;
+    border-top: 1px solid rgba(14, 42, 92, .05);
+    border-bottom: 0;
+    box-shadow: none;
 }
-html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
-#home .home-partners .slider-title{padding:0 13px 7px;font-size:9.5px;gap:5px;}
-#home .home-partners .slider-title .app-icon{width:15px;height:15px;}
-#home .home-partners .slider-wrapper{min-height:48px;padding:2px 0;}
-#home .home-partners .slider-track{gap:7px;padding:0 8px;min-height:44px;}
-#home .home-partners .slider-item{min-width:112px;padding:5px 9px 5px 10px;border-radius:12px;gap:6px;}
-#home .home-partners .slider-item .company-logo{width:25px;height:25px;}
-#home .home-partners .slider-item .company-name{font-size:8.5px;}
-#home .home-partners .slider-item .company-badge{font-size:6px;}
+
+html.dark-mode #home .home-partners {
+    border-top-color: rgba(255, 255, 255, .06);
+}
+
+#home .home-partners .slider-title {
+    padding: 0 13px 7px;
+    font-size: 9.5px;
+    gap: 5px;
+}
+
+#home .home-partners .slider-title .app-icon {
+    width: 15px;
+    height: 15px;
+}
+
+#home .home-partners .slider-wrapper {
+    min-height: 48px;
+    padding: 2px 0;
+}
+
+#home .home-partners .slider-track {
+    gap: 7px;
+    padding: 0 8px;
+    min-height: 44px;
+}
+
+#home .home-partners .slider-item {
+    min-width: 112px;
+    padding: 5px 9px 5px 10px;
+    border-radius: 12px;
+    gap: 6px;
+}
+
+#home .home-partners .slider-item .company-logo {
+    width: 25px;
+    height: 25px;
+}
+
+#home .home-partners .slider-item .company-name {
+    font-size: 8.5px;
+}
+
+#home .home-partners .slider-item .company-badge {
+    font-size: 6px;
+}
 
 /* WhatsApp: stay clear of content and keep the drag feature */
-#home .home-whatsapp-fab{
-    width:46px;height:46px;right:12px;bottom:calc(84px + var(--safe-area-bottom));
-    z-index:998;box-shadow:0 8px 24px rgba(37,211,102,.38);
+#home .home-whatsapp-fab {
+    width: 46px;
+    height: 46px;
+    right: 12px;
+    bottom: calc(84px + var(--safe-area-bottom));
+    z-index: 998;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, .38);
 }
-#home .home-whatsapp-fab .fab-icon svg{width:23px;height:23px;}
+
+#home .home-whatsapp-fab .fab-icon svg {
+    width: 23px;
+    height: 23px;
+}
 
 /* ---------- Responsive ---------- */
-@media (max-width:480px){
-    #home .pro-topbar{padding-top:calc(17px + var(--safe-area-top));padding-left:12px;padding-right:12px;}
-    #home .topbar-left .name{font-size:18px;}
-    #home .topbar-right > button,#home .bell{width:34px;height:34px;flex-basis:34px;}
-    #home .protection-card{min-height:74px;padding:11px 12px;}
-    #home .protection-left strong{font-size:24px;}
-    #home .home-quick,#home .home-policies-head{padding-left:11px;padding-right:11px;}
-    #home .quick-grid{gap:5px;}
-    #home .quick-card{min-height:78px;padding-left:2px;padding-right:2px;}
-    #home .quick-card .qicon{width:36px;height:36px;flex-basis:36px;}
-    #home .quick-card .qicon .app-icon{width:19px;height:19px;}
-    #home .quick-card .quick-label{font-size:8.5px;}
-    #home .home-policies-list{padding-left:11px;padding-right:11px;}
-    #home .home-offers,#home .home-points{margin-left:11px!important;margin-right:11px!important;}
+@media (max-width:480px) {
+    #home .pro-topbar {
+        padding-top: calc(17px + var(--safe-area-top));
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    #home .topbar-left .name {
+        font-size: 18px;
+    }
+
+    #home .topbar-right>button,
+    #home .bell {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    #home .protection-card {
+        min-height: 74px;
+        padding: 11px 12px;
+    }
+
+    #home .protection-left strong {
+        font-size: 24px;
+    }
+
+    #home .home-quick,
+    #home .home-policies-head {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    #home .quick-grid {
+        gap: 5px;
+    }
+
+    #home .quick-card {
+        min-height: 78px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    #home .quick-card .qicon {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    #home .quick-card .qicon .app-icon {
+        width: 19px;
+        height: 19px;
+    }
+
+    #home .quick-card .quick-label {
+        font-size: 8.5px;
+    }
+
+    #home .home-policies-list {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    #home .home-offers,
+    #home .home-points {
+        margin-left: 11px !important;
+        margin-right: 11px !important;
+    }
 }
-@media (min-width:481px){
-    #home .home-whatsapp-fab{right:14px;}
+
+@media (min-width:481px) {
+    #home .home-whatsapp-fab {
+        right: 14px;
+    }
 }
-@media (prefers-reduced-motion:reduce){
-    #home *,#home *::before,#home *::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
-}
-</style>
+
+@media (prefers-reduced-motion:reduce) {
+
+    #home *,
+    #home *::before,
+    #home *::after {
+        animation: none !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}</style>
 </head>
 <body>
 
@@ -5143,7 +5710,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="auth-brand-icon" aria-label="SecurePath">
                     <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
                 </div>
-                <img class="brand-logo-full" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
+                <img class="brand-logo-full" loading="eager" decoding="async" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
                 <div class="brand-tagline securepath-advisory" id="loginTagline">مرحباً في منظومتك التأمينية الرقمية</div>
                 <p id="brokerDisclosureFooter" style="font-size:9px;color:rgba(255,255,255,0.65);margin-top:8px;line-height:1.6;padding:0 10px;">هذا التطبيق منصة تعريفية بخدمات وسيط تأمين حر مرخّص من الهيئة العامة للرقابة المالية، ولا يمثل شركة تأمين بعينها.</p>
             </div>
@@ -5159,11 +5726,32 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
                     <button id="loginLangToggle" class="lang-toggle light" onclick="toggleLanguage()" style="background:var(--card);color:var(--slate);border:1px solid var(--line);">EN</button>
                 </div>
-                <div class="field"><label id="loginEmailLabel">اسم المستخدم أو البريد الإلكتروني</label><input type="text" id="loginEmail" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="اسم المستخدم أو البريد الإلكتروني"></div>
+                <div class="field"><label id="loginEmailLabel">البريد الإلكتروني</label><input type="text" id="loginEmail" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="name@securepath أو name@securepsth"></div><div style="font-size:9.5px;color:var(--muted);margin:-8px 0 10px;line-height:1.6;">يمكنك الدخول باستخدام حسابات العملاء بصيغة <b>@securepath</b> أو الحسابات القديمة <b>@securepsth</b> المرتبطة بالفعل بـ Firebase.</div>
                 <div class="field"><label id="loginPassLabel">كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password" placeholder="••••••••"></div>
                 <div class="forgot-password-link" onclick="openForgotPassword()">نسيت كلمة المرور؟</div>
                 <button class="btn-primary" id="loginBtn" onclick="handleLogin()">🚀 دخول المنصة</button>
                 <div class="switch-auth" id="loginSwitch">ليس لديك حساب؟ <b onclick="showScreen('signup')">إنشاء حساب جديد</b></div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- EMAIL VERIFICATION SCREEN                                     -->
+        <!-- ============================================================ -->
+        <div class="screen" id="verifyEmail">
+            <div class="brand brand-premium">
+                <div class="auth-brand-icon" aria-label="SecurePath">
+                    <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
+                </div>
+                <div class="brand-tagline securepath-advisory" id="verifyEmailTagline">تحقق من بريدك الإلكتروني</div>
+            </div>
+            <div class="login-card">
+                <h2 id="verifyEmailTitle">فعّل حسابك</h2>
+                <p id="verifyEmailText" style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:16px;">لقد أرسلنا رابط تفعيل إلى بريدك الإلكتروني <b id="verifyEmailAddress"></b>. يرجى فتح الرابط ثم الضغط على "تحققت، متابعة" أدناه.</p>
+                <div id="verifyEmailError" style="color:var(--red);font-size:12px;margin-bottom:10px;display:none;"></div>
+                <div id="verifyEmailSuccess" style="color:var(--green);font-size:12px;margin-bottom:10px;display:none;"></div>
+                <button class="btn-primary" id="verifyEmailContinueBtn" onclick="recheckEmailVerification()">✅ تحققت، متابعة</button>
+                <button class="btn-gold-small" style="margin-top:10px;width:100%;" id="verifyEmailResendBtn" onclick="resendVerificationEmail()">✉️ إعادة إرسال رابط التفعيل</button>
+                <div class="switch-auth" id="verifyEmailLogout" onclick="handleLogout()" style="cursor:pointer;">تسجيل الخروج</div>
             </div>
         </div>
 
@@ -5175,7 +5763,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="auth-brand-icon" aria-label="SecurePath">
                     <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
                 </div>
-                <img class="brand-logo-full" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
+                <img class="brand-logo-full" loading="eager" decoding="async" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
                 <p id="signupDisclosure" class="signup-disclosure">(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)</p>
             </div>
             <div class="login-card">
@@ -5197,7 +5785,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
 
                 <div class="field"><label id="regFullNameLabel">الاسم الرباعي <span class="required">*</span></label><input type="text" id="regFullName" placeholder="مثال: أحمد محمد علي حسن"></div>
-                <div class="field"><label id="regEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="regEmail" placeholder="name@domain.com"></div>
+                <div class="field"><label id="regEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="regEmail" placeholder="name@securepsth أو name@domain.com"></div>
                 <div class="field"><label id="regPassLabel">كلمة المرور <span class="required">*</span></label><input type="password" id="regPass" minlength="8" placeholder="•••••••• (8 أحرف على الأقل، حرف ورقم)"></div>
                 <div class="field"><label id="regBirthDateLabel">تاريخ الميلاد <span class="required">*</span></label><input type="date" id="regBirthDate"></div>
                 <div class="field"><label id="regGenderLabel">الجنس <span class="required">*</span></label>
@@ -5285,15 +5873,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="stats">
                     <div class="stat">
                         <b id="statActiveCount">0</b>
-                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-9"/></svg></span> وثائق سارية</span>
+                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-9"/></svg></span> <span id="statActiveLabel">وثائق سارية</span></span>
                     </div>
                     <div class="stat">
                         <b id="statExpiringCount">0</b>
-                        <span class="icon-orange"><span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> تجديد قريب</span>
+                        <span class="icon-orange"><span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> <span id="statExpiringLabel">تجديد قريب</span></span>
                     </div>
                     <div class="stat">
                         <b id="statDocsCount">0</b>
-                        <span class="icon-green"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span> مستندات مفعلة</span>
+                        <span class="icon-green"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span> <span id="statDocsLabel">مستندات مفعلة</span></span>
                     </div>
                 </div>
             </div>
@@ -5322,7 +5910,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             <div class="companies-slider-section home-partners">
                 <div class="slider-title" id="companiesSliderTitle">
                     <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18"/></svg></span></span>
-                    شركاؤنا في النجاح <span>·</span> <span id="companiesCount">0</span> شركة
+                    <span id="companiesSliderTitleText">شركاؤنا في النجاح</span> <span>·</span> <span id="companiesCount">0</span> <span id="companiesSliderTitleUnit">شركة</span>
                 </div>
                 <div class="slider-wrapper" id="companiesSlider" role="region" aria-label="Insurance companies">
                     <div class="slider-track" id="sliderTrack" role="list"></div>
@@ -5342,7 +5930,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="section-head">
                     <h2 id="quickAccessTitle">
                         <span class="icon-gold"><span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><path d="m4 16 10-10 4 4L8 20l-4 1 1-5Z"/><path d="m13 7 4 4"/></svg></span></span>
-                        الوصول السريع
+                        <span id="quickAccessTitleText">الوصول السريع</span>
                     </h2>
                 </div>
                 <div class="quick-grid">
@@ -5377,7 +5965,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="section-head">
                     <h2 id="myPoliciesTitle">
                         <span class="icon-navy"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span></span>
-                        وثائقي التأمينية
+                        <span id="myPoliciesTitleText">وثائقي التأمينية</span>
                     </h2>
                     <span style="font-size:11px;color:var(--navy-2);cursor:pointer;font-weight:700;" onclick="showScreen('policies')" id="viewAllLink">عرض الكل →</span>
                 </div>
@@ -5652,7 +6240,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             <div class="account-header">
                 <div class="profile-pic-wrapper" onclick="document.getElementById('profilePicInput').click()">
                     <div class="avatar" id="accAvatarContainer">
-                        <img id="accAvatarImg" src="" alt="Profile" style="display:none;">
+                        <img id="accAvatarImg" src="" alt="Profile" loading="lazy" decoding="async" style="display:none;">
                         <span class="initials" id="accAvatarInitials">م</span>
                         <div class="upload-overlay">
                             <span>📷<br><span style="font-size:10px;">تغيير</span></span>
@@ -5806,7 +6394,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div style="text-align:center;margin-bottom:16px;">
                     <div class="profile-pic-wrapper" style="margin:0 auto;" onclick="document.getElementById('profilePicEditInput').click()">
                         <div class="avatar" style="width:80px;height:80px;margin:0 auto;">
-                            <img id="profilePicEditImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            <img id="profilePicEditImg" src="" alt="Profile" loading="lazy" decoding="async" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
                             <span class="initials" id="profilePicEditInitials" style="font-size:32px;">م</span>
                             <div class="upload-overlay">
                                 <span>📷<br><span style="font-size:10px;">تغيير</span></span>
@@ -6234,6 +6822,28 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // ============================================================ //
         // FIREBASE CONFIG                                               //
         // ============================================================ //
+        // ============================================================ //
+        // FIREBASE CONFIG                                               //
+        // ------------------------------------------------------------ //
+        // NOTE ON "EXPOSED" FIREBASE KEY:                               //
+        // This apiKey is NOT a secret by design — Google's own docs     //
+        // confirm Firebase web config is meant to ship inside client    //
+        // code (https://firebase.google.com/docs/projects/api-keys).   //
+        // It only identifies your Firebase project; it does not grant  //
+        // access to data. The two things that ACTUALLY protect this    //
+        // app are, in order of importance:                             //
+        //   1) Firestore Security Rules — must deny any read/write     //
+        //      that isn't explicitly allowed per-user (never leave     //
+        //      rules in test-mode "allow read, write: if true").       //
+        //   2) Restricting this API key in Google Cloud Console >      //
+        //      Credentials > (this key) > "Application restrictions"   //
+        //      to your app's exact domain(s), and enabling Firebase    //
+        //      App Check so only your real app can call your backend.  //
+        // Hiding the key in code (env vars, a build step, etc.) adds   //
+        // zero real protection for a static, serverless app like this  //
+        // one — it can always be read from the network tab — so effort //
+        // belongs in rules + key restriction, not obfuscation.         //
+        // ============================================================ //
         var firebaseConfig = {
             apiKey: 'AIzaSyCkRYPffAEBRivC2Si5T-ILL99ZrSq-dWM',
             authDomain: 'path-1a672.firebaseapp.com',
@@ -6246,6 +6856,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 
         var auth = firebase.auth();
         var db = firebase.firestore();
+        // Legacy customer login domain. Kept as an accepted identifier format;
+        // Firebase must contain the matching account for authentication to succeed.
+        var LEGACY_CLIENT_EMAIL_DOMAIN = 'securepsth';
 
         // ============================================================ //
         // STATE                                                         //
@@ -6291,8 +6904,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         var TRANSLATIONS = {
             ar: {
                 loginTitle: 'تسجيل الدخول',
-                loginEmailLabel: 'اسم المستخدم أو البريد الإلكتروني',
+                loginEmailLabel: 'البريد الإلكتروني',
                 loginPassLabel: 'كلمة المرور',
+                verifyEmailTagline: 'تحقق من بريدك الإلكتروني',
+                verifyEmailTitle: 'فعّل حسابك',
+                verifyEmailLogout: 'تسجيل الخروج',
                 loginBtn: '🚀 دخول المنصة',
                 loginSwitch: 'ليس لديك حساب؟ ',
                 loginSwitchLink: 'إنشاء حساب جديد',
@@ -6324,6 +6940,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 welcomeText: 'مرحباً بك،',
                 protectionLabel: 'مؤشر الحماية التأمينية',
                 quickAccessTitle: 'الوصول السريع',
+                statActiveLabel: 'وثائق سارية',
+                statExpiringLabel: 'تجديد قريب',
+                statDocsLabel: 'مستندات مفعلة',
+                companiesSliderTitleText: 'شركاؤنا في النجاح',
+                companiesSliderTitleUnit: 'شركة',
                 quickUpload: 'رفع مستند',
                 quickProducts: 'المنتجات',
                 quickAssessment: 'فحص الحماية',
@@ -6564,8 +7185,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             },
             en: {
                 loginTitle: 'Login',
-                loginEmailLabel: 'Username or Email',
+                loginEmailLabel: 'Email',
                 loginPassLabel: 'Password',
+                verifyEmailTagline: 'Verify your email',
+                verifyEmailTitle: 'Activate your account',
+                verifyEmailLogout: 'Log out',
                 loginBtn: '🚀 Login',
                 loginSwitch: "Don't have an account? ",
                 loginSwitchLink: 'Create new account',
@@ -6597,6 +7221,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 welcomeText: 'Welcome,',
                 protectionLabel: 'Insurance Protection Score',
                 quickAccessTitle: 'Quick Access',
+                statActiveLabel: 'Active Policies',
+                statExpiringLabel: 'Renewing Soon',
+                statDocsLabel: 'Verified Documents',
+                companiesSliderTitleText: 'Our Partners in Success',
+                companiesSliderTitleUnit: 'companies',
                 quickUpload: 'Upload Document',
                 quickProducts: 'Products',
                 quickAssessment: 'Protection Check',
@@ -6841,6 +7470,48 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 ((TRANSLATIONS.ar && TRANSLATIONS.ar[key] !== undefined) ? TRANSLATIONS.ar[key] : key);
         }
 
+        // ============================================================ //
+        // DYNAMIC SEO META                                              //
+        // ------------------------------------------------------------ //
+        // Since this is a single-page app, <title> and the description
+        // meta tags stay static for crawlers unless we update them as
+        // the user moves between screens. This keeps the visible tab
+        // title and any shared/social preview relevant to the current
+        // screen instead of always saying "SecurePath".
+        // ============================================================ //
+        var SCREEN_META = {
+            home: { ar: ['SecurePath — الرئيسية', 'تابع وثائقك التأمينية ونقاط الأمان والعروض الحالية في مكان واحد.'], en: ['SecurePath — Home', 'Track your policies, InsuraPoints and current offers in one place.'] },
+            products: { ar: ['SecurePath — المنتجات', 'استعرض منتجات التأمين المتاحة من شركات مرخّصة.'], en: ['SecurePath — Products', 'Browse available insurance products from licensed companies.'] },
+            offers: { ar: ['SecurePath — العروض', 'أحدث عروض التأمين الحصرية لعملاء SecurePath.'], en: ['SecurePath — Offers', "The latest exclusive insurance offers for SecurePath clients."] },
+            compareOffers: { ar: ['SecurePath — مقارنة العروض', 'قارن بين عروض التأمين المختلفة لاختيار الأنسب لك.'], en: ['SecurePath — Compare Offers', 'Compare insurance offers side by side to find the best fit.'] },
+            documents: { ar: ['SecurePath — مستنداتي', 'ارفع وتابع حالة مراجعة مستنداتك التأمينية.'], en: ['SecurePath — My Documents', 'Upload and track the review status of your insurance documents.'] },
+            account: { ar: ['SecurePath — حسابي', 'إدارة بياناتك الشخصية وإعدادات حسابك.'], en: ['SecurePath — My Account', 'Manage your personal details and account settings.'] },
+            advice: { ar: ['SecurePath — استشارة', 'اطلب استشارة تأمينية من وسيطك المرخّص.'], en: ['SecurePath — Advice', 'Request insurance advice from your licensed broker.'] },
+            insuranceTips: { ar: ['SecurePath — نصائح تأمينية', 'نصائح توعوية لمساعدتك على اختيار التغطية المناسبة.'], en: ['SecurePath — Insurance Tips', 'Educational tips to help you choose the right coverage.'] },
+            login: { ar: ['SecurePath — تسجيل الدخول', 'سجّل الدخول لمتابعة وثائقك التأمينية.'], en: ['SecurePath — Login', 'Log in to track your insurance policies.'] },
+            signup: { ar: ['SecurePath — إنشاء حساب', 'أنشئ حسابك للبدء في متابعة تغطيتك التأمينية.'], en: ['SecurePath — Sign Up', 'Create your account to start tracking your insurance coverage.'] }
+        };
+
+        function updatePageMeta(id) {
+            var meta = SCREEN_META[id];
+            var lang = STATE.language === 'en' ? 'en' : 'ar';
+            var title = 'SecurePath', desc = null;
+            if (meta) { title = meta[lang][0]; desc = meta[lang][1]; }
+            document.title = title;
+            var titleEl = document.getElementById('pageTitle');
+            if (titleEl) titleEl.textContent = title;
+            if (desc) {
+                ['metaDescription', 'ogDescription', 'twitterDescription'].forEach(function(elId) {
+                    var el = document.getElementById(elId);
+                    if (el) el.setAttribute('content', desc);
+                });
+                var ogTitle = document.getElementById('ogTitle'),
+                    twTitle = document.getElementById('twitterTitle');
+                if (ogTitle) ogTitle.setAttribute('content', title);
+                if (twTitle) twTitle.setAttribute('content', title);
+            }
+        }
+
         function setText(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
 
         function setHTML(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
@@ -6854,6 +7525,22 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // UTILITY FUNCTIONS                                             //
         // ============================================================ //
         function esc(v) { return v === null || v === undefined ? '' : String(v).replace(/[&<>'"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' } [c] || c; }); }
+
+        // ------------------------------------------------------------ //
+        // INPUT SANITIZATION                                            //
+        // Firestore has no query-string concatenation, so classic SQL
+        // injection does not apply here — but any free-text field a
+        // client can write is later rendered elsewhere (admin panel,
+        // notifications, chat) and could otherwise carry a stored-XSS
+        // payload. sanitizeText() strips markup characters at write
+        // time, on top of esc() escaping everything at render time
+        // (defense in depth: two independent layers).
+        // ------------------------------------------------------------ //
+        function sanitizeText(v, maxLen) {
+            var s = String(v == null ? '' : v).replace(/<[^>]*>/g, '').trim();
+            if (maxLen) s = s.slice(0, maxLen);
+            return s;
+        }
 
         function dateMillis(v) { if (!v) return 0; var d = v && typeof v.toDate === 'function' ? v.toDate() : new Date(v); return isNaN(d.getTime()) ? 0 : d.getTime(); }
 
@@ -6918,7 +7605,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 medal: '<circle cx="12" cy="15" r="6"/><path d="m9 10-4-7M15 10l4-7"/><path d="M9.5 13.5 12 12l2.5 1.5-.7-2.7L16 9h-2.8L12 6.5 10.8 9H8l2.2 1.8-.7 2.7Z"/>',
                 walk: '<circle cx="13" cy="4" r="2"/><path d="M10 9 7 21M10 9l4 2 3-2M14 11l3 3 3-1M10 9 8 14l3 2-1 5"/>',
                 run: '<circle cx="15" cy="4" r="2"/><path d="M11 8 7 10l1 5 4 1-1 6M11 8l3 3 4-1M14 11l-1 3 4 3-2 4"/>',
-                apple: '<path d="M12 8c-3 0-5.5 2.5-5.5 6S9 20 12 20s5.5-2.5 5.5-6S15 8 12 8Z"/><path d="M12 8c0-2 1-3.5 2.5-4M10 6c1 0 1.5-1 1.5-2"/>'
+                apple: '<path d="M12 8c-3 0-5.5 2.5-5.5 6S9 20 12 20s5.5-2.5 5.5-6S15 8 12 8Z"/><path d="M12 8c0-2 1-3.5 2.5-4M10 6c1 0 1.5-1 1.5-2"/>',
+                water: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/>',
+                moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>',
+                book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M19 17H6a2 2 0 0 0-2 2"/>'
             };
             return '<span class="app-icon ' + (cls || '') + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (paths[name] || paths.info) + '</svg></span>';
         }
@@ -6941,11 +7631,42 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // ============================================================ //
         // SCREEN NAVIGATION                                             //
         // ============================================================ //
+        // Screens reachable without a fully authenticated + verified session.
+        // Every other screen id is treated as protected.
+        var PUBLIC_SCREEN_IDS = ['login', 'signup', 'verifyEmail'];
+
+        function isProtectedScreen(id) { return PUBLIC_SCREEN_IDS.indexOf(id) === -1; }
+
+        // SecurePath internal/fake email identifiers. Firebase Authentication
+        // requires a syntactically valid email, so accounts created as
+        // name@securepath.com (or the legacy name@securepsth.com) can also be
+        // entered by the customer as name@securepath / name@securepsth.
+        function isSecurePathInternalIdentifier(value) {
+            var v = normalizeLoginIdentifier(value);
+            return /^[^\s@]+@securepath(?:\.com)?$/.test(v) || /^[^\s@]+@securepsth(?:\.com)?$/.test(v);
+        }
+
+        function firebaseLoginEmail(identifier) {
+            var v = normalizeLoginIdentifier(identifier);
+            if (/^[^\s@]+@securepath$/.test(v)) return v + '.com';
+            if (/^[^\s@]+@securepsth$/.test(v)) return v + '.com';
+            return v;
+        }
+
         function showScreen(id) {
+            // Route guard: block direct navigation to protected screens
+            // (e.g. via console/devtools) when there is no authenticated,
+            // email-verified user backing STATE.currentUser.
+            if (isProtectedScreen(id)) {
+                var authedUser = auth.currentUser;
+                if (!STATE.currentUser || !authedUser) { id = 'login'; }
+                else if (!authedUser.emailVerified && !isSecurePathInternalIdentifier(authedUser.email || '')) { id = 'verifyEmail'; }
+            }
             var target = document.getElementById(id);
             if (!target) return;
             document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
             target.classList.add('active');
+            updatePageMeta(id);
 
             var nav = document.getElementById('mainNavbar');
             if (nav) {
@@ -6980,6 +7701,14 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 var langSel = document.getElementById('signupLanguage');
                 if (langSel) langSel.value = STATE.language;
                 showOfferReferralBanner('signup');
+            }
+            if (id === 'verifyEmail') {
+                var addrEl = document.getElementById('verifyEmailAddress');
+                if (addrEl) addrEl.textContent = STATE.pendingVerifyEmail || (auth.currentUser && auth.currentUser.email) || '';
+                var vErr = document.getElementById('verifyEmailError'),
+                    vOk = document.getElementById('verifyEmailSuccess');
+                if (vErr) vErr.style.display = 'none';
+                if (vOk) vOk.style.display = 'none';
             }
             if (id === 'login') {
                 var loginLangBtn = document.getElementById('loginLangToggle');
@@ -7242,23 +7971,6 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // ============================================================ //
         function normalizeLoginIdentifier(value) { return (value || '').trim().toLowerCase(); }
 
-        function resolveLoginEmail(identifier) {
-            identifier = normalizeLoginIdentifier(identifier);
-            if (identifier.indexOf('@') > 0) return Promise.resolve(identifier);
-            if (!identifier) return Promise.reject({ code: 'auth/invalid-identifier', message: 'Missing username.' });
-            return db.collection('clients').where('username', '==', identifier).limit(2).get()
-                .then(function(snap) {
-                    if (snap.size > 1) throw { code: 'auth/username-ambiguous', message: 'Username is assigned to more than one client.' };
-                    if (!snap.size) throw { code: 'auth/username-not-found', message: 'Username is not registered.' };
-                    var data = snap.docs[0].data() || {};
-                    var email = String(data.email || data.loginEmail || data.authEmail || '').trim().toLowerCase();
-                    if (!email || email.indexOf('@') < 1) {
-                        throw { code: 'auth/username-email-missing', message: 'This client record does not contain its Firebase login email.' };
-                    }
-                    return email;
-                });
-        }
-
         function getClientProfile(uid, email) {
             return db.collection('clients').doc(uid).get().then(function(doc) {
                 if (doc.exists) return { ref: doc.ref, data: doc.data() || {} };
@@ -7333,7 +8045,17 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             if (err) err.style.display = 'none';
             if (LOGIN_IN_PROGRESS) return;
             if (!identifier || !pass) {
-                if (err) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال اسم المستخدم أو البريد الإلكتروني وكلمة المرور' : 'Please enter your username/email and password';
+                if (err) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال البريد الإلكتروني وكلمة المرور' : 'Please enter your email and password';
+                    err.style.display = 'block'; }
+                return;
+            }
+            // SecurePath supports internal customer login identifiers such as
+            // name@securepath and legacy name@securepsth. These are intentional
+            // non-public email identifiers, so do not require a dot in the domain.
+            var isStandardEmail = /^\S+@\S+\.\S+$/.test(identifier);
+            var isSecurePathAlias = isSecurePathInternalIdentifier(identifier);
+            if (!isStandardEmail && !isSecurePathAlias) {
+                if (err) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد إلكتروني أو معرف SecurePath صحيح مثل name@securepath' : 'Enter a valid email or SecurePath ID such as name@securepath';
                     err.style.display = 'block'; }
                 return;
             }
@@ -7341,21 +8063,31 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             showLoading('loginBtn', STATE.language === 'ar' ? 'جاري التحقق من الحساب...' : 'Verifying account...');
             AUTH_READY.then(function() {
                 resetState();
-                return resolveLoginEmail(identifier);
-            }).then(function(email) {
-                return auth.signInWithEmailAndPassword(email, pass);
+                // Login is email-only: no separate username-lookup query is
+                // needed before authentication, which also removes the need
+                // for any unauthenticated pre-auth read access to the
+                // "clients" collection.
+                // Convert the short internal identifier to the valid Firebase
+                // email used by existing SecurePath accounts. The customer's
+                // original identifier is still passed to the profile matching
+                // layer, so Firestore data/UIDs remain unchanged.
+                var authEmail = firebaseLoginEmail(identifier);
+                return auth.signInWithEmailAndPassword(authEmail, pass);
             }).then(function(credential) {
+                var user = credential && credential.user;
+                // Internal SecurePath accounts do not rely on mailbox verification.
+                var internalAlias = isSecurePathInternalIdentifier(identifier) || isSecurePathInternalIdentifier(user && user.email);
+                if (user && !user.emailVerified && !internalAlias) {
+                    return handleUnverifiedUser(user);
+                }
                 return finishClientLogin(credential, identifier);
             }).catch(function(e) {
                 return auth.signOut().catch(function() {}).then(function() {
                     resetState();
                     var code = e && e.code || '';
                     var message;
-                    if (code === 'auth/username-not-found') message = STATE.language === 'ar' ? 'اسم المستخدم غير مسجل في بيانات العملاء.' : 'Username is not registered in the client directory.';
-                    else if (code === 'auth/username-email-missing') message = STATE.language === 'ar' ? 'هذا العميل موجود في Firestore لكن لا يوجد البريد الإلكتروني المرتبط بحساب Firebase داخل سجل العميل.' : 'The client exists in Firestore, but its Firebase login email is missing from the client record.';
-                    else if (code === 'auth/username-ambiguous') message = STATE.language === 'ar' ? 'اسم المستخدم مرتبط بأكثر من حساب. يجب أن يكون فريداً.' : 'This username is linked to more than one client account.';
-                    else if (code === 'client/profile-not-found') message = STATE.language === 'ar' ? 'تم التحقق من الحساب، لكن ملف العميل غير مرتبط بهذا الحساب.' : 'Authentication succeeded, but no client profile is linked to this account.';
-                    else if (code === 'client/identity-mismatch') message = STATE.language === 'ar' ? 'تم تسجيل الدخول بحساب Firebase مختلف عن اسم المستخدم المطلوب.' : 'The authenticated Firebase account does not match the requested username.';
+                    if (code === 'client/profile-not-found') message = STATE.language === 'ar' ? 'تم التحقق من الحساب، لكن ملف العميل غير مرتبط بهذا الحساب.' : 'Authentication succeeded, but no client profile is linked to this account.';
+                    else if (code === 'client/identity-mismatch') message = STATE.language === 'ar' ? 'تم تسجيل الدخول بحساب Firebase مختلف عن البريد الإلكتروني المطلوب.' : 'The authenticated Firebase account does not match the requested email.';
                     else if (code === 'client/name-missing') message = STATE.language === 'ar' ? 'ملف العميل لا يحتوي اسمًا صالحًا للعرض.' : 'The client profile has no valid display name.';
                     else if (code === 'client/invalid-role') message = STATE.language === 'ar' ? 'هذا الحساب ليس حساب عميل.' : 'This account is not a client account.';
                     else if (code === 'permission-denied' || code === 'firestore/permission-denied') message = STATE.language === 'ar' ? 'تم تسجيل الدخول لكن Firebase يمنع قراءة ملف العميل.' : 'Authentication succeeded, but Firestore rules deny access to the client profile.';
@@ -7367,6 +8099,79 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             }).finally(function() {
                 LOGIN_IN_PROGRESS = false;
                 hideLoading('loginBtn');
+            });
+        }
+
+        // ============================================================ //
+        // EMAIL VERIFICATION                                            //
+        // ------------------------------------------------------------ //
+        // Accounts must verify their email before they can use the app.
+        // The user stays signed in (so resend/recheck work) but every
+        // protected screen is blocked by the showScreen() guard below
+        // until auth.currentUser.emailVerified is true.
+        // ============================================================ //
+        var VERIFY_RESEND_COOLDOWN_MS = 60 * 1000;
+
+        function handleUnverifiedUser(user) {
+            STATE.pendingVerifyEmail = user.email || '';
+            maybeSendVerificationEmail(user);
+            showScreen('verifyEmail');
+            return Promise.resolve();
+        }
+
+        function maybeSendVerificationEmail(user) {
+            var lastSentKey = 'SecurePath_verify_sent_' + (user.uid || '');
+            var last = 0;
+            try { last = parseInt(localStorage.getItem(lastSentKey), 10) || 0; } catch (e) {}
+            if (Date.now() - last < VERIFY_RESEND_COOLDOWN_MS) return Promise.resolve();
+            return user.sendEmailVerification().then(function() {
+                try { localStorage.setItem(lastSentKey, String(Date.now())); } catch (e) {}
+            }).catch(function(e) { console.warn('Could not send verification email', e); });
+        }
+
+        function resendVerificationEmail() {
+            var user = auth.currentUser;
+            var successEl = document.getElementById('verifyEmailSuccess'),
+                errEl = document.getElementById('verifyEmailError');
+            if (successEl) successEl.style.display = 'none';
+            if (errEl) errEl.style.display = 'none';
+            if (!user) { showScreen('login'); return; }
+            var lastSentKey = 'SecurePath_verify_sent_' + (user.uid || '');
+            var last = 0;
+            try { last = parseInt(localStorage.getItem(lastSentKey), 10) || 0; } catch (e) {}
+            var remaining = VERIFY_RESEND_COOLDOWN_MS - (Date.now() - last);
+            if (remaining > 0) {
+                if (errEl) { errEl.textContent = STATE.language === 'ar' ? 'يرجى الانتظار قليلاً قبل إعادة الإرسال.' : 'Please wait a moment before resending.';
+                    errEl.style.display = 'block'; }
+                return;
+            }
+            user.sendEmailVerification().then(function() {
+                try { localStorage.setItem(lastSentKey, String(Date.now())); } catch (e) {}
+                if (successEl) { successEl.textContent = STATE.language === 'ar' ? 'تم إرسال رابط تفعيل جديد إلى بريدك.' : 'A new verification link has been sent to your email.';
+                    successEl.style.display = 'block'; }
+            }).catch(function(e) {
+                if (errEl) { errEl.textContent = (STATE.language === 'ar' ? 'تعذر إرسال البريد: ' : 'Could not send email: ') + friendlyFirebaseError(e);
+                    errEl.style.display = 'block'; }
+            });
+        }
+
+        function recheckEmailVerification() {
+            var user = auth.currentUser,
+                errEl = document.getElementById('verifyEmailError');
+            if (errEl) errEl.style.display = 'none';
+            if (!user) { showScreen('login'); return; }
+            showLoading('verifyEmailContinueBtn', STATE.language === 'ar' ? 'جاري التحقق...' : 'Checking...');
+            user.reload().then(function() {
+                hideLoading('verifyEmailContinueBtn');
+                if (auth.currentUser && auth.currentUser.emailVerified) {
+                    return finishClientLogin({ user: auth.currentUser }, auth.currentUser.email);
+                }
+                if (errEl) { errEl.textContent = STATE.language === 'ar' ? 'لم يتم تفعيل البريد بعد. افتح الرابط المرسل إليك ثم أعد المحاولة.' : 'Your email is not verified yet. Open the link we sent you, then try again.';
+                    errEl.style.display = 'block'; }
+            }).catch(function(e) {
+                hideLoading('verifyEmailContinueBtn');
+                if (errEl) { errEl.textContent = friendlyFirebaseError(e);
+                    errEl.style.display = 'block'; }
             });
         }
 
@@ -7390,7 +8195,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             if (!fullName || fullName.split(/\s+/).length < 2) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال الاسم الكامل' : 'Please enter your full name';
                 err.style.display = 'block'; return; }
             var strongPass = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(pass);
-            if (!email || !/^\S+@\S+\.\S+$/.test(email) || !pass || !strongPass) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد صحيح وكلمة مرور من 8 أحرف على الأقل تحتوي حرفاً ورقماً' : 'Enter a valid email and a password of at least 8 characters containing a letter and a number';
+            if (!email || !/^\S+@\S+(?:\.\S+)?$/.test(email) || !pass || !strongPass) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد صحيح وكلمة مرور من 8 أحرف على الأقل تحتوي حرفاً ورقماً' : 'Enter a valid email and a password of at least 8 characters containing a letter and a number';
                 err.style.display = 'block'; return; }
             if (!birthDate || !phone || !occupation) { err.textContent = STATE.language === 'ar' ? 'يرجى استكمال الحقول الإلزامية' : 'Please complete all required fields';
                 err.style.display = 'block'; return; }
@@ -7399,13 +8204,13 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             if (!terms.checked) { err.textContent = STATE.language === 'ar' ? 'يرجى الموافقة على الشروط والأحكام' : 'Please accept the terms and conditions';
                 err.style.display = 'block'; return; }
             var data = {
-                fullName: fullName,
+                fullName: sanitizeText(fullName, 100),
                 email: email,
                 username: email.split('@')[0],
-                phone: phone,
+                phone: sanitizeText(phone, 30),
                 birthDate: birthDate,
                 gender: gender,
-                occupation: occupation,
+                occupation: sanitizeText(occupation, 100),
                 clientType: clientType,
                 existingPolicies: getSelectedPolicies(),
                 termsAccepted: true,
@@ -7415,8 +8220,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 language: STATE.language,
                 onboardingSeen: false
             };
-            if (clientType === 'corporate') { data.businessName = businessName;
-                data.businessActivity = businessActivity;
+            if (clientType === 'corporate') { data.businessName = sanitizeText(businessName, 150);
+                data.businessActivity = sanitizeText(businessActivity, 150);
                 data.employees = employees; }
             var refCode = getReferralCode();
             if (refCode) data.referredBy = refCode;
@@ -7455,7 +8260,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     STATE.offerReferralName = null;
                     STATE.offerReferralCompany = null;
                 }
-                return finishClientLogin(cred, email).then(function() { hideLoading('signupBtn'); });
+                return maybeSendVerificationEmail(cred.user).then(function() {
+                    hideLoading('signupBtn');
+                    STATE.pendingVerifyEmail = email;
+                    showScreen('verifyEmail');
+                });
             }).catch(function(e) {
                 hideLoading('signupBtn');
                 auth.signOut().catch(function() {});
@@ -7707,7 +8516,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             var homeAvatar = document.querySelector('.topbar-left .avatar-sm');
             if (homeAvatar) {
                 if (url) {
-                    homeAvatar.innerHTML = '<img src="' + esc(url) + '" alt="Profile">';
+                    homeAvatar.innerHTML = '<img src="' + esc(url) + '" alt="Profile" loading="lazy" decoding="async">';
                 } else {
                     homeAvatar.innerHTML = '<span class="initials">' + esc(initial) + '</span>';
                 }
@@ -8280,9 +9089,12 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             habits: {
                 walking: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'walk', ar: 'المشي', en: 'Walking' },
                 running: { points: 8, streakBonus: 15, streakEvery: 7, icon: 'run', ar: 'الجري', en: 'Running' },
-                healthyEating: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'apple', ar: 'الأكل الصحي', en: 'Healthy eating' }
+                healthyEating: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'apple', ar: 'الأكل الصحي', en: 'Healthy eating' },
+                hydration: { points: 4, streakBonus: 8, streakEvery: 7, icon: 'water', ar: 'شرب الماء (8 أكواب)', en: 'Hydration (8 glasses)' },
+                sleep: { points: 6, streakBonus: 12, streakEvery: 7, icon: 'moon', ar: 'نوم كافٍ (7+ ساعات)', en: 'Good sleep (7+ hours)' },
+                insuranceReading: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'book', ar: 'قراءة نصيحة تأمينية', en: 'Read an insurance tip' }
             },
-            driving: { points: 6, streakBonus: 15, streakEvery: 7 }
+            driving: { points: 6, streakBonus: 15, streakEvery: 7, minDurationSec: 600, minDistanceKm: 2, safeToleranceKmh: 5, sampleIntervalMs: 5000 }
         };
 
         function todayStr() { return new Date().toISOString().split('T')[0]; }
@@ -8303,6 +9115,12 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 u.habitData[k] = u.habitData[k] || { streak: 0, lastDate: '', totalDays: 0 };
             });
             u.drivingData = u.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
+            u.drivingData.active = !!u.drivingData.active;
+            u.drivingData.currentSpeed = Number(u.drivingData.currentSpeed || 0);
+            u.drivingData.currentLimit = Number(u.drivingData.currentLimit || 0);
+            u.drivingData.distanceKm = Number(u.drivingData.distanceKm || 0);
+            u.drivingData.durationSec = Number(u.drivingData.durationSec || 0);
+            u.drivingData.safeRatio = Number(u.drivingData.safeRatio || 0);
             return u;
         }
 
@@ -8468,26 +9286,113 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             return u.drivingData.lastDate === todayStr();
         }
 
-        function checkInSafeDriving() {
-            if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr();
-            if (u.drivingData.lastDate === today) return;
-            var c1 = document.getElementById('drivingCheckSpeed'),
-                c2 = document.getElementById('drivingCheckPhone');
-            if (!(c1 && c1.checked) || !(c2 && c2.checked)) {
-                alert(STATE.language === 'ar' ? 'يرجى تأكيد الالتزام بكل بنود القيادة الآمنة اليوم أولاً.' : 'Please confirm every safe-driving item for today first.');
-                return;
-            }
-            var gap = daysBetweenDates(u.drivingData.lastDate, today),
-                newStreak = (gap === 1) ? (u.drivingData.streak || 0) + 1 : 1,
-                bonus = (newStreak % POINTS_CONFIG.driving.streakEvery === 0) ? POINTS_CONFIG.driving.streakBonus : 0,
-                total = POINTS_CONFIG.driving.points + bonus,
-                newDriving = { streak: newStreak, lastDate: today, totalDays: (u.drivingData.totalDays || 0) + 1 };
-            var descAr = 'الالتزام بقيادة آمنة اليوم' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
-                descEn = 'Committed to safe driving today' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
-            awardInsuraPoints(total, 'safe_driving', descAr, descEn, { drivingData: newDriving });
+        // GPS safe-driving engine. Road limits are read from OpenStreetMap maxspeed tags
+        // through Overpass; if a road has no reliable maxspeed tag, the app does not award points.
+        var GPS_DRIVE = { watchId: null, timer: null, lastPosition: null, lastLimitAt: 0, lastLimit: 0, limitPromise: null };
+        var SECUREPATH_SPEED_LIMIT_ENDPOINT = 'https://overpass-api.de/api/interpreter';
+
+        function haversineKm(a, b) {
+            if (!a || !b) return 0;
+            var R = 6371, dLat = (b.lat-a.lat)*Math.PI/180, dLon = (b.lon-a.lon)*Math.PI/180;
+            var x = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
         }
+        function parseMaxspeed(v) {
+            if (v == null) return 0;
+            var m = String(v).match(/(\d+(?:\.\d+)?)/);
+            if (!m) return 0;
+            var n = parseFloat(m[1]);
+            if (/mph/i.test(String(v))) n *= 1.60934;
+            return n > 5 && n < 180 ? Math.round(n) : 0;
+        }
+        function lookupRoadSpeedLimit(lat, lon) {
+            if (GPS_DRIVE.limitPromise) return GPS_DRIVE.limitPromise;
+            if (GPS_DRIVE.lastLimit && Date.now()-GPS_DRIVE.lastLimitAt < 120000) return Promise.resolve(GPS_DRIVE.lastLimit);
+            var q = '[out:json][timeout:8];way(around:35,' + lat.toFixed(6) + ',' + lon.toFixed(6) + ')[highway][maxspeed];out tags center;';
+            GPS_DRIVE.limitPromise = fetch(SECUREPATH_SPEED_LIMIT_ENDPOINT + '?data=' + encodeURIComponent(q), { method:'GET', headers:{'Accept':'application/json'} })
+                .then(function(r){ if(!r.ok) throw new Error('speed-limit-service'); return r.json(); })
+                .then(function(data){
+                    var best=0, bestD=Infinity;
+                    (data.elements||[]).forEach(function(w){ var lim=parseMaxspeed(w.tags&&w.tags.maxspeed); if(!lim||!w.center) return; var d=haversineKm({lat:lat,lon:lon},{lat:Number(w.center.lat),lon:Number(w.center.lon)}); if(d<bestD){bestD=d;best=lim;} });
+                    GPS_DRIVE.lastLimit=best; GPS_DRIVE.lastLimitAt=Date.now(); return best;
+                }).catch(function(){ return 0; }).finally(function(){ GPS_DRIVE.limitPromise=null; });
+            return GPS_DRIVE.limitPromise;
+        }
+        function updateGPSDrivingUI() {
+            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData||{};
+            var el=document.getElementById('gpsCurrentSpeed'); if(el) el.textContent=Math.round(Number(d.currentSpeed||0));
+            el=document.getElementById('gpsRoadLimit'); if(el) el.textContent=d.currentLimit||'—';
+            el=document.getElementById('gpsDriveDistance'); if(el) el.textContent=Number(d.distanceKm||0).toFixed(1);
+            el=document.getElementById('gpsSafeProgress'); if(el) el.style.width=Math.min(100,Math.round(Number(d.safeRatio||0)*100))+'%';
+            el=document.getElementById('gpsDrivingNote'); if(el) el.textContent=d.active ? (STATE.language==='ar' ? 'الرحلة قيد التتبع. تجنب استخدام الهاتف أثناء القيادة. لا يتم احتساب النقاط إلا بعد تحقق شروط الرحلة.' : 'Trip tracking is active. Avoid using the phone while driving. Points are awarded only after the trip meets the verification rules.') : el.textContent;
+            var pill=document.querySelector('.gps-status-pill'); if(pill) { pill.classList.toggle('live',!!d.active); pill.textContent='● '+(d.active?(STATE.language==='ar'?'GPS يعمل':'GPS active'):(STATE.language==='ar'?'GPS متوقف':'GPS off')); }
+        }
+        function toggleGPSDriving() {
+            if (!STATE.currentUser) { alert(STATE.language==='ar'?'يرجى تسجيل الدخول أولاً':'Please login first'); return; }
+            if (drivingDoneToday()) return;
+            var u=ensurePointsData(STATE.userData||{});
+            if (u.drivingData.active) stopGPSDriving(true); else startGPSDriving();
+        }
+        function startGPSDriving() {
+            if (!navigator.geolocation) { alert(STATE.language==='ar'?'جهازك لا يدعم GPS في هذا المتصفح.':'Geolocation is not supported by this browser.'); return; }
+            if (!window.isSecureContext) { alert(STATE.language==='ar'?'يلزم تشغيل التطبيق عبر HTTPS لتفعيل GPS.':'HTTPS is required to use GPS.'); return; }
+            var u=ensurePointsData(STATE.userData||{});
+            u.drivingData.active=true; u.drivingData.startedAt=Date.now(); u.drivingData.currentSpeed=0; u.drivingData.currentLimit=0; u.drivingData.distanceKm=0; u.drivingData.durationSec=0; u.drivingData.safeSamples=0; u.drivingData.totalSamples=0; u.drivingData.safeRatio=0;
+            STATE.userData=u; updateGPSDrivingUI();
+            GPS_DRIVE.lastPosition=null;
+            GPS_DRIVE.watchId=navigator.geolocation.watchPosition(onGPSPosition, onGPSError, { enableHighAccuracy:true, maximumAge:2000, timeout:10000 });
+            GPS_DRIVE.timer=setInterval(function(){
+                if(!STATE.userData || !STATE.userData.drivingData.active) return;
+                var d=STATE.userData.drivingData; d.durationSec=Math.max(0,Math.round((Date.now()-Number(d.startedAt||Date.now()))/1000));
+                d.safeRatio=d.totalSamples ? d.safeSamples/d.totalSamples : 0; updateGPSDrivingUI();
+                persistDrivingTelemetry(true);
+            }, 5000);
+        }
+        function onGPSError(err) {
+            var msg=STATE.language==='ar'?'تعذر قراءة موقع الجهاز. تأكد من السماح بالموقع ثم حاول مرة أخرى.':'Unable to read your location. Allow location access and try again.';
+            console.warn('GPS error',err); var el=document.getElementById('gpsDrivingNote'); if(el) el.textContent=msg;
+        }
+        function onGPSPosition(pos) {
+            if(!STATE.currentUser) return;
+            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData;
+            if(!d.active) return;
+            var lat=Number(pos.coords.latitude), lon=Number(pos.coords.longitude), speed=Number(pos.coords.speed);
+            if(!isFinite(speed)||speed<0) speed=GPS_DRIVE.lastPosition ? (haversineKm(GPS_DRIVE.lastPosition,{lat:lat,lon:lon})*1000/Math.max(1,(Date.now()-GPS_DRIVE.lastPosition.t)/1000))*3.6 : 0;
+            speed=Math.max(0,speed*3.6);
+            if(GPS_DRIVE.lastPosition) d.distanceKm+=haversineKm(GPS_DRIVE.lastPosition,{lat:lat,lon:lon});
+            GPS_DRIVE.lastPosition={lat:lat,lon:lon,t:Date.now()}; d.currentSpeed=Math.round(speed);
+            lookupRoadSpeedLimit(lat,lon).then(function(limit){
+                d.currentLimit=limit||0;
+                if(limit>0 && speed <= limit + POINTS_CONFIG.driving.safeToleranceKmh) d.safeSamples=(d.safeSamples||0)+1;
+                d.totalSamples=(d.totalSamples||0)+1; d.safeRatio=d.totalSamples?d.safeSamples/d.totalSamples:0;
+                updateGPSDrivingUI();
+            });
+        }
+        function persistDrivingTelemetry(active) {
+            if(!STATE.currentUser) return;
+            var d=ensurePointsData(STATE.userData||{}).drivingData;
+            db.collection('clients').doc(STATE.currentUser.uid).set({ drivingData: Object.assign({},d,{active:!!active}) },{merge:true}).catch(function(e){console.warn('Driving telemetry save failed',e);});
+        }
+        function stopGPSDriving(manual) {
+            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData;
+            if(GPS_DRIVE.watchId!==null){navigator.geolocation.clearWatch(GPS_DRIVE.watchId);GPS_DRIVE.watchId=null;}
+            if(GPS_DRIVE.timer){clearInterval(GPS_DRIVE.timer);GPS_DRIVE.timer=null;}
+            d.durationSec=Math.max(0,Math.round((Date.now()-Number(d.startedAt||Date.now()))/1000)); d.active=false; d.safeRatio=d.totalSamples?d.safeSamples/d.totalSamples:0;
+            STATE.userData=u; updateGPSDrivingUI();
+            var eligible=d.durationSec>=POINTS_CONFIG.driving.minDurationSec && d.distanceKm>=POINTS_CONFIG.driving.minDistanceKm && d.totalSamples>=10 && d.safeRatio>=0.90 && d.currentLimit>0;
+            if(eligible){ finalizeGPSDrivingPoints(d); }
+            else { persistDrivingTelemetry(false); var note=document.getElementById('gpsDrivingNote'); if(note) note.textContent=STATE.language==='ar'?'لم تستوفِ الرحلة شروط احتساب النقاط (10 دقائق، 2 كم، و90% من العينات ضمن الحد). لم يتم خصم أو إضافة أي نقاط.':'The trip did not meet the point criteria (10 min, 2 km, and 90% of samples within the limit). No points were added.'; }
+        }
+        function finalizeGPSDrivingPoints(d) {
+            var today=todayStr(), u=ensurePointsData(STATE.userData||{}); if(u.drivingData.lastDate===today) return;
+            var gap=daysBetweenDates(u.drivingData.lastDate,today), newStreak=(gap===1)?(u.drivingData.streak||0)+1:1, bonus=(newStreak%POINTS_CONFIG.driving.streakEvery===0)?POINTS_CONFIG.driving.streakBonus:0, total=POINTS_CONFIG.driving.points+bonus;
+            var newDriving=Object.assign({},u.drivingData,{lastDate:today,streak:newStreak,totalDays:(u.drivingData.totalDays||0)+1,active:false});
+            var descAr='رحلة قيادة آمنة موثقة عبر GPS ('+Number(d.distanceKm||0).toFixed(1)+' كم)', descEn='GPS-verified safe driving trip ('+Number(d.distanceKm||0).toFixed(1)+' km)';
+            awardInsuraPoints(total,'safe_driving_gps',descAr,descEn,{drivingData:newDriving});
+            var note=document.getElementById('gpsDrivingNote'); if(note) note.textContent=STATE.language==='ar'?'🎉 تم احتساب نقاط الرحلة بنجاح لأن سرعة القيادة كانت ضمن الحد المسموح في معظم القياسات.':'🎉 Trip points awarded because speed stayed within the allowed limit for most measurements.';
+        }
+        // Kept for backward compatibility with existing data/UI calls.
+        function checkInSafeDriving() { if (navigator.geolocation) toggleGPSDriving(); else alert(STATE.language==='ar'?'GPS غير متاح.':'GPS unavailable.'); }
 
         // ---- Redemption: convert points into a purchase discount ----
         function openRedeemModal() {
@@ -8651,13 +9556,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             // Section 3: Safe driving
             var drivingDone = drivingDoneToday(),
                 drivingStreak = u.drivingData.streak || 0;
-            html += '<div class="points-section"><div class="points-section-head"><h3>' + iconSvg('car', 'icon-navy') + (lang === 'ar' ? 'عادات القيادة الآمنة' : 'Safe-driving habits') + '</h3></div>' +
-                '<div class="driving-card' + (drivingDone ? ' done' : '') + '"><div class="driving-card-top"><div class="qicon">' + iconSvg('car') + '</div><div><div class="driving-card-title">' + (lang === 'ar' ? 'تسجيل قيادة آمنة اليوم' : "Log today's safe driving") + '</div><div class="driving-card-sub">' + (lang === 'ar' ? '+' + POINTS_CONFIG.driving.points + ' نقطة يومياً' : '+' + POINTS_CONFIG.driving.points + ' pts / day') + '</div></div></div>' +
-                '<div class="driving-checks">' +
-                '<label class="driving-check-item"><input type="checkbox" id="drivingCheckSpeed" ' + (drivingDone ? 'checked disabled' : '') + '> ' + (lang === 'ar' ? 'التزمت بحدود السرعة المقررة اليوم' : "I stayed within speed limits today") + '</label>' +
-                '<label class="driving-check-item"><input type="checkbox" id="drivingCheckPhone" ' + (drivingDone ? 'checked disabled' : '') + '> ' + (lang === 'ar' ? 'لم أستخدم الهاتف أثناء القيادة اليوم' : "I didn't use my phone while driving today") + '</label>' +
+            var dd = u.drivingData || {}, gpsActive = !!dd.active, gpsSpeed = Number(dd.currentSpeed || 0), gpsLimit = Number(dd.currentLimit || 0), gpsDuration = Math.round(Number(dd.durationSec || 0) / 60), gpsDistance = (Number(dd.distanceKm || 0)).toFixed(1), gpsSafe = Number(dd.safeRatio || 0);
+            html += '<div class="points-section"><div class="points-section-head"><h3>' + iconSvg('car', 'icon-navy') + (lang === 'ar' ? 'القيادة الآمنة عبر GPS' : 'GPS safe driving') + '</h3></div>' +
+                '<div class="driving-card' + (drivingDone ? ' done' : '') + '"><div class="driving-card-top"><div class="qicon">' + iconSvg('car') + '</div><div><div class="driving-card-title">' + (lang === 'ar' ? 'تتبع قيادتك واحصل على نقاط' : 'Track your drive and earn points') + '</div><div class="driving-card-sub">' + (lang === 'ar' ? '+' + POINTS_CONFIG.driving.points + ' نقاط عند إكمال رحلة آمنة' : '+' + POINTS_CONFIG.driving.points + ' points for a safe trip') + '</div></div></div>' +
+                '<div class="gps-driving-panel"><div class="gps-driving-status"><span class="gps-status-pill ' + (gpsActive ? 'live' : '') + '">● ' + (gpsActive ? (lang === 'ar' ? 'GPS يعمل' : 'GPS active') : (lang === 'ar' ? 'GPS متوقف' : 'GPS off')) + '</span><span class="gps-status-pill ' + (gpsLimit ? 'live' : 'warn') + '">' + (gpsLimit ? (lang === 'ar' ? gpsLimit + ' كم/س الحد الحالي' : gpsLimit + ' km/h current limit') : (lang === 'ar' ? 'بانتظار حد الطريق' : 'Waiting for road limit')) + '</span></div>' +
+                '<div class="gps-speed-grid"><div class="gps-speed-metric"><b id="gpsCurrentSpeed">' + Math.round(gpsSpeed) + '</b><span>' + (lang === 'ar' ? 'سرعتك كم/س' : 'Your speed km/h') + '</span></div><div class="gps-speed-metric"><b id="gpsRoadLimit">' + (gpsLimit || '—') + '</b><span>' + (lang === 'ar' ? 'حد الطريق' : 'Road limit') + '</span></div><div class="gps-speed-metric"><b id="gpsDriveDistance">' + gpsDistance + '</b><span>' + (lang === 'ar' ? 'كم' : 'km') + '</span></div></div>' +
+                '<div class="gps-driving-progress"><span id="gpsSafeProgress" style="width:' + Math.min(100, Math.round(gpsSafe * 100)) + '%"></span></div>' +
+                '<div class="gps-driving-note" id="gpsDrivingNote">' + (lang === 'ar' ? 'يتم استخدام موقع الجهاز وسرعته فقط للتحقق من الالتزام بحد السرعة. لن تُمنح النقاط إذا تعذر تحديد حد الطريق.' : 'The device location and speed are used only to verify speed-limit compliance. No points are awarded when the road limit cannot be determined.') + '</div>' +
                 '</div>' +
-                '<button class="driving-card-btn" onclick="checkInSafeDriving()" ' + (drivingDone ? 'disabled' : '') + '>' + (drivingDone ? (lang === 'ar' ? '✓ تم التسجيل اليوم' : '✓ Logged for today') : (lang === 'ar' ? 'تسجيل القيادة الآمنة' : 'Log safe driving')) + '</button>' +
+                '<div class="gps-driving-actions"><button class="driving-card-btn" id="gpsStartBtn" onclick="toggleGPSDriving()" ' + (drivingDone ? 'disabled' : '') + '>' + (drivingDone ? (lang === 'ar' ? '✓ تم احتساب رحلة اليوم' : '✓ Today\'s trip counted') : (gpsActive ? (lang === 'ar' ? 'إيقاف الرحلة' : 'Stop trip') : (lang === 'ar' ? '▶ بدء رحلة GPS' : '▶ Start GPS trip'))) + '</button></div>' +
                 (drivingStreak ? '<div class="driving-streak-badge">🔥 ' + (lang === 'ar' ? 'تتابع ' + drivingStreak + ' يوم' : drivingStreak + '-day streak') + '</div>' : '') +
                 '</div></div>';
 
@@ -9087,9 +9994,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 clientEmail: STATE.currentUser.email || '',
                 clientPhone: (STATE.userData && STATE.userData.phone) || '',
                 type: type,
-                subject: subject,
-                details: details,
-                policyNumber: policy || '',
+                subject: sanitizeText(subject, 200),
+                details: sanitizeText(details, 1000),
+                policyNumber: sanitizeText(policy, 60),
                 status: 'pending',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -9583,6 +10490,36 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // ============================================================ //
         function isSupportedFile(file) { return !!file && (file.type === 'application/pdf' || /^image\/(jpeg|jpg|png|webp|gif)$/i.test(file.type)); }
 
+        // Extra "magic bytes" check: the browser's reported file.type comes
+        // from the file extension and can be spoofed by simply renaming a
+        // file, so we also peek at the first bytes to confirm the file
+        // really is what it claims to be before uploading it anywhere.
+        // NOTE: this is defense-in-depth on top of client validation, not a
+        // replacement for server-side enforcement — see the Cloudinary note
+        // on uploadToCloudinary() below for the actual server-side control.
+        var FILE_SIGNATURES = [
+            { bytes: [0x25, 0x50, 0x44, 0x46], mime: 'application/pdf' }, // %PDF
+            { bytes: [0xFF, 0xD8, 0xFF], mime: 'image/jpeg' },
+            { bytes: [0x89, 0x50, 0x4E, 0x47], mime: 'image/png' },
+            { bytes: [0x47, 0x49, 0x46, 0x38], mime: 'image/gif' },
+            { bytes: [0x52, 0x49, 0x46, 0x46], mime: 'image/webp' } // RIFF header (WEBP container)
+        ];
+
+        function verifyFileSignature(file) {
+            return new Promise(function(resolve) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var bytes = new Uint8Array(e.target.result);
+                    var ok = FILE_SIGNATURES.some(function(sig) {
+                        return sig.bytes.every(function(b, i) { return bytes[i] === b; });
+                    });
+                    resolve(ok);
+                };
+                reader.onerror = function() { resolve(false); };
+                reader.readAsArrayBuffer(file.slice(0, 8));
+            });
+        }
+
         function openUploadDocModal() {
             setText('uploadError', '');
             var e = document.getElementById('uploadError');
@@ -9629,6 +10566,17 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 err.style.display = 'block'; return; }
             if (file.size > MAX_UPLOAD_BYTES) { err.textContent = STATE.language === 'ar' ? 'حجم الملف أكبر من 10MB.' : 'File size exceeds 10MB.';
                 err.style.display = 'block'; return; }
+            verifyFileSignature(file).then(function(signatureOk) {
+                if (!signatureOk) {
+                    err.textContent = STATE.language === 'ar' ? 'محتوى الملف لا يطابق نوعه المعلن. يرجى اختيار ملف صالح.' : "The file's content does not match its claimed type. Please choose a valid file.";
+                    err.style.display = 'block';
+                    return;
+                }
+                continueDocUpload(name, category, file, err);
+            });
+        }
+
+        function continueDocUpload(name, category, file, err) {
             var progress = document.getElementById('uploadProgress');
             if (progress) { progress.style.display = 'block';
                 progress.value = 0; }
@@ -9702,7 +10650,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             openModal('docPreviewModal');
             getDocumentUrl(d).then(function(url) {
                 var pdf = String(d.fileType || '').toLowerCase().includes('pdf');
-                c.innerHTML = pdf ? '<iframe src="' + esc(url) + '" title="Document preview"></iframe>' : '<img src="' + esc(url) + '" alt="Document preview">';
+                c.innerHTML = pdf ? '<iframe src="' + esc(url) + '" title="Document preview"></iframe>' : '<img src="' + esc(url) + '" alt="Document preview" loading="eager" decoding="async">';
             }).catch(function(e) {
                 c.innerHTML = '<div class="doc-error">' + esc(STATE.language === 'ar' ? 'تعذر تجهيز المعاينة.' : 'Unable to prepare preview.') + '<br><small>' + esc(e.message || 'Try again') + '</small></div>';
             });
@@ -9782,7 +10730,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             var message = {
                 clientId: STATE.currentUser.uid,
                 sender: 'client',
-                text: text,
+                text: sanitizeText(text, 1000),
                 type: 'advice_request',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 readByAdmin: false
@@ -10004,7 +10952,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 
         function sendChatMessage() {
             var input = document.getElementById('chatInputWidget'),
-                text = (input.value || '').trim();
+                text = sanitizeText(input.value, 1000);
             if (!text || !STATE.currentUser) return;
             var c = document.getElementById('chatMessages');
             appendChatMessage({ sender: 'client', text: text, createdAt: new Date() });
@@ -10153,6 +11101,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             loginPassLabel: 'loginPassLabel',
             loginTagline: 'loginTagline',
             loginBtn: 'loginBtn',
+            verifyEmailTagline: 'verifyEmailTagline',
+            verifyEmailTitle: 'verifyEmailTitle',
+            verifyEmailLogout: 'verifyEmailLogout',
             signupTitle: 'signupTitle',
             signupLangLabel: 'signupLangLabel',
             regFullNameLabel: 'regFullNameLabel',
@@ -10176,12 +11127,17 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             signupBtn: 'signupBtn',
             welcomeText: 'welcomeText',
             protectionLabel: 'protectionLabel',
-            quickAccessTitle: 'quickAccessTitle',
+            quickAccessTitle: 'quickAccessTitleText',
+            statActiveLabel: 'statActiveLabel',
+            statExpiringLabel: 'statExpiringLabel',
+            statDocsLabel: 'statDocsLabel',
+            companiesSliderTitleText: 'companiesSliderTitleText',
+            companiesSliderTitleUnit: 'companiesSliderTitleUnit',
             quickUpload: 'quickUpload',
             quickProducts: 'quickProducts',
             quickAssessment: 'quickAssessment',
             quickAdvice: 'quickAdvice',
-            myPoliciesTitle: 'myPoliciesTitle',
+            myPoliciesTitle: 'myPoliciesTitleText',
             viewAllLink: 'viewAllLink',
             assessmentResultTitle: 'assessmentResultTitle',
             assessmentResultSub: 'assessmentResultSub',
@@ -10523,23 +11479,26 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     x.id = d.id; return x; }).sort(function(a, b) { return dateMillis(b.createdAt) - dateMillis(a.createdAt); });
             }).catch(function(e) { console.warn('Notifications load failed', e);
                 STATE.notifications = []; }));
-            p.push(db.collection('products').where('published', '==', true).get().then(function(s) {
+            p.push(db.collection('products').where('published', '==', true).limit(100).get().then(function(s) {
                 STATE.products = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Products load failed', e);
                 STATE.products = []; }));
             p.push(loadCompanyDirectory().then(function(rows) { STATE.companies = rows; }).catch(function(e) { console.warn('Company directory load failed', e);
                 STATE.companies = []; }));
-            p.push(db.collection('offers').get().then(function(s) {
+            // Shared/global collections (offers, ads) are capped so a growing
+            // admin catalog never turns every single login into an ever-larger
+            // full-collection read — this keeps Firestore read quota bounded.
+            p.push(db.collection('offers').limit(50).get().then(function(s) {
                 STATE.offers = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Offers load failed', e);
                 STATE.offers = []; }));
-            p.push(db.collection('companyAds').get().then(function(s) {
+            p.push(db.collection('companyAds').limit(50).get().then(function(s) {
                 STATE.companyAds = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) {
-                return db.collection('insuranceAds').get().then(function(s) {
+                return db.collection('insuranceAds').limit(50).get().then(function(s) {
                     STATE.companyAds = s.docs.map(function(d) { var x = d.data() || {};
                         x.id = d.id; return x; });
                 }).catch(function() { STATE.companyAds = []; });
@@ -10637,6 +11596,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 complaintDetails.addEventListener('input', updateComplaintCharCount);
             }
         }
+
+        window.addEventListener('beforeunload', function(){ if(GPS_DRIVE.watchId!==null && navigator.geolocation) navigator.geolocation.clearWatch(GPS_DRIVE.watchId); if(GPS_DRIVE.timer) clearInterval(GPS_DRIVE.timer); });
 
         document.addEventListener('DOMContentLoaded', function() {
             loadThemePreference();
