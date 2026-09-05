@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/31866501/README.md)
 # SecurePath
 
 > **منصة تعريفية وتوعوية لخدمة حاملي وثائق التأمين**
