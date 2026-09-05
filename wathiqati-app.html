@@ -5676,6 +5676,454 @@ html.dark-mode #home .home-partners {
         scroll-behavior: auto !important;
     }
 }</style>
+
+<style id="securepath-original-identity-rebuild">
+/* ============================================================
+   SECUREPATH — ORIGINAL VISUAL IDENTITY REBUILD
+   Identity: Deep Navy + Gold
+   Light/Dark are two modes of the SAME brand.
+   Application logic intentionally untouched.
+   ============================================================ */
+
+:root{
+  --brand:#0E2A5C;
+  --brand-deep:#071D40;
+  --brand-mid:#173F78;
+  --brand-soft:#EAF1FA;
+
+  --gold:#D9A441;
+  --gold-light:#F2C866;
+  --gold-soft:#FFF4D8;
+  --gold-border:#E4C77E;
+
+  --success:#16805B;
+  --success-soft:#E8F6F0;
+  --danger:#C84B4B;
+  --danger-soft:#FBECEC;
+  --warning:#B77716;
+  --warning-soft:#FFF4DB;
+
+  --bg:#F4F7FB;
+  --surface:#FFFFFF;
+  --surface-2:#F8FAFD;
+  --surface-3:#EEF3F8;
+  --border:#DDE5EF;
+  --text:#16243A;
+  --muted:#6D7B8F;
+
+  --radius-sm:12px;
+  --radius-md:16px;
+  --radius-lg:20px;
+  --radius-xl:26px;
+
+  --shadow-sm:0 4px 14px rgba(14,42,92,.055);
+  --shadow:0 9px 25px rgba(14,42,92,.075);
+  --shadow-lg:0 16px 38px rgba(14,42,92,.11);
+}
+
+/* ---------- GLOBAL ---------- */
+*{box-sizing:border-box}
+body{
+  background:var(--bg)!important;
+  color:var(--text)!important;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+/* ---------- BRAND HEADER ---------- */
+header,.app-header,.topbar,.navbar{
+  border-color:var(--border)!important;
+}
+.brand,.logo,.brand-name{
+  color:var(--brand)!important;
+}
+.brand-mark,.logo-mark{
+  color:var(--gold)!important;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+h1,h2,h3,h4,h5,h6,
+.section-title,.card-title,.policy-title,.offer-title{
+  color:var(--brand)!important;
+}
+p,.muted,.subtitle,.secondary-text,
+.card-subtitle,.policy-meta,.offer-meta{
+  color:var(--muted)!important;
+}
+
+/* ---------- CARDS ---------- */
+.card,.panel,.section-card,.stat-card,
+.policy-card,.offer-card,.product-card,
+.quick-card,.partner-card,.settings-card,
+.points-card,.document-card,.profile-card{
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  border:1px solid var(--border)!important;
+  border-radius:var(--radius-lg)!important;
+  box-shadow:var(--shadow-sm)!important;
+}
+.card:hover,.policy-card:hover,.offer-card:hover,
+.quick-card:hover,.product-card:hover{
+  border-color:rgba(217,164,65,.48)!important;
+  box-shadow:var(--shadow)!important;
+}
+
+/* ---------- PRIMARY ACTION ---------- */
+.btn-primary,.primary-btn,.btn-blue,.main-action,
+.cta-primary{
+  background:linear-gradient(135deg,var(--brand-deep),var(--brand))!important;
+  color:#fff!important;
+  border:1px solid var(--brand)!important;
+  border-radius:var(--radius-md)!important;
+  box-shadow:0 7px 18px rgba(14,42,92,.14)!important;
+}
+.btn-primary:hover,.primary-btn:hover,.btn-blue:hover,
+.main-action:hover,.cta-primary:hover{
+  background:linear-gradient(135deg,var(--brand),var(--brand-mid))!important;
+}
+
+/* Gold = premium accent, not a competing background */
+.btn-gold,.gold-btn,.premium-action{
+  background:linear-gradient(135deg,#C99118,var(--gold-light))!important;
+  color:var(--brand-deep)!important;
+  border:1px solid var(--gold)!important;
+  border-radius:var(--radius-md)!important;
+}
+.btn-secondary,.outline-btn{
+  background:var(--gold-soft)!important;
+  color:var(--brand)!important;
+  border:1px solid rgba(217,164,65,.48)!important;
+  border-radius:var(--radius-md)!important;
+}
+
+/* ---------- ICON SYSTEM ---------- */
+.feature-icon,.quick-icon,.action-icon,
+.section-icon,.service-icon,.nav-icon{
+  color:var(--brand)!important;
+}
+.feature-icon,.quick-icon,.action-icon{
+  background:var(--gold-soft)!important;
+  border:1px solid rgba(217,164,65,.30)!important;
+  border-radius:14px!important;
+}
+
+/* ---------- BADGES / STATUS ---------- */
+.badge,.tag,.premium-badge,.gold-badge{
+  background:var(--gold-soft)!important;
+  color:#9B6C12!important;
+  border:1px solid rgba(217,164,65,.38)!important;
+}
+.status-active,.valid-status,.success-badge{
+  background:var(--success-soft)!important;
+  color:var(--success)!important;
+  border-color:rgba(22,128,91,.20)!important;
+}
+.status-danger,.danger-badge{
+  background:var(--danger-soft)!important;
+  color:var(--danger)!important;
+}
+
+/* ---------- INPUTS ---------- */
+input,select,textarea{
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  border:1px solid var(--border)!important;
+  border-radius:var(--radius-md)!important;
+}
+input::placeholder,textarea::placeholder{color:#98A5B5!important}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;
+  border-color:var(--gold)!important;
+  box-shadow:0 0 0 3px rgba(217,164,65,.13)!important;
+}
+
+/* ---------- HOME ---------- */
+#home,#homeScreen{
+  background:linear-gradient(180deg,#F8FAFD 0%,var(--bg) 62%,#F1F5FA 100%)!important;
+}
+
+/* Preserve the app's premium navy header identity */
+#home .pro-topbar,
+#home .home-header,
+#home .topbar{
+  background:linear-gradient(145deg,var(--brand-deep),var(--brand) 66%,var(--brand-mid))!important;
+  color:#fff!important;
+  box-shadow:0 13px 30px rgba(7,29,64,.17)!important;
+}
+#home .pro-topbar h1,
+#home .pro-topbar h2,
+#home .pro-topbar h3,
+#home .pro-topbar .name{
+  color:#fff!important;
+}
+#home .pro-topbar .hi,
+#home .pro-topbar .subtitle{
+  color:rgba(255,255,255,.72)!important;
+}
+#home .pro-topbar button,
+#home .topbar-right button{
+  background:rgba(255,255,255,.09)!important;
+  color:var(--gold-light)!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+}
+
+/* ---------- QUICK ACTIONS ---------- */
+#home .quick-card{
+  min-height:100px;
+}
+#home .quick-card .qicon{
+  background:var(--gold-soft)!important;
+  color:var(--brand)!important;
+  border:1px solid rgba(217,164,65,.28)!important;
+}
+
+/* ---------- PROTECTION INDICATOR CONTEXT ---------- */
+/* Geometry, score, SVG and JS bindings remain untouched. */
+#home .protection-card{
+  background:linear-gradient(145deg,var(--brand-deep),var(--brand-mid))!important;
+  border:1px solid rgba(217,164,65,.30)!important;
+  box-shadow:var(--shadow-lg)!important;
+}
+#home .protection-card .app-icon{
+  color:var(--gold-light)!important;
+}
+
+/* ---------- POINTS / PROGRESS ---------- */
+.progress-bar,.progress-fill,.points-progress{
+  background:linear-gradient(90deg,var(--brand),var(--gold))!important;
+}
+.points-value,.points-icon{
+  color:var(--gold)!important;
+}
+
+/* ---------- NAVIGATION ---------- */
+.bottom-nav,.app-navbar,.navbar{
+  background:rgba(255,255,255,.97)!important;
+  border-color:var(--border)!important;
+  box-shadow:0 -7px 22px rgba(14,42,92,.06)!important;
+}
+.bottom-nav .active,.navbar .active,
+.bottom-nav .nav-item.active{
+  background:var(--gold-soft)!important;
+  color:var(--brand)!important;
+  border-radius:14px!important;
+}
+.bottom-nav .active .nav-icon,
+.navbar .active .nav-icon{
+  color:#9B6C12!important;
+}
+
+/* ---------- PARTNERS ---------- */
+.partner-card{
+  background:var(--surface)!important;
+}
+.partner-card .partner-icon{
+  background:var(--brand-soft)!important;
+  color:var(--brand)!important;
+}
+
+/* ---------- DARK MODE ---------- */
+html.dark-mode{
+  --bg:#06162D;
+  --surface:#0C2344;
+  --surface-2:#102A4E;
+  --surface-3:#15345D;
+  --border:#264365;
+  --text:#F1F5FA;
+  --muted:#AAB9CC;
+
+  --brand:#EAF2FF;
+  --brand-deep:#031329;
+  --brand-mid:#0D3A76;
+  --brand-soft:rgba(112,163,225,.13);
+
+  --gold:#F2C866;
+  --gold-light:#FFD978;
+  --gold-soft:rgba(242,200,102,.13);
+  --gold-border:#806321;
+
+  --success-soft:rgba(22,128,91,.16);
+  --danger-soft:rgba(200,75,75,.15);
+
+  --shadow-sm:0 5px 18px rgba(0,0,0,.18);
+  --shadow:0 10px 28px rgba(0,0,0,.24);
+  --shadow-lg:0 17px 38px rgba(0,0,0,.30);
+}
+
+html.dark-mode body{
+  background:var(--bg)!important;
+  color:var(--text)!important;
+}
+html.dark-mode #home,
+html.dark-mode #homeScreen{
+  background:linear-gradient(180deg,#05152D 0%,#06162D 62%,#07182F 100%)!important;
+}
+html.dark-mode .card,
+html.dark-mode .panel,
+html.dark-mode .section-card,
+html.dark-mode .stat-card,
+html.dark-mode .policy-card,
+html.dark-mode .offer-card,
+html.dark-mode .product-card,
+html.dark-mode .quick-card,
+html.dark-mode .partner-card,
+html.dark-mode .settings-card,
+html.dark-mode .points-card,
+html.dark-mode .document-card,
+html.dark-mode .profile-card{
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  border-color:var(--border)!important;
+  box-shadow:var(--shadow-sm)!important;
+}
+html.dark-mode h1,html.dark-mode h2,html.dark-mode h3,
+html.dark-mode h4,html.dark-mode h5,html.dark-mode h6,
+html.dark-mode .section-title,html.dark-mode .card-title,
+html.dark-mode .policy-title,html.dark-mode .offer-title{
+  color:#F1F5FA!important;
+}
+html.dark-mode p,html.dark-mode .muted,
+html.dark-mode .subtitle,html.dark-mode .secondary-text,
+html.dark-mode .card-subtitle,html.dark-mode .policy-meta,
+html.dark-mode .offer-meta{
+  color:#AAB9CC!important;
+}
+html.dark-mode .feature-icon,
+html.dark-mode .quick-icon,
+html.dark-mode .action-icon{
+  background:rgba(242,200,102,.12)!important;
+  color:var(--gold-light)!important;
+  border-color:rgba(242,200,102,.23)!important;
+}
+html.dark-mode input,
+html.dark-mode select,
+html.dark-mode textarea{
+  background:#091C37!important;
+  color:#F1F5FA!important;
+  border-color:var(--border)!important;
+}
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder{
+  color:#788BA5!important;
+}
+html.dark-mode .bottom-nav,
+html.dark-mode .app-navbar,
+html.dark-mode .navbar{
+  background:rgba(5,21,45,.98)!important;
+  border-color:var(--border)!important;
+  box-shadow:0 -9px 25px rgba(0,0,0,.23)!important;
+}
+html.dark-mode .bottom-nav .active,
+html.dark-mode .navbar .active,
+html.dark-mode .bottom-nav .nav-item.active{
+  background:rgba(242,200,102,.12)!important;
+  color:var(--gold-light)!important;
+}
+html.dark-mode .bottom-nav .active .nav-icon,
+html.dark-mode .navbar .active .nav-icon{
+  color:var(--gold-light)!important;
+}
+html.dark-mode #home .protection-card{
+  background:linear-gradient(145deg,#031329,#0A3266)!important;
+  border-color:rgba(242,200,102,.30)!important;
+}
+html.dark-mode #home .protection-card .app-icon{
+  color:var(--gold-light)!important;
+}
+html.dark-mode .btn-secondary,
+html.dark-mode .outline-btn{
+  background:rgba(242,200,102,.12)!important;
+  color:var(--gold-light)!important;
+  border-color:rgba(242,200,102,.30)!important;
+}
+html.dark-mode .badge,
+html.dark-mode .tag,
+html.dark-mode .premium-badge,
+html.dark-mode .gold-badge{
+  background:rgba(242,200,102,.12)!important;
+  color:var(--gold-light)!important;
+  border-color:rgba(242,200,102,.28)!important;
+}
+
+/* ---------- CONSISTENT MOTION ---------- */
+.app-icon.animated,.bounce,.float,.spin,
+.quick-icon.animated,.feature-icon.animated{
+  animation:none!important;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:640px){
+  .card,.panel,.section-card,.policy-card,.offer-card,
+  .product-card,.quick-card,.partner-card{
+    border-radius:17px!important;
+  }
+}
+</style>
+
+<style id="securepath-header-lighting-fix">
+/* SECUREPATH HEADER LIGHTING FIX */
+#home .pro-topbar.home-hero{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#081A35!important;
+  background-image:linear-gradient(180deg,#081A35 0%,#0A2347 55%,#0E2A5C 100%)!important;
+  color:#F7FAFF!important;
+  box-shadow:0 12px 28px rgba(3,19,41,.24)!important;
+}
+#home .pro-topbar.home-hero::before{
+  content:none!important;
+  display:none!important;
+}
+#home .pro-topbar.home-hero::after{
+  content:""!important;
+  position:absolute!important;
+  inset:-35% -12% auto auto!important;
+  width:72%!important;
+  height:125%!important;
+  border-radius:50%!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  background:
+    radial-gradient(circle at 58% 42%,rgba(242,200,102,.16) 0%,rgba(242,200,102,.07) 22%,rgba(47,128,237,.07) 43%,transparent 70%)!important;
+  filter:blur(2px)!important;
+  opacity:.9!important;
+}
+#home .pro-topbar.home-hero > *{
+  position:relative!important;
+  z-index:1!important;
+}
+#home .pro-topbar.home-hero .topbar-row{
+  background:transparent!important;
+}
+#home .pro-topbar.home-hero .hi{
+  color:rgba(247,250,255,.70)!important;
+}
+#home .pro-topbar.home-hero .name{
+  color:#FFFFFF!important;
+}
+#home .pro-topbar.home-hero .topbar-right>button,
+#home .pro-topbar.home-hero .bell{
+  background:rgba(255,255,255,.07)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 12px rgba(3,19,41,.18)!important;
+}
+#home .pro-topbar.home-hero .topbar-right>button:hover,
+#home .pro-topbar.home-hero .bell:hover{
+  background:rgba(255,255,255,.10)!important;
+  border-color:rgba(242,200,102,.28)!important;
+}
+@media (prefers-reduced-motion:reduce){
+  #home .pro-topbar.home-hero::after{filter:none!important}
+}
+</style>
 </head>
 <body>
 
