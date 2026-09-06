@@ -142,7 +142,7 @@
         body {
             margin: 0;
             font-family: var(--font-ui);
-            background: #EAF0F7;
+            background: var(--paper);
             color: var(--slate);
             display: flex;
             justify-content: center;
@@ -156,6 +156,15 @@
 
         html.dark-mode body {
             background: #060A14;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
         }
 
         html[dir="rtl"] body,
@@ -562,7 +571,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(242, 189, 99, .24), rgba(242, 189, 99, .04) 66%, transparent 67%);
             box-shadow: 0 0 0 8px rgba(242, 189, 99, .06), 0 10px 28px rgba(0,0,0,.18);
-            animation: authIconSpin 6s linear infinite;
+            animation: none;
         }
 
         .auth-brand-icon::after {
@@ -571,7 +580,7 @@
             inset: -7px;
             border: 1px dashed rgba(242, 189, 99, .5);
             border-radius: 50%;
-            animation: authRingSpin 6s linear infinite;
+            animation: none;
         }
 
         @keyframes authIconSpin {
@@ -6899,11 +6908,39 @@ html.dark-mode #home .home-partners {
         // client-side source) could register `anything@securepath.com` and
         // get full access with zero verification. Keep this list to
         // domains where that risk is acceptable to you.
-        var VERIFICATION_EXEMPT_DOMAINS = [];
+        // Email verification is mandatory for every client account.
+        // There is intentionally NO domain-level exemption: a public/static
+        // web app cannot safely prove ownership of an email domain from code
+        // running in the browser.
+        var EMAIL_VERIFICATION_REQUIRED = true;
+        // Production: email verification is mandatory. Test accounts can use
+        // a Firebase Admin custom claim: securepathTest=true.
+        // Local development only: accounts ending with @securepath.com may be
+        // used without verification when the file is opened via file://.
+        var SECUREPATH_TEST_CLAIM = 'securepathTest';
+        var SECUREPATH_LOCAL_TEST_MODE = (window.location.protocol === 'file:');
+        var SECUREPATH_LOCAL_TEST_DOMAIN = '@securepath.com';
+        var SECUREPATH_TEST_ACCOUNT = false;
 
-        function isVerificationExemptEmail(email) {
-            var domain = String(email || '').split('@')[1] || '';
-            return VERIFICATION_EXEMPT_DOMAINS.indexOf(domain.toLowerCase()) !== -1;
+        function isLocalTestEmail(email) {
+            if (!SECUREPATH_LOCAL_TEST_MODE) return false;
+            var value = String(email || '').trim().toLowerCase();
+            return value.length > SECUREPATH_LOCAL_TEST_DOMAIN.length && value.endsWith(SECUREPATH_LOCAL_TEST_DOMAIN);
+        }
+
+        function resolveTestAccount(user) {
+            if (!user) {
+                SECUREPATH_TEST_ACCOUNT = false;
+                return Promise.resolve(false);
+            }
+            return user.getIdTokenResult(true).then(function(tokenResult) {
+                var claims = tokenResult && tokenResult.claims || {};
+                SECUREPATH_TEST_ACCOUNT = claims[SECUREPATH_TEST_CLAIM] === true || isLocalTestEmail(user.email);
+                return SECUREPATH_TEST_ACCOUNT;
+            }).catch(function() {
+                SECUREPATH_TEST_ACCOUNT = isLocalTestEmail(user.email);
+                return SECUREPATH_TEST_ACCOUNT;
+            });
         }
         var CLOUDINARY_CLOUD_NAME = 'zs4wny34';
         var CLOUDINARY_UPLOAD_PRESET = 'securepath_docs';
@@ -7649,13 +7686,12 @@ html.dark-mode #home .home-partners {
         function isProtectedScreen(id) { return PUBLIC_SCREEN_IDS.indexOf(id) === -1; }
 
         function showScreen(id) {
-            // Route guard: block direct navigation to protected screens
-            // (e.g. via console/devtools) when there is no authenticated,
-            // email-verified user backing STATE.currentUser.
+            // Route guard: only a verified account OR an explicitly approved
+            // test account (Firebase custom claim) may access protected screens.
             if (isProtectedScreen(id)) {
                 var authedUser = auth.currentUser;
                 if (!STATE.currentUser || !authedUser) { id = 'login'; }
-                else if (!authedUser.emailVerified && !isVerificationExemptEmail(authedUser.email)) { id = 'verifyEmail'; }
+                else if (EMAIL_VERIFICATION_REQUIRED && !authedUser.emailVerified && !SECUREPATH_TEST_ACCOUNT) { id = 'verifyEmail'; }
             }
             var target = document.getElementById(id);
             if (!target) return;
@@ -8007,6 +8043,11 @@ html.dark-mode #home .home-partners {
         function finishClientLogin(credential, identifier) {
             var user = credential && credential.user;
             if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
+            if (EMAIL_VERIFICATION_REQUIRED && !user.emailVerified && !SECUREPATH_TEST_ACCOUNT) {
+                return handleUnverifiedUser(user).then(function() {
+                    return Promise.reject({ code: 'auth/email-not-verified', message: 'Email verification is required before access.' });
+                });
+            }
             return getClientProfile(user.uid, user.email).then(function(profile) {
                 if (!profile) throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
                 var name = verifyClientIdentity(profile, user, identifier);
@@ -8053,17 +8094,18 @@ html.dark-mode #home .home-partners {
             showLoading('loginBtn', STATE.language === 'ar' ? 'جاري التحقق من الحساب...' : 'Verifying account...');
             AUTH_READY.then(function() {
                 resetState();
-                // Login is email-only: no separate username-lookup query is
-                // needed before authentication, which also removes the need
-                // for any unauthenticated pre-auth read access to the
-                // "clients" collection.
+                SECUREPATH_TEST_ACCOUNT = false;
+                // Login is email-only: no unauthenticated Firestore lookup is needed.
                 return auth.signInWithEmailAndPassword(identifier, pass);
             }).then(function(credential) {
                 var user = credential && credential.user;
-                if (user && !user.emailVerified && !isVerificationExemptEmail(user.email)) {
-                    return handleUnverifiedUser(user);
-                }
-                return finishClientLogin(credential, identifier);
+                if (!user) throw { code: 'auth/no-user', message: 'Firebase did not return a user.' };
+                return resolveTestAccount(user).then(function() {
+                    if (EMAIL_VERIFICATION_REQUIRED && !user.emailVerified && !SECUREPATH_TEST_ACCOUNT) {
+                        return handleUnverifiedUser(user);
+                    }
+                    return finishClientLogin(credential, identifier);
+                });
             }).catch(function(e) {
                 return auth.signOut().catch(function() {}).then(function() {
                     resetState();
@@ -8096,7 +8138,9 @@ html.dark-mode #home .home-partners {
         var VERIFY_RESEND_COOLDOWN_MS = 60 * 1000;
 
         function handleUnverifiedUser(user) {
-            STATE.pendingVerifyEmail = user.email || '';
+            STATE.currentUser = null;
+            STATE.userData = null;
+            STATE.pendingVerifyEmail = user && user.email || '';
             maybeSendVerificationEmail(user);
             showScreen('verifyEmail');
             return Promise.resolve();
@@ -8145,8 +8189,10 @@ html.dark-mode #home .home-partners {
             if (!user) { showScreen('login'); return; }
             showLoading('verifyEmailContinueBtn', STATE.language === 'ar' ? 'جاري التحقق...' : 'Checking...');
             user.reload().then(function() {
+                return resolveTestAccount(user);
+            }).then(function() {
                 hideLoading('verifyEmailContinueBtn');
-                if (auth.currentUser && auth.currentUser.emailVerified) {
+                if ((auth.currentUser && auth.currentUser.emailVerified) || SECUREPATH_TEST_ACCOUNT) {
                     return finishClientLogin({ user: auth.currentUser }, auth.currentUser.email);
                 }
                 if (errEl) { errEl.textContent = STATE.language === 'ar' ? 'لم يتم تفعيل البريد بعد. افتح الرابط المرسل إليك ثم أعد المحاولة.' : 'Your email is not verified yet. Open the link we sent you, then try again.';
@@ -9844,10 +9890,36 @@ html.dark-mode #home .home-partners {
         // INSURANCE TIPS                                                //
         // ============================================================ //
         var INSURANCE_TIPS = [
-            { icon: 'shield', titleAr: 'إزاي تختار تأمين طبي مناسب؟', titleEn: 'How to choose the right medical insurance?', bodyAr: 'قارن بين حدود التغطية، الشبكة الطبية المعتمدة، ونسبة التحمل قبل ما تقرر — مش بس السعر.', bodyEn: 'Compare coverage limits, the approved medical network, and the deductible — not just the price.' },
-            { icon: 'car', titleAr: 'تأمين شامل ولا ضد الغير؟', titleEn: 'Comprehensive vs third-party car insurance?', bodyAr: 'التأمين ضد الغير أرخص لكنه بيغطي بس أضرار الطرف التاني. الشامل بيغطي سيارتك كمان — اختار حسب عمر وقيمة سيارتك.', bodyEn: 'Third-party is cheaper but only covers the other party. Comprehensive also covers your own car — choose based on your car\'s age and value.' },
-            { icon: 'document', titleAr: 'راجع وثيقتك قبل التجديد', titleEn: 'Review your policy before renewal', bodyAr: 'ظروفك بتتغير كل سنة (دخل، عائلة، ممتلكات) — التجديد فرصة تراجع التغطية مش بس تكرر نفس الوثيقة.', bodyEn: 'Your circumstances change every year (income, family, assets) — renewal is a chance to review coverage, not just repeat the same policy.' },
-            { icon: 'lightbulb', titleAr: 'ليه محتاج وسيط تأمين مرخص؟', titleEn: 'Why work with a licensed insurance broker?', bodyAr: 'الوسيط المرخص من الهيئة العامة للرقابة المالية بيقارنلك بين شركات مختلفة، وبيساعدك وقت المطالبات كمان — من غير ما تدفع أي مقابل إضافي.', bodyEn: 'A broker licensed by the Financial Regulatory Authority compares offers across companies for you, and helps you through claims — at no extra cost to you.' }
+            {icon:'shield', categoryAr:'وعي تأميني', categoryEn:'Insurance Awareness', titleAr:'اقرأ التغطية قبل السعر', titleEn:'Read the coverage before the price', bodyAr:'السعر مهم، لكن الأهم تعرف ما الذي تغطيه الوثيقة وما الذي تستثنيه وحدود التعويض وشروط المطالبة.', bodyEn:'Price matters, but first understand what the policy covers, exclusions, claim limits, and conditions.'},
+            {icon:'document', categoryAr:'الوثيقة', categoryEn:'Policy', titleAr:'احتفظ بنسخة من وثيقتك', titleEn:'Keep a copy of your policy', bodyAr:'احتفظ بنسخة رقمية سهلة الوصول من الوثيقة وجدول المنافع وأرقام التواصل مع شركة التأمين أو الوسيط.', bodyEn:'Keep an accessible digital copy of your policy, benefit schedule, and insurer or broker contact details.'},
+            {icon:'lightbulb', categoryAr:'وعي تأميني', categoryEn:'Insurance Awareness', titleAr:'راجع الاستثناءات بنفس اهتمامك بالتغطية', titleEn:'Review exclusions as carefully as coverage', bodyAr:'الاستثناءات قد تكون مؤثرة وقت المطالبة؛ اقرأها واسأل عن أي بند غير واضح قبل الموافقة.', bodyEn:'Exclusions can matter at claim time; read them and ask about anything unclear before agreeing.'},
+            {icon:'calendar', categoryAr:'تجديد', categoryEn:'Renewal', titleAr:'ابدأ مراجعة التجديد مبكرًا', titleEn:'Start renewal review early', bodyAr:'لا تنتظر آخر يوم. راجع احتياجاتك والتغطية والأسعار والمنافع قبل موعد التجديد بوقت كافٍ.', bodyEn:'Do not wait until the last day. Review your needs, coverage, pricing, and benefits well before renewal.'},
+            {icon:'heart', categoryAr:'صحة', categoryEn:'Health', titleAr:'اجعل الوقاية عادة يومية', titleEn:'Make prevention a daily habit', bodyAr:'النوم المنتظم، الحركة اليومية، التغذية المتوازنة، وتقليل التدخين من عادات صحية جيدة تدعم نمط حياة أكثر أمانًا.', bodyEn:'Regular sleep, daily movement, balanced nutrition, and reducing smoking are healthy habits that support a safer lifestyle.'},
+            {icon:'car', categoryAr:'سلامة وقيادة', categoryEn:'Road Safety', titleAr:'السلامة أولًا أثناء القيادة', titleEn:'Put safety first when driving', bodyAr:'اربط حزام الأمان، تجنب استخدام الهاتف أثناء القيادة، واحترم السرعات والإشارات وظروف الطريق.', bodyEn:'Wear your seat belt, avoid phone use while driving, and respect speed limits, signs, and road conditions.'},
+            {icon:'document', categoryAr:'المطالبات', categoryEn:'Claims', titleAr:'وثّق الحادث بسرعة', titleEn:'Document incidents promptly', bodyAr:'عند وقوع حادث أو خسارة، احتفظ بالصور والمستندات والإيصالات وأبلغ الجهة المختصة وفق شروط وثيقتك.', bodyEn:'After an incident or loss, keep photos, documents, receipts, and notify the relevant party according to your policy.'},
+            {icon:'shield', categoryAr:'المطالبات', categoryEn:'Claims', titleAr:'لا تؤخر الإبلاغ عن المطالبة', titleEn:'Do not delay a claim', bodyAr:'بعض الوثائق تضع مواعيد أو إجراءات للإبلاغ؛ التأخير قد يسبب مشكلة في معالجة المطالبة.', bodyEn:'Some policies have notification deadlines or procedures; delays can complicate claim handling.'},
+            {icon:'lightbulb', categoryAr:'عادات تأمينية', categoryEn:'Insurance Habits', titleAr:'حدّث بياناتك عند تغير ظروفك', titleEn:'Update your information when life changes', bodyAr:'الزواج، الأبناء، تغيير الوظيفة أو السكن أو امتلاك أصل جديد قد يستدعي مراجعة التغطية.', bodyEn:'Marriage, children, a new job or home, or a new asset may justify reviewing your coverage.'},
+            {icon:'shield', categoryAr:'وعي تأميني', categoryEn:'Insurance Awareness', titleAr:'لا تفترض أن كل شيء مغطى', titleEn:'Do not assume everything is covered', bodyAr:'وجود وثيقة لا يعني أن كل خسارة مؤمَّن عليها؛ ارجع إلى شروط التغطية والاستثناءات وحدود المسؤولية.', bodyEn:'Having a policy does not mean every loss is covered; check coverage terms, exclusions, and liability limits.'},
+            {icon:'document', categoryAr:'الوثيقة', categoryEn:'Policy', titleAr:'تعرف على مبلغ التحمل', titleEn:'Know your deductible', bodyAr:'اعرف قيمة التحمل ومتى يطبق؛ هذا يساعدك على تقدير التكلفة الفعلية عند وقوع مطالبة.', bodyEn:'Know the deductible and when it applies; it helps you estimate your real out-of-pocket cost.'},
+            {icon:'hospital', categoryAr:'تأمين طبي', categoryEn:'Medical Insurance', titleAr:'تحقق من الشبكة الطبية', titleEn:'Check the medical network', bodyAr:'قبل زيارة مقدم الخدمة، تأكد من وجوده ضمن الشبكة والتغطية المطلوبة حتى تتجنب مفاجآت في التكلفة.', bodyEn:'Before visiting a provider, check that it is in-network and the required service is covered.'},
+            {icon:'heart', categoryAr:'صحة', categoryEn:'Health', titleAr:'التزم بالأدوية وفق وصف الطبيب', titleEn:'Use medicines as prescribed', bodyAr:'لا تغيّر الجرعات أو توقف العلاج من نفسك، واسأل الطبيب أو الصيدلي عند وجود أي استفسار.', bodyEn:'Do not change doses or stop treatment on your own; ask a doctor or pharmacist when unsure.'},
+            {icon:'heart', categoryAr:'صحة', categoryEn:'Health', titleAr:'راقب المؤشرات الصحية الأساسية', titleEn:'Monitor basic health indicators', bodyAr:'المتابعة الدورية المناسبة لعمرك وحالتك الصحية تساعدك على اكتشاف المشكلات مبكرًا واتخاذ خطوات وقائية.', bodyEn:'Appropriate periodic checkups for your age and health can support early awareness and prevention.'},
+            {icon:'car', categoryAr:'سلامة وقيادة', categoryEn:'Road Safety', titleAr:'افحص سيارتك قبل السفر', titleEn:'Check your car before travel', bodyAr:'راجع الإطارات والفرامل والأنوار ومستويات السوائل وحالة الإطارات الاحتياطية ومعدات الطوارئ.', bodyEn:'Check tires, brakes, lights, fluids, the spare tire, and emergency equipment before travel.'},
+            {icon:'lock', categoryAr:'حماية البيانات', categoryEn:'Data Safety', titleAr:'احمِ بياناتك التأمينية', titleEn:'Protect your insurance data', bodyAr:'لا تشارك كلمات المرور أو أكواد الدخول، وتجنب إرسال مستنداتك الحساسة عبر قنوات غير موثوقة.', bodyEn:'Do not share passwords or access codes, and avoid sending sensitive documents through untrusted channels.'},
+            {icon:'lightbulb', categoryAr:'وسيط التأمين', categoryEn:'Broker', titleAr:'تعامل مع وسيط مرخص', titleEn:'Work with a licensed broker', bodyAr:'عند طلب عرض أو استشارة، تأكد من التعامل مع وسيط تأمين مرخص وتحقق من بيانات الترخيص عند الحاجة.', bodyEn:'When seeking a quote or advice, deal with a licensed insurance broker and verify licensing details when needed.'},
+            {icon:'coins', categoryAr:'إدارة مالية', categoryEn:'Financial Planning', titleAr:'وازن بين التغطية وقدرتك المالية', titleEn:'Balance coverage with affordability', bodyAr:'اختر تغطية تناسب احتياجاتك وميزانيتك وتجنب شراء منافع لا تحتاجها فقط بسبب العرض أو التخفيض.', bodyEn:'Choose coverage that fits your needs and budget; avoid buying unnecessary benefits just because of a promotion.'},
+            {icon:'shield', categoryAr:'منزل وممتلكات', categoryEn:'Home & Property', titleAr:'حدّث قيمة الممتلكات المهمة', titleEn:'Keep important asset values updated', bodyAr:'عند تغير قيمة الممتلكات أو إضافة تجهيزات جديدة، راجع ما إذا كانت حدود التغطية ما زالت مناسبة.', bodyEn:'When asset values change or new equipment is added, review whether coverage limits are still appropriate.'},
+            {icon:'document', categoryAr:'مستندات', categoryEn:'Documents', titleAr:'سمِّ ملفاتك بوضوح', titleEn:'Name files clearly', bodyAr:'استخدم أسماء مرتبة للمستندات مثل نوع الوثيقة وتاريخها، لتصل إليها بسرعة وقت الحاجة.', bodyEn:'Use clear filenames with the document type and date so you can find them quickly when needed.'},
+            {icon:'calendar', categoryAr:'عادات سليمة', categoryEn:'Good Habits', titleAr:'ضع تذكيرات لمواعيد مهمة', titleEn:'Set reminders for key dates', bodyAr:'ذكّر نفسك بموعد انتهاء الوثائق والأقساط والفحوصات والمهام المهمة حتى لا تعتمد على الذاكرة فقط.', bodyEn:'Set reminders for policy renewals, premiums, checkups, and other important tasks instead of relying on memory.'},
+            {icon:'shield', categoryAr:'وعي تأميني', categoryEn:'Insurance Awareness', titleAr:'اسأل قبل أن توقّع', titleEn:'Ask before you sign', bodyAr:'أي بند غير واضح يستحق سؤالًا مباشرًا. فهم الالتزام الآن أفضل من اكتشافه وقت المطالبة.', bodyEn:'Any unclear term deserves a direct question. Understanding an obligation now is better than discovering it at claim time.'},
+            {icon:'heart', categoryAr:'صحة', categoryEn:'Health', titleAr:'خفّف السلوكيات عالية الخطورة', titleEn:'Reduce high-risk behaviors', bodyAr:'تجنب القيادة المتهورة وتعاطي المواد الضارة والسهر المفرط، واعمل على بناء روتين أكثر انتظامًا وأمانًا.', bodyEn:'Avoid reckless driving, harmful substance use, and excessive sleep deprivation; build a safer, more consistent routine.'},
+            {icon:'car', categoryAr:'سلامة وقيادة', categoryEn:'Road Safety', titleAr:'لا تقد وأنت مرهق', titleEn:'Do not drive when exhausted', bodyAr:'إذا كنت شديد التعب أو النعاس، توقف وخذ قسطًا من الراحة أو استخدم وسيلة نقل بديلة.', bodyEn:'If you are very tired or sleepy, stop and rest or use an alternative way to travel.'},
+            {icon:'document', categoryAr:'المطالبات', categoryEn:'Claims', titleAr:'احتفظ بإثباتات المصروفات', titleEn:'Keep expense evidence', bodyAr:'احتفظ بالفواتير والإيصالات وأي تقارير مرتبطة بالمطالبة وفق ما تطلبه الوثيقة.', bodyEn:'Keep invoices, receipts, and relevant reports as required by the policy.'},
+            {icon:'lock', categoryAr:'أمان رقمي', categoryEn:'Digital Safety', titleAr:'فعّل التحقق بخطوتين حيثما أمكن', titleEn:'Enable two-step verification where available', bodyAr:'أضف طبقة حماية إضافية لحساباتك المهمة، خصوصًا البريد والحسابات المرتبطة بالمستندات والبيانات.', bodyEn:'Add an extra protection layer to important accounts, especially email and accounts containing documents and data.'},
+            {icon:'lightbulb', categoryAr:'عادات تأمينية', categoryEn:'Insurance Habits', titleAr:'راجع احتياجات عائلتك سنويًا', titleEn:'Review family needs annually', bodyAr:'تغير عدد أفراد الأسرة أو مسؤولياتك المالية قد يغيّر مستوى الحماية المناسب لك.', bodyEn:'Changes in family size or financial responsibilities can change the protection level that fits you.'},
+            {icon:'coins', categoryAr:'إدارة مالية', categoryEn:'Financial Planning', titleAr:'كوّن احتياطيًا للطوارئ', titleEn:'Build an emergency reserve', bodyAr:'وجود احتياطي مالي مناسب يساعدك على التعامل مع المصروفات غير المتوقعة دون الضغط على التزاماتك الأساسية.', bodyEn:'A suitable emergency reserve can help you handle unexpected costs without disrupting essential obligations.'},
+            {icon:'shield', categoryAr:'وعي تأميني', categoryEn:'Insurance Awareness', titleAr:'قارن على أساس المنفعة الفعلية', titleEn:'Compare based on real value', bodyAr:'عند المقارنة، انظر إلى التغطية والشروط وحدود التعويض والخدمة، وليس فقط نسبة الخصم.', bodyEn:'When comparing, look at coverage, conditions, limits, and service—not only the discount.'},
+            {icon:'hospital', categoryAr:'صحة', categoryEn:'Health', titleAr:'اجعل الحركة جزءًا من يومك', titleEn:'Make movement part of your day', bodyAr:'المشي أو النشاط المناسب بانتظام يساعد على بناء عادة صحية مستدامة. اختر ما يناسبك والتزم به تدريجيًا.', bodyEn:'Regular walking or suitable activity can support a sustainable healthy routine. Choose what suits you and build gradually.'}
         ];
 
         function renderInsuranceTips() {
@@ -9855,7 +9927,10 @@ html.dark-mode #home .home-partners {
             var c = document.getElementById('insuranceTipsList');
             if (!c) return;
             c.innerHTML = INSURANCE_TIPS.map(function(tip) {
-                return '<div class="p-card"><div class="p-seal"><div class="ring">' + iconSvg(tip.icon, 'icon-navy') + '</div></div><div class="p-body"><div class="top"><h3>' + esc(lang === 'ar' ? tip.titleAr : tip.titleEn) + '</h3></div><p style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.7">' + esc(lang === 'ar' ? tip.bodyAr : tip.bodyEn) + '</p></div></div>';
+                var title = lang === 'ar' ? tip.titleAr : tip.titleEn;
+                var body = lang === 'ar' ? tip.bodyAr : tip.bodyEn;
+                var category = lang === 'ar' ? tip.categoryAr : tip.categoryEn;
+                return '<div class="p-card"><div class="p-seal"><div class="ring">' + iconSvg(tip.icon, 'icon-navy') + '</div></div><div class="p-body"><div class="top"><h3>' + esc(title) + '</h3><span class="badge blue">' + esc(category) + '</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.8">' + esc(body) + '</p></div></div>';
             }).join('');
         }
 
@@ -11700,7 +11775,7 @@ html.dark-mode #home .home-partners {
             updateCharCount();
             updateComplaintCharCount();
             initDraggableWhatsappFab();
-            AUTH_READY = auth.setPersistence(firebase.auth.Auth.Persistence.NONE)
+            AUTH_READY = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 .then(function() { return auth.signOut().catch(function() {}); })
                 .catch(function(e) {
                     console.warn('Authentication initialization warning:', e);
