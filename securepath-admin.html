@@ -156,6 +156,21 @@
     .stat-card .sub { font-size: 11px; font-weight: 500; }
     .stat-card .sub.green { color: var(--green); } .stat-card .sub.red { color: var(--red); } .stat-card .sub.blue { color: var(--blue); } .stat-card .sub.gold { color: var(--gold); }
 
+    .mark-col { width: 42px; text-align: center !important; }
+    .client-select { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
+    .bulk-mark-toolbar { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: -6px 0 14px; padding: 10px 14px; background: linear-gradient(135deg, var(--gold-soft), var(--white)); border: 1px solid var(--gold); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+    .bulk-mark-toolbar.show { display: flex; }
+    [data-theme="dark"] .bulk-mark-toolbar { background: linear-gradient(135deg, #2a2518, var(--paper-dark)); }
+    .bulk-mark-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .client-mark-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; background: var(--gold-soft); color: #8A6D1B; }
+    .lead-select { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
+    .lead-mark-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; background: var(--gold-soft); color: #8A6D1B; }
+    .lead-bulk-toolbar { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: -6px 0 14px; padding: 10px 14px; background: linear-gradient(135deg, var(--gold-soft), var(--white)); border: 1px solid var(--gold); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+    .lead-bulk-toolbar.show { display: flex; }
+    [data-theme="dark"] .lead-bulk-toolbar { background: linear-gradient(135deg, #2a2518, var(--paper-dark)); }
+    .lead-bulk-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .lead-bulk-actions select { min-width: 150px; padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper); color: var(--text); font-size: 11px; }
+
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); text-align: right; }
@@ -487,8 +502,9 @@
 
           <!-- Clients -->
           <div id="v-clients" class="view">
-            <div class="toolbar"><div class="search"><input id="clientSearch" oninput="renderClients()" placeholder="ابحث بالاسم أو الهاتف"></div><div class="actions"><button class="btn btn-primary" onclick="openModal('clientModal')"><i class="fas fa-user-plus"></i> إضافة</button></div></div>
-            <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>العميل</th><th>الهاتف</th><th>الوثائق</th><th>النقاط</th><th>المطالبات</th><th>آخر رسالة</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="clientsBody"></tbody></table></div></div></div>
+            <div class="toolbar"><div class="search"><input id="clientSearch" oninput="renderClients()" placeholder="ابحث بالاسم أو الهاتف"></div><div class="actions"><button class="btn btn-outline btn-sm" onclick="selectAllVisibleClients()"><i class="fas fa-check-double"></i> تحديد الظاهر</button><button class="btn btn-outline btn-sm" onclick="clearClientSelection()"><i class="fas fa-xmark"></i> إلغاء التحديد</button><button class="btn btn-primary" onclick="openModal('clientModal')"><i class="fas fa-user-plus"></i> إضافة</button></div></div>
+            <div class="bulk-mark-toolbar" id="clientBulkToolbar" aria-live="polite"><div><strong id="selectedClientsCount">0</strong> محدد</div><div class="bulk-mark-actions"><button class="btn btn-success btn-sm" onclick="bulkMarkClients(true)"><i class="fas fa-bookmark"></i> Mark</button><button class="btn btn-outline btn-sm" onclick="bulkMarkClients(false)"><i class="far fa-bookmark"></i> Unmark</button></div></div>
+            <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th class="mark-col"><input type="checkbox" id="clientsSelectAll" aria-label="تحديد كل العملاء الظاهرين" onchange="toggleVisibleClients(this.checked)"></th><th>العميل</th><th>الهاتف</th><th>الوثائق</th><th>النقاط</th><th>المطالبات</th><th>آخر رسالة</th><th>الحالة</th><th>Mark</th><th>إجراءات</th></tr></thead><tbody id="clientsBody"></tbody></table></div></div></div>
           </div>
 
           <!-- Policies -->
@@ -581,6 +597,8 @@
             <div class="toolbar">
               <div class="search"><input id="leadSearch" oninput="renderLeads()" placeholder="ابحث بالاسم أو الهاتف أو الشركة"></div>
               <div class="actions">
+                <button class="btn btn-outline btn-sm" onclick="selectAllVisibleLeads()"><i class="fas fa-check-double"></i> تحديد الظاهر</button>
+                <button class="btn btn-outline btn-sm" onclick="clearLeadSelection()"><i class="fas fa-xmark"></i> إلغاء التحديد</button>
                 <select id="leadStatusFilter" onchange="renderLeads()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--line,#ddd);">
                   <option value="">كل الحالات</option>
                   <option value="new">جديد</option>
@@ -599,8 +617,25 @@
                 </select>
               </div>
             </div>
+            <div class="lead-bulk-toolbar" id="leadBulkToolbar" aria-live="polite">
+              <div><strong id="selectedLeadsCount">0</strong> محدد</div>
+              <div class="lead-bulk-actions">
+                <button class="btn btn-success btn-sm" onclick="bulkMarkLeads(true)"><i class="fas fa-bookmark"></i> Mark</button>
+                <button class="btn btn-outline btn-sm" onclick="bulkMarkLeads(false)"><i class="far fa-bookmark"></i> Unmark</button>
+                <select id="bulkLeadStatus" aria-label="تغيير حالة العملاء المحتملين المحددين">
+                  <option value="">تغيير الحالة...</option>
+                  <option value="new">جديد</option>
+                  <option value="contacted">تم التواصل</option>
+                  <option value="quoted">تم عرض السعر</option>
+                  <option value="converted">تم التحويل</option>
+                  <option value="lost">فاقد</option>
+                </select>
+                <button class="btn btn-dark btn-sm" onclick="applyBulkLeadStatus()"><i class="fas fa-check"></i> تطبيق</button>
+                <button class="btn btn-danger btn-sm" onclick="bulkDeleteLeads()"><i class="fas fa-trash"></i> حذف</button>
+              </div>
+            </div>
             <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr>
-              <th>العميل</th><th>الهاتف</th><th>المصدر</th><th>النوع/التفاصيل</th><th>الشركة</th><th>الحالة</th><th>التاريخ</th><th></th>
+              <th class="mark-col"><input type="checkbox" id="leadsSelectAll" aria-label="تحديد كل العملاء المحتملين الظاهرين" onchange="toggleVisibleLeads(this.checked)"></th><th>العميل</th><th>الهاتف</th><th>المصدر</th><th>النوع/التفاصيل</th><th>الشركة</th><th>الحالة</th><th>التاريخ</th><th>Mark</th><th></th>
             </tr></thead><tbody id="leadsTableBody"></tbody></table></div></div></div>
           </div>
 
@@ -849,6 +884,8 @@
 
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const SECUREPATH_ADMIN_CLAIM = 'securepathAdmin';
+    const SECUREPATH_TEST_CLAIM = 'securepathTest';
 
     // حساب ثانوي لإنشاء العملاء
     let clientAuth = null;
@@ -869,6 +906,8 @@
        syncing: false, lastSyncAt: null, syncErrors: []
     };
     let selectedFile = null;
+    const SELECTED_CLIENT_IDS = new Set();
+    const SELECTED_LEAD_IDS = new Set();
     let listeners = { messages: null, activity: null, notifications: null, documents: null };
 
     // ================================================================
@@ -1020,13 +1059,34 @@
       if (!email) { document.getElementById('loginErr').textContent = '⚠️ يرجى إدخال البريد'; return; }
       auth.sendPasswordResetEmail(email).then(() => { toast('📧 تم إرسال رابط إعادة التعيين'); }).catch(err => { document.getElementById('loginErr').textContent = '❌ ' + err.message; });
     }
+    const SECUREPATH_LOCAL_ADMIN_MODE = (window.location.protocol === 'file:');
 
     async function checkAdmin(user) {
-      if (!user) return false;
+      if (!user) return { ok: false, reason: 'missing-user' };
+      // Server-issued claim is the strongest path and avoids requiring a
+      // Firestore read for admins that have already been provisioned.
+      try {
+        const token = await user.getIdTokenResult(true);
+        const claims = token && token.claims || {};
+        if (claims[SECUREPATH_ADMIN_CLAIM] === true) return { ok: true, reason: 'custom-claim' };
+      } catch (e) {
+        console.warn('Unable to read Firebase custom claims:', e);
+      }
+
+      // Backward-compatible path for existing admin/{uid} documents.
+      // We verify role first so existing local development admins do not get
+      // locked out merely because their placeholder email cannot receive mail.
       try {
         const doc = await db.collection('admin').doc(user.uid).get();
-        return doc.exists && doc.data().role === 'admin';
-      } catch { return false; }
+        if (!doc.exists) return { ok: false, reason: 'admin-profile-missing' };
+        const role = String(doc.data().role || '').trim().toLowerCase();
+        if (role !== 'admin') return { ok: false, reason: 'invalid-role' };
+        if (!user.emailVerified && !SECUREPATH_LOCAL_ADMIN_MODE) return { ok: false, reason: 'email-not-verified' };
+        return { ok: true, reason: SECUREPATH_LOCAL_ADMIN_MODE && !user.emailVerified ? 'local-admin-document' : 'admin-document' };
+      } catch (e) {
+        console.error('Admin profile check failed:', e);
+        return { ok: false, reason: 'firestore-permission' };
+      }
     }
 
     function login() {
@@ -1039,8 +1099,18 @@
       showLoading('loginBtn', 'جاري تسجيل الدخول...');
       auth.signInWithEmailAndPassword(email, pass)
         .then(async (cred) => {
-          const isAdmin = await checkAdmin(cred.user);
-          if (!isAdmin) { await auth.signOut(); throw new Error('الحساب ليس لديه صلاحيات إدارية.'); }
+          const adminStatus = await checkAdmin(cred.user);
+          if (!adminStatus.ok) {
+            await auth.signOut();
+            const messages = {
+              'email-not-verified': 'يجب تفعيل البريد الإلكتروني أولاً قبل الدخول إلى لوحة الإدارة.',
+              'admin-profile-missing': 'تم تسجيل الدخول، لكن لا يوجد ملف إداري مرتبط بهذا الحساب.',
+              'invalid-role': 'الحساب موجود، لكن صلاحية الدور ليست admin.',
+              'firestore-permission': 'تم تسجيل الدخول لكن Firebase منع التحقق من صلاحية الأدمن. راجع Firestore Rules.',
+              'missing-user': 'تعذر الحصول على حساب Firebase.'
+            };
+            throw new Error(messages[adminStatus.reason] || 'الحساب ليس لديه صلاحيات إدارية.');
+          }
           APP_STATE.currentUser = cred.user;
           if (document.getElementById('rememberMe').checked) localStorage.setItem('adminEmail', email);
           else localStorage.removeItem('adminEmail');
@@ -1067,13 +1137,18 @@
 
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const isAdmin = await checkAdmin(user);
-        if (!isAdmin) {
+        const adminStatus = await checkAdmin(user);
+        if (!adminStatus.ok) {
           document.getElementById('unauthorized').classList.add('show');
           document.getElementById('login').style.display = 'none';
           document.getElementById('app').style.display = 'none';
-          toast('⚠️ حساب غير مصرح به', true);
-          setTimeout(() => auth.signOut(), 3000);
+          const authMessage = adminStatus.reason === 'email-not-verified'
+            ? '⚠️ يجب تفعيل البريد الإلكتروني أولاً'
+            : adminStatus.reason === 'firestore-permission'
+              ? '⚠️ تعذر التحقق من صلاحيات الأدمن بسبب Firestore Rules'
+              : '⚠️ حساب غير مصرح به';
+          toast(authMessage, true);
+          setTimeout(() => auth.signOut(), 2500);
           return;
         }
         APP_STATE.currentUser = user;
@@ -1251,6 +1326,8 @@
       if (listeners.leads) listeners.leads();
       listeners.leads = db.collection('leads').onSnapshot(snap => {
         APP_STATE.leads = snap.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
+        const existing = new Set(APP_STATE.leads.map(l => l.id));
+        Array.from(SELECTED_LEAD_IDS).forEach(id => { if (!existing.has(id)) SELECTED_LEAD_IDS.delete(id); });
         renderLeads();
         const newCount = APP_STATE.leads.filter(l => (l.status || 'new') === 'new').length;
         const badge = document.getElementById('leadsBadge');
@@ -1262,29 +1339,142 @@
     const LEAD_SOURCE_LABELS = { offer: 'عرض', company_ad: 'إعلان شركة', assessment: 'تقييم الحماية', renewal: 'تجديد', referral: 'إحالة' };
     const LEAD_STATUS_LABELS = { new: 'جديد', contacted: 'تم التواصل', quoted: 'تم عرض السعر', converted: 'تم التحويل', lost: 'فاقد' };
 
-    function renderLeads() {
-      const body = document.getElementById('leadsTableBody');
-      if (!body) return;
-      const q = (document.getElementById('leadSearch')?.value || '').toLowerCase();
+    function getVisibleLeadRecords() {
+      const q = (document.getElementById('leadSearch')?.value || '').toLowerCase().trim();
       const statusF = document.getElementById('leadStatusFilter')?.value || '';
       const sourceF = document.getElementById('leadSourceFilter')?.value || '';
       let leads = APP_STATE.leads || [];
       if (statusF) leads = leads.filter(l => (l.status || 'new') === statusF);
       if (sourceF) leads = leads.filter(l => l.source === sourceF);
-      if (q) leads = leads.filter(l => [l.clientName, l.phone, l.companyName, l.company, l.message].join(' ').toLowerCase().includes(q));
-      body.innerHTML = leads.length ? leads.map(l => `
-        <tr>
+      if (q) leads = leads.filter(l => [l.clientName, l.phone, l.companyName, l.company, l.message, l.insuranceType].join(' ').toLowerCase().includes(q));
+      return leads;
+    }
+
+    function updateLeadBulkToolbar() {
+      const toolbar = document.getElementById('leadBulkToolbar');
+      const count = document.getElementById('selectedLeadsCount');
+      if (count) count.textContent = SELECTED_LEAD_IDS.size;
+      if (toolbar) toolbar.classList.toggle('show', SELECTED_LEAD_IDS.size > 0);
+      const selectAll = document.getElementById('leadsSelectAll');
+      const visible = getVisibleLeadRecords();
+      const selectedVisible = visible.filter(l => SELECTED_LEAD_IDS.has(l.id)).length;
+      if (selectAll) {
+        selectAll.checked = visible.length > 0 && selectedVisible === visible.length;
+        selectAll.indeterminate = selectedVisible > 0 && selectedVisible < visible.length;
+      }
+    }
+
+    function toggleLeadSelection(id, checked) {
+      if (!id) return;
+      if (checked) SELECTED_LEAD_IDS.add(id); else SELECTED_LEAD_IDS.delete(id);
+      updateLeadBulkToolbar();
+    }
+
+    function toggleVisibleLeads(checked) {
+      getVisibleLeadRecords().forEach(l => {
+        if (checked) SELECTED_LEAD_IDS.add(l.id); else SELECTED_LEAD_IDS.delete(l.id);
+      });
+      renderLeads();
+    }
+
+    function selectAllVisibleLeads() { toggleVisibleLeads(true); }
+
+    function clearLeadSelection() {
+      SELECTED_LEAD_IDS.clear();
+      renderLeads();
+    }
+
+    async function bulkMarkLeads(marked) {
+      const ids = Array.from(SELECTED_LEAD_IDS);
+      if (!ids.length) { toast('اختر عميلاً محتملاً واحداً على الأقل.', true); return; }
+      const ok = window.confirm((marked ? 'سيتم تمييز' : 'سيتم إلغاء تمييز') + ` ${ids.length} عميل محتمل. هل تريد المتابعة؟`);
+      if (!ok) return;
+      try {
+        for (let start = 0; start < ids.length; start += 450) {
+          const chunk = ids.slice(start, start + 450);
+          const batch = db.batch();
+          chunk.forEach(id => batch.set(db.collection('leads').doc(id), { marked: !!marked, markedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }));
+          await batch.commit();
+        }
+        SELECTED_LEAD_IDS.clear();
+        toast(marked ? `تم Mark لـ ${ids.length} عميل محتمل` : `تم Unmark لـ ${ids.length} عميل محتمل`);
+        renderLeads();
+      } catch (e) {
+        console.error('Bulk lead mark error:', e);
+        toast('تعذر تنفيذ العملية: ' + (e.message || 'خطأ غير معروف'), true);
+      }
+    }
+
+    async function applyBulkLeadStatus() {
+      const ids = Array.from(SELECTED_LEAD_IDS);
+      const status = document.getElementById('bulkLeadStatus')?.value || '';
+      if (!ids.length) { toast('اختر عميلاً محتملاً واحداً على الأقل.', true); return; }
+      if (!status) { toast('اختر الحالة أولاً.', true); return; }
+      const ok = window.confirm(`سيتم تغيير حالة ${ids.length} عميل محتمل. هل تريد المتابعة؟`);
+      if (!ok) return;
+      try {
+        for (let start = 0; start < ids.length; start += 450) {
+          const chunk = ids.slice(start, start + 450);
+          const batch = db.batch();
+          chunk.forEach(id => batch.update(db.collection('leads').doc(id), { status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }));
+          await batch.commit();
+        }
+        SELECTED_LEAD_IDS.clear();
+        const select = document.getElementById('bulkLeadStatus');
+        if (select) select.value = '';
+        toast('✅ تم تحديث حالات العملاء المحتملين');
+        renderLeads();
+      } catch (e) {
+        console.error('Bulk lead status error:', e);
+        toast('تعذر تحديث الحالات: ' + (e.message || 'خطأ غير معروف'), true);
+      }
+    }
+
+    async function bulkDeleteLeads() {
+      const ids = Array.from(SELECTED_LEAD_IDS);
+      if (!ids.length) { toast('اختر عميلاً محتملاً واحداً على الأقل.', true); return; }
+      const ok = window.confirm(`سيتم حذف ${ids.length} عميل محتمل نهائيًا. هل تريد المتابعة؟`);
+      if (!ok) return;
+      try {
+        for (let start = 0; start < ids.length; start += 450) {
+          const chunk = ids.slice(start, start + 450);
+          const batch = db.batch();
+          chunk.forEach(id => batch.delete(db.collection('leads').doc(id)));
+          await batch.commit();
+        }
+        SELECTED_LEAD_IDS.clear();
+        toast(`✅ تم حذف ${ids.length} عميل محتمل`);
+        renderLeads();
+      } catch (e) {
+        console.error('Bulk lead delete error:', e);
+        toast('تعذر الحذف: ' + (e.message || 'خطأ غير معروف'), true);
+      }
+    }
+
+    function renderLeads() {
+      const body = document.getElementById('leadsTableBody');
+      if (!body) return;
+      const leads = getVisibleLeadRecords();
+      body.innerHTML = leads.length ? leads.map(l => {
+        const selected = SELECTED_LEAD_IDS.has(l.id);
+        const marked = l.marked === true;
+        const safeId = esc(l.id || '');
+        return `
+        <tr${marked ? ' style="background:linear-gradient(90deg,var(--gold-soft),transparent)"' : ''}>
+          <td class="mark-col"><input class="lead-select" type="checkbox" ${selected ? 'checked' : ''} aria-label="تحديد ${esc(l.clientName || 'العميل المحتمل')}" onchange="toggleLeadSelection('${safeId}',this.checked)"></td>
           <td>${esc(l.clientName || '—')}</td>
           <td>${esc(l.phone || '—')}</td>
           <td>${esc(LEAD_SOURCE_LABELS[l.source] || l.source || '—')}</td>
           <td>${esc(l.message || l.insuranceType || '—')}</td>
           <td>${esc(l.companyName || l.company || '—')}</td>
-          <td><select onchange="updateLeadStatus('${l.id}', this.value)" style="padding:4px 8px;border-radius:6px;">
+          <td><select onchange="updateLeadStatus('${safeId}', this.value)" style="padding:4px 8px;border-radius:6px;">
             ${Object.keys(LEAD_STATUS_LABELS).map(s => `<option value="${s}" ${((l.status || 'new') === s) ? 'selected' : ''}>${LEAD_STATUS_LABELS[s]}</option>`).join('')}
           </select></td>
           <td>${date(l.createdAt)}</td>
-          <td><button class="btn btn-outline btn-xs" onclick="deleteLead('${l.id}')"><i class="fas fa-trash"></i></button></td>
-        </tr>`).join('') : `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted,#999);">لا يوجد عملاء محتملون بعد</td></tr>`;
+          <td>${marked ? '<span class="lead-mark-badge"><i class="fas fa-bookmark"></i> Marked</span>' : '<span class="text-muted">—</span>'}</td>
+          <td><button class="btn btn-outline btn-xs" onclick="deleteLead('${safeId}')"><i class="fas fa-trash"></i></button></td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted,#999);">لا يوجد عملاء محتملون بعد</td></tr>`;
       const total = (APP_STATE.leads || []).length;
       const newC = (APP_STATE.leads || []).filter(l => (l.status || 'new') === 'new').length;
       const contactedC = (APP_STATE.leads || []).filter(l => l.status === 'contacted' || l.status === 'quoted').length;
@@ -1294,6 +1484,7 @@
       document.getElementById('leadsStatContacted').textContent = contactedC;
       document.getElementById('leadsStatConverted').textContent = convertedC;
       document.getElementById('leadsStatRate').textContent = total ? Math.round((convertedC / total) * 100) + '%' : '0%';
+      updateLeadBulkToolbar();
     }
 
     async function updateLeadStatus(id, status) {
@@ -1304,6 +1495,7 @@
     async function deleteLead(id) {
       if (!confirm('هل أنت متأكد من حذف هذا العميل المحتمل؟')) return;
       await db.collection('leads').doc(id).delete();
+      SELECTED_LEAD_IDS.delete(id);
       toast('✅ تم الحذف');
     }
 
@@ -1582,17 +1774,88 @@
       targets.forEach((el, i) => { if (el) el.innerHTML = i === 1 ? html.slice(0, html.length) : html; });
     }
 
+    function getVisibleClientRecords() {
+      const q = (document.getElementById('clientSearch')?.value || '').toLowerCase().trim();
+      return APP_STATE.clients.filter(c => [c.fullName, c.phone, c.username, c.email].join(' ').toLowerCase().includes(q));
+    }
+
+    function updateClientBulkToolbar() {
+      const toolbar = document.getElementById('clientBulkToolbar');
+      const count = document.getElementById('selectedClientsCount');
+      if (count) count.textContent = SELECTED_CLIENT_IDS.size;
+      if (toolbar) toolbar.classList.toggle('show', SELECTED_CLIENT_IDS.size > 0);
+      const selectAll = document.getElementById('clientsSelectAll');
+      const visible = getVisibleClientRecords();
+      const selectedVisible = visible.filter(c => SELECTED_CLIENT_IDS.has(c.id || c.uid)).length;
+      if (selectAll) {
+        selectAll.checked = visible.length > 0 && selectedVisible === visible.length;
+        selectAll.indeterminate = selectedVisible > 0 && selectedVisible < visible.length;
+      }
+    }
+
+    function toggleClientSelection(id, checked) {
+      if (!id) return;
+      if (checked) SELECTED_CLIENT_IDS.add(id); else SELECTED_CLIENT_IDS.delete(id);
+      updateClientBulkToolbar();
+    }
+
+    function toggleVisibleClients(checked) {
+      getVisibleClientRecords().forEach(c => {
+        const id = c.id || c.uid;
+        if (checked) SELECTED_CLIENT_IDS.add(id); else SELECTED_CLIENT_IDS.delete(id);
+      });
+      renderClients();
+    }
+
+    function selectAllVisibleClients() { toggleVisibleClients(true); }
+
+    function clearClientSelection() {
+      SELECTED_CLIENT_IDS.clear();
+      renderClients();
+    }
+
+    async function bulkMarkClients(marked) {
+      const ids = Array.from(SELECTED_CLIENT_IDS);
+      if (!ids.length) { toast('اختر عميلاً واحداً على الأقل.', true); return; }
+      const action = marked ? 'Mark' : 'Unmark';
+      const ok = window.confirm((marked ? 'سيتم تمييز' : 'سيتم إلغاء تمييز') + ` ${ids.length} عميل. هل تريد المتابعة؟`);
+      if (!ok) return;
+      try {
+        for (let start = 0; start < ids.length; start += 450) {
+          const chunk = ids.slice(start, start + 450);
+          const batch = db.batch();
+          chunk.forEach(id => batch.set(db.collection('clients').doc(id), { marked: !!marked, markedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }));
+          await batch.commit();
+        }
+        SELECTED_CLIENT_IDS.clear();
+        await refreshCollection('clients');
+        toast(marked ? `تم Mark لـ ${ids.length} عميل` : `تم Unmark لـ ${ids.length} عميل`);
+      } catch (e) {
+        console.error('Bulk mark error:', e);
+        toast('تعذر تنفيذ العملية: ' + (e.message || 'خطأ غير معروف'), true);
+      }
+    }
+
     function renderClients() {
-      const q = (document.getElementById('clientSearch')?.value || '').toLowerCase();
-      const html = APP_STATE.clients.filter(c => [c.fullName, c.phone, c.username, c.email].join(' ').toLowerCase().includes(q)).map(c => {
+      const filtered = getVisibleClientRecords();
+      const html = filtered.map(c => {
         const cid = c.id || c.uid;
         const pc = APP_STATE.policies.filter(x => x.clientId === cid || x.uid === cid).length;
         const cc = APP_STATE.claims.filter(x => x.clientId === cid || x.uid === cid).length;
         const msgs = APP_STATE.messages.filter(x => x.clientId === cid || x.uid === cid).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
         const unread = msgs.some(m => m.sender === 'client' && !m.autoReply && !m.readByAdmin);
-        return `<tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:var(--gold-soft);display:grid;place-items:center;font-weight:900;font-size:15px;color:var(--navy);">${esc((c.fullName||'?').slice(0,2))}</div><div><b>${esc(c.fullName||'—')}</b><div style="font-size:11px;color:var(--muted)">${esc(c.username||c.email||'')}</div></div></div></td><td>${esc(c.phone||'—')}</td><td>${pc}</td><td><strong class="points-positive">${pointNumber(c.insuraPoints || 0)}</strong></td><td>${cc}</td><td>${esc(msgs[0]?.text||'—')}</td><td>${unread ? '<span class="badge badge-danger">جديد</span>' : '<span class="badge badge-success">نشط</span>'}</td><td><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-outline btn-xs" onclick="openClientChat('${cid}')"><i class="fas fa-comment"></i></button><button class="btn btn-outline btn-xs" onclick="openPolicyModal('${cid}')"><i class="fas fa-plus"></i></button><button class="btn btn-outline btn-xs" onclick="openClientProfile('${cid}')"><i class="fas fa-eye"></i></button></div></td></tr>`;
+        const selected = SELECTED_CLIENT_IDS.has(cid);
+        const marked = c.marked === true;
+        return `<tr${marked ? ' style="background:linear-gradient(90deg,var(--gold-soft),transparent)"' : ''}>`+
+          `<td class="mark-col"><input class="client-select" type="checkbox" ${selected ? 'checked' : ''} aria-label="تحديد ${esc(c.fullName || 'العميل')}" onchange="toggleClientSelection('${esc(cid)}',this.checked)"></td>`+
+          `<td><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:var(--gold-soft);display:grid;place-items:center;font-weight:900;font-size:15px;color:var(--navy);">${esc((c.fullName||'?').slice(0,2))}</div><div><b>${esc(c.fullName||'—')}</b><div style="font-size:11px;color:var(--muted)">${esc(c.username||c.email||'')}</div></div></div></td>`+
+          `<td>${esc(c.phone||'—')}</td><td>${pc}</td><td><strong class="points-positive">${pointNumber(c.insuraPoints || 0)}</strong></td><td>${cc}</td><td>${esc(msgs[0]?.text||'—')}</td>`+
+          `<td>${unread ? '<span class="badge badge-danger">جديد</span>' : '<span class="badge badge-success">نشط</span>'}</td>`+
+          `<td>${marked ? '<span class="client-mark-badge"><i class="fas fa-bookmark"></i> Marked</span>' : '<span class="text-muted">—</span>'}</td>`+
+          `<td><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-outline btn-xs" onclick="openClientChat('${esc(cid)}')"><i class="fas fa-comment"></i></button><button class="btn btn-outline btn-xs" onclick="openPolicyModal('${esc(cid)}')"><i class="fas fa-plus"></i></button><button class="btn btn-outline btn-xs" onclick="openClientProfile('${esc(cid)}')"><i class="fas fa-eye"></i></button></div></td></tr>`;
       }).join('');
-      document.getElementById('clientsBody').innerHTML = html || '<tr><td colspan="8"><div class="empty">لا يوجد عملاء</div></td></tr>';
+      document.getElementById('clientsBody').innerHTML = html || '<tr><td colspan="10"><div class="empty">لا يوجد عملاء</div></td></tr>';
+      updateClientBulkToolbar();
     }
 
     function renderPolicies() {
@@ -1678,6 +1941,14 @@
     .dashboard-points-summary{display:grid;grid-template-columns:repeat(3,1fr) auto;align-items:center;gap:12px}.dashboard-points-summary div{display:flex;flex-direction:column;gap:3px}.dashboard-points-summary span{font-size:11px;color:var(--muted)}.dashboard-points-summary strong{font-size:21px;font-weight:900}
     .client-points-head{display:flex;align-items:center;gap:12px;padding:8px 0 14px}.client-points-avatar{width:48px;height:48px;border-radius:15px;background:var(--gold-soft);display:grid;place-items:center;color:var(--navy);font-size:20px}.client-points-head h3{margin:0;font-size:18px}.client-points-head p{margin:2px 0 0;color:var(--muted);font-size:12px}.client-points-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.client-points-stats>div{padding:14px;border:1px solid var(--line-soft);border-radius:14px;background:var(--paper)}.client-points-stats span{display:block;font-size:10px;color:var(--muted);margin-bottom:5px}.client-points-stats b{font-size:20px}
     @media(max-width:900px){.points-admin-grid{grid-template-columns:1fr}.dashboard-points-summary{grid-template-columns:repeat(2,1fr)}.client-points-stats{grid-template-columns:repeat(2,1fr)}}
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
 </style></head><body><h2>📎 ${title}</h2><p>لتنزيل الملف الأصلي:</p><a id="download" download="${title}">تنزيل المستند</a><script>document.getElementById("download").href='${JSON.stringify(url)}';<\/script></body></html>`);
       }
       win.document.close();
