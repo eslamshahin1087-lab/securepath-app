@@ -6899,7 +6899,7 @@ html.dark-mode #home .home-partners {
         // client-side source) could register `anything@securepath.com` and
         // get full access with zero verification. Keep this list to
         // domains where that risk is acceptable to you.
-        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+        var VERIFICATION_EXEMPT_DOMAINS = [];
 
         function isVerificationExemptEmail(email) {
             var domain = String(email || '').split('@')[1] || '';
