@@ -395,6 +395,8 @@
           <button data-view="payments" onclick="showView('payments',this)"><span class="icon"><i class="fas fa-coins"></i></span><span class="label">المدفوعات</span></button>
           <button data-view="claims" onclick="showView('claims',this)"><span class="icon"><i class="fas fa-exclamation-triangle"></i></span><span class="label">المطالبات</span></button>
           <button data-view="documents" onclick="showView('documents',this)"><span class="icon"><i class="fas fa-paperclip"></i></span><span class="label">المستندات</span></button>
+          <button data-view="appointments" onclick="showView('appointments',this)"><span class="icon"><i class="fas fa-calendar-check"></i></span><span class="label">المواعيد</span><b id="apptBadge" class="badge hidden">0</b></button>
+          <button data-view="complaints" onclick="showView('complaints',this)"><span class="icon"><i class="fas fa-comment-dots"></i></span><span class="label">الشكاوى</span><b id="complaintsAdminBadge" class="badge hidden">0</b></button>
           <button data-view="renewals" onclick="showView('renewals',this)"><span class="icon"><i class="fas fa-sync-alt"></i></span><span class="label">التجديدات</span></button>
           <button data-view="offers" onclick="showView('offers',this)"><span class="icon"><i class="fas fa-tags"></i></span><span class="label">العروض</span></button>
           <button data-view="companyAds" onclick="showView('companyAds',this)"><span class="icon"><i class="fas fa-bullhorn"></i></span><span class="label">إعلانات</span></button>
@@ -512,6 +514,42 @@
           <div id="v-documents" class="view">
             <div class="toolbar"><div class="search"><input id="docSearch" oninput="renderDocuments()" placeholder="ابحث باسم الملف أو العميل"></div><div class="actions"><button class="btn btn-primary" onclick="openDocUploadModal()"><i class="fas fa-upload"></i> رفع مستند</button></div></div>
             <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>العميل</th><th>المستند</th><th>النوع</th><th>المصدر</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="documentsBody"></tbody></table></div></div></div>
+          </div>
+
+          <!-- Appointments (مواعيدي في تطبيق العميل) -->
+          <div id="v-appointments" class="view">
+            <div class="toolbar">
+              <div class="search"><input id="apptSearch" oninput="renderAppointmentsAdmin()" placeholder="ابحث بالعميل أو الملاحظات"></div>
+              <div class="actions">
+                <select id="apptStatusFilter" onchange="renderAppointmentsAdmin()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--line,#ddd);">
+                  <option value="">كل الحالات</option>
+                  <option value="pending">قيد المراجعة</option>
+                  <option value="confirmed">مؤكد</option>
+                  <option value="cancelled">ملغي</option>
+                </select>
+              </div>
+            </div>
+            <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr>
+              <th>العميل</th><th>النوع</th><th>التاريخ</th><th>الوقت</th><th>ملاحظات</th><th>الحالة</th><th>إجراء</th>
+            </tr></thead><tbody id="appointmentsAdminBody"></tbody></table></div></div></div>
+          </div>
+
+          <!-- Complaints (الشكاوى) -->
+          <div id="v-complaints" class="view">
+            <div class="toolbar">
+              <div class="search"><input id="complaintSearch" oninput="renderComplaintsAdmin()" placeholder="ابحث بالعميل أو الموضوع"></div>
+              <div class="actions">
+                <select id="complaintStatusFilter" onchange="renderComplaintsAdmin()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--line,#ddd);">
+                  <option value="">كل الحالات</option>
+                  <option value="pending">قيد المراجعة</option>
+                  <option value="in_progress">جاري المعالجة</option>
+                  <option value="resolved">تم الحل</option>
+                </select>
+              </div>
+            </div>
+            <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr>
+              <th>العميل</th><th>النوع</th><th>الموضوع</th><th>رقم الوثيقة</th><th>التفاصيل</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th>
+            </tr></thead><tbody id="complaintsAdminBody"></tbody></table></div></div></div>
           </div>
 
           <!-- Offers -->
@@ -826,6 +864,7 @@
       clients: [], policies: [], payments: [], claims: [], documents: [],
       messages: [], notifications: [], activity: [], products: [], companies: [],
       assessments: [], types: [], offers: [], companyAds: [], leads: [], pointsLog: [],
+      appointments: [], complaints: [],
        loaded: false, currentUser: null, currentChat: null,
        syncing: false, lastSyncAt: null, syncErrors: []
     };
@@ -1134,6 +1173,8 @@
       startNotificationsListener();
       startDocumentsListener();
       startLeadsListener();
+      startAppointmentsListener();
+      startComplaintsListener();
       loadBrokerSettings();
        toast(APP_STATE.syncErrors.length ? '⚠️ تم التحميل مع وجود بيانات لم تكتمل' : '✅ تم تحميل البيانات بنجاح', APP_STATE.syncErrors.length > 0);
     }
@@ -1263,6 +1304,111 @@
     async function deleteLead(id) {
       if (!confirm('هل أنت متأكد من حذف هذا العميل المحتمل؟')) return;
       await db.collection('leads').doc(id).delete();
+      toast('✅ تم الحذف');
+    }
+
+    // ================================================================
+    // APPOINTMENTS (المواعيد) — real-time feed of "appointments" bookings
+    // made from the client app's "مواعيدي" screen.
+    // ================================================================
+    function startAppointmentsListener() {
+      if (listeners.appointments) listeners.appointments();
+      listeners.appointments = db.collection('appointments').onSnapshot(snap => {
+        APP_STATE.appointments = snap.docs.map(d => ({ ...d.data(), id: d.id }))
+          .sort((a, b) => (String(a.date || '') + String(a.time || '')).localeCompare(String(b.date || '') + String(b.time || '')));
+        renderAppointmentsAdmin();
+        const pendingCount = APP_STATE.appointments.filter(a => (a.status || 'pending') === 'pending').length;
+        const badge = document.getElementById('apptBadge');
+        if (badge) { badge.textContent = pendingCount;
+          badge.classList.toggle('hidden', pendingCount === 0); }
+      }, e => console.warn('Appointments listener failed', e));
+    }
+
+    const APPT_TYPE_LABELS = { consultation: 'استشارة', renewal: 'تجديد', claim: 'مطالبة' };
+    const APPT_STATUS_LABELS = { pending: 'قيد المراجعة', confirmed: 'مؤكد', cancelled: 'ملغي' };
+
+    function renderAppointmentsAdmin() {
+      const body = document.getElementById('appointmentsAdminBody');
+      if (!body) return;
+      const q = (document.getElementById('apptSearch')?.value || '').toLowerCase();
+      const statusF = document.getElementById('apptStatusFilter')?.value || '';
+      let list = APP_STATE.appointments || [];
+      if (statusF) list = list.filter(a => (a.status || 'pending') === statusF);
+      if (q) list = list.filter(a => [a.clientName, a.notes, a.type].join(' ').toLowerCase().includes(q));
+      body.innerHTML = list.length ? list.map(a => `
+        <tr>
+          <td>${esc(a.clientName || clientName(a.clientId))}</td>
+          <td>${esc(APPT_TYPE_LABELS[a.type] || a.type || '—')}</td>
+          <td>${esc(a.date || '—')}</td>
+          <td>${esc(a.time || '—')}</td>
+          <td>${esc(a.notes || '—')}</td>
+          <td><select onchange="updateAppointmentStatus('${a.id}', this.value)" style="padding:4px 8px;border-radius:6px;">
+            ${Object.keys(APPT_STATUS_LABELS).map(s => `<option value="${s}" ${((a.status || 'pending') === s) ? 'selected' : ''}>${APPT_STATUS_LABELS[s]}</option>`).join('')}
+          </select></td>
+          <td><button class="btn btn-outline btn-xs" onclick="deleteAppointment('${a.id}')"><i class="fas fa-trash"></i></button></td>
+        </tr>`).join('') : `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted,#999);">لا توجد مواعيد بعد</td></tr>`;
+    }
+
+    async function updateAppointmentStatus(id, status) {
+      await db.collection('appointments').doc(id).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      toast('✅ تم تحديث حالة الموعد');
+    }
+
+    async function deleteAppointment(id) {
+      if (!confirm('هل أنت متأكد من حذف هذا الموعد؟')) return;
+      await db.collection('appointments').doc(id).delete();
+      toast('✅ تم الحذف');
+    }
+
+    // ================================================================
+    // COMPLAINTS (الشكاوى) — real-time feed of "complaints" submitted
+    // from the client app's complaint form.
+    // ================================================================
+    function startComplaintsListener() {
+      if (listeners.complaints) listeners.complaints();
+      listeners.complaints = db.collection('complaints').onSnapshot(snap => {
+        APP_STATE.complaints = snap.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
+        renderComplaintsAdmin();
+        const pendingCount = APP_STATE.complaints.filter(c => (c.status || 'pending') === 'pending').length;
+        const badge = document.getElementById('complaintsAdminBadge');
+        if (badge) { badge.textContent = pendingCount;
+          badge.classList.toggle('hidden', pendingCount === 0); }
+      }, e => console.warn('Complaints listener failed', e));
+    }
+
+    const COMPLAINT_STATUS_LABELS = { pending: 'قيد المراجعة', in_progress: 'جاري المعالجة', resolved: 'تم الحل' };
+
+    function renderComplaintsAdmin() {
+      const body = document.getElementById('complaintsAdminBody');
+      if (!body) return;
+      const q = (document.getElementById('complaintSearch')?.value || '').toLowerCase();
+      const statusF = document.getElementById('complaintStatusFilter')?.value || '';
+      let list = APP_STATE.complaints || [];
+      if (statusF) list = list.filter(c => (c.status || 'pending') === statusF);
+      if (q) list = list.filter(c => [c.clientName, c.subject, c.details, c.type].join(' ').toLowerCase().includes(q));
+      body.innerHTML = list.length ? list.map(c => `
+        <tr>
+          <td>${esc(c.clientName || clientName(c.clientId))}${c.clientPhone ? '<br><span style="font-size:11px;color:var(--muted,#999);">' + esc(c.clientPhone) + '</span>' : ''}</td>
+          <td>${esc(c.type || '—')}</td>
+          <td>${esc(c.subject || '—')}</td>
+          <td>${esc(c.policyNumber || '—')}</td>
+          <td style="max-width:220px;white-space:normal;">${esc(c.details || '—')}</td>
+          <td><select onchange="updateComplaintStatus('${c.id}', this.value)" style="padding:4px 8px;border-radius:6px;">
+            ${Object.keys(COMPLAINT_STATUS_LABELS).map(s => `<option value="${s}" ${((c.status || 'pending') === s) ? 'selected' : ''}>${COMPLAINT_STATUS_LABELS[s]}</option>`).join('')}
+          </select></td>
+          <td>${date(c.createdAt)}</td>
+          <td><button class="btn btn-outline btn-xs" onclick="deleteComplaint('${c.id}')"><i class="fas fa-trash"></i></button></td>
+        </tr>`).join('') : `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted,#999);">لا توجد شكاوى بعد</td></tr>`;
+    }
+
+    async function updateComplaintStatus(id, status) {
+      await db.collection('complaints').doc(id).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      toast('✅ تم تحديث حالة الشكوى');
+    }
+
+    async function deleteComplaint(id) {
+      if (!confirm('هل أنت متأكد من حذف هذه الشكوى؟')) return;
+      await db.collection('complaints').doc(id).delete();
       toast('✅ تم الحذف');
     }
 
@@ -2495,9 +2641,9 @@
       document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
       const target = el || document.querySelector(`[data-view="${view}"]`);
       if (target) target.classList.add('active');
-      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
-       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
-      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
+      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
+       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
+      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
       document.getElementById('title').textContent = titles[view] || view;
        document.getElementById('pageIcon').innerHTML = `<i class="fas ${icons[view] || 'fa-chart-pie'}" aria-hidden="true"></i>`;
       document.getElementById('pageSub').textContent = subs[view] || '';
