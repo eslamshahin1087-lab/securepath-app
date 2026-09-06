@@ -48,7 +48,7 @@
     <link rel="icon" href="icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
     </script>
@@ -94,8 +94,8 @@
             --radius-lg: 24px;
             --radius-xl: 30px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-ui: "Plus Jakarta Sans", "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif;
-            --font-ar: "IBM Plex Sans Arabic", "Tajawal", "Plus Jakarta Sans", system-ui, sans-serif;
+            --font-ui: "Inter", "Cairo", "Tajawal", system-ui, sans-serif;
+            --font-ar: "Cairo", "Tajawal", "Inter", system-ui, sans-serif;
         }
 
         html.dark-mode {
@@ -149,6 +149,9 @@
             padding: 24px 8px;
             user-select: none;
             min-height: 100vh;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         html.dark-mode body {
@@ -706,61 +709,6 @@
             filter: drop-shadow(0 4px 16px rgba(201, 84, 62, 0.5));
             transform: scale(1.1);
         }
-
-        /* ===== MODERN TYPOGRAPHY ===== */
-        body, button, input, select, textarea {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-        html[dir="rtl"] body,
-        html[dir="rtl"] .phone,
-        html[dir="rtl"] .app,
-        html[dir="rtl"] button,
-        html[dir="rtl"] input,
-        html[dir="rtl"] select,
-        html[dir="rtl"] textarea {
-            font-family: var(--font-ar);
-        }
-        .page-top h1, .section-head h2, .points-section-head h3, .driving-card-title,
-        .milestone-item .m-title, .habit-card .habit-name, .points-hero-balance {
-            letter-spacing: -0.15px;
-        }
-        .field input, .field select, .field textarea {
-            font-weight: 500;
-            line-height: 1.55;
-        }
-        /* ===== GPS SAFE-DRIVING ===== */
-        .gps-driving-panel {
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 16px;
-            border: 1px solid var(--line);
-            background: var(--paper);
-        }
-        .gps-driving-status {
-            display:flex; align-items:center; justify-content:space-between; gap:10px;
-            margin-bottom:10px;
-        }
-        .gps-status-pill {
-            display:inline-flex; align-items:center; gap:6px;
-            padding:5px 9px; border-radius:999px;
-            font-size:10px; font-weight:800; background:var(--card); color:var(--muted); border:1px solid var(--line);
-        }
-        .gps-status-pill.live { color:var(--green); border-color:rgba(22,128,91,.28); background:var(--green-light); }
-        .gps-status-pill.warn { color:#8A5D13; background:#FFF1D2; border-color:#F1D79A; }
-        html.dark-mode .gps-status-pill.warn { background:#2A1E10; color:#E8A23A; border-color:#5B431F; }
-        .gps-speed-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
-        .gps-speed-metric { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px 5px; text-align:center; }
-        .gps-speed-metric b { display:block; font-size:15px; color:var(--slate); font-weight:800; }
-        .gps-speed-metric span { display:block; font-size:8.5px; color:var(--muted); margin-top:2px; }
-        .gps-driving-progress { height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:10px; }
-        .gps-driving-progress > span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--green),var(--gold)); transition:width .35s ease; }
-        .gps-driving-note { font-size:9.5px; line-height:1.65; color:var(--muted); margin-top:8px; }
-        .gps-driving-actions { display:flex; gap:7px; margin-top:10px; }
-        .gps-driving-actions button { flex:1; }
-        .gps-driving-actions .secondary { background:var(--card); color:var(--slate); border:1px solid var(--line); box-shadow:none; }
-        @media (max-width:480px) { .gps-speed-metric b{font-size:14px;} .gps-driving-actions{flex-direction:column;} }
 
         /* ===== FIELD ===== */
         .field {
@@ -2182,6 +2130,35 @@
         .driving-card-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .driving-card.done { border-color: var(--green); }
         .driving-streak-badge { font-size: 10.5px; color: var(--gold-dark, #B8860B); font-weight: 800; margin-top: 8px; }
+
+        .driving-gps-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; color: var(--muted); font-size: 10.5px; font-weight: 700; }
+        .driving-gps-divider::before, .driving-gps-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+        .driving-gps-block { background: linear-gradient(150deg, rgba(22,128,91,0.06), rgba(22,128,91,0.02)); border: 1.5px dashed rgba(22,128,91,0.3); border-radius: var(--radius-md); padding: 14px; }
+        .driving-gps-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--slate); }
+        .driving-gps-title .app-icon { width: 18px; height: 18px; }
+        .driving-gps-sub { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.7; }
+        .driving-gps-btn { background: linear-gradient(135deg, var(--green), #0E8F63) !important; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .driving-gps-btn .app-icon { width: 16px; height: 16px; }
+
+        /* GPS driving-session modal content */
+        .drive-road-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+        .drive-road-chip { border: 1.5px solid var(--line); border-radius: var(--radius-md); padding: 12px 6px; text-align: center; cursor: pointer; background: var(--card); transition: all var(--transition); }
+        .drive-road-chip b { display: block; font-size: 15px; color: var(--navy); }
+        .drive-road-chip span { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+        .drive-road-chip.active { border-color: var(--green); background: rgba(22,128,91,0.08); }
+        .drive-speed-gauge { text-align: center; padding: 22px 0 8px; }
+        .drive-speed-value { font-size: 52px; font-weight: 900; color: var(--navy); line-height: 1; }
+        .drive-speed-unit { font-size: 12px; color: var(--muted); font-weight: 700; }
+        .drive-speed-limit { font-size: 11.5px; color: var(--muted); margin-top: 6px; font-weight: 700; }
+        .drive-status-bar { height: 8px; border-radius: 5px; background: var(--line); overflow: hidden; margin: 14px 0 6px; }
+        .drive-status-fill { height: 100%; border-radius: 5px; background: var(--green); transition: width 0.4s ease, background 0.4s ease; }
+        .drive-status-fill.warn { background: var(--gold); }
+        .drive-status-fill.over { background: var(--red); }
+        .drive-stats-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
+        .drive-alert { text-align: center; font-size: 12.5px; font-weight: 800; padding: 8px; border-radius: 10px; margin-bottom: 10px; }
+        .drive-alert.ok { color: var(--green); background: rgba(22,128,91,0.08); }
+        .drive-alert.over { color: var(--red); background: rgba(201,84,62,0.08); }
+        .drive-stop-btn { width: 100%; background: var(--red) !important; }
 
         .milestone-list { display: flex; flex-direction: column; gap: 8px; }
         .milestone-item {
@@ -5676,454 +5653,6 @@ html.dark-mode #home .home-partners {
         scroll-behavior: auto !important;
     }
 }</style>
-
-<style id="securepath-original-identity-rebuild">
-/* ============================================================
-   SECUREPATH — ORIGINAL VISUAL IDENTITY REBUILD
-   Identity: Deep Navy + Gold
-   Light/Dark are two modes of the SAME brand.
-   Application logic intentionally untouched.
-   ============================================================ */
-
-:root{
-  --brand:#0E2A5C;
-  --brand-deep:#071D40;
-  --brand-mid:#173F78;
-  --brand-soft:#EAF1FA;
-
-  --gold:#D9A441;
-  --gold-light:#F2C866;
-  --gold-soft:#FFF4D8;
-  --gold-border:#E4C77E;
-
-  --success:#16805B;
-  --success-soft:#E8F6F0;
-  --danger:#C84B4B;
-  --danger-soft:#FBECEC;
-  --warning:#B77716;
-  --warning-soft:#FFF4DB;
-
-  --bg:#F4F7FB;
-  --surface:#FFFFFF;
-  --surface-2:#F8FAFD;
-  --surface-3:#EEF3F8;
-  --border:#DDE5EF;
-  --text:#16243A;
-  --muted:#6D7B8F;
-
-  --radius-sm:12px;
-  --radius-md:16px;
-  --radius-lg:20px;
-  --radius-xl:26px;
-
-  --shadow-sm:0 4px 14px rgba(14,42,92,.055);
-  --shadow:0 9px 25px rgba(14,42,92,.075);
-  --shadow-lg:0 16px 38px rgba(14,42,92,.11);
-}
-
-/* ---------- GLOBAL ---------- */
-*{box-sizing:border-box}
-body{
-  background:var(--bg)!important;
-  color:var(--text)!important;
-}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-
-/* ---------- BRAND HEADER ---------- */
-header,.app-header,.topbar,.navbar{
-  border-color:var(--border)!important;
-}
-.brand,.logo,.brand-name{
-  color:var(--brand)!important;
-}
-.brand-mark,.logo-mark{
-  color:var(--gold)!important;
-}
-
-/* ---------- TYPOGRAPHY ---------- */
-h1,h2,h3,h4,h5,h6,
-.section-title,.card-title,.policy-title,.offer-title{
-  color:var(--brand)!important;
-}
-p,.muted,.subtitle,.secondary-text,
-.card-subtitle,.policy-meta,.offer-meta{
-  color:var(--muted)!important;
-}
-
-/* ---------- CARDS ---------- */
-.card,.panel,.section-card,.stat-card,
-.policy-card,.offer-card,.product-card,
-.quick-card,.partner-card,.settings-card,
-.points-card,.document-card,.profile-card{
-  background:var(--surface)!important;
-  color:var(--text)!important;
-  border:1px solid var(--border)!important;
-  border-radius:var(--radius-lg)!important;
-  box-shadow:var(--shadow-sm)!important;
-}
-.card:hover,.policy-card:hover,.offer-card:hover,
-.quick-card:hover,.product-card:hover{
-  border-color:rgba(217,164,65,.48)!important;
-  box-shadow:var(--shadow)!important;
-}
-
-/* ---------- PRIMARY ACTION ---------- */
-.btn-primary,.primary-btn,.btn-blue,.main-action,
-.cta-primary{
-  background:linear-gradient(135deg,var(--brand-deep),var(--brand))!important;
-  color:#fff!important;
-  border:1px solid var(--brand)!important;
-  border-radius:var(--radius-md)!important;
-  box-shadow:0 7px 18px rgba(14,42,92,.14)!important;
-}
-.btn-primary:hover,.primary-btn:hover,.btn-blue:hover,
-.main-action:hover,.cta-primary:hover{
-  background:linear-gradient(135deg,var(--brand),var(--brand-mid))!important;
-}
-
-/* Gold = premium accent, not a competing background */
-.btn-gold,.gold-btn,.premium-action{
-  background:linear-gradient(135deg,#C99118,var(--gold-light))!important;
-  color:var(--brand-deep)!important;
-  border:1px solid var(--gold)!important;
-  border-radius:var(--radius-md)!important;
-}
-.btn-secondary,.outline-btn{
-  background:var(--gold-soft)!important;
-  color:var(--brand)!important;
-  border:1px solid rgba(217,164,65,.48)!important;
-  border-radius:var(--radius-md)!important;
-}
-
-/* ---------- ICON SYSTEM ---------- */
-.feature-icon,.quick-icon,.action-icon,
-.section-icon,.service-icon,.nav-icon{
-  color:var(--brand)!important;
-}
-.feature-icon,.quick-icon,.action-icon{
-  background:var(--gold-soft)!important;
-  border:1px solid rgba(217,164,65,.30)!important;
-  border-radius:14px!important;
-}
-
-/* ---------- BADGES / STATUS ---------- */
-.badge,.tag,.premium-badge,.gold-badge{
-  background:var(--gold-soft)!important;
-  color:#9B6C12!important;
-  border:1px solid rgba(217,164,65,.38)!important;
-}
-.status-active,.valid-status,.success-badge{
-  background:var(--success-soft)!important;
-  color:var(--success)!important;
-  border-color:rgba(22,128,91,.20)!important;
-}
-.status-danger,.danger-badge{
-  background:var(--danger-soft)!important;
-  color:var(--danger)!important;
-}
-
-/* ---------- INPUTS ---------- */
-input,select,textarea{
-  background:var(--surface)!important;
-  color:var(--text)!important;
-  border:1px solid var(--border)!important;
-  border-radius:var(--radius-md)!important;
-}
-input::placeholder,textarea::placeholder{color:#98A5B5!important}
-input:focus,select:focus,textarea:focus{
-  outline:none!important;
-  border-color:var(--gold)!important;
-  box-shadow:0 0 0 3px rgba(217,164,65,.13)!important;
-}
-
-/* ---------- HOME ---------- */
-#home,#homeScreen{
-  background:linear-gradient(180deg,#F8FAFD 0%,var(--bg) 62%,#F1F5FA 100%)!important;
-}
-
-/* Preserve the app's premium navy header identity */
-#home .pro-topbar,
-#home .home-header,
-#home .topbar{
-  background:linear-gradient(145deg,var(--brand-deep),var(--brand) 66%,var(--brand-mid))!important;
-  color:#fff!important;
-  box-shadow:0 13px 30px rgba(7,29,64,.17)!important;
-}
-#home .pro-topbar h1,
-#home .pro-topbar h2,
-#home .pro-topbar h3,
-#home .pro-topbar .name{
-  color:#fff!important;
-}
-#home .pro-topbar .hi,
-#home .pro-topbar .subtitle{
-  color:rgba(255,255,255,.72)!important;
-}
-#home .pro-topbar button,
-#home .topbar-right button{
-  background:rgba(255,255,255,.09)!important;
-  color:var(--gold-light)!important;
-  border:1px solid rgba(255,255,255,.15)!important;
-}
-
-/* ---------- QUICK ACTIONS ---------- */
-#home .quick-card{
-  min-height:100px;
-}
-#home .quick-card .qicon{
-  background:var(--gold-soft)!important;
-  color:var(--brand)!important;
-  border:1px solid rgba(217,164,65,.28)!important;
-}
-
-/* ---------- PROTECTION INDICATOR CONTEXT ---------- */
-/* Geometry, score, SVG and JS bindings remain untouched. */
-#home .protection-card{
-  background:linear-gradient(145deg,var(--brand-deep),var(--brand-mid))!important;
-  border:1px solid rgba(217,164,65,.30)!important;
-  box-shadow:var(--shadow-lg)!important;
-}
-#home .protection-card .app-icon{
-  color:var(--gold-light)!important;
-}
-
-/* ---------- POINTS / PROGRESS ---------- */
-.progress-bar,.progress-fill,.points-progress{
-  background:linear-gradient(90deg,var(--brand),var(--gold))!important;
-}
-.points-value,.points-icon{
-  color:var(--gold)!important;
-}
-
-/* ---------- NAVIGATION ---------- */
-.bottom-nav,.app-navbar,.navbar{
-  background:rgba(255,255,255,.97)!important;
-  border-color:var(--border)!important;
-  box-shadow:0 -7px 22px rgba(14,42,92,.06)!important;
-}
-.bottom-nav .active,.navbar .active,
-.bottom-nav .nav-item.active{
-  background:var(--gold-soft)!important;
-  color:var(--brand)!important;
-  border-radius:14px!important;
-}
-.bottom-nav .active .nav-icon,
-.navbar .active .nav-icon{
-  color:#9B6C12!important;
-}
-
-/* ---------- PARTNERS ---------- */
-.partner-card{
-  background:var(--surface)!important;
-}
-.partner-card .partner-icon{
-  background:var(--brand-soft)!important;
-  color:var(--brand)!important;
-}
-
-/* ---------- DARK MODE ---------- */
-html.dark-mode{
-  --bg:#06162D;
-  --surface:#0C2344;
-  --surface-2:#102A4E;
-  --surface-3:#15345D;
-  --border:#264365;
-  --text:#F1F5FA;
-  --muted:#AAB9CC;
-
-  --brand:#EAF2FF;
-  --brand-deep:#031329;
-  --brand-mid:#0D3A76;
-  --brand-soft:rgba(112,163,225,.13);
-
-  --gold:#F2C866;
-  --gold-light:#FFD978;
-  --gold-soft:rgba(242,200,102,.13);
-  --gold-border:#806321;
-
-  --success-soft:rgba(22,128,91,.16);
-  --danger-soft:rgba(200,75,75,.15);
-
-  --shadow-sm:0 5px 18px rgba(0,0,0,.18);
-  --shadow:0 10px 28px rgba(0,0,0,.24);
-  --shadow-lg:0 17px 38px rgba(0,0,0,.30);
-}
-
-html.dark-mode body{
-  background:var(--bg)!important;
-  color:var(--text)!important;
-}
-html.dark-mode #home,
-html.dark-mode #homeScreen{
-  background:linear-gradient(180deg,#05152D 0%,#06162D 62%,#07182F 100%)!important;
-}
-html.dark-mode .card,
-html.dark-mode .panel,
-html.dark-mode .section-card,
-html.dark-mode .stat-card,
-html.dark-mode .policy-card,
-html.dark-mode .offer-card,
-html.dark-mode .product-card,
-html.dark-mode .quick-card,
-html.dark-mode .partner-card,
-html.dark-mode .settings-card,
-html.dark-mode .points-card,
-html.dark-mode .document-card,
-html.dark-mode .profile-card{
-  background:var(--surface)!important;
-  color:var(--text)!important;
-  border-color:var(--border)!important;
-  box-shadow:var(--shadow-sm)!important;
-}
-html.dark-mode h1,html.dark-mode h2,html.dark-mode h3,
-html.dark-mode h4,html.dark-mode h5,html.dark-mode h6,
-html.dark-mode .section-title,html.dark-mode .card-title,
-html.dark-mode .policy-title,html.dark-mode .offer-title{
-  color:#F1F5FA!important;
-}
-html.dark-mode p,html.dark-mode .muted,
-html.dark-mode .subtitle,html.dark-mode .secondary-text,
-html.dark-mode .card-subtitle,html.dark-mode .policy-meta,
-html.dark-mode .offer-meta{
-  color:#AAB9CC!important;
-}
-html.dark-mode .feature-icon,
-html.dark-mode .quick-icon,
-html.dark-mode .action-icon{
-  background:rgba(242,200,102,.12)!important;
-  color:var(--gold-light)!important;
-  border-color:rgba(242,200,102,.23)!important;
-}
-html.dark-mode input,
-html.dark-mode select,
-html.dark-mode textarea{
-  background:#091C37!important;
-  color:#F1F5FA!important;
-  border-color:var(--border)!important;
-}
-html.dark-mode input::placeholder,
-html.dark-mode textarea::placeholder{
-  color:#788BA5!important;
-}
-html.dark-mode .bottom-nav,
-html.dark-mode .app-navbar,
-html.dark-mode .navbar{
-  background:rgba(5,21,45,.98)!important;
-  border-color:var(--border)!important;
-  box-shadow:0 -9px 25px rgba(0,0,0,.23)!important;
-}
-html.dark-mode .bottom-nav .active,
-html.dark-mode .navbar .active,
-html.dark-mode .bottom-nav .nav-item.active{
-  background:rgba(242,200,102,.12)!important;
-  color:var(--gold-light)!important;
-}
-html.dark-mode .bottom-nav .active .nav-icon,
-html.dark-mode .navbar .active .nav-icon{
-  color:var(--gold-light)!important;
-}
-html.dark-mode #home .protection-card{
-  background:linear-gradient(145deg,#031329,#0A3266)!important;
-  border-color:rgba(242,200,102,.30)!important;
-}
-html.dark-mode #home .protection-card .app-icon{
-  color:var(--gold-light)!important;
-}
-html.dark-mode .btn-secondary,
-html.dark-mode .outline-btn{
-  background:rgba(242,200,102,.12)!important;
-  color:var(--gold-light)!important;
-  border-color:rgba(242,200,102,.30)!important;
-}
-html.dark-mode .badge,
-html.dark-mode .tag,
-html.dark-mode .premium-badge,
-html.dark-mode .gold-badge{
-  background:rgba(242,200,102,.12)!important;
-  color:var(--gold-light)!important;
-  border-color:rgba(242,200,102,.28)!important;
-}
-
-/* ---------- CONSISTENT MOTION ---------- */
-.app-icon.animated,.bounce,.float,.spin,
-.quick-icon.animated,.feature-icon.animated{
-  animation:none!important;
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation-duration:.01ms!important;
-    animation-iteration-count:1!important;
-    transition-duration:.01ms!important;
-  }
-}
-
-/* ---------- RESPONSIVE ---------- */
-@media(max-width:640px){
-  .card,.panel,.section-card,.policy-card,.offer-card,
-  .product-card,.quick-card,.partner-card{
-    border-radius:17px!important;
-  }
-}
-</style>
-
-<style id="securepath-header-lighting-fix">
-/* SECUREPATH HEADER LIGHTING FIX */
-#home .pro-topbar.home-hero{
-  position:relative!important;
-  isolation:isolate!important;
-  overflow:hidden!important;
-  background:#081A35!important;
-  background-image:linear-gradient(180deg,#081A35 0%,#0A2347 55%,#0E2A5C 100%)!important;
-  color:#F7FAFF!important;
-  box-shadow:0 12px 28px rgba(3,19,41,.24)!important;
-}
-#home .pro-topbar.home-hero::before{
-  content:none!important;
-  display:none!important;
-}
-#home .pro-topbar.home-hero::after{
-  content:""!important;
-  position:absolute!important;
-  inset:-35% -12% auto auto!important;
-  width:72%!important;
-  height:125%!important;
-  border-radius:50%!important;
-  pointer-events:none!important;
-  z-index:0!important;
-  background:
-    radial-gradient(circle at 58% 42%,rgba(242,200,102,.16) 0%,rgba(242,200,102,.07) 22%,rgba(47,128,237,.07) 43%,transparent 70%)!important;
-  filter:blur(2px)!important;
-  opacity:.9!important;
-}
-#home .pro-topbar.home-hero > *{
-  position:relative!important;
-  z-index:1!important;
-}
-#home .pro-topbar.home-hero .topbar-row{
-  background:transparent!important;
-}
-#home .pro-topbar.home-hero .hi{
-  color:rgba(247,250,255,.70)!important;
-}
-#home .pro-topbar.home-hero .name{
-  color:#FFFFFF!important;
-}
-#home .pro-topbar.home-hero .topbar-right>button,
-#home .pro-topbar.home-hero .bell{
-  background:rgba(255,255,255,.07)!important;
-  border:1px solid rgba(255,255,255,.12)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 5px 12px rgba(3,19,41,.18)!important;
-}
-#home .pro-topbar.home-hero .topbar-right>button:hover,
-#home .pro-topbar.home-hero .bell:hover{
-  background:rgba(255,255,255,.10)!important;
-  border-color:rgba(242,200,102,.28)!important;
-}
-@media (prefers-reduced-motion:reduce){
-  #home .pro-topbar.home-hero::after{filter:none!important}
-}
-</style>
 </head>
 <body>
 
@@ -6174,7 +5703,7 @@ html.dark-mode .gold-badge{
                 <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
                     <button id="loginLangToggle" class="lang-toggle light" onclick="toggleLanguage()" style="background:var(--card);color:var(--slate);border:1px solid var(--line);">EN</button>
                 </div>
-                <div class="field"><label id="loginEmailLabel">البريد الإلكتروني</label><input type="text" id="loginEmail" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="name@securepath أو name@securepsth"></div><div style="font-size:9.5px;color:var(--muted);margin:-8px 0 10px;line-height:1.6;">يمكنك الدخول باستخدام حسابات العملاء بصيغة <b>@securepath</b> أو الحسابات القديمة <b>@securepsth</b> المرتبطة بالفعل بـ Firebase.</div>
+                <div class="field"><label id="loginEmailLabel">البريد الإلكتروني</label><input type="email" id="loginEmail" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="name@domain.com"></div>
                 <div class="field"><label id="loginPassLabel">كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password" placeholder="••••••••"></div>
                 <div class="forgot-password-link" onclick="openForgotPassword()">نسيت كلمة المرور؟</div>
                 <button class="btn-primary" id="loginBtn" onclick="handleLogin()">🚀 دخول المنصة</button>
@@ -6233,7 +5762,7 @@ html.dark-mode .gold-badge{
                 </div>
 
                 <div class="field"><label id="regFullNameLabel">الاسم الرباعي <span class="required">*</span></label><input type="text" id="regFullName" placeholder="مثال: أحمد محمد علي حسن"></div>
-                <div class="field"><label id="regEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="regEmail" placeholder="name@securepsth أو name@domain.com"></div>
+                <div class="field"><label id="regEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="regEmail" placeholder="name@domain.com"></div>
                 <div class="field"><label id="regPassLabel">كلمة المرور <span class="required">*</span></label><input type="password" id="regPass" minlength="8" placeholder="•••••••• (8 أحرف على الأقل، حرف ورقم)"></div>
                 <div class="field"><label id="regBirthDateLabel">تاريخ الميلاد <span class="required">*</span></label><input type="date" id="regBirthDate"></div>
                 <div class="field"><label id="regGenderLabel">الجنس <span class="required">*</span></label>
@@ -7232,6 +6761,21 @@ html.dark-mode .gold-badge{
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- GPS DRIVING SESSION MODAL                                     -->
+        <!-- ============================================================ -->
+        <div class="overlay" id="drivingSessionModal">
+            <div class="sheet" style="padding-bottom:calc(30px + var(--safe-area-bottom));">
+                <div class="grabber"></div>
+                <div class="close-x" onclick="closeDrivingSession()">✕</div>
+                <h2 id="drivingSessionTitle">
+                    <span class="icon-green"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m5 16 1.5-6h11L19 16"/><path d="M3 16h18v4H3z"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></span></span>
+                    جلسة قيادة بـ GPS
+                </h2>
+                <div id="drivingSessionBody"></div>
+            </div>
+        </div>
+
         <div class="overlay" id="newAppointmentModal">
             <div class="sheet">
                 <div class="grabber"></div>
@@ -7304,9 +6848,6 @@ html.dark-mode .gold-badge{
 
         var auth = firebase.auth();
         var db = firebase.firestore();
-        // Legacy customer login domain. Kept as an accepted identifier format;
-        // Firebase must contain the matching account for authentication to succeed.
-        var LEGACY_CLIENT_EMAIL_DOMAIN = 'securepsth';
 
         // ============================================================ //
         // STATE                                                         //
@@ -7342,6 +6883,28 @@ html.dark-mode .gold-badge{
         var assessmentCache = {};
         var RENEWAL_WINDOW_DAYS = 45;
         var MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+        // ------------------------------------------------------------ //
+        // EMAIL-VERIFICATION EXEMPTION (internal/staff test accounts)   //
+        // ------------------------------------------------------------ //
+        // These domains skip the "must verify email" gate entirely.
+        // Use this ONLY for a domain your team fully controls for internal
+        // demo/staging accounts that can't receive real mail (like the
+        // @securepath.com placeholder addresses used to build client-facing
+        // pages) — never for a domain real customers could also sign up
+        // under. IMPORTANT SECURITY CAVEAT: Firebase's createUserWithEmail
+        // AndPassword never checks that you actually own an email address —
+        // that's exactly what verification exists to prove. Exempting a
+        // domain means anyone who knows this app's code (which is public
+        // client-side source) could register `anything@securepath.com` and
+        // get full access with zero verification. Keep this list to
+        // domains where that risk is acceptable to you.
+        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+
+        function isVerificationExemptEmail(email) {
+            var domain = String(email || '').split('@')[1] || '';
+            return VERIFICATION_EXEMPT_DOMAINS.indexOf(domain.toLowerCase()) !== -1;
+        }
         var CLOUDINARY_CLOUD_NAME = 'zs4wny34';
         var CLOUDINARY_UPLOAD_PRESET = 'securepath_docs';
         var CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/auto/upload';
@@ -8085,22 +7648,6 @@ html.dark-mode .gold-badge{
 
         function isProtectedScreen(id) { return PUBLIC_SCREEN_IDS.indexOf(id) === -1; }
 
-        // SecurePath internal/fake email identifiers. Firebase Authentication
-        // requires a syntactically valid email, so accounts created as
-        // name@securepath.com (or the legacy name@securepsth.com) can also be
-        // entered by the customer as name@securepath / name@securepsth.
-        function isSecurePathInternalIdentifier(value) {
-            var v = normalizeLoginIdentifier(value);
-            return /^[^\s@]+@securepath(?:\.com)?$/.test(v) || /^[^\s@]+@securepsth(?:\.com)?$/.test(v);
-        }
-
-        function firebaseLoginEmail(identifier) {
-            var v = normalizeLoginIdentifier(identifier);
-            if (/^[^\s@]+@securepath$/.test(v)) return v + '.com';
-            if (/^[^\s@]+@securepsth$/.test(v)) return v + '.com';
-            return v;
-        }
-
         function showScreen(id) {
             // Route guard: block direct navigation to protected screens
             // (e.g. via console/devtools) when there is no authenticated,
@@ -8108,7 +7655,7 @@ html.dark-mode .gold-badge{
             if (isProtectedScreen(id)) {
                 var authedUser = auth.currentUser;
                 if (!STATE.currentUser || !authedUser) { id = 'login'; }
-                else if (!authedUser.emailVerified && !isSecurePathInternalIdentifier(authedUser.email || '')) { id = 'verifyEmail'; }
+                else if (!authedUser.emailVerified && !isVerificationExemptEmail(authedUser.email)) { id = 'verifyEmail'; }
             }
             var target = document.getElementById(id);
             if (!target) return;
@@ -8497,13 +8044,8 @@ html.dark-mode .gold-badge{
                     err.style.display = 'block'; }
                 return;
             }
-            // SecurePath supports internal customer login identifiers such as
-            // name@securepath and legacy name@securepsth. These are intentional
-            // non-public email identifiers, so do not require a dot in the domain.
-            var isStandardEmail = /^\S+@\S+\.\S+$/.test(identifier);
-            var isSecurePathAlias = isSecurePathInternalIdentifier(identifier);
-            if (!isStandardEmail && !isSecurePathAlias) {
-                if (err) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد إلكتروني أو معرف SecurePath صحيح مثل name@securepath' : 'Enter a valid email or SecurePath ID such as name@securepath';
+            if (!/^\S+@\S+\.\S+$/.test(identifier)) {
+                if (err) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email address';
                     err.style.display = 'block'; }
                 return;
             }
@@ -8515,17 +8057,10 @@ html.dark-mode .gold-badge{
                 // needed before authentication, which also removes the need
                 // for any unauthenticated pre-auth read access to the
                 // "clients" collection.
-                // Convert the short internal identifier to the valid Firebase
-                // email used by existing SecurePath accounts. The customer's
-                // original identifier is still passed to the profile matching
-                // layer, so Firestore data/UIDs remain unchanged.
-                var authEmail = firebaseLoginEmail(identifier);
-                return auth.signInWithEmailAndPassword(authEmail, pass);
+                return auth.signInWithEmailAndPassword(identifier, pass);
             }).then(function(credential) {
                 var user = credential && credential.user;
-                // Internal SecurePath accounts do not rely on mailbox verification.
-                var internalAlias = isSecurePathInternalIdentifier(identifier) || isSecurePathInternalIdentifier(user && user.email);
-                if (user && !user.emailVerified && !internalAlias) {
+                if (user && !user.emailVerified && !isVerificationExemptEmail(user.email)) {
                     return handleUnverifiedUser(user);
                 }
                 return finishClientLogin(credential, identifier);
@@ -8643,7 +8178,7 @@ html.dark-mode .gold-badge{
             if (!fullName || fullName.split(/\s+/).length < 2) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال الاسم الكامل' : 'Please enter your full name';
                 err.style.display = 'block'; return; }
             var strongPass = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(pass);
-            if (!email || !/^\S+@\S+(?:\.\S+)?$/.test(email) || !pass || !strongPass) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد صحيح وكلمة مرور من 8 أحرف على الأقل تحتوي حرفاً ورقماً' : 'Enter a valid email and a password of at least 8 characters containing a letter and a number';
+            if (!email || !/^\S+@\S+\.\S+$/.test(email) || !pass || !strongPass) { err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد صحيح وكلمة مرور من 8 أحرف على الأقل تحتوي حرفاً ورقماً' : 'Enter a valid email and a password of at least 8 characters containing a letter and a number';
                 err.style.display = 'block'; return; }
             if (!birthDate || !phone || !occupation) { err.textContent = STATE.language === 'ar' ? 'يرجى استكمال الحقول الإلزامية' : 'Please complete all required fields';
                 err.style.display = 'block'; return; }
@@ -9542,7 +9077,7 @@ html.dark-mode .gold-badge{
                 sleep: { points: 6, streakBonus: 12, streakEvery: 7, icon: 'moon', ar: 'نوم كافٍ (7+ ساعات)', en: 'Good sleep (7+ hours)' },
                 insuranceReading: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'book', ar: 'قراءة نصيحة تأمينية', en: 'Read an insurance tip' }
             },
-            driving: { points: 6, streakBonus: 15, streakEvery: 7, minDurationSec: 600, minDistanceKm: 2, safeToleranceKmh: 5, sampleIntervalMs: 5000 }
+            driving: { points: 6, streakBonus: 15, streakEvery: 7 }
         };
 
         function todayStr() { return new Date().toISOString().split('T')[0]; }
@@ -9563,12 +9098,6 @@ html.dark-mode .gold-badge{
                 u.habitData[k] = u.habitData[k] || { streak: 0, lastDate: '', totalDays: 0 };
             });
             u.drivingData = u.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
-            u.drivingData.active = !!u.drivingData.active;
-            u.drivingData.currentSpeed = Number(u.drivingData.currentSpeed || 0);
-            u.drivingData.currentLimit = Number(u.drivingData.currentLimit || 0);
-            u.drivingData.distanceKm = Number(u.drivingData.distanceKm || 0);
-            u.drivingData.durationSec = Number(u.drivingData.durationSec || 0);
-            u.drivingData.safeRatio = Number(u.drivingData.safeRatio || 0);
             return u;
         }
 
@@ -9734,115 +9263,226 @@ html.dark-mode .gold-badge{
             return u.drivingData.lastDate === todayStr();
         }
 
-        // GPS safe-driving engine. Road limits are read from OpenStreetMap maxspeed tags
-        // through Overpass; if a road has no reliable maxspeed tag, the app does not award points.
-        var GPS_DRIVE = { watchId: null, timer: null, lastPosition: null, lastLimitAt: 0, lastLimit: 0, limitPromise: null };
-        var SECUREPATH_SPEED_LIMIT_ENDPOINT = 'https://overpass-api.de/api/interpreter';
+        function checkInSafeDriving() {
+            if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
+            var u = ensurePointsData(STATE.userData || {}),
+                today = todayStr();
+            if (u.drivingData.lastDate === today) return;
+            var c1 = document.getElementById('drivingCheckSpeed'),
+                c2 = document.getElementById('drivingCheckPhone');
+            if (!(c1 && c1.checked) || !(c2 && c2.checked)) {
+                alert(STATE.language === 'ar' ? 'يرجى تأكيد الالتزام بكل بنود القيادة الآمنة اليوم أولاً.' : 'Please confirm every safe-driving item for today first.');
+                return;
+            }
+            var gap = daysBetweenDates(u.drivingData.lastDate, today),
+                newStreak = (gap === 1) ? (u.drivingData.streak || 0) + 1 : 1,
+                bonus = (newStreak % POINTS_CONFIG.driving.streakEvery === 0) ? POINTS_CONFIG.driving.streakBonus : 0,
+                total = POINTS_CONFIG.driving.points + bonus,
+                newDriving = { streak: newStreak, lastDate: today, totalDays: (u.drivingData.totalDays || 0) + 1 };
+            var descAr = 'الالتزام بقيادة آمنة اليوم' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
+                descEn = 'Committed to safe driving today' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
+            awardInsuraPoints(total, 'safe_driving', descAr, descEn, { drivingData: newDriving });
+        }
 
-        function haversineKm(a, b) {
-            if (!a || !b) return 0;
-            var R = 6371, dLat = (b.lat-a.lat)*Math.PI/180, dLon = (b.lon-a.lon)*Math.PI/180;
-            var x = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-            return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+        // ============================================================ //
+        // GPS DRIVING SESSION                                           //
+        // ------------------------------------------------------------ //
+        // Honest scope note: real per-road speed limits require a paid
+        // mapping API (Google Roads API / HERE / TomTom) that isn't part
+        // of this app's free Firebase setup. Instead, the driver picks a
+        // road type before starting and the app measures live GPS speed
+        // against that limit for the session, then awards points scaled
+        // to how much of the trip stayed compliant. Also note: this only
+        // tracks while the browser tab stays open and active — a locked
+        // phone or backgrounded tab will pause tracking, since that kind
+        // of continuous background GPS needs a native app, not a web page.
+        // ============================================================ //
+        var DRIVE_ROAD_LIMITS = [
+            { key: 'city', limit: 60, ar: 'طريق داخلي', en: 'City road' },
+            { key: 'main', limit: 90, ar: 'طريق رئيسي', en: 'Main road' },
+            { key: 'highway', limit: 120, ar: 'طريق سريع', en: 'Highway' }
+        ];
+
+        var DriveSession = {
+            watchId: null,
+            roadKey: null,
+            limit: 90,
+            active: false,
+            startedAt: 0,
+            lastFix: null, // { lat, lng, t }
+            elapsedMs: 0,
+            compliantMs: 0,
+            overCount: 0,
+            currentSpeed: 0,
+            timerId: null
+        };
+
+        function openDrivingSessionModal() {
+            if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
+            if (drivingDoneToday()) { alert(STATE.language === 'ar' ? 'لقد سجّلت القيادة الآمنة لهذا اليوم بالفعل.' : 'You already logged safe driving for today.'); return; }
+            if (!('geolocation' in navigator)) {
+                alert(STATE.language === 'ar' ? 'المتصفح لا يدعم تحديد الموقع (GPS).' : 'This browser does not support GPS location.');
+                return;
+            }
+            renderDrivingRoadPicker();
+            openModal('drivingSessionModal');
         }
-        function parseMaxspeed(v) {
-            if (v == null) return 0;
-            var m = String(v).match(/(\d+(?:\.\d+)?)/);
-            if (!m) return 0;
-            var n = parseFloat(m[1]);
-            if (/mph/i.test(String(v))) n *= 1.60934;
-            return n > 5 && n < 180 ? Math.round(n) : 0;
+
+        function renderDrivingRoadPicker() {
+            var lang = STATE.language || 'ar';
+            var body = document.getElementById('drivingSessionBody');
+            if (!body) return;
+            body.innerHTML =
+                '<div class="sub">' + (lang === 'ar' ? 'اختر نوع الطريق الذي ستقود عليه، ثم ابدأ الجلسة. سيقيس التطبيق سرعتك مقابل الحد المناسب لهذا النوع طوال الرحلة.' : "Pick the road type you'll be driving on, then start. The app measures your speed against that limit for the whole trip.") + '</div>' +
+                '<div class="drive-road-picker">' + DRIVE_ROAD_LIMITS.map(function(r) {
+                    return '<div class="drive-road-chip" data-road="' + r.key + '" onclick="selectDrivingRoad(\'' + r.key + '\')"><b>' + r.limit + '</b><span>' + (lang === 'ar' ? r.ar : r.en) + '</span></div>';
+                }).join('') + '</div>' +
+                '<button class="btn-primary" id="startDrivingBtn" onclick="startDrivingSession()" disabled>' + (lang === 'ar' ? '📍 ابدأ الجلسة' : '📍 Start session') + '</button>';
         }
-        function lookupRoadSpeedLimit(lat, lon) {
-            if (GPS_DRIVE.limitPromise) return GPS_DRIVE.limitPromise;
-            if (GPS_DRIVE.lastLimit && Date.now()-GPS_DRIVE.lastLimitAt < 120000) return Promise.resolve(GPS_DRIVE.lastLimit);
-            var q = '[out:json][timeout:8];way(around:35,' + lat.toFixed(6) + ',' + lon.toFixed(6) + ')[highway][maxspeed];out tags center;';
-            GPS_DRIVE.limitPromise = fetch(SECUREPATH_SPEED_LIMIT_ENDPOINT + '?data=' + encodeURIComponent(q), { method:'GET', headers:{'Accept':'application/json'} })
-                .then(function(r){ if(!r.ok) throw new Error('speed-limit-service'); return r.json(); })
-                .then(function(data){
-                    var best=0, bestD=Infinity;
-                    (data.elements||[]).forEach(function(w){ var lim=parseMaxspeed(w.tags&&w.tags.maxspeed); if(!lim||!w.center) return; var d=haversineKm({lat:lat,lon:lon},{lat:Number(w.center.lat),lon:Number(w.center.lon)}); if(d<bestD){bestD=d;best=lim;} });
-                    GPS_DRIVE.lastLimit=best; GPS_DRIVE.lastLimitAt=Date.now(); return best;
-                }).catch(function(){ return 0; }).finally(function(){ GPS_DRIVE.limitPromise=null; });
-            return GPS_DRIVE.limitPromise;
-        }
-        function updateGPSDrivingUI() {
-            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData||{};
-            var el=document.getElementById('gpsCurrentSpeed'); if(el) el.textContent=Math.round(Number(d.currentSpeed||0));
-            el=document.getElementById('gpsRoadLimit'); if(el) el.textContent=d.currentLimit||'—';
-            el=document.getElementById('gpsDriveDistance'); if(el) el.textContent=Number(d.distanceKm||0).toFixed(1);
-            el=document.getElementById('gpsSafeProgress'); if(el) el.style.width=Math.min(100,Math.round(Number(d.safeRatio||0)*100))+'%';
-            el=document.getElementById('gpsDrivingNote'); if(el) el.textContent=d.active ? (STATE.language==='ar' ? 'الرحلة قيد التتبع. تجنب استخدام الهاتف أثناء القيادة. لا يتم احتساب النقاط إلا بعد تحقق شروط الرحلة.' : 'Trip tracking is active. Avoid using the phone while driving. Points are awarded only after the trip meets the verification rules.') : el.textContent;
-            var pill=document.querySelector('.gps-status-pill'); if(pill) { pill.classList.toggle('live',!!d.active); pill.textContent='● '+(d.active?(STATE.language==='ar'?'GPS يعمل':'GPS active'):(STATE.language==='ar'?'GPS متوقف':'GPS off')); }
-        }
-        function toggleGPSDriving() {
-            if (!STATE.currentUser) { alert(STATE.language==='ar'?'يرجى تسجيل الدخول أولاً':'Please login first'); return; }
-            if (drivingDoneToday()) return;
-            var u=ensurePointsData(STATE.userData||{});
-            if (u.drivingData.active) stopGPSDriving(true); else startGPSDriving();
-        }
-        function startGPSDriving() {
-            if (!navigator.geolocation) { alert(STATE.language==='ar'?'جهازك لا يدعم GPS في هذا المتصفح.':'Geolocation is not supported by this browser.'); return; }
-            if (!window.isSecureContext) { alert(STATE.language==='ar'?'يلزم تشغيل التطبيق عبر HTTPS لتفعيل GPS.':'HTTPS is required to use GPS.'); return; }
-            var u=ensurePointsData(STATE.userData||{});
-            u.drivingData.active=true; u.drivingData.startedAt=Date.now(); u.drivingData.currentSpeed=0; u.drivingData.currentLimit=0; u.drivingData.distanceKm=0; u.drivingData.durationSec=0; u.drivingData.safeSamples=0; u.drivingData.totalSamples=0; u.drivingData.safeRatio=0;
-            STATE.userData=u; updateGPSDrivingUI();
-            GPS_DRIVE.lastPosition=null;
-            GPS_DRIVE.watchId=navigator.geolocation.watchPosition(onGPSPosition, onGPSError, { enableHighAccuracy:true, maximumAge:2000, timeout:10000 });
-            GPS_DRIVE.timer=setInterval(function(){
-                if(!STATE.userData || !STATE.userData.drivingData.active) return;
-                var d=STATE.userData.drivingData; d.durationSec=Math.max(0,Math.round((Date.now()-Number(d.startedAt||Date.now()))/1000));
-                d.safeRatio=d.totalSamples ? d.safeSamples/d.totalSamples : 0; updateGPSDrivingUI();
-                persistDrivingTelemetry(true);
-            }, 5000);
-        }
-        function onGPSError(err) {
-            var msg=STATE.language==='ar'?'تعذر قراءة موقع الجهاز. تأكد من السماح بالموقع ثم حاول مرة أخرى.':'Unable to read your location. Allow location access and try again.';
-            console.warn('GPS error',err); var el=document.getElementById('gpsDrivingNote'); if(el) el.textContent=msg;
-        }
-        function onGPSPosition(pos) {
-            if(!STATE.currentUser) return;
-            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData;
-            if(!d.active) return;
-            var lat=Number(pos.coords.latitude), lon=Number(pos.coords.longitude), speed=Number(pos.coords.speed);
-            if(!isFinite(speed)||speed<0) speed=GPS_DRIVE.lastPosition ? (haversineKm(GPS_DRIVE.lastPosition,{lat:lat,lon:lon})*1000/Math.max(1,(Date.now()-GPS_DRIVE.lastPosition.t)/1000))*3.6 : 0;
-            speed=Math.max(0,speed*3.6);
-            if(GPS_DRIVE.lastPosition) d.distanceKm+=haversineKm(GPS_DRIVE.lastPosition,{lat:lat,lon:lon});
-            GPS_DRIVE.lastPosition={lat:lat,lon:lon,t:Date.now()}; d.currentSpeed=Math.round(speed);
-            lookupRoadSpeedLimit(lat,lon).then(function(limit){
-                d.currentLimit=limit||0;
-                if(limit>0 && speed <= limit + POINTS_CONFIG.driving.safeToleranceKmh) d.safeSamples=(d.safeSamples||0)+1;
-                d.totalSamples=(d.totalSamples||0)+1; d.safeRatio=d.totalSamples?d.safeSamples/d.totalSamples:0;
-                updateGPSDrivingUI();
+
+        function selectDrivingRoad(key) {
+            var road = DRIVE_ROAD_LIMITS.filter(function(r) { return r.key === key; })[0];
+            if (!road) return;
+            DriveSession.roadKey = key;
+            DriveSession.limit = road.limit;
+            document.querySelectorAll('.drive-road-chip').forEach(function(el) {
+                el.classList.toggle('active', el.getAttribute('data-road') === key);
             });
+            var btn = document.getElementById('startDrivingBtn');
+            if (btn) btn.disabled = false;
         }
-        function persistDrivingTelemetry(active) {
-            if(!STATE.currentUser) return;
-            var d=ensurePointsData(STATE.userData||{}).drivingData;
-            db.collection('clients').doc(STATE.currentUser.uid).set({ drivingData: Object.assign({},d,{active:!!active}) },{merge:true}).catch(function(e){console.warn('Driving telemetry save failed',e);});
-        }
-        function stopGPSDriving(manual) {
-            var u=ensurePointsData(STATE.userData||{}), d=u.drivingData;
-            if(GPS_DRIVE.watchId!==null){navigator.geolocation.clearWatch(GPS_DRIVE.watchId);GPS_DRIVE.watchId=null;}
-            if(GPS_DRIVE.timer){clearInterval(GPS_DRIVE.timer);GPS_DRIVE.timer=null;}
-            d.durationSec=Math.max(0,Math.round((Date.now()-Number(d.startedAt||Date.now()))/1000)); d.active=false; d.safeRatio=d.totalSamples?d.safeSamples/d.totalSamples:0;
-            STATE.userData=u; updateGPSDrivingUI();
-            var eligible=d.durationSec>=POINTS_CONFIG.driving.minDurationSec && d.distanceKm>=POINTS_CONFIG.driving.minDistanceKm && d.totalSamples>=10 && d.safeRatio>=0.90 && d.currentLimit>0;
-            if(eligible){ finalizeGPSDrivingPoints(d); }
-            else { persistDrivingTelemetry(false); var note=document.getElementById('gpsDrivingNote'); if(note) note.textContent=STATE.language==='ar'?'لم تستوفِ الرحلة شروط احتساب النقاط (10 دقائق، 2 كم، و90% من العينات ضمن الحد). لم يتم خصم أو إضافة أي نقاط.':'The trip did not meet the point criteria (10 min, 2 km, and 90% of samples within the limit). No points were added.'; }
-        }
-        function finalizeGPSDrivingPoints(d) {
-            var today=todayStr(), u=ensurePointsData(STATE.userData||{}); if(u.drivingData.lastDate===today) return;
-            var gap=daysBetweenDates(u.drivingData.lastDate,today), newStreak=(gap===1)?(u.drivingData.streak||0)+1:1, bonus=(newStreak%POINTS_CONFIG.driving.streakEvery===0)?POINTS_CONFIG.driving.streakBonus:0, total=POINTS_CONFIG.driving.points+bonus;
-            var newDriving=Object.assign({},u.drivingData,{lastDate:today,streak:newStreak,totalDays:(u.drivingData.totalDays||0)+1,active:false});
-            var descAr='رحلة قيادة آمنة موثقة عبر GPS ('+Number(d.distanceKm||0).toFixed(1)+' كم)', descEn='GPS-verified safe driving trip ('+Number(d.distanceKm||0).toFixed(1)+' km)';
-            awardInsuraPoints(total,'safe_driving_gps',descAr,descEn,{drivingData:newDriving});
-            var note=document.getElementById('gpsDrivingNote'); if(note) note.textContent=STATE.language==='ar'?'🎉 تم احتساب نقاط الرحلة بنجاح لأن سرعة القيادة كانت ضمن الحد المسموح في معظم القياسات.':'🎉 Trip points awarded because speed stayed within the allowed limit for most measurements.';
-        }
-        // Kept for backward compatibility with existing data/UI calls.
-        function checkInSafeDriving() { if (navigator.geolocation) toggleGPSDriving(); else alert(STATE.language==='ar'?'GPS غير متاح.':'GPS unavailable.'); }
 
-        // ---- Redemption: convert points into a purchase discount ----
+        function startDrivingSession() {
+            if (!DriveSession.roadKey) return;
+            DriveSession.active = true;
+            DriveSession.startedAt = Date.now();
+            DriveSession.lastFix = null;
+            DriveSession.elapsedMs = 0;
+            DriveSession.compliantMs = 0;
+            DriveSession.overCount = 0;
+            DriveSession.currentSpeed = 0;
+            renderDrivingLiveView();
+            DriveSession.watchId = navigator.geolocation.watchPosition(onDrivingPosition, onDrivingGeoError, {
+                enableHighAccuracy: true,
+                maximumAge: 1000,
+                timeout: 15000
+            });
+            DriveSession.timerId = setInterval(renderDrivingLiveView, 1000);
+        }
+
+        function haversineMeters(lat1, lon1, lat2, lon2) {
+            var R = 6371000,
+                toRad = function(d) { return d * Math.PI / 180; };
+            var dLat = toRad(lat2 - lat1),
+                dLon = toRad(lon2 - lon1);
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function onDrivingPosition(pos) {
+            if (!DriveSession.active) return;
+            var now = Date.now();
+            var speedKmh = null;
+            // Prefer the device's own speed reading (m/s) when available.
+            if (typeof pos.coords.speed === 'number' && pos.coords.speed !== null && !isNaN(pos.coords.speed)) {
+                speedKmh = Math.max(0, pos.coords.speed * 3.6);
+            }
+            if (DriveSession.lastFix) {
+                var dtMs = now - DriveSession.lastFix.t;
+                if (dtMs > 0) {
+                    // Fallback / cross-check: derive speed from distance over time when
+                    // the device doesn't report speed directly (common on some Android/iOS builds).
+                    if (speedKmh === null) {
+                        var meters = haversineMeters(DriveSession.lastFix.lat, DriveSession.lastFix.lng, pos.coords.latitude, pos.coords.longitude);
+                        speedKmh = Math.max(0, (meters / (dtMs / 1000)) * 3.6);
+                    }
+                    DriveSession.elapsedMs += dtMs;
+                    if (speedKmh <= DriveSession.limit + 5) { // small GPS-noise tolerance
+                        DriveSession.compliantMs += dtMs;
+                    } else {
+                        DriveSession.overCount++;
+                    }
+                }
+            }
+            DriveSession.currentSpeed = speedKmh || 0;
+            DriveSession.lastFix = { lat: pos.coords.latitude, lng: pos.coords.longitude, t: now };
+            renderDrivingLiveView();
+        }
+
+        function onDrivingGeoError(err) {
+            var lang = STATE.language || 'ar';
+            var msg = err && err.code === 1 ?
+                (lang === 'ar' ? 'تم رفض إذن الوصول للموقع. يرجى تفعيله من إعدادات المتصفح للمتابعة.' : 'Location permission denied. Please enable it in your browser settings to continue.') :
+                (lang === 'ar' ? 'تعذر الحصول على إشارة GPS. تأكد أنك في مكان مفتوح وحاول مجدداً.' : 'Could not get a GPS signal. Make sure you are outdoors and try again.');
+            alert(msg);
+            if (!DriveSession.lastFix) stopDrivingSession(true);
+        }
+
+        function renderDrivingLiveView() {
+            var lang = STATE.language || 'ar';
+            var body = document.getElementById('drivingSessionBody');
+            if (!body || !DriveSession.active) return;
+            var speed = Math.round(DriveSession.currentSpeed || 0);
+            var over = speed > DriveSession.limit + 5;
+            var warn = !over && speed > DriveSession.limit - 10 && speed > 0;
+            var pct = DriveSession.elapsedMs > 0 ? Math.round((DriveSession.compliantMs / DriveSession.elapsedMs) * 100) : 100;
+            var elapsedMin = Math.floor(DriveSession.elapsedMs / 60000),
+                elapsedSec = Math.floor((DriveSession.elapsedMs % 60000) / 1000);
+            body.innerHTML =
+                (over ? '<div class="drive-alert over">' + (lang === 'ar' ? '⚠️ تجاوزت السرعة المقررة' : '⚠️ You are over the speed limit') + '</div>' :
+                    '<div class="drive-alert ok">' + (lang === 'ar' ? '✓ ملتزم بالسرعة المقررة' : '✓ Within the speed limit') + '</div>') +
+                '<div class="drive-speed-gauge"><span class="drive-speed-value">' + speed + '</span> <span class="drive-speed-unit">' + (lang === 'ar' ? 'كم/س' : 'km/h') + '</span>' +
+                '<div class="drive-speed-limit">' + (lang === 'ar' ? 'الحد المسموح: ' : 'Limit: ') + DriveSession.limit + ' ' + (lang === 'ar' ? 'كم/س' : 'km/h') + '</div></div>' +
+                '<div class="drive-status-bar"><div class="drive-status-fill' + (over ? ' over' : warn ? ' warn' : '') + '" style="width:' + Math.min(100, speed / (DriveSession.limit * 1.3) * 100) + '%"></div></div>' +
+                '<div class="drive-stats-row"><span>' + (lang === 'ar' ? 'مدة الرحلة: ' : 'Trip time: ') + elapsedMin + ':' + (elapsedSec < 10 ? '0' : '') + elapsedSec + '</span><span>' + (lang === 'ar' ? 'نسبة الالتزام: ' : 'Compliance: ') + pct + '%</span></div>' +
+                '<button class="driving-card-btn drive-stop-btn" onclick="stopDrivingSession()">' + (lang === 'ar' ? '⏹ إنهاء الجلسة وحفظ النقاط' : '⏹ End session & save points') + '</button>';
+        }
+
+        function stopDrivingSession(silent) {
+            if (DriveSession.watchId !== null) { navigator.geolocation.clearWatch(DriveSession.watchId); DriveSession.watchId = null; }
+            if (DriveSession.timerId) { clearInterval(DriveSession.timerId); DriveSession.timerId = null; }
+            DriveSession.active = false;
+            if (silent) { closeModal('drivingSessionModal'); return; }
+            var lang = STATE.language || 'ar';
+            // Require a minimally meaningful trip before awarding anything,
+            // so a two-second test tap can't farm points.
+            if (DriveSession.elapsedMs < 60000) {
+                alert(lang === 'ar' ? 'الرحلة قصيرة جداً لاحتساب النقاط (أقل من دقيقة).' : 'The trip was too short to award points (under one minute).');
+                closeModal('drivingSessionModal');
+                return;
+            }
+            var compliancePct = DriveSession.elapsedMs > 0 ? (DriveSession.compliantMs / DriveSession.elapsedMs) : 0;
+            if (compliancePct < 0.5) {
+                alert(lang === 'ar' ? 'نسبة الالتزام بالسرعة كانت منخفضة هذه الرحلة، حاول مرة أخرى في رحلة أهدأ.' : 'Speed compliance was too low on this trip — try again on a calmer drive.');
+                closeModal('drivingSessionModal');
+                return;
+            }
+            var u = ensurePointsData(STATE.userData || {}),
+                today = todayStr();
+            var gap = daysBetweenDates(u.drivingData.lastDate, today),
+                newStreak = (gap === 1) ? (u.drivingData.streak || 0) + 1 : 1,
+                bonus = (newStreak % POINTS_CONFIG.driving.streakEvery === 0) ? POINTS_CONFIG.driving.streakBonus : 0,
+                base = Math.round(POINTS_CONFIG.driving.points * compliancePct),
+                total = base + bonus,
+                newDriving = { streak: newStreak, lastDate: today, totalDays: (u.drivingData.totalDays || 0) + 1 };
+            var pctLabel = Math.round(compliancePct * 100);
+            var descAr = 'قيادة آمنة عبر GPS (التزام ' + pctLabel + '%)' + (bonus ? (' + مكافأة تتابع ' + newStreak + ' يوم') : ''),
+                descEn = 'GPS-verified safe driving (' + pctLabel + '% compliant)' + (bonus ? (' + ' + newStreak + '-day streak bonus') : '');
+            awardInsuraPoints(total, 'safe_driving', descAr, descEn, { drivingData: newDriving });
+            closeModal('drivingSessionModal');
+            renderPointsHub();
+        }
+
+        function closeDrivingSession() {
+            if (DriveSession.active) {
+                var lang = STATE.language || 'ar';
+                if (!confirm(lang === 'ar' ? 'هل تريد إنهاء الجلسة بدون حفظ النقاط؟' : 'End the session without saving points?')) return;
+            }
+            stopDrivingSession(true);
+        }
+
+
         function openRedeemModal() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
             var u = ensurePointsData(STATE.userData || {}),
@@ -10004,16 +9644,20 @@ html.dark-mode .gold-badge{
             // Section 3: Safe driving
             var drivingDone = drivingDoneToday(),
                 drivingStreak = u.drivingData.streak || 0;
-            var dd = u.drivingData || {}, gpsActive = !!dd.active, gpsSpeed = Number(dd.currentSpeed || 0), gpsLimit = Number(dd.currentLimit || 0), gpsDuration = Math.round(Number(dd.durationSec || 0) / 60), gpsDistance = (Number(dd.distanceKm || 0)).toFixed(1), gpsSafe = Number(dd.safeRatio || 0);
-            html += '<div class="points-section"><div class="points-section-head"><h3>' + iconSvg('car', 'icon-navy') + (lang === 'ar' ? 'القيادة الآمنة عبر GPS' : 'GPS safe driving') + '</h3></div>' +
-                '<div class="driving-card' + (drivingDone ? ' done' : '') + '"><div class="driving-card-top"><div class="qicon">' + iconSvg('car') + '</div><div><div class="driving-card-title">' + (lang === 'ar' ? 'تتبع قيادتك واحصل على نقاط' : 'Track your drive and earn points') + '</div><div class="driving-card-sub">' + (lang === 'ar' ? '+' + POINTS_CONFIG.driving.points + ' نقاط عند إكمال رحلة آمنة' : '+' + POINTS_CONFIG.driving.points + ' points for a safe trip') + '</div></div></div>' +
-                '<div class="gps-driving-panel"><div class="gps-driving-status"><span class="gps-status-pill ' + (gpsActive ? 'live' : '') + '">● ' + (gpsActive ? (lang === 'ar' ? 'GPS يعمل' : 'GPS active') : (lang === 'ar' ? 'GPS متوقف' : 'GPS off')) + '</span><span class="gps-status-pill ' + (gpsLimit ? 'live' : 'warn') + '">' + (gpsLimit ? (lang === 'ar' ? gpsLimit + ' كم/س الحد الحالي' : gpsLimit + ' km/h current limit') : (lang === 'ar' ? 'بانتظار حد الطريق' : 'Waiting for road limit')) + '</span></div>' +
-                '<div class="gps-speed-grid"><div class="gps-speed-metric"><b id="gpsCurrentSpeed">' + Math.round(gpsSpeed) + '</b><span>' + (lang === 'ar' ? 'سرعتك كم/س' : 'Your speed km/h') + '</span></div><div class="gps-speed-metric"><b id="gpsRoadLimit">' + (gpsLimit || '—') + '</b><span>' + (lang === 'ar' ? 'حد الطريق' : 'Road limit') + '</span></div><div class="gps-speed-metric"><b id="gpsDriveDistance">' + gpsDistance + '</b><span>' + (lang === 'ar' ? 'كم' : 'km') + '</span></div></div>' +
-                '<div class="gps-driving-progress"><span id="gpsSafeProgress" style="width:' + Math.min(100, Math.round(gpsSafe * 100)) + '%"></span></div>' +
-                '<div class="gps-driving-note" id="gpsDrivingNote">' + (lang === 'ar' ? 'يتم استخدام موقع الجهاز وسرعته فقط للتحقق من الالتزام بحد السرعة. لن تُمنح النقاط إذا تعذر تحديد حد الطريق.' : 'The device location and speed are used only to verify speed-limit compliance. No points are awarded when the road limit cannot be determined.') + '</div>' +
+            html += '<div class="points-section"><div class="points-section-head"><h3>' + iconSvg('car', 'icon-navy') + (lang === 'ar' ? 'عادات القيادة الآمنة' : 'Safe-driving habits') + '</h3></div>' +
+                '<div class="driving-card' + (drivingDone ? ' done' : '') + '"><div class="driving-card-top"><div class="qicon">' + iconSvg('car') + '</div><div><div class="driving-card-title">' + (lang === 'ar' ? 'تسجيل قيادة آمنة اليوم' : "Log today's safe driving") + '</div><div class="driving-card-sub">' + (lang === 'ar' ? '+' + POINTS_CONFIG.driving.points + ' نقطة يومياً' : '+' + POINTS_CONFIG.driving.points + ' pts / day') + '</div></div></div>' +
+                '<div class="driving-checks">' +
+                '<label class="driving-check-item"><input type="checkbox" id="drivingCheckSpeed" ' + (drivingDone ? 'checked disabled' : '') + '> ' + (lang === 'ar' ? 'التزمت بحدود السرعة المقررة اليوم' : "I stayed within speed limits today") + '</label>' +
+                '<label class="driving-check-item"><input type="checkbox" id="drivingCheckPhone" ' + (drivingDone ? 'checked disabled' : '') + '> ' + (lang === 'ar' ? 'لم أستخدم الهاتف أثناء القيادة اليوم' : "I didn't use my phone while driving today") + '</label>' +
                 '</div>' +
-                '<div class="gps-driving-actions"><button class="driving-card-btn" id="gpsStartBtn" onclick="toggleGPSDriving()" ' + (drivingDone ? 'disabled' : '') + '>' + (drivingDone ? (lang === 'ar' ? '✓ تم احتساب رحلة اليوم' : '✓ Today\'s trip counted') : (gpsActive ? (lang === 'ar' ? 'إيقاف الرحلة' : 'Stop trip') : (lang === 'ar' ? '▶ بدء رحلة GPS' : '▶ Start GPS trip'))) + '</button></div>' +
+                '<button class="driving-card-btn" onclick="checkInSafeDriving()" ' + (drivingDone ? 'disabled' : '') + '>' + (drivingDone ? (lang === 'ar' ? '✓ تم التسجيل اليوم' : '✓ Logged for today') : (lang === 'ar' ? 'تسجيل القيادة الآمنة' : 'Log safe driving')) + '</button>' +
                 (drivingStreak ? '<div class="driving-streak-badge">🔥 ' + (lang === 'ar' ? 'تتابع ' + drivingStreak + ' يوم' : drivingStreak + '-day streak') + '</div>' : '') +
+                '<div class="driving-gps-divider"><span>' + (lang === 'ar' ? 'أو' : 'or') + '</span></div>' +
+                '<div class="driving-gps-block">' +
+                '<div class="driving-gps-title">' + iconSvg('shield', 'icon-green') + (lang === 'ar' ? 'تتبّع تلقائي عبر GPS' : 'Automatic GPS tracking') + '</div>' +
+                '<div class="driving-gps-sub">' + (lang === 'ar' ? 'شغّل GPS أثناء القيادة ليحتسب التطبيق التزامك بالسرعة تلقائياً بدل التأكيد اليدوي.' : "Turn on GPS while you drive so the app measures your speed compliance automatically instead of a manual check-in.") + '</div>' +
+                '<button class="driving-card-btn driving-gps-btn" onclick="openDrivingSessionModal()" ' + (drivingDone ? 'disabled' : '') + '>' + iconSvg('car') + ' ' + (lang === 'ar' ? 'بدء جلسة قيادة بـ GPS' : 'Start a GPS driving session') + '</button>' +
+                '</div>' +
                 '</div></div>';
 
             // Section 4: Points history
@@ -12044,8 +11688,6 @@ html.dark-mode .gold-badge{
                 complaintDetails.addEventListener('input', updateComplaintCharCount);
             }
         }
-
-        window.addEventListener('beforeunload', function(){ if(GPS_DRIVE.watchId!==null && navigator.geolocation) navigator.geolocation.clearWatch(GPS_DRIVE.watchId); if(GPS_DRIVE.timer) clearInterval(GPS_DRIVE.timer); });
 
         document.addEventListener('DOMContentLoaded', function() {
             loadThemePreference();
