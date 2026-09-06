@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/admin/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admin/$(request.auth.uid)).data.role == 'admin';
+    }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function legacyVerified() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/legacyVerification/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/legacyVerification/$(request.auth.uid)).data.approved == true;
+    }
+    function clientApproved() { return signedIn() && (isAdmin() || legacyVerified() || request.auth.token.email_verified == true); }
+
+    match /admin/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow write: if isAdmin() && request.resource.data.role == 'admin';
+    }
+    match /legacyVerification/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create, update, delete: if isAdmin() && request.resource.data.approved == true;
+    }
+    match /clients/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow create: if isOwner(uid) && request.resource.data.role == 'client';
+      allow update: if isAdmin() || (isOwner(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName','email','phone','birthDate','gender','occupation','clientType','businessName','businessActivity','employees','existingPolicies','language','profilePicture','onboardingSeen','termsAccepted','updatedAt','username','referredBy','offerReferralId','offerReferralName','offerReferralCompany','offerReferralDate']));
+      allow delete: if isAdmin();
+    }
+    match /policies/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+    match /documents/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create: if clientApproved() && request.resource.data.clientId == request.auth.uid && request.resource.data.uploadedBy == 'client';
+      allow update: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fileName','category','updatedAt','downloadURL','fileUrl','verificationStatus','reviewStatus']));
+      allow delete: if isAdmin();
+    }
+    match /notifications/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+    match /products/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.published == true);
+      allow create, update, delete: if isAdmin();
+    }
+    match /offers/{id} {
+      allow read: if isAdmin() || (clientApproved() && (resource.data.status == 'active' || resource.data.published == true));
+      allow create, update, delete: if isAdmin();
+    }
+    match /companyAds/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.status == 'active');
+      allow create, update, delete: if isAdmin();
+    }
+    match /insuranceAds/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.status == 'active');
+      allow create, update, delete: if isAdmin();
+    }
+    match /companies/{id} {
+      allow read: if isAdmin() || clientApproved();
+      allow create, update, delete: if isAdmin();
+    }
+    match /insuranceTypes/{id} {
+      allow read: if isAdmin() || clientApproved();
+      allow create, update, delete: if isAdmin();
+    }
+    match /insuranceAssessments/{uid} {
+      allow read, write: if isAdmin() || (clientApproved() && isOwner(uid));
+    }
+    match /appointments/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create: if clientApproved() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['date','time','notes','status','updatedAt']));
+      allow delete: if isAdmin();
+    }
+    match /complaints/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create: if clientApproved() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','adminReply','updatedAt']));
+      allow delete: if isAdmin();
+    }
+    match /messages/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create: if isAdmin() || (clientApproved() && request.resource.data.clientId == request.auth.uid);
+      allow update: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    match /leads/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if clientApproved() && request.resource.data.clientId == request.auth.uid;
+    }
+    match /pointsLog/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+    match /payments/{id} {
+      allow read, create, update, delete: if isAdmin();
+    }
+    match /claims/{id} {
+      allow read: if isAdmin() || (clientApproved() && resource.data.clientId == request.auth.uid);
+      allow create: if clientApproved() && request.resource.data.clientId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+    match /activity/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
