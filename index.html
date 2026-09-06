@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#0E2A5C">
 <meta name="application-name" content="SecurePath">
 <meta name="apple-mobile-web-app-title" content="SecurePath">
-<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="https://eslamshahin1087-lab.github.io/securepath-app/icon-512.png">
+<link rel="apple-touch-icon" href="https://eslamshahin1087-lab.github.io/securepath-app/apple-touch-icon.png">
 <link rel="canonical" href="https://eslamshahin1087-lab.github.io/securepath-app/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="SecurePath">
 <meta property="og:title" content="SecurePath — التطبيق الرسمي"><meta property="og:description" content="منصة تعريفية وتوعوية لخدمة حاملي وثائق التأمين.">
@@ -134,12 +134,76 @@ h2{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-1.4px;margin:
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}.btn:hover{transform:none}}
 </style>
+
+
+<style id="securepath-3d-logo">
+/* SecurePath — premium 3D logo system. Self-contained; no external logo image required. */
+.logo-3d.securepath-logo-mark{display:block;width:100%;height:100%;overflow:visible;shape-rendering:geometricPrecision}
+.brand-mark{width:44px;height:44px;flex:0 0 44px;border-radius:13px;filter:drop-shadow(0 8px 13px rgba(3,25,57,.24));transform:perspective(500px) rotateX(0deg) rotateY(0deg);transition:transform .35s ease,filter .35s ease}
+.brand:hover .brand-mark{transform:perspective(500px) rotateX(4deg) rotateY(-6deg) translateY(-1px);filter:drop-shadow(0 11px 17px rgba(3,25,57,.30))}
+.phone-logo-wrap{position:relative;width:128px;height:128px;margin:0 auto;display:grid;place-items:center;perspective:900px}
+.phone-logo-wrap::before{content:"";position:absolute;inset:8px;border-radius:34px;background:radial-gradient(circle at 50% 42%,rgba(242,200,102,.28),rgba(47,128,237,.14) 42%,transparent 72%);filter:blur(12px);animation:logoGlow3D 4.2s ease-in-out infinite}
+.phone-logo-wrap::after{content:"";position:absolute;width:84px;height:17px;left:50%;bottom:3px;transform:translateX(-50%);border-radius:50%;background:rgba(0,0,0,.28);filter:blur(8px);animation:logoShadow3D 4.2s ease-in-out infinite}
+.phone-logo{width:108px;height:108px;margin:0;position:relative;z-index:2;border-radius:28px;transform-origin:50% 58%;filter:drop-shadow(0 19px 20px rgba(0,0,0,.34));animation:logoFloat3D 4.8s ease-in-out infinite}
+@keyframes logoFloat3D{0%,100%{transform:translateY(0) rotateX(0deg) rotateY(-3deg) scale(1)}25%{transform:translateY(-5px) rotateX(2deg) rotateY(5deg) scale(1.015)}50%{transform:translateY(-9px) rotateX(-1deg) rotateY(-2deg) scale(1.035)}75%{transform:translateY(-5px) rotateX(2deg) rotateY(-6deg) scale(1.015)}}
+@keyframes logoGlow3D{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes logoShadow3D{0%,100%{opacity:.28;transform:translateX(-50%) scaleX(1)}50%{opacity:.13;transform:translateX(-50%) scaleX(.72)}}
+@media(max-width:640px){.brand-mark{width:40px;height:40px;flex-basis:40px}.phone-logo-wrap{width:106px;height:106px}.phone-logo{width:90px;height:90px;border-radius:24px}}
+@media(prefers-reduced-motion:reduce){.phone-logo,.phone-logo-wrap::before,.phone-logo-wrap::after,.brand-mark{animation:none!important;transition:none!important}}
+</style>
+
+<style id="securepath-icon-system-v3">
+/* SecurePath — unified icon system v3 */
+:root{--icon-box:56px;--icon-size:24px;--icon-radius:16px}
+.feature-icon{width:var(--icon-box)!important;height:var(--icon-box)!important;min-width:var(--icon-box);min-height:var(--icon-box);border-radius:var(--icon-radius)!important;margin:0 0 18px!important;display:grid!important;place-items:center!important;box-sizing:border-box!important}
+.feature-icon svg{width:var(--icon-size)!important;height:var(--icon-size)!important;display:block!important;flex:none!important;stroke-width:1.8!important}
+.trust-icon{width:44px!important;height:44px!important;flex:0 0 44px!important;border-radius:14px!important;display:grid!important;place-items:center!important;box-sizing:border-box!important}
+.trust-icon svg{width:21px!important;height:21px!important;display:block!important;flex:none!important;stroke-width:1.8!important}
+.actions .btn svg{width:18px!important;height:18px!important;flex:0 0 18px!important;display:block!important}
+.nav-actions svg,.nav-link svg{width:18px;height:18px;display:block}
+.brand-mark{width:42px!important;height:42px!important;flex:0 0 42px!important;border-radius:12px!important;box-sizing:border-box!important}
+.phone-logo-wrap{width:116px!important;height:116px!important;min-width:116px!important;min-height:116px!important;position:relative!important;display:grid!important;place-items:center!important;overflow:visible!important}
+.phone-logo-wrap .phone-logo,.phone-logo-wrap svg.phone-logo{width:88px!important;height:88px!important;max-width:88px!important;max-height:88px!important;min-width:88px!important;min-height:88px!important;display:block!important;position:relative!important;inset:auto!important;transform-origin:50% 58%!important;box-sizing:border-box!important}
+.phone-logo-wrap::before{inset:14px!important;border-radius:28px!important}
+.phone-logo-wrap::after{width:66px!important;height:11px!important;bottom:5px!important}
+@media(max-width:640px){
+  .brand-mark{width:38px!important;height:38px!important;flex-basis:38px!important}
+  .phone-logo-wrap{width:100px!important;height:100px!important;min-width:100px!important;min-height:100px!important}
+  .phone-logo-wrap .phone-logo,.phone-logo-wrap svg.phone-logo{width:76px!important;height:76px!important;max-width:76px!important;max-height:76px!important;min-width:76px!important;min-height:76px!important}
+  .feature-icon{width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important}
+  .feature-icon svg{width:22px!important;height:22px!important}
+}
+@media(prefers-reduced-motion:reduce){.phone-logo{animation:none!important}.phone-logo-wrap::before,.phone-logo-wrap::after{animation:none!important}}
+</style>
 </head>
 <body>
 <header class="site-header">
   <nav class="container nav" aria-label="التنقل الرئيسي">
     <a class="brand" href="./" aria-label="SecurePath">
-      <img class="brand-mark" src="./icon-512.png" alt="SecurePath">
+      <svg class="securepath-logo-svg securepath-logo-mark logo-3d brand-mark" viewBox="0 0 512 512" role="img" aria-label="SecurePath" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navy3d_h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#173F78"/><stop offset=".55" stop-color="#0B2D61"/><stop offset="1" stop-color="#031B3D"/></linearGradient>
+    <linearGradient id="gold3d_h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B5"/><stop offset=".38" stop-color="#F5D06A"/><stop offset=".72" stop-color="#D9A441"/><stop offset="1" stop-color="#A66E0D"/></linearGradient>
+    <linearGradient id="edge3d_h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A87516"/><stop offset="1" stop-color="#684209"/></linearGradient>
+    <filter id="shadow3d_h" x="-35%" y="-35%" width="170%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="13" flood-color="#000" flood-opacity=".34"/></filter>
+  </defs>
+  <!-- 3D base / depth -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="#03152F" stroke="#183D70" stroke-width="8"/>
+  <path d="M256 80 405 133v108c0 103-58 170-149 212-91-42-149-109-149-212V133L256 80Z" fill="url(#edge3d_h)" opacity=".92" transform="translate(11 15)"/>
+  <path d="M256 70 399 121v121c0 99-58 157-143 198-85-41-143-99-143-198V121L256 70Z" fill="url(#navy3d_h)" stroke="url(#gold3d_h)" stroke-width="18" stroke-linejoin="round" filter="url(#shadow3d_h)"/>
+  <!-- beveled highlight -->
+  <path d="M256 78 390 126" stroke="#FFF0B5" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <path d="M151 145v94c0 86 45 145 105 180" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".10"/>
+  <!-- SecurePath cross / path symbol -->
+  <path d="M256 122v266" stroke="url(#gold3d_h)" stroke-width="15" stroke-linecap="round"/>
+  <path d="M177 256h158" stroke="url(#gold3d_h)" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="256" cy="256" r="52" fill="#092A59" stroke="url(#gold3d_h)" stroke-width="13"/>
+  <circle cx="242" cy="241" r="9" fill="#FFF0B5" opacity=".85"/>
+  <!-- lock -->
+  <path d="M237 270v-26c0-15 8-27 19-27s19 12 19 27v26" fill="none" stroke="#FFF0B5" stroke-width="12" stroke-linecap="round"/>
+  <path d="M227 270h58l-8 34h-42l-8-34Z" fill="none" stroke="#FFF0B5" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="256" cy="287" r="5.5" fill="#F2C866"/>
+</svg>
       <span class="brand-name">SecurePath</span>
     </a>
     <div class="nav-actions"><a class="nav-link" href="./wathiqati-app.html">فتح النسخة الرقمية</a></div>
@@ -152,7 +216,7 @@ h2{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-1.4px;margin:
     <div class="hero-grid">
       <div class="hero-copy">
         <div class="overline"><span class="overline-dot"></span>التطبيق الرسمي للأندرويد</div>
-        <h1>تأمينك.<br><em>طريقك أوضح.</em></h1>
+        <h1>اعرف أكثر<br><em>قبل أي خطوة</em></h1>
         <p class="hero-lead">SecurePath منصة تعريفية وتوعوية تساعد حاملي وثائق التأمين على الوصول إلى المعلومات والخدمات الرقمية بصورة أبسط وأكثر وضوحًا.</p>
         <div class="actions">
           <a class="btn btn-primary" href="./SecurePath.apk" download="SecurePath.apk" aria-label="تحميل تطبيق SecurePath للأندرويد">
@@ -171,7 +235,30 @@ h2{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-1.4px;margin:
         <div class="phone">
           <div class="phone-notch"></div>
           <div class="phone-screen">
-            <div class="phone-content"><img class="phone-logo" src="./icon-512.png" alt=""><div class="phone-title">SecurePath</div><div class="phone-subtitle">Your insurance, clearer.</div></div>
+            <div class="phone-content"><div class="phone-logo-wrap"><svg class="securepath-logo-svg securepath-logo-mark logo-3d phone-logo" viewBox="0 0 512 512" role="img" aria-label="SecurePath" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navy3d_p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#173F78"/><stop offset=".55" stop-color="#0B2D61"/><stop offset="1" stop-color="#031B3D"/></linearGradient>
+    <linearGradient id="gold3d_p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B5"/><stop offset=".38" stop-color="#F5D06A"/><stop offset=".72" stop-color="#D9A441"/><stop offset="1" stop-color="#A66E0D"/></linearGradient>
+    <linearGradient id="edge3d_p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A87516"/><stop offset="1" stop-color="#684209"/></linearGradient>
+    <filter id="shadow3d_p" x="-35%" y="-35%" width="170%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="13" flood-color="#000" flood-opacity=".34"/></filter>
+  </defs>
+  <!-- 3D base / depth -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="#03152F" stroke="#183D70" stroke-width="8"/>
+  <path d="M256 80 405 133v108c0 103-58 170-149 212-91-42-149-109-149-212V133L256 80Z" fill="url(#edge3d_p)" opacity=".92" transform="translate(11 15)"/>
+  <path d="M256 70 399 121v121c0 99-58 157-143 198-85-41-143-99-143-198V121L256 70Z" fill="url(#navy3d_p)" stroke="url(#gold3d_p)" stroke-width="18" stroke-linejoin="round" filter="url(#shadow3d_p)"/>
+  <!-- beveled highlight -->
+  <path d="M256 78 390 126" stroke="#FFF0B5" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <path d="M151 145v94c0 86 45 145 105 180" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".10"/>
+  <!-- SecurePath cross / path symbol -->
+  <path d="M256 122v266" stroke="url(#gold3d_p)" stroke-width="15" stroke-linecap="round"/>
+  <path d="M177 256h158" stroke="url(#gold3d_p)" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="256" cy="256" r="52" fill="#092A59" stroke="url(#gold3d_p)" stroke-width="13"/>
+  <circle cx="242" cy="241" r="9" fill="#FFF0B5" opacity=".85"/>
+  <!-- lock -->
+  <path d="M237 270v-26c0-15 8-27 19-27s19 12 19 27v26" fill="none" stroke="#FFF0B5" stroke-width="12" stroke-linecap="round"/>
+  <path d="M227 270h58l-8 34h-42l-8-34Z" fill="none" stroke="#FFF0B5" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="256" cy="287" r="5.5" fill="#F2C866"/>
+</svg></div><div class="phone-title">SecurePath</div><div class="phone-subtitle">Your insurance, clearer.</div></div>
           </div>
         </div>
       </div>
