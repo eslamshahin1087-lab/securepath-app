@@ -1,0 +1,58 @@
+name: SecurePath production hardening
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: ${{ !contains(github.event.head_commit.message, '[hardening-bot]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply safe production fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('wathiqati-app.html')
+          s = app.read_text(encoding='utf-8')
+          old = "var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];"
+          new = "var VERIFICATION_EXEMPT_DOMAINS = [];"
+          if old not in s:
+              raise SystemExit('Expected verification exemption declaration was not found')
+          s = s.replace(old, new, 1)
+          app.write_text(s, encoding='utf-8')
+
+          index = Path('index.html')
+          s = index.read_text(encoding='utf-8')
+          s = s.replace('./SecurePath.apk', './SecurePath-Production.apk')
+          s = s.replace('download="SecurePath.apk"', 'download="SecurePath-Production.apk"')
+          s = s.replace('تحميل SecurePath.apk', 'تحميل SecurePath-Production.apk')
+          s = s.replace('الإصدار 1.0.0', 'الإصدار الإنتاجي')
+          index.write_text(s, encoding='utf-8')
+
+          sw = Path('sw.js')
+          sw.write_text("""const CACHE_NAME = 'securepath-shell-v2';\nconst APP_SHELL = [\n  './',\n  './index.html',\n  './wathiqati-app.html',\n  './manifest.json',\n  './icon-192.png',\n  './icon-512.png',\n  './icon-512-maskable.png',\n  './apple-touch-icon.png'\n];\n\nself.addEventListener('install', event => {\n  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));\n});\n\nself.addEventListener('activate', event => {\n  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))).then(() => self.clients.claim()));\n});\n\nself.addEventListener('fetch', event => {\n  const request = event.request;\n  if (request.method !== 'GET') return;\n  const url = new URL(request.url);\n  if (url.origin !== self.location.origin) return;\n  event.respondWith(fetch(request).then(response => {\n    const copy = response.clone();\n    caches.open(CACHE_NAME).then(cache => cache.put(request, copy)).catch(() => {});\n    return response;\n  }).catch(() => caches.match(request).then(cached => cached || caches.match('./wathiqati-app.html'))));\n});\n""", encoding='utf-8')
+          PY
+
+      - name: Commit hardened files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wathiqati-app.html index.html sw.js
+          git diff --cached --quiet || git commit -m "security: apply production hardening [hardening-bot]"
+          git push
+
+      - name: Remove one-time hardening workflow
+        if: success()
+        run: |
+          rm -f .github/workflows/securepath-hardening.yml
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: remove one-time hardening workflow [hardening-bot]"
+          git push
