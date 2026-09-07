@@ -1,10 +1,11 @@
 {
   "name": "securepath-admin-tools",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SecurePath Firebase Admin utilities for explicit test/admin accounts",
   "scripts": {
     "test": "node securepath-auth-policy.test.js",
+    "apply-auth-fix": "node apply-securepath-auth-fix.js",
     "list": "node securepath-firebase-migration.js list",
     "apply-test": "node securepath-firebase-migration.js apply-test",
     "apply-admin": "node securepath-firebase-migration.js apply-admin",
