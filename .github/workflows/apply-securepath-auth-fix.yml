@@ -1,0 +1,42 @@
+name: Apply SecurePath auth patch
+
+on:
+  push:
+    branches:
+      - fix/test-email-login-safe
+
+permissions:
+  contents: write
+
+jobs:
+  patch-auth:
+    if: ${{ !contains(github.event.head_commit.message, '[auth-patch-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run auth-policy tests
+        run: npm test
+
+      - name: Apply auth patch to app
+        run: node apply-securepath-auth-fix.js
+
+      - name: Commit patched application
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wathiqati-app.html wathiqati-app.html.pre-auth-fix.bak
+          if git diff --cached --quiet; then
+            echo "No application changes detected."
+            exit 0
+          fi
+          git commit -m "Apply SecurePath verification-safe auth policy [auth-patch-applied]"
+          git push origin HEAD:fix/test-email-login-safe
