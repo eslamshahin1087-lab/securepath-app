@@ -1,0 +1,144 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        (
+          request.auth.token.securepathAdmin == true ||
+          exists(/databases/$(database)/documents/admin/$(request.auth.uid))
+        );
+    }
+
+    function onlyChanged(allowed) {
+      return request.resource.diff(resource).affectedKeys().hasOnly(allowed);
+    }
+
+    // Canonical client profile: document ID MUST be Firebase Auth UID.
+    match /clients/{clientId} {
+      allow read: if isAdmin() || isOwner(clientId);
+      allow create: if isOwner(clientId);
+      allow update: if isAdmin() || (isOwner(clientId) &&
+        onlyChanged(['fullName','username','phone','photoURL','language','darkMode','updatedAt']));
+      allow delete: if isAdmin();
+    }
+
+    match /admin/{adminId} {
+      allow read: if isAdmin() && request.auth.uid == adminId;
+      allow write: if false;
+    }
+
+    // Client-owned records. Admin has full broker access.
+    match /policies/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /documents/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /claims/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /appointments/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid &&
+        onlyChanged(['date','time','notes','status','updatedAt']));
+      allow delete: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+    }
+
+    match /complaints/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /messages/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid &&
+        onlyChanged(['readByClient','updatedAt']));
+      allow delete: if isAdmin();
+    }
+
+    match /notifications/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Points and assessment are intentionally not client-writable.
+    // Production writes should go through a trusted backend / Admin SDK.
+    match /pointsLog/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /insuranceAssessments/{clientId} {
+      allow read: if isAdmin() || isOwner(clientId);
+      allow write: if isAdmin();
+    }
+
+    match /leads/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if signedIn() && request.resource.data.clientId == request.auth.uid;
+    }
+
+    match /payments/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.clientId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /activity/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    match /products/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /companies/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /insuranceTypes/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /offers/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /companyAds/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /brokerSettings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
