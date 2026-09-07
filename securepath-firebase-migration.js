@@ -18,10 +18,10 @@
  *   SECUREPATH_ADMIN_UIDS='uid1,uid2'
  *
  * Commands:
- *   node legacy-verification-migration.js list
- *   node legacy-verification-migration.js apply-test
- *   node legacy-verification-migration.js apply-admin
- *   node legacy-verification-migration.js apply-both
+ *   node securepath-firebase-migration-fixed.js list
+ *   node securepath-firebase-migration-fixed.js apply-test
+ *   node securepath-firebase-migration-fixed.js apply-admin
+ *   node securepath-firebase-migration-fixed.js apply-both
  *
  * apply commands set custom claims only for the explicit accounts above.
  * They do NOT delete users or Firestore data.
@@ -89,10 +89,23 @@ async function applyClaims(kind) {
   for (const { user, securepathTest, securepathAdmin } of byUid.values()) {
     const existing = user.customClaims || {};
     const next = { ...existing };
-    if (kind === 'test' || kind === 'both') next.securepathTest = true;
-    if (kind === 'admin' || kind === 'both') next.securepathAdmin = true;
+
+    // A SecurePath test account is an explicitly targeted, non-production
+    // account. Mark it verified so the client does not require a real
+    // verification email/code for this account. Never infer this from the
+    // email domain alone; only users selected by the explicit allow-list
+    // above reach this branch.
+    if ((kind === 'test' || kind === 'both') && securepathTest) {
+      await auth.updateUser(user.uid, { emailVerified: true });
+      next.securepathTest = true;
+    }
+
+    if ((kind === 'admin' || kind === 'both') && securepathAdmin) {
+      next.securepathAdmin = true;
+    }
+
     await auth.setCustomUserClaims(user.uid, next);
-    console.log(`UPDATED ${user.uid} ${user.email || ''} claims=${JSON.stringify(next)}`);
+    console.log(`UPDATED ${user.uid} ${user.email || ''} emailVerified=${(kind === 'test' || kind === 'both') && securepathTest ? 'true' : String(user.emailVerified)} claims=${JSON.stringify(next)}`);
   }
 
   if (byUid.size === 0) {
