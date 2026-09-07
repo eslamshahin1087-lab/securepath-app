@@ -6025,6 +6025,19 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             </div>
         </div>
 
+        <div class="overlay" id="gpsTripModal">
+            <div class="sheet">
+                <div class="grabber"></div>
+                <div class="close-x" onclick="stopGpsTrip(true)">✕</div>
+                <h2 id="gpsTripTitle">
+                    <span class="icon-navy"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span></span>
+                    <span id="gpsTripTitleText">رحلة قيادة بتتبع GPS</span>
+                </h2>
+                <div class="sub" id="gpsTripSub">راقب سرعتك بشكل حي واكسب نقاطاً عند الالتزام بحد السرعة</div>
+                <div id="gpsTripBody"></div>
+            </div>
+        </div>
+
         <div class="overlay" id="uploadDocModal">
             <div class="sheet">
                 <div class="grabber"></div>
@@ -6918,7 +6931,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 medal: '<circle cx="12" cy="15" r="6"/><path d="m9 10-4-7M15 10l4-7"/><path d="M9.5 13.5 12 12l2.5 1.5-.7-2.7L16 9h-2.8L12 6.5 10.8 9H8l2.2 1.8-.7 2.7Z"/>',
                 walk: '<circle cx="13" cy="4" r="2"/><path d="M10 9 7 21M10 9l4 2 3-2M14 11l3 3 3-1M10 9 8 14l3 2-1 5"/>',
                 run: '<circle cx="15" cy="4" r="2"/><path d="M11 8 7 10l1 5 4 1-1 6M11 8l3 3 4-1M14 11l-1 3 4 3-2 4"/>',
-                apple: '<path d="M12 8c-3 0-5.5 2.5-5.5 6S9 20 12 20s5.5-2.5 5.5-6S15 8 12 8Z"/><path d="M12 8c0-2 1-3.5 2.5-4M10 6c1 0 1.5-1 1.5-2"/>'
+                apple: '<path d="M12 8c-3 0-5.5 2.5-5.5 6S9 20 12 20s5.5-2.5 5.5-6S15 8 12 8Z"/><path d="M12 8c0-2 1-3.5 2.5-4M10 6c1 0 1.5-1 1.5-2"/>',
+                heart: '<path d="M12 21s-7-4.5-9.5-9C.8 8.5 2.3 5 6 5c2 0 3.3 1 4 2.2C10.7 6 12 5 14 5c3.7 0 5.2 3.5 3.5 7-2.5 4.5-9.5 9-9.5 9Z"/>'
             };
             return '<span class="app-icon ' + (cls || '') + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (paths[name] || paths.info) + '</svg></span>';
         }
@@ -7297,9 +7311,28 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             return name;
         }
 
+        // ============================================================ //
+        // EMAIL VERIFICATION GATE                                       //
+        // ============================================================ //
+        // Pre-built placeholder accounts on this domain (no real inbox)
+        // are exempt from the mandatory email-verification check below.
+        // Only use for domains you fully control end-to-end.
+        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+
+        function isVerificationExemptEmail(email) {
+            var e = String(email || '').trim().toLowerCase();
+            var at = e.lastIndexOf('@');
+            if (at < 0) return false;
+            var domain = e.slice(at + 1);
+            return VERIFICATION_EXEMPT_DOMAINS.indexOf(domain) !== -1;
+        }
+
         function finishClientLogin(credential, identifier) {
             var user = credential && credential.user;
             if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
+            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
+                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
+            }
             return getClientProfile(user.uid, user.email).then(function(profile) {
                 if (!profile) throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
                 var name = verifyClientIdentity(profile, user, identifier);
@@ -7358,6 +7391,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     else if (code === 'client/identity-mismatch') message = STATE.language === 'ar' ? 'تم تسجيل الدخول بحساب Firebase مختلف عن اسم المستخدم المطلوب.' : 'The authenticated Firebase account does not match the requested username.';
                     else if (code === 'client/name-missing') message = STATE.language === 'ar' ? 'ملف العميل لا يحتوي اسمًا صالحًا للعرض.' : 'The client profile has no valid display name.';
                     else if (code === 'client/invalid-role') message = STATE.language === 'ar' ? 'هذا الحساب ليس حساب عميل.' : 'This account is not a client account.';
+                    else if (code === 'auth/email-not-verified') message = STATE.language === 'ar' ? 'يجب توثيق بريدك الإلكتروني قبل تسجيل الدخول. يرجى مراجعة صندوق الوارد لديك (وملف الرسائل غير المرغوبة) وتفعيل رابط التوثيق ثم إعادة المحاولة.' : 'Please verify your email address before logging in. Check your inbox (and spam folder) for the verification link, then try again.';
                     else if (code === 'permission-denied' || code === 'firestore/permission-denied') message = STATE.language === 'ar' ? 'تم تسجيل الدخول لكن Firebase يمنع قراءة ملف العميل.' : 'Authentication succeeded, but Firestore rules deny access to the client profile.';
                     else message = (STATE.language === 'ar' ? 'فشل تسجيل الدخول: ' : 'Login failed: ') + friendlyFirebaseError(e);
                     if (err) { err.textContent = message;
@@ -7455,7 +7489,21 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     STATE.offerReferralName = null;
                     STATE.offerReferralCompany = null;
                 }
-                return finishClientLogin(cred, email).then(function() { hideLoading('signupBtn'); });
+                if (isVerificationExemptEmail(email)) {
+                    return finishClientLogin(cred, email).then(function() { hideLoading('signupBtn'); });
+                }
+                return cred.user.sendEmailVerification().catch(function() {}).then(function() {
+                    return auth.signOut().catch(function() {});
+                }).then(function() {
+                    hideLoading('signupBtn');
+                    resetState();
+                    showScreen('login');
+                    var loginErr = document.getElementById('loginError');
+                    if (loginErr) {
+                        loginErr.textContent = STATE.language === 'ar' ? 'تم إنشاء حسابك بنجاح! أرسلنا رابط توثيق إلى بريدك الإلكتروني — يرجى تفعيله ثم تسجيل الدخول.' : 'Your account was created! We sent a verification link to your email — please verify it, then log in.';
+                        loginErr.style.display = 'block';
+                    }
+                });
             }).catch(function(e) {
                 hideLoading('signupBtn');
                 auth.signOut().catch(function() {});
@@ -8282,7 +8330,16 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 running: { points: 8, streakBonus: 15, streakEvery: 7, icon: 'run', ar: 'الجري', en: 'Running' },
                 healthyEating: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'apple', ar: 'الأكل الصحي', en: 'Healthy eating' }
             },
-            driving: { points: 6, streakBonus: 15, streakEvery: 7 }
+            driving: { points: 6, streakBonus: 15, streakEvery: 7 },
+            gpsDriving: {
+                points: 8, streakBonus: 15, streakEvery: 7,
+                minDurationSec: 60, minCompliancePct: 50, speedToleranceKmh: 5,
+                roadTypes: {
+                    city: { limitKmh: 60, ar: 'طريق داخل المدينة', en: 'City road' },
+                    main: { limitKmh: 90, ar: 'طريق رئيسي', en: 'Main road' },
+                    highway: { limitKmh: 120, ar: 'طريق سريع / صحراوي', en: 'Highway' }
+                }
+            }
         };
 
         function todayStr() { return new Date().toISOString().split('T')[0]; }
@@ -8303,6 +8360,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 u.habitData[k] = u.habitData[k] || { streak: 0, lastDate: '', totalDays: 0 };
             });
             u.drivingData = u.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
+            u.gpsDrivingData = u.gpsDrivingData || { streak: 0, lastDate: '', totalTrips: 0 };
             return u;
         }
 
@@ -8334,7 +8392,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             u.insuraPointsLifetime += points;
             if (flagUpdates) {
                 Object.keys(flagUpdates).forEach(function(k) {
-                    if (k === 'habitData' || k === 'drivingData') { u[k] = flagUpdates[k]; } else { u.pointsFlags[k] = flagUpdates[k]; }
+                    if (k === 'habitData' || k === 'drivingData' || k === 'gpsDrivingData') { u[k] = flagUpdates[k]; } else { u.pointsFlags[k] = flagUpdates[k]; }
                 });
             }
             STATE.userData = u;
@@ -8344,7 +8402,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 insuraPointsLifetime: firebase.firestore.FieldValue.increment(points),
                 pointsFlags: u.pointsFlags,
                 habitData: u.habitData,
-                drivingData: u.drivingData
+                drivingData: u.drivingData,
+                gpsDrivingData: u.gpsDrivingData
             }, { merge: true }).catch(function(e) { console.warn('Points save failed', e); });
 
             db.collection('pointsLog').add({
@@ -8487,6 +8546,137 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             var descAr = 'الالتزام بقيادة آمنة اليوم' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
                 descEn = 'Committed to safe driving today' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
             awardInsuraPoints(total, 'safe_driving', descAr, descEn, { drivingData: newDriving });
+        }
+
+        // ---- GPS-tracked driving trip (rewards compliance with speed limits) ----
+        var GPS_TRIP = null;
+
+        function gpsTripDoneToday() {
+            var u = ensurePointsData(STATE.userData || {});
+            return u.gpsDrivingData.lastDate === todayStr();
+        }
+
+        function openGpsTripModal() {
+            if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
+            if (!navigator.geolocation) { alert(STATE.language === 'ar' ? 'متصفحك لا يدعم تحديد الموقع (GPS).' : 'Your browser does not support GPS location.'); return; }
+            GPS_TRIP = null;
+            renderGpsTripModal();
+            openModal('gpsTripModal');
+        }
+
+        function haversineMeters(lat1, lon1, lat2, lon2) {
+            var R = 6371000,
+                toRad = function(d) { return d * Math.PI / 180; };
+            var dLat = toRad(lat2 - lat1),
+                dLon = toRad(lon2 - lon1);
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function renderGpsTripModal() {
+            var lang = STATE.language || 'ar',
+                body = document.getElementById('gpsTripBody');
+            if (!body) return;
+            if (gpsTripDoneToday() && !GPS_TRIP) {
+                body.innerHTML = '<div class="points-section-note">' + (lang === 'ar' ? 'تم بالفعل تسجيل رحلة GPS اليوم — عاود المحاولة غداً.' : 'You already logged a GPS trip today — try again tomorrow.') + '</div>';
+                return;
+            }
+            if (!GPS_TRIP) {
+                var cfg = POINTS_CONFIG.gpsDriving;
+                var opts = Object.keys(cfg.roadTypes).map(function(k) {
+                    var r = cfg.roadTypes[k];
+                    return '<button class="driving-card-btn" style="margin-top:8px;" onclick="startGpsTrip(\'' + k + '\')">' +
+                        (lang === 'ar' ? r.ar : r.en) + ' · ' + r.limitKmh + ' ' + (lang === 'ar' ? 'كم/س' : 'km/h') + '</button>';
+                }).join('');
+                body.innerHTML = '<p style="font-size:12px;color:var(--muted);line-height:1.8;">' +
+                    (lang === 'ar' ? 'اختر نوع الطريق قبل بدء رحلتك — هنتابع سرعتك عن طريق GPS، وهتكسب نقاطاً لو التزمت بالحد المسموح لمدة دقيقة على الأقل.' : "Pick your road type before starting — we'll track your speed via GPS, and you'll earn points if you stay within the limit for at least a minute.") +
+                    '</p>' + opts;
+                return;
+            }
+            var s = GPS_TRIP,
+                elapsed = Math.floor((Date.now() - s.startTime) / 1000),
+                compliance = s.totalSamples ? Math.round((s.compliantSamples / s.totalSamples) * 100) : 100;
+            body.innerHTML = '<div class="gps-live" style="text-align:center;padding:10px 0;">' +
+                '<div style="font-size:38px;font-weight:800;color:var(--navy-2);">' + (s.lastSpeedKmh != null ? Math.round(s.lastSpeedKmh) : '--') + '<span style="font-size:14px;color:var(--muted);"> ' + (lang === 'ar' ? 'كم/س' : 'km/h') + '</span></div>' +
+                '<div style="font-size:12px;color:var(--muted);margin-top:2px;">' + (lang === 'ar' ? 'الحد المسموح: ' : 'Limit: ') + s.limitKmh + ' ' + (lang === 'ar' ? 'كم/س' : 'km/h') + '</div>' +
+                '<div style="display:flex;justify-content:center;gap:22px;margin-top:14px;">' +
+                '<div><b style="font-size:16px;">' + elapsed + 's</b><div style="font-size:11px;color:var(--muted);">' + (lang === 'ar' ? 'المدة' : 'Duration') + '</div></div>' +
+                '<div><b style="font-size:16px;">' + compliance + '%</b><div style="font-size:11px;color:var(--muted);">' + (lang === 'ar' ? 'الالتزام' : 'Compliance') + '</div></div>' +
+                '</div>' +
+                '<button class="btn-outline" style="width:100%;margin-top:16px;" onclick="stopGpsTrip()">' + (lang === 'ar' ? 'إنهاء الرحلة' : 'End trip') + '</button>' +
+                '</div>';
+        }
+
+        function startGpsTrip(roadKey) {
+            var cfg = POINTS_CONFIG.gpsDriving.roadTypes[roadKey];
+            if (!cfg) return;
+            GPS_TRIP = { roadKey: roadKey, limitKmh: cfg.limitKmh, startTime: Date.now(), lastPos: null, lastSpeedKmh: null, totalSamples: 0, compliantSamples: 0, watchId: null, timerId: null };
+            GPS_TRIP.watchId = navigator.geolocation.watchPosition(handleGpsPosition, handleGpsError, { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 });
+            GPS_TRIP.timerId = setInterval(renderGpsTripModal, 1000);
+            renderGpsTripModal();
+        }
+
+        function handleGpsPosition(pos) {
+            if (!GPS_TRIP) return;
+            var speedKmh;
+            if (typeof pos.coords.speed === 'number' && pos.coords.speed >= 0) {
+                speedKmh = pos.coords.speed * 3.6;
+            } else if (GPS_TRIP.lastPos) {
+                var distM = haversineMeters(GPS_TRIP.lastPos.lat, GPS_TRIP.lastPos.lon, pos.coords.latitude, pos.coords.longitude),
+                    dtSec = (pos.timestamp - GPS_TRIP.lastPos.t) / 1000;
+                speedKmh = dtSec > 0 ? (distM / dtSec) * 3.6 : (GPS_TRIP.lastSpeedKmh || 0);
+            } else {
+                speedKmh = 0;
+            }
+            GPS_TRIP.lastPos = { lat: pos.coords.latitude, lon: pos.coords.longitude, t: pos.timestamp };
+            GPS_TRIP.lastSpeedKmh = speedKmh;
+            GPS_TRIP.totalSamples++;
+            if (speedKmh <= GPS_TRIP.limitKmh + POINTS_CONFIG.gpsDriving.speedToleranceKmh) GPS_TRIP.compliantSamples++;
+            renderGpsTripModal();
+        }
+
+        function handleGpsError() {
+            alert(STATE.language === 'ar' ? 'تعذر الوصول لموقعك — تأكد من تفعيل صلاحية الموقع (GPS) لهذا الموقع.' : 'Could not access your location — please allow location permission for this site.');
+            stopGpsTrip(true);
+        }
+
+        function stopGpsTrip(silent) {
+            if (!GPS_TRIP) { if (!silent) closeModal('gpsTripModal'); return; }
+            var s = GPS_TRIP;
+            if (s.watchId != null) navigator.geolocation.clearWatch(s.watchId);
+            if (s.timerId) clearInterval(s.timerId);
+            var elapsedSec = Math.floor((Date.now() - s.startTime) / 1000),
+                compliance = s.totalSamples ? Math.round((s.compliantSamples / s.totalSamples) * 100) : 0;
+            GPS_TRIP = null;
+            var lang = STATE.language || 'ar';
+            if (silent) { closeModal('gpsTripModal'); return; }
+            var cfg = POINTS_CONFIG.gpsDriving;
+            if (elapsedSec < cfg.minDurationSec) {
+                alert(lang === 'ar' ? 'الرحلة قصيرة جداً — جرّب رحلة أطول من دقيقة على الأقل.' : 'Trip too short — try a trip of at least a minute.');
+                renderGpsTripModal();
+                return;
+            }
+            var u = ensurePointsData(STATE.userData || {}),
+                today = todayStr();
+            if (u.gpsDrivingData.lastDate === today) {
+                closeModal('gpsTripModal');
+                alert(lang === 'ar' ? 'تم بالفعل تسجيل رحلة GPS اليوم — حاول غداً.' : 'You already logged a GPS trip today — try again tomorrow.');
+                return;
+            }
+            if (compliance < cfg.minCompliancePct) {
+                alert(lang === 'ar' ? ('لم تحقق نسبة التزام كافية بحد السرعة (' + compliance + '%). حاول مرة أخرى.') : ('Your speed compliance was too low (' + compliance + '%). Try again.'));
+                renderGpsTripModal();
+                return;
+            }
+            var gap = daysBetweenDates(u.gpsDrivingData.lastDate, today),
+                newStreak = (gap === 1) ? (u.gpsDrivingData.streak || 0) + 1 : 1,
+                bonus = (newStreak % cfg.streakEvery === 0) ? cfg.streakBonus : 0,
+                total = cfg.points + bonus,
+                newGps = { streak: newStreak, lastDate: today, totalTrips: (u.gpsDrivingData.totalTrips || 0) + 1 };
+            var descAr = 'رحلة قيادة بتتبع GPS بنسبة التزام ' + compliance + '%' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
+                descEn = 'GPS-tracked trip with ' + compliance + '% speed compliance' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
+            closeModal('gpsTripModal');
+            awardInsuraPoints(total, 'safe_driving_gps', descAr, descEn, { gpsDrivingData: newGps });
         }
 
         // ---- Redemption: convert points into a purchase discount ----
@@ -8659,6 +8849,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 '</div>' +
                 '<button class="driving-card-btn" onclick="checkInSafeDriving()" ' + (drivingDone ? 'disabled' : '') + '>' + (drivingDone ? (lang === 'ar' ? '✓ تم التسجيل اليوم' : '✓ Logged for today') : (lang === 'ar' ? 'تسجيل القيادة الآمنة' : 'Log safe driving')) + '</button>' +
                 (drivingStreak ? '<div class="driving-streak-badge">🔥 ' + (lang === 'ar' ? 'تتابع ' + drivingStreak + ' يوم' : drivingStreak + '-day streak') + '</div>' : '') +
+                '</div>' +
+                '<div class="driving-card' + (gpsTripDoneToday() ? ' done' : '') + '" style="margin-top:12px;"><div class="driving-card-top"><div class="qicon">' + iconSvg('car') + '</div><div><div class="driving-card-title">' + (lang === 'ar' ? 'رحلة قيادة بتتبع GPS' : 'GPS-tracked trip') + '</div><div class="driving-card-sub">' + (lang === 'ar' ? '+' + POINTS_CONFIG.gpsDriving.points + ' نقطة عند الالتزام بحد السرعة' : '+' + POINTS_CONFIG.gpsDriving.points + ' pts for staying within the speed limit') + '</div></div></div>' +
+                '<button class="driving-card-btn" onclick="openGpsTripModal()" ' + (gpsTripDoneToday() ? 'disabled' : '') + '>' + (gpsTripDoneToday() ? (lang === 'ar' ? '✓ تم تسجيل رحلة اليوم' : '✓ Trip logged for today') : (lang === 'ar' ? '📍 ابدأ رحلة بتتبع GPS' : '📍 Start a GPS-tracked trip')) + '</button>' +
+                (u.gpsDrivingData.streak ? '<div class="driving-streak-badge">🔥 ' + (lang === 'ar' ? 'تتابع رحلات ' + u.gpsDrivingData.streak + ' يوم' : u.gpsDrivingData.streak + '-day trip streak') + '</div>' : '') +
                 '</div></div>';
 
             // Section 4: Points history
@@ -8848,7 +9042,14 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             { icon: 'shield', titleAr: 'إزاي تختار تأمين طبي مناسب؟', titleEn: 'How to choose the right medical insurance?', bodyAr: 'قارن بين حدود التغطية، الشبكة الطبية المعتمدة، ونسبة التحمل قبل ما تقرر — مش بس السعر.', bodyEn: 'Compare coverage limits, the approved medical network, and the deductible — not just the price.' },
             { icon: 'car', titleAr: 'تأمين شامل ولا ضد الغير؟', titleEn: 'Comprehensive vs third-party car insurance?', bodyAr: 'التأمين ضد الغير أرخص لكنه بيغطي بس أضرار الطرف التاني. الشامل بيغطي سيارتك كمان — اختار حسب عمر وقيمة سيارتك.', bodyEn: 'Third-party is cheaper but only covers the other party. Comprehensive also covers your own car — choose based on your car\'s age and value.' },
             { icon: 'document', titleAr: 'راجع وثيقتك قبل التجديد', titleEn: 'Review your policy before renewal', bodyAr: 'ظروفك بتتغير كل سنة (دخل، عائلة، ممتلكات) — التجديد فرصة تراجع التغطية مش بس تكرر نفس الوثيقة.', bodyEn: 'Your circumstances change every year (income, family, assets) — renewal is a chance to review coverage, not just repeat the same policy.' },
-            { icon: 'lightbulb', titleAr: 'ليه محتاج وسيط تأمين مرخص؟', titleEn: 'Why work with a licensed insurance broker?', bodyAr: 'الوسيط المرخص من الهيئة العامة للرقابة المالية بيقارنلك بين شركات مختلفة، وبيساعدك وقت المطالبات كمان — من غير ما تدفع أي مقابل إضافي.', bodyEn: 'A broker licensed by the Financial Regulatory Authority compares offers across companies for you, and helps you through claims — at no extra cost to you.' }
+            { icon: 'lightbulb', titleAr: 'ليه محتاج وسيط تأمين مرخص؟', titleEn: 'Why work with a licensed insurance broker?', bodyAr: 'الوسيط المرخص من الهيئة العامة للرقابة المالية بيقارنلك بين شركات مختلفة، وبيساعدك وقت المطالبات كمان — من غير ما تدفع أي مقابل إضافي.', bodyEn: 'A broker licensed by the Financial Regulatory Authority compares offers across companies for you, and helps you through claims — at no extra cost to you.' },
+            { icon: 'heart', titleAr: 'إمتى تحتاج تأمين على الحياة؟', titleEn: 'When do you need life insurance?', bodyAr: 'لو عندك ناس بتعتمد عليك ماديًا (أولاد، زوج/زوجة، قرض)، تأمين الحياة بيحميهم من أي التزامات مالية لو حصل مكروه — مش رفاهية، ده أمان لعيلتك.', bodyEn: "If people depend on you financially (kids, spouse, a loan), life insurance protects them from financial obligations if something happens to you — it's not a luxury, it's security for your family." },
+            { icon: 'document', titleAr: 'تأمين المنزل مش بس ضد الحريق', titleEn: "Home insurance isn't just about fire", bodyAr: 'أغلب وثائق تأمين المسكن بتغطي كمان السرقة، تسرب المياه، والكوارث الطبيعية. اتأكد من قيمة المحتويات المؤمن عليها تعكس القيمة الحقيقية لمقتنياتك.', bodyEn: 'Most home policies also cover theft, water leaks, and natural disasters. Make sure your contents coverage value reflects what your belongings are really worth.' },
+            { icon: 'briefcase', titleAr: 'تأمين السفر قبل أي رحلة برة مصر', titleEn: 'Travel insurance before any trip abroad', bodyAr: 'غير إنه شرط أساسي لتأشيرات كتير، تأمين السفر بيغطي المصاريف الطبية الطارئة، فقدان الأمتعة، وإلغاء الرحلة — قيمته بسيطة مقارنة بتكلفة أي طارئ برة البلد.', bodyEn: "Besides being a visa requirement for many countries, travel insurance covers emergency medical costs, lost luggage, and trip cancellation — its cost is tiny compared to an emergency abroad." },
+            { icon: 'refresh', titleAr: 'إزاي تقدم مطالبة تأمين صح من أول مرة؟', titleEn: 'How to file an insurance claim correctly the first time', bodyAr: 'وثّق الحادث بالصور فورًا، احتفظ بكل الإيصالات والتقارير، وابلغ شركة التأمين أو الوسيط بتاعك في أقرب وقت ممكن — التأخير في الإبلاغ ممكن يأخر أو يعقد المطالبة.', bodyEn: 'Document the incident with photos immediately, keep all receipts and reports, and notify your insurer or broker as soon as possible — delayed reporting can slow down or complicate a claim.' },
+            { icon: 'chart', titleAr: 'إيه هو "نسبة التحمل" وليه بتفرق؟', titleEn: 'What is a "deductible" and why does it matter?', bodyAr: 'نسبة التحمل هي المبلغ اللي بتدفعه إنت من جيبك قبل ما التأمين يبدأ يغطي الباقي. تحمل أعلى = قسط شهري أقل، لكن لازم يكون في حدود تقدر تدفعه وقت الحادث.', bodyEn: 'A deductible is the amount you pay out of pocket before your insurance covers the rest. A higher deductible means a lower premium, but it should stay within what you can actually afford when a claim happens.' },
+            { icon: 'gift', titleAr: 'التأمين الجماعي من الشركة مش كافي غالبًا', titleEn: "Your employer's group insurance usually isn't enough", bodyAr: 'التأمين الطبي أو الحياة اللي بتوفره الشركة بينتهي غالبًا بمجرد ما تسيب الشغل. وثيقة شخصية إضافية بتضمن استمرار حمايتك مهما تغيرت وظيفتك.', bodyEn: "Medical or life coverage from your employer usually ends the moment you leave the job. A personal policy on top ensures your protection continues no matter how your job situation changes." },
+            { icon: 'bell', titleAr: 'راجع تغطيتك بعد أي حدث كبير في حياتك', titleEn: 'Review your coverage after any major life event', bodyAr: 'زواج، مولود جديد، شراء عربية أو بيت جديد — كل حدث من دول لازم يترجم لمراجعة سريعة لتغطيتك التأمينية عشان تفضل مناسبة لظروفك الحالية.', bodyEn: 'Marriage, a new baby, a new car or home — each of these should trigger a quick review of your coverage so it keeps matching your current situation.' }
         ];
 
         function renderInsuranceTips() {
