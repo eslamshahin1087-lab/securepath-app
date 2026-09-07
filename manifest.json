@@ -1,7 +1,7 @@
 {
-  "name": "SecurePath",
+  "name": "SecurePath — منصة التأمين الذكية",
   "short_name": "SecurePath",
-  "description": "متابعة وثائق التأمين الخاصة بك في مكان واحد",
+  "description": "منصة تعريفية وتوعوية لخدمة حاملي وثائق التأمين",
   "start_url": "./wathiqati-app.html",
   "scope": "./",
   "display": "standalone",
