@@ -1,0 +1,24 @@
+# Firebase / Node local secrets
+node_modules/
+.firebase/
+firebase-debug.log
+firebaserc
+.env
+.env.*
+service-account.json
+*-service-account.json
+
+# Local tooling
+.DS_Store
+Thumbs.db
+*.log
+
+# Temporary build/export files
+coverage/
+dist/
+build/
+.tmp/
+
+# Local backups
+*.bak
+*.backup
