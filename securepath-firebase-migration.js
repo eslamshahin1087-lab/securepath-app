@@ -2,38 +2,46 @@
 'use strict';
 
 /**
- * SecurePath account migration / test-account manager.
+ * SecurePath Firebase account migration / test-account manager.
  *
- * SAFETY RULE:
- * - Never trusts a domain as proof of ownership.
- * - Only explicitly listed emails/UIDs are modified.
- * - Default mode is dry-run.
- * - Uses Firebase Admin SDK (server-side only).
+ * SAFETY RULES:
+ * - Firestore/customer documents are never deleted or overwritten by this script.
+ * - Only Firebase Auth metadata and custom claims are changed.
+ * - Default mode is dry-run/list; apply commands require explicit configuration.
+ * - An email domain is never treated as proof of ownership. Domain matching is
+ *   only an explicit administrative allow-list for non-production/test accounts.
  *
  * Environment:
  *   FIREBASE_SERVICE_ACCOUNT_JSON='{"project_id":...}'
  *   SECUREPATH_TEST_EMAILS='test1@example.com,test2@example.com'
  *   SECUREPATH_TEST_UIDS='uid1,uid2'
+ *   SECUREPATH_TEST_DOMAINS='securepath.com'
  *   SECUREPATH_ADMIN_EMAILS='admin@example.com'
  *   SECUREPATH_ADMIN_UIDS='uid1,uid2'
  *
  * Commands:
- *   node securepath-firebase-migration-fixed.js list
- *   node securepath-firebase-migration-fixed.js apply-test
- *   node securepath-firebase-migration-fixed.js apply-admin
- *   node securepath-firebase-migration-fixed.js apply-both
+ *   node securepath-firebase-migration.js list
+ *   node securepath-firebase-migration.js apply-test
+ *   node securepath-firebase-migration.js apply-admin
+ *   node securepath-firebase-migration.js apply-both
  *
- * apply commands set custom claims only for the explicit accounts above.
- * They do NOT delete users or Firestore data.
+ * apply-test marks explicitly targeted test accounts as email-verified and adds
+ * securepathTest=true. Existing custom claims are preserved.
+ * It does NOT touch Firestore customer data.
  */
 
 const admin = require('firebase-admin');
+const {
+  normalizeEmail,
+  normalizeDomain,
+  parseList,
+  isExplicitTestEmail,
+  isAllowedTestDomain,
+  mergeClaimsForTestAccount
+} = require('./securepath-auth-policy');
 
 function envList(name) {
-  return String(process.env[name] || '')
-    .split(',')
-    .map(v => v.trim())
-    .filter(Boolean);
+  return parseList(process.env[name]);
 }
 
 function requireServiceAccount() {
@@ -46,37 +54,96 @@ function requireServiceAccount() {
 admin.initializeApp({ credential: admin.credential.cert(requireServiceAccount()) });
 const auth = admin.auth();
 
-async function resolveTargets(emails, uids) {
+function isTestTarget(user) {
+  const emails = envList('SECUREPATH_TEST_EMAILS').map(normalizeEmail);
+  const uids = envList('SECUREPATH_TEST_UIDS');
+  const domains = envList('SECUREPATH_TEST_DOMAINS').map(normalizeDomain);
+  return uids.includes(user.uid) ||
+    isExplicitTestEmail(user.email, emails) ||
+    isAllowedTestDomain(user.email, domains);
+}
+
+async function resolveTargets(emails, uids, includeDomains) {
   const resolved = [];
+  const seen = new Set();
+
   for (const uid of uids) {
     const user = await auth.getUser(uid);
-    resolved.push(user);
+    if (!seen.has(user.uid)) { resolved.push(user); seen.add(user.uid); }
   }
+
   for (const email of emails) {
-    const user = await auth.getUserByEmail(email);
-    if (!resolved.some(x => x.uid === user.uid)) resolved.push(user);
+    const user = await auth.getUserByEmail(normalizeEmail(email));
+    if (!seen.has(user.uid)) { resolved.push(user); seen.add(user.uid); }
   }
+
+  if (includeDomains) {
+    const domains = envList('SECUREPATH_TEST_DOMAINS').map(normalizeDomain);
+    if (domains.length) {
+      let nextPageToken;
+      do {
+        const page = await auth.listUsers(1000, nextPageToken);
+        for (const user of page.users) {
+          if (isAllowedTestDomain(user.email, domains) && !seen.has(user.uid)) {
+            resolved.push(user);
+            seen.add(user.uid);
+          }
+        }
+        nextPageToken = page.pageToken;
+      } while (nextPageToken);
+    }
+  }
+
   return resolved;
 }
 
 async function listAccounts() {
-  const tests = await resolveTargets(envList('SECUREPATH_TEST_EMAILS'), envList('SECUREPATH_TEST_UIDS'));
-  const admins = await resolveTargets(envList('SECUREPATH_ADMIN_EMAILS'), envList('SECUREPATH_ADMIN_UIDS'));
+  const tests = await resolveTargets(
+    envList('SECUREPATH_TEST_EMAILS'),
+    envList('SECUREPATH_TEST_UIDS'),
+    true
+  );
+  const admins = await resolveTargets(
+    envList('SECUREPATH_ADMIN_EMAILS'),
+    envList('SECUREPATH_ADMIN_UIDS'),
+    false
+  );
   console.log(JSON.stringify({
-    testAccounts: tests.map(u => ({ uid: u.uid, email: u.email, emailVerified: u.emailVerified })),
-    adminAccounts: admins.map(u => ({ uid: u.uid, email: u.email, emailVerified: u.emailVerified }))
+    testAccounts: tests.map(u => ({
+      uid: u.uid,
+      email: u.email,
+      emailVerified: u.emailVerified,
+      securepathTest: Boolean(u.customClaims && u.customClaims.securepathTest)
+    })),
+    adminAccounts: admins.map(u => ({
+      uid: u.uid,
+      email: u.email,
+      emailVerified: u.emailVerified,
+      securepathAdmin: Boolean(u.customClaims && u.customClaims.securepathAdmin)
+    }))
   }, null, 2));
 }
 
 async function applyClaims(kind) {
-  const testUsers = await resolveTargets(envList('SECUREPATH_TEST_EMAILS'), envList('SECUREPATH_TEST_UIDS'));
-  const adminUsers = await resolveTargets(envList('SECUREPATH_ADMIN_EMAILS'), envList('SECUREPATH_ADMIN_UIDS'));
+  const testUsers = await resolveTargets(
+    envList('SECUREPATH_TEST_EMAILS'),
+    envList('SECUREPATH_TEST_UIDS'),
+    true
+  );
+  const adminUsers = await resolveTargets(
+    envList('SECUREPATH_ADMIN_EMAILS'),
+    envList('SECUREPATH_ADMIN_UIDS'),
+    false
+  );
+
   const byUid = new Map();
-  for (const u of testUsers) byUid.set(u.uid, { user: u, securepathTest: true });
-  for (const u of adminUsers) {
-    const x = byUid.get(u.uid) || { user: u };
-    x.securepathAdmin = true;
-    byUid.set(u.uid, x);
+  for (const user of testUsers) {
+    byUid.set(user.uid, { user, securepathTest: true });
+  }
+  for (const user of adminUsers) {
+    const item = byUid.get(user.uid) || { user };
+    item.securepathAdmin = true;
+    byUid.set(user.uid, item);
   }
 
   if (kind === 'test') {
@@ -86,18 +153,20 @@ async function applyClaims(kind) {
     for (const [uid, item] of byUid) if (!item.securepathAdmin) byUid.delete(uid);
   }
 
+  if (byUid.size === 0) {
+    console.log('No explicitly targeted accounts. Nothing changed.');
+    return;
+  }
+
   for (const { user, securepathTest, securepathAdmin } of byUid.values()) {
     const existing = user.customClaims || {};
-    const next = { ...existing };
+    let next = { ...existing };
 
-    // A SecurePath test account is an explicitly targeted, non-production
-    // account. Mark it verified so the client does not require a real
-    // verification email/code for this account. Never infer this from the
-    // email domain alone; only users selected by the explicit allow-list
-    // above reach this branch.
     if ((kind === 'test' || kind === 'both') && securepathTest) {
-      await auth.updateUser(user.uid, { emailVerified: true });
-      next.securepathTest = true;
+      // This changes only Firebase Auth metadata. It does not touch the client
+      // document, policies, documents, points, leads, or any other Firestore data.
+      if (!user.emailVerified) await auth.updateUser(user.uid, { emailVerified: true });
+      next = mergeClaimsForTestAccount(next);
     }
 
     if ((kind === 'admin' || kind === 'both') && securepathAdmin) {
@@ -106,10 +175,6 @@ async function applyClaims(kind) {
 
     await auth.setCustomUserClaims(user.uid, next);
     console.log(`UPDATED ${user.uid} ${user.email || ''} emailVerified=${(kind === 'test' || kind === 'both') && securepathTest ? 'true' : String(user.emailVerified)} claims=${JSON.stringify(next)}`);
-  }
-
-  if (byUid.size === 0) {
-    console.log('No explicitly targeted accounts. Nothing changed.');
   }
 }
 
@@ -120,4 +185,7 @@ async function applyClaims(kind) {
   if (command === 'apply-admin') return applyClaims('admin');
   if (command === 'apply-both') return applyClaims('both');
   throw new Error('Unknown command. Use list, apply-test, apply-admin, or apply-both.');
-})().catch(err => { console.error('ERROR:', err.message); process.exit(1); });
+})().catch(err => {
+  console.error('ERROR:', err.message);
+  process.exit(1);
+});
