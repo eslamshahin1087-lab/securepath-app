@@ -1,17 +1,23 @@
-SecurePath — Test Account Migration
+SecurePath — Firebase Account Migration
 
-This script uses Firebase Admin SDK. Do not put service-account JSON in source control.
+This utility uses Firebase Admin SDK. Never commit service-account JSON.
 
-Windows PowerShell example:
+Windows PowerShell:
 
 $env:FIREBASE_SERVICE_ACCOUNT_JSON = Get-Content .\service-account.json -Raw
-$env:SECUREPATH_TEST_EMAILS = "daf@securepath.com"
-node .\securepath-firebase-migration-fixed.js apply-test
+$env:SECUREPATH_TEST_EMAILS = "test@example.com"
+node .\securepath-firebase-migration.js apply-test
 
-The script only modifies explicitly listed test accounts. For apply-test it sets:
-- emailVerified = true
-- custom claim securepathTest = true
+Available commands:
 
-It does not delete users or Firestore data.
+npm run list
+npm run apply-test
+npm run apply-admin
+npm run apply-both
 
-SHA-256: acb0ca2fed715100de9d0147befcf786c1d7745efdac8518e0d68e2c442522a4
+The utility only modifies explicitly configured accounts and does not delete Firebase Auth users or Firestore data.
+
+Security note:
+- Production admin access should use the securepathAdmin Firebase custom claim.
+- Do not rely on client-side checks as an authorization boundary.
+- Review and deploy firestore.rules before production hardening.
