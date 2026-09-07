@@ -41,4 +41,4 @@ fs.renameSync(temp, file);
 
 console.log('SecurePath auth fix applied.');
 console.log('Backup:', path.basename(backup));
-console.log('Allowed placeholder domain:', SECUREPATH_TEST_DOMAINS_PLACEHOLDER);
+console.log('Allowed placeholder domain: securepath.com');
