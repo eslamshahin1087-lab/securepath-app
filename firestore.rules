@@ -26,12 +26,20 @@ service cloud.firestore {
     // Canonical client profile: document ID MUST be Firebase Auth UID.
     match /clients/{clientId} {
       allow read: if isAdmin() || isOwner(clientId);
-      allow create: if isOwner(clientId);
+      allow create: if isOwner(clientId) || isAdmin();
       allow update: if isAdmin() || (isOwner(clientId) &&
         onlyChanged(['fullName','username','phone','photoURL','language','darkMode','updatedAt']));
       allow delete: if isAdmin();
     }
 
+    // Legacy/user profile collection used by the admin client-creation flow.
+    // Admin may manage it; a signed-in user may read only their own document.
+    match /users/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Admin identity document. Do not expose or permit client-side writes.
     match /admin/{adminId} {
       allow read: if isAdmin() && request.auth.uid == adminId;
       allow write: if false;
@@ -122,16 +130,26 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Existing admin data uses both status and (in newer records) published.
+    // Preserve both models so existing active records remain visible to clients.
     match /offers/{id} {
-      allow read: if resource.data.published == true || isAdmin();
+      allow read: if isAdmin() || resource.data.published == true || resource.data.status == 'active';
       allow write: if isAdmin();
     }
 
     match /companyAds/{id} {
-      allow read: if resource.data.published == true || isAdmin();
+      allow read: if isAdmin() || resource.data.published == true || resource.data.status == 'active';
       allow write: if isAdmin();
     }
 
+    // Existing admin panel stores broker disclosure at settings/app.
+    // Keep this path unchanged; only administrators may write it.
+    match /settings/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Newer brokerSettings namespace remains supported for forward compatibility.
     match /brokerSettings/{id} {
       allow read: if true;
       allow write: if isAdmin();
