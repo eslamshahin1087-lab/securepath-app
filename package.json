@@ -1,13 +1,13 @@
 {
   "name": "securepath-admin-tools",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SecurePath Firebase Admin utilities for explicit test/admin accounts",
   "scripts": {
-    "list": "node legacy-verification-migration.js list",
-    "apply-test": "node legacy-verification-migration.js apply-test",
-    "apply-admin": "node legacy-verification-migration.js apply-admin",
-    "apply-both": "node legacy-verification-migration.js apply-both"
+    "list": "node securepath-firebase-migration.js list",
+    "apply-test": "node securepath-firebase-migration.js apply-test",
+    "apply-admin": "node securepath-firebase-migration.js apply-admin",
+    "apply-both": "node securepath-firebase-migration.js apply-both"
   },
   "dependencies": {
     "firebase-admin": "^13.5.0"
