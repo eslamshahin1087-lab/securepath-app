@@ -7,8 +7,8 @@
  * SAFETY RULE:
  * - Never trusts a domain as proof of ownership.
  * - Only explicitly listed emails/UIDs are modified.
- * - Default mode is dry-run.
  * - Uses Firebase Admin SDK (server-side only).
+ * - Does not delete users or Firestore data.
  *
  * Environment:
  *   FIREBASE_SERVICE_ACCOUNT_JSON='{"project_id":...}'
@@ -18,13 +18,12 @@
  *   SECUREPATH_ADMIN_UIDS='uid1,uid2'
  *
  * Commands:
- *   node securepath-firebase-migration-fixed.js list
- *   node securepath-firebase-migration-fixed.js apply-test
- *   node securepath-firebase-migration-fixed.js apply-admin
- *   node securepath-firebase-migration-fixed.js apply-both
+ *   node securepath-firebase-migration.js list
+ *   node securepath-firebase-migration.js apply-test
+ *   node securepath-firebase-migration.js apply-admin
+ *   node securepath-firebase-migration.js apply-both
  *
- * apply commands set custom claims only for the explicit accounts above.
- * They do NOT delete users or Firestore data.
+ * apply commands modify only the explicitly targeted accounts above.
  */
 
 const admin = require('firebase-admin');
@@ -39,29 +38,46 @@ function envList(name) {
 function requireServiceAccount() {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON is required.');
-  try { return JSON.parse(raw); }
-  catch (e) { throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON.'); }
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON.');
+  }
 }
 
-admin.initializeApp({ credential: admin.credential.cert(requireServiceAccount()) });
+if (!admin.apps.length) {
+  admin.initializeApp({ credential: admin.credential.cert(requireServiceAccount()) });
+}
+
 const auth = admin.auth();
 
 async function resolveTargets(emails, uids) {
   const resolved = [];
+
   for (const uid of uids) {
-    const user = await auth.getUser(uid);
-    resolved.push(user);
+    try {
+      resolved.push(await auth.getUser(uid));
+    } catch (err) {
+      throw new Error(`Unable to resolve UID ${uid}: ${err.message}`);
+    }
   }
+
   for (const email of emails) {
-    const user = await auth.getUserByEmail(email);
-    if (!resolved.some(x => x.uid === user.uid)) resolved.push(user);
+    try {
+      const user = await auth.getUserByEmail(email);
+      if (!resolved.some(x => x.uid === user.uid)) resolved.push(user);
+    } catch (err) {
+      throw new Error(`Unable to resolve ${email}: ${err.message}`);
+    }
   }
+
   return resolved;
 }
 
 async function listAccounts() {
   const tests = await resolveTargets(envList('SECUREPATH_TEST_EMAILS'), envList('SECUREPATH_TEST_UIDS'));
   const admins = await resolveTargets(envList('SECUREPATH_ADMIN_EMAILS'), envList('SECUREPATH_ADMIN_UIDS'));
+
   console.log(JSON.stringify({
     testAccounts: tests.map(u => ({ uid: u.uid, email: u.email, emailVerified: u.emailVerified })),
     adminAccounts: admins.map(u => ({ uid: u.uid, email: u.email, emailVerified: u.emailVerified }))
@@ -72,11 +88,12 @@ async function applyClaims(kind) {
   const testUsers = await resolveTargets(envList('SECUREPATH_TEST_EMAILS'), envList('SECUREPATH_TEST_UIDS'));
   const adminUsers = await resolveTargets(envList('SECUREPATH_ADMIN_EMAILS'), envList('SECUREPATH_ADMIN_UIDS'));
   const byUid = new Map();
-  for (const u of testUsers) byUid.set(u.uid, { user: u, securepathTest: true });
-  for (const u of adminUsers) {
-    const x = byUid.get(u.uid) || { user: u };
-    x.securepathAdmin = true;
-    byUid.set(u.uid, x);
+
+  for (const user of testUsers) byUid.set(user.uid, { user, securepathTest: true });
+  for (const user of adminUsers) {
+    const current = byUid.get(user.uid) || { user };
+    current.securepathAdmin = true;
+    byUid.set(user.uid, current);
   }
 
   if (kind === 'test') {
@@ -87,14 +104,8 @@ async function applyClaims(kind) {
   }
 
   for (const { user, securepathTest, securepathAdmin } of byUid.values()) {
-    const existing = user.customClaims || {};
-    const next = { ...existing };
+    const next = { ...(user.customClaims || {}) };
 
-    // A SecurePath test account is an explicitly targeted, non-production
-    // account. Mark it verified so the client does not require a real
-    // verification email/code for this account. Never infer this from the
-    // email domain alone; only users selected by the explicit allow-list
-    // above reach this branch.
     if ((kind === 'test' || kind === 'both') && securepathTest) {
       await auth.updateUser(user.uid, { emailVerified: true });
       next.securepathTest = true;
@@ -120,4 +131,7 @@ async function applyClaims(kind) {
   if (command === 'apply-admin') return applyClaims('admin');
   if (command === 'apply-both') return applyClaims('both');
   throw new Error('Unknown command. Use list, apply-test, apply-admin, or apply-both.');
-})().catch(err => { console.error('ERROR:', err.message); process.exit(1); });
+})().catch(err => {
+  console.error('ERROR:', err.message);
+  process.exit(1);
+});
