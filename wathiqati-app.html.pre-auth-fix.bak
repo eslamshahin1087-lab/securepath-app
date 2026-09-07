@@ -6913,20 +6913,20 @@ html.dark-mode #home .home-partners {
         // web app cannot safely prove ownership of an email domain from code
         // running in the browser.
         var EMAIL_VERIFICATION_REQUIRED = true;
-
-        // ============================================================ //
-        // SECUREPATH TEST / PLACEHOLDER EMAIL POLICY                   //
-        // ------------------------------------------------------------ //
-        // Production customer accounts still require email verification.
-        // Explicitly provisioned test/placeholder accounts may bypass
-        // the verification screen only when Firebase Admin has granted
-        // the securepathTest=true custom claim to that exact account.
-        // Do NOT infer this from an email domain in the browser: this is
-        // public client code and domain-only bypass would let anyone
-        // register a fake address and enter the protected application.
-        // ============================================================ //
+        // Production: email verification is mandatory. Test accounts can use
+        // a Firebase Admin custom claim: securepathTest=true.
+        // Local development only: accounts ending with @securepath.com may be
+        // used without verification when the file is opened via file://.
         var SECUREPATH_TEST_CLAIM = 'securepathTest';
+        var SECUREPATH_LOCAL_TEST_MODE = (window.location.protocol === 'file:');
+        var SECUREPATH_LOCAL_TEST_DOMAIN = '@securepath.com';
         var SECUREPATH_TEST_ACCOUNT = false;
+
+        function isLocalTestEmail(email) {
+            if (!SECUREPATH_LOCAL_TEST_MODE) return false;
+            var value = String(email || '').trim().toLowerCase();
+            return value.length > SECUREPATH_LOCAL_TEST_DOMAIN.length && value.endsWith(SECUREPATH_LOCAL_TEST_DOMAIN);
+        }
 
         function resolveTestAccount(user) {
             if (!user) {
@@ -6935,11 +6935,11 @@ html.dark-mode #home .home-partners {
             }
             return user.getIdTokenResult(true).then(function(tokenResult) {
                 var claims = tokenResult && tokenResult.claims || {};
-                SECUREPATH_TEST_ACCOUNT = claims[SECUREPATH_TEST_CLAIM] === true;
+                SECUREPATH_TEST_ACCOUNT = claims[SECUREPATH_TEST_CLAIM] === true || isLocalTestEmail(user.email);
                 return SECUREPATH_TEST_ACCOUNT;
             }).catch(function() {
-                SECUREPATH_TEST_ACCOUNT = false;
-                return false;
+                SECUREPATH_TEST_ACCOUNT = isLocalTestEmail(user.email);
+                return SECUREPATH_TEST_ACCOUNT;
             });
         }
         var CLOUDINARY_CLOUD_NAME = 'zs4wny34';
