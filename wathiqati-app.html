@@ -7270,6 +7270,12 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                         throw { code: 'auth/username-email-missing', message: 'This client record does not contain its Firebase login email.' };
                     }
                     return email;
+                })
+                .catch(function(e) {
+                    if (e && (e.code === 'permission-denied' || e.code === 'firestore/permission-denied')) {
+                        throw { code: 'auth/username-lookup-blocked', message: 'Firestore rules deny the unauthenticated username lookup. Log in with the full email address instead.' };
+                    }
+                    throw e;
                 });
         }
 
@@ -7334,7 +7340,32 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
             }
             return getClientProfile(user.uid, user.email).then(function(profile) {
-                if (!profile) throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
+                if (!profile) {
+                    // Exempt (placeholder/test) accounts are allowed in even if the
+                    // signup flow that normally writes clients/{uid} never ran for
+                    // them — auto-provision a minimal profile instead of blocking.
+                    if (isVerificationExemptEmail(user.email)) {
+                        var emailLocal = String(user.email || '').split('@')[0] || 'client';
+                        var stub = {
+                            fullName: emailLocal,
+                            email: user.email || '',
+                            username: emailLocal,
+                            role: 'client',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            language: STATE.language || 'ar',
+                            onboardingSeen: false
+                        };
+                        var ref = db.collection('clients').doc(user.uid);
+                        return ref.set(stub, { merge: true }).then(function() {
+                            return ref.get();
+                        }).then(function(doc) {
+                            return { ref: ref, data: doc.data() || stub };
+                        });
+                    }
+                    throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
+                }
+                return profile;
+            }).then(function(profile) {
                 var name = verifyClientIdentity(profile, user, identifier);
                 STATE.userData = Object.assign({}, profile.data || {});
                 STATE.currentUser = { uid: user.uid, name: name, email: user.email || STATE.userData.email || STATE.userData.loginEmail || '' };
@@ -7385,6 +7416,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     var code = e && e.code || '';
                     var message;
                     if (code === 'auth/username-not-found') message = STATE.language === 'ar' ? 'اسم المستخدم غير مسجل في بيانات العملاء.' : 'Username is not registered in the client directory.';
+                    else if (code === 'auth/username-lookup-blocked') message = STATE.language === 'ar' ? 'تعذر البحث عن اسم المستخدم بسبب صلاحيات Firebase. جرّب تسجيل الدخول بالبريد الإلكتروني الكامل بدلاً من اسم المستخدم.' : 'Could not look up that username due to Firestore permissions. Try logging in with the full email address instead of the username.';
                     else if (code === 'auth/username-email-missing') message = STATE.language === 'ar' ? 'هذا العميل موجود في Firestore لكن لا يوجد البريد الإلكتروني المرتبط بحساب Firebase داخل سجل العميل.' : 'The client exists in Firestore, but its Firebase login email is missing from the client record.';
                     else if (code === 'auth/username-ambiguous') message = STATE.language === 'ar' ? 'اسم المستخدم مرتبط بأكثر من حساب. يجب أن يكون فريداً.' : 'This username is linked to more than one client account.';
                     else if (code === 'client/profile-not-found') message = STATE.language === 'ar' ? 'تم التحقق من الحساب، لكن ملف العميل غير مرتبط بهذا الحساب.' : 'Authentication succeeded, but no client profile is linked to this account.';
