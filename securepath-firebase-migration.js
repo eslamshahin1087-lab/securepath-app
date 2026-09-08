@@ -18,10 +18,10 @@
  *   SECUREPATH_ADMIN_UIDS='uid1,uid2'
  *
  * Commands:
- *   node securepath-firebase-migration-fixed.js list
- *   node securepath-firebase-migration-fixed.js apply-test
- *   node securepath-firebase-migration-fixed.js apply-admin
- *   node securepath-firebase-migration-fixed.js apply-both
+ *   node securepath-firebase-migration.js list
+ *   node securepath-firebase-migration.js apply-test
+ *   node securepath-firebase-migration.js apply-admin
+ *   node securepath-firebase-migration.js apply-both
  *
  * apply commands set custom claims only for the explicit accounts above.
  * They do NOT delete users or Firestore data.
