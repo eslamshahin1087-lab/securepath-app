@@ -1,0 +1,166 @@
+name: Apply SecurePath Auth Hardening
+
+on:
+  push:
+    branches:
+      - fix/auth-identity-v1
+    paths:
+      - '.github/workflows/apply-auth-hardening.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-client-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: fix/auth-identity-v1
+          fetch-depth: 0
+
+      - name: Patch UID-first client identity
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('wathiqati-app.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = '''        function getClientProfile(uid, email) {
+            return db.collection('clients').doc(uid).get().then(function(doc) {
+                if (doc.exists) return { ref: doc.ref, data: doc.data() || {} };
+                return db.collection('clients').where('uid', '==', uid).limit(2).get().then(function(snap) {
+                    if (snap.size > 1) throw { code: 'client/duplicate-uid', message: 'Multiple client records are linked to this account.' };
+                    if (snap.size === 1) return { ref: snap.docs[0].ref, data: snap.docs[0].data() || {} };
+                    return db.collection('clients').where('email', '==', String(email || '').trim().toLowerCase()).limit(2).get().then(function(esnap) {
+                        if (esnap.size > 1) throw { code: 'client/duplicate-email', message: 'Multiple client records use this email.' };
+                        if (esnap.size === 1) return { ref: esnap.docs[0].ref, data: esnap.docs[0].data() || {} };
+                        return null;
+                    });
+                });
+            });
+        }'''
+
+          new = '''        function getClientProfile(uid) {
+            if (!uid) return Promise.reject({ code: 'client/identity-unavailable', message: 'Firebase UID is required.' });
+
+            // Canonical identity: Firebase Auth UID.
+            return db.collection('clients').doc(uid).get().then(function(doc) {
+                if (doc.exists) {
+                    var canonical = doc.data() || {};
+                    var storedUid = String(canonical.uid || '').trim();
+                    if (storedUid && storedUid !== uid) {
+                        throw { code: 'client/identity-mismatch', message: 'The client profile UID does not match the authenticated Firebase account.' };
+                    }
+                    return { ref: doc.ref, data: canonical };
+                }
+
+                // Legacy compatibility only: locate a record whose stored UID is
+                // exactly the authenticated Firebase UID.
+                return db.collection('clients').where('uid', '==', uid).limit(2).get().then(function(snap) {
+                    if (snap.size > 1) throw { code: 'client/duplicate-uid', message: 'Multiple client records are linked to this Firebase account.' };
+                    if (snap.size === 1) {
+                        var legacy = snap.docs[0];
+                        var legacyData = legacy.data() || {};
+                        if (String(legacyData.uid || '').trim() !== uid) {
+                            throw { code: 'client/identity-mismatch', message: 'The client record is not linked to the authenticated Firebase account.' };
+                        }
+                        return { ref: legacy.ref, data: legacyData };
+                    }
+                    // Never use email as a profile selector. Email may be duplicated,
+                    // changed, or refer to a legacy record belonging to another user.
+                    return null;
+                });
+            });
+        }'''
+
+          if old not in s:
+              raise SystemExit('Expected getClientProfile block was not found; aborting safely.')
+          s = s.replace(old, new, 1)
+
+          old_stub = '''                if (!profile) {
+                    // Exempt (placeholder/test) accounts are allowed in even if the
+                    // signup flow that normally writes clients/{uid} never ran for
+                    // them — auto-provision a minimal profile instead of blocking.
+                    if (isVerificationExemptEmail(user.email)) {
+                        var emailLocal = String(user.email || '').split('@')[0] || 'client';
+                        var stub = {
+                            fullName: emailLocal,
+                            email: user.email || '',
+                            username: emailLocal,
+                            role: 'client',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            language: STATE.language || 'ar',
+                            onboardingSeen: false
+                        };
+                        var ref = db.collection('clients').doc(user.uid);
+                        return ref.set(stub, { merge: true }).then(function() {
+                            return ref.get();
+                        }).then(function(doc) {
+                            return { ref: ref, data: doc.data() || stub };
+                        });
+                    }
+                    throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
+                }'''
+
+          new_stub = '''                if (!profile) {
+                    // An authenticated Firebase user must have an explicitly linked
+                    // client profile. Do not auto-create a profile during login.
+                    throw { code: 'client/profile-not-found', message: 'Client profile not found for this Firebase account.' };
+                }'''
+
+          if old_stub not in s:
+              raise SystemExit('Expected auto-provision block was not found; aborting safely.')
+          s = s.replace(old_stub, new_stub, 1)
+
+          marker = "        // ============================================================ //\n        // AUTH HANDLERS"
+          guard = '''        // Identity contract: the UI state may only be created from the
+        // authenticated Firebase user and its UID-linked client profile.
+        function assertAuthenticatedClient(user, profile) {
+            if (!user || !user.uid) throw { code: 'client/identity-unavailable', message: 'No authenticated Firebase UID is available.' };
+            if (!profile || !profile.data) throw { code: 'client/profile-not-found', message: 'Client profile is unavailable.' };
+            var data = profile.data || {};
+            var storedUid = String(data.uid || '').trim();
+            var docId = profile.ref ? String(profile.ref.id || '').trim() : '';
+            if ((storedUid && storedUid !== user.uid) || (docId && docId !== user.uid && !storedUid)) {
+                throw { code: 'client/identity-mismatch', message: 'The client profile does not belong to the authenticated Firebase account.' };
+            }
+            return true;
+        }
+
+'''
+          if marker not in s:
+              raise SystemExit('Auth handlers marker not found; aborting safely.')
+          s = s.replace(marker, guard + marker, 1)
+
+          old_call = "                var name = verifyClientIdentity(profile, user, identifier);"
+          new_call = "                assertAuthenticatedClient(user, profile);\n                var name = verifyClientIdentity(profile, user, identifier);"
+          if old_call not in s:
+              raise SystemExit('Login identity call not found; aborting safely.')
+          s = s.replace(old_call, new_call, 1)
+
+          # Keep the helper file for future modularization, but do not load it
+          # automatically; the authoritative implementation is now inside the app.
+          p.write_text(s, encoding='utf-8')
+
+          # Static safety checks.
+          updated = p.read_text(encoding='utf-8')
+          assert "where('email', '==', String(email" not in updated
+          assert "auto-provision a minimal profile" not in updated
+          assert 'function assertAuthenticatedClient' in updated
+          assert 'assertAuthenticatedClient(user, profile);' in updated
+          print('Auth hardening patch applied and verified.')
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name 'securepath-bot'
+          git config user.email 'securepath-bot@users.noreply.github.com'
+          git add wathiqati-app.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'security(auth): enforce UID-first client identity'
+          git push origin HEAD:fix/auth-identity-v1
