@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(clientId) {
+      return isSignedIn() && request.auth.uid == clientId;
+    }
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.securepathAdmin == true;
+    }
+
+    // Fields that must NEVER be set directly by a client write.
+    // They are only ever changed by Cloud Functions via the Admin SDK,
+    // which bypasses these rules entirely - so blocking them here for
+    // client requests is enough, it does not block the functions.
+    function touchesProtectedFields() {
+      let protectedKeys = [
+        'insuraPoints', 'insuraPointsLifetime', 'insuraPointsRedeemed',
+        'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData', 'role'
+      ];
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedKeys);
+    }
+
+    match /clients/{clientId} {
+      allow read: if isOwner(clientId) || isAdmin();
+
+      // Registration: only safe zeroed defaults are allowed at creation time.
+      allow create: if isOwner(clientId)
+        && request.resource.data.role == 'client'
+        && request.resource.data.get('insuraPoints', 0) == 0
+        && request.resource.data.get('insuraPointsLifetime', 0) == 0
+        && request.resource.data.get('insuraPointsRedeemed', 0) == 0;
+
+      // Client can update their own profile (name, phone, language, etc.)
+      // but can never touch points / role fields directly.
+      allow update: if (isOwner(clientId) && !touchesProtectedFields()) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    match /pointsLog/{logId} {
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
+      // No direct client writes at all - only Cloud Functions write here.
+      allow write: if false;
+    }
+
+    match /leads/{leadId} {
+      allow read: if isAdmin();
+
+      // Ordinary quote-request leads may still be created by the client...
+      allow create: if isSignedIn()
+        && request.resource.data.clientId == request.auth.uid
+        && request.resource.data.source != 'points_redemption';
+
+      // ...but a points-redemption lead must ALWAYS come from the
+      // redeemPoints Cloud Function (Admin SDK), never directly.
+      allow update, delete: if isAdmin();
+    }
+
+    match /documents/{docId} {
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
+      // clientId must match the uploader - this is what onDocumentUploaded
+      // trusts when it later awards points automatically.
+      allow create: if isSignedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /insuranceAssessments/{id} {
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Keep your other existing collection rules (policies, offers,
+    // complaints, appointments, messages, etc.) unchanged below this line.
+  }
+}
