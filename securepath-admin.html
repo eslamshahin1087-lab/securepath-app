@@ -447,6 +447,12 @@
             <button class="btn btn-outline btn-sm" onclick="refreshAllData()"><i class="fas fa-sync-alt"></i> تحديث</button>
           </div>
         </header>
+        <div id="dataLoadErrorBanner" style="display:none;background:#FEF2F2;border:1px solid #FCA5A5;color:#7F1D1D;padding:12px 16px;margin:14px 20px 0;border-radius:10px;font-size:13px;line-height:1.8;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+            <div><b>⚠️ لم يتم تحميل بعض البيانات بنجاح.</b><div id="dataLoadErrorDetail" style="margin-top:6px;white-space:pre-line;"></div></div>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('dataLoadErrorBanner').style.display='none'">إغلاق</button>
+          </div>
+        </div>
         <section class="content">
           <!-- Dashboard -->
           <div id="v-dashboard" class="view active">
@@ -1061,6 +1067,18 @@
     }
     const SECUREPATH_LOCAL_ADMIN_MODE = (window.location.protocol === 'file:');
 
+    // Pre-built placeholder accounts on this domain (no real inbox) are
+    // exempt from the mandatory email-verification check below — same
+    // allowlist used by the client app (wathiqati-app.html). Only use for
+    // domains you fully control end-to-end.
+    const SECUREPATH_VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+    function isVerificationExemptEmail(email) {
+      const e = String(email || '').trim().toLowerCase();
+      const at = e.lastIndexOf('@');
+      if (at < 0) return false;
+      return SECUREPATH_VERIFICATION_EXEMPT_DOMAINS.indexOf(e.slice(at + 1)) !== -1;
+    }
+
     async function checkAdmin(user) {
       if (!user) return { ok: false, reason: 'missing-user' };
       // Server-issued claim is the strongest path and avoids requiring a
@@ -1081,8 +1099,8 @@
         if (!doc.exists) return { ok: false, reason: 'admin-profile-missing' };
         const role = String(doc.data().role || '').trim().toLowerCase();
         if (role !== 'admin') return { ok: false, reason: 'invalid-role' };
-        if (!user.emailVerified && !SECUREPATH_LOCAL_ADMIN_MODE) return { ok: false, reason: 'email-not-verified' };
-        return { ok: true, reason: SECUREPATH_LOCAL_ADMIN_MODE && !user.emailVerified ? 'local-admin-document' : 'admin-document' };
+        if (!user.emailVerified && !SECUREPATH_LOCAL_ADMIN_MODE && !isVerificationExemptEmail(user.email)) return { ok: false, reason: 'email-not-verified' };
+        return { ok: true, reason: (SECUREPATH_LOCAL_ADMIN_MODE || isVerificationExemptEmail(user.email)) && !user.emailVerified ? 'local-admin-document' : 'admin-document' };
       } catch (e) {
         console.error('Admin profile check failed:', e);
         return { ok: false, reason: 'firestore-permission' };
@@ -1230,6 +1248,8 @@
        APP_STATE.syncing = true;
        APP_STATE.syncErrors = [];
        setConnectionState('online', 'جاري المزامنة…');
+       var existingBanner = document.getElementById('dataLoadErrorBanner');
+       if (existingBanner) existingBanner.style.display = 'none';
       const names = ['clients', 'policies', 'payments', 'claims', 'documents', 'messages', 'notifications', 'activity', 'products', 'companies', 'insuranceAssessments', 'insuranceTypes', 'offers', 'companyAds', 'pointsLog'];
       const results = await Promise.all(names.map(n => loadCollection(n)));
       names.forEach((n, i) => {
@@ -1243,6 +1263,9 @@
        setConnectionState(APP_STATE.syncErrors.length ? 'offline' : 'online', APP_STATE.syncErrors.length ? 'مزامنة جزئية' : 'متصل');
       renderAll();
       refreshAllSelects();
+      if (APP_STATE.syncErrors.length) {
+        showDataLoadError(APP_STATE.syncErrors.map(function(e) { return 'تحميل ' + e.collection + ': ' + e.message; }));
+      }
       startMessagesListener();
       startActivityListener();
       startNotificationsListener();
@@ -3055,26 +3078,33 @@
     // 17. RENDER ALL & INIT
     // ================================================================
     function renderAll() {
-      renderDashboard();
-      renderHomeContent();
-      renderClients();
-      renderPolicies();
-      renderPayments();
-      renderClaims();
-      renderDocuments();
-      renderOffers();
-      renderCompanyAds();
-      renderConversations();
-      renderRenewals();
-      renderCompanies();
-      renderInsuranceTypes();
-      renderProducts();
-      renderReports();
-      renderAssessments();
-      renderPointsAdmin();
-      renderNotifications();
-      renderActivity();
-      updateBadge();
+      var steps = [
+        ['renderDashboard', renderDashboard], ['renderHomeContent', renderHomeContent], ['renderClients', renderClients],
+        ['renderPolicies', renderPolicies], ['renderPayments', renderPayments], ['renderClaims', renderClaims],
+        ['renderDocuments', renderDocuments], ['renderOffers', renderOffers], ['renderCompanyAds', renderCompanyAds],
+        ['renderConversations', renderConversations], ['renderRenewals', renderRenewals], ['renderCompanies', renderCompanies],
+        ['renderInsuranceTypes', renderInsuranceTypes], ['renderProducts', renderProducts], ['renderReports', renderReports],
+        ['renderAssessments', renderAssessments], ['renderPointsAdmin', renderPointsAdmin], ['renderNotifications', renderNotifications],
+        ['renderActivity', renderActivity], ['updateBadge', updateBadge]
+      ];
+      var renderErrors = [];
+      steps.forEach(function(step) {
+        try { step[1](); } catch (e) {
+          console.error('❌ ' + step[0] + ' failed:', e);
+          renderErrors.push(step[0] + ': ' + e.message);
+        }
+      });
+      if (renderErrors.length) showDataLoadError(renderErrors);
+    }
+
+    function showDataLoadError(lines) {
+      var banner = document.getElementById('dataLoadErrorBanner'),
+          detail = document.getElementById('dataLoadErrorDetail');
+      if (!banner || !detail || !lines || !lines.length) return;
+      var existing = (banner.style.display === 'block' && detail.textContent) ? detail.textContent.split('\n') : [];
+      var merged = existing.concat(lines).filter(function(l, i, arr) { return arr.indexOf(l) === i; });
+      detail.textContent = merged.join('\n');
+      banner.style.display = 'block';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
