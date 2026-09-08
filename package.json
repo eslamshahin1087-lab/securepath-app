@@ -1,15 +1,18 @@
 {
-  "name": "securepath-admin-tools",
-  "private": true,
-  "version": "1.0.0",
-  "description": "SecurePath Firebase Admin utilities for explicit test/admin accounts",
+  "name": "securepath-functions",
+  "description": "SecurePath server-side trusted logic (points issuance & redemption)",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
   "scripts": {
-    "list": "node legacy-verification-migration.js list",
-    "apply-test": "node legacy-verification-migration.js apply-test",
-    "apply-admin": "node legacy-verification-migration.js apply-admin",
-    "apply-both": "node legacy-verification-migration.js apply-both"
+    "serve": "firebase emulators:start --only functions,firestore,auth",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   },
   "dependencies": {
-    "firebase-admin": "^13.5.0"
-  }
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "private": true
 }
