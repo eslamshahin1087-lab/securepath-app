@@ -1,239 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
 
-    // ---------- helpers ----------
-    function isSignedIn() {
-      return request.auth != null;
-    }
-    function isOwner(clientId) {
-      return isSignedIn() && request.auth.uid == clientId;
-    }
-    function isAdmin() {
-      return isSignedIn() && request.auth.token.securepathAdmin == true;
-    }
-    function ownsAsClient() {
-      return isSignedIn() && request.resource.data.clientId == request.auth.uid;
-    }
+      function isValidActivity(activity) {
+        // خريطة الأنشطة المسموحة وقيمها (هنا ننقل المنطق من المتصفح إلى السيرفر)
+        return activity in {
+          'walking': 5,
+          'running': 8,
+          'driving': 6,
+          'assessment': 30,
+          'docUpload': 10,
+          'diversify': 50,
+          'renewal': 40,
+          'profileComplete': 20,
+          'referral': 15
+        };
+      }
 
-    function touchesProtectedFields() {
-      let protectedKeys = [
-        'insuraPoints', 'insuraPointsLifetime', 'insuraPointsRedeemed',
-        'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData', 'role'
-      ];
-      return request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedKeys);
-    }
+      function getPointsForActivity(activity) {
+        return {
+          'walking': 5,
+          'running': 8,
+          'driving': 6,
+          'assessment': 30,
+          'docUpload': 10,
+          'diversify': 50,
+          'renewal': 40,
+          'profileComplete': 20,
+          'referral': 15
+        }[activity];
+      }
 
-    // ============================================================
-    // POINTS SYSTEM (Spark plan - no Cloud Functions).
-    // The app never sends a Cloud Function a category and trusts a
-    // server-computed value; instead every point value the client can
-    // ever write is a FIXED number that must appear in this whitelist,
-    // taken directly from POINTS_CONFIG in wathiqati-app.html. A client
-    // can never write an amount that isn't on this list, so tampering is
-    // bounded to "replay one of these legitimate amounts", not "grant
-    // yourself unlimited points". Update this list if POINTS_CONFIG in
-    // the client app ever changes.
-    // Values: assessment 30, docUpload 10, diversify 50, renewal 40,
-    // profileComplete 20, referralShare 15, walking 5/15,
-    // running 8/23, healthyEating 5/15, driving 6/21, gpsDriving 8/23.
-    // ============================================================
-    function VALID_POINT_DELTAS() {
-      return [5, 6, 8, 10, 15, 20, 21, 23, 30, 40, 50];
-    }
-    // 100 points = 1% discount, capped at 15% -> max single redemption 1500.
-    function REDEEM_PER_PERCENT() { return 100; }
-    function REDEEM_MAX_POINTS() { return 1500; }
+      // منع التكرار: يجب أن يكون آخر نشاط منذ أكثر من 12 ساعة (43200 ثانية)
+      function isNotDuplicate() {
+        return (!('lastActivityAt' in resource.data)) || 
+               (request.resource.data.lastActivityAt > resource.data.lastActivityAt + 43200);
+      }
 
-    // Earning points: only insuraPoints/insuraPointsLifetime and the
-    // bookkeeping maps may change, and the amount gained must be exactly
-    // one whitelisted value (a single check-in, upload, etc; the app never
-    // batches two awards into one write).
-    function isValidPointsEarnUpdate(clientId) {
-      let delta = request.resource.data.insuraPoints - resource.data.insuraPoints;
-      return isOwner(clientId)
-        && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['insuraPoints', 'insuraPointsLifetime', 'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData'])
-        && delta in VALID_POINT_DELTAS()
-        && request.resource.data.insuraPointsLifetime == resource.data.insuraPointsLifetime + delta
-        && request.resource.data.insuraPointsRedeemed == resource.data.get('insuraPointsRedeemed', 0);
-    }
-
-    // Redeeming points: a multiple of 100, never more than the client
-    // actually has, never more than the 15% cap in one redemption.
-    function isValidPointsRedeemUpdate(clientId) {
-      let pts = resource.data.insuraPoints - request.resource.data.insuraPoints;
-      return isOwner(clientId)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['insuraPoints', 'insuraPointsRedeemed'])
-        && pts > 0
-        && pts % REDEEM_PER_PERCENT() == 0
-        && pts <= REDEEM_MAX_POINTS()
-        && pts <= resource.data.insuraPoints
-        && request.resource.data.insuraPointsRedeemed == resource.data.insuraPointsRedeemed + pts;
-    }
-
-    function isValidPointsLogCreate() {
-      return ownsAsClient() && (
-        (request.resource.data.points in VALID_POINT_DELTAS()
-          && request.resource.data.category in ['insurance_habit', 'health_habit', 'safe_driving', 'safe_driving_gps'])
-        || (request.resource.data.category == 'redemption'
-          && request.resource.data.points < 0
-          && (-request.resource.data.points) % REDEEM_PER_PERCENT() == 0
-          && (-request.resource.data.points) <= REDEEM_MAX_POINTS())
-      );
-    }
-
-    function isValidRedemptionLead() {
-      return ownsAsClient()
-        && request.resource.data.pointsUsed > 0
-        && request.resource.data.pointsUsed % REDEEM_PER_PERCENT() == 0
-        && request.resource.data.pointsUsed <= REDEEM_MAX_POINTS()
-        && request.resource.data.discountPercent == request.resource.data.pointsUsed / REDEEM_PER_PERCENT()
-        && request.resource.data.status == 'new';
-    }
-
-    // ---------- identity / access ----------
-    match /clients/{clientId} {
-      allow read: if isOwner(clientId) || isAdmin();
-
-      allow create: if isOwner(clientId)
-        && request.resource.data.role == 'client'
-        && request.resource.data.get('insuraPoints', 0) == 0
-        && request.resource.data.get('insuraPointsLifetime', 0) == 0
-        && request.resource.data.get('insuraPointsRedeemed', 0) == 0;
-
-      allow update: if isAdmin()
-        || (isOwner(clientId) && !touchesProtectedFields())
-        || isValidPointsEarnUpdate(clientId)
-        || isValidPointsRedeemUpdate(clientId);
-
-      allow delete: if isAdmin();
-    }
-
-    match /admin/{adminId} {
-      allow read: if isOwner(adminId);
-      allow write: if isAdmin();
-    }
-
-    match /users/{uid} {
-      allow read, create: if isOwner(uid);
-      allow update: if (isOwner(uid) && !touchesProtectedFields()) || isAdmin();
-      allow delete: if isAdmin();
-    }
-
-    match /settings/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // ---------- points log (client creates its own entries only) ----------
-    match /pointsLog/{logId} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if isValidPointsLogCreate() || isAdmin();
-      allow update, delete: if isAdmin();
-    }
-
-    // ---------- leads / conversions ----------
-    match /leads/{leadId} {
-      allow read: if isAdmin();
-      allow create: if (ownsAsClient() && request.resource.data.source != 'points_redemption')
-        || (ownsAsClient() && request.resource.data.source == 'points_redemption' && isValidRedemptionLead());
-      allow update, delete: if isAdmin();
-    }
-
-    match /renewals/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-
-    // ---------- documents / assessments ----------
-    match /documents/{docId} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-
-    match /insuranceAssessments/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-
-    // ---------- client-owned records, admin-authored ----------
-    match /policies/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
-    }
-    match /claims/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
-    }
-    match /payments/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
-    }
-
-    // ---------- appointments / complaints ----------
-    match /appointments/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-    match /complaints/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-
-    // ---------- messaging / notifications ----------
-    match /messages/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if (ownsAsClient() && request.resource.data.sender == 'client') || isAdmin();
-      allow update, delete: if isAdmin();
-    }
-    match /notifications/{id} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin())
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
-      allow delete: if isAdmin();
-    }
-
-    // ---------- activity log ----------
-    match /activity/{id} {
-      allow read: if isAdmin();
-      allow create: if ownsAsClient();
-      allow update, delete: if isAdmin();
-    }
-
-    // ---------- public catalog content (admin-managed, client read-only) ----------
-    match /products/{id} {
-      allow read: if resource.data.get('published', false) == true || isAdmin();
-      allow write: if isAdmin();
-    }
-    match /companies/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /insuranceTypes/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /offers/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /companyAds/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    // 'insuranceAds' appears to be a second, older name for the same
-    // "company ads" feature as 'companyAds' - see the report for why
-    // this should be consolidated to one collection.
-    match /insuranceAds/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow update: if request.resource.data.diff(resource.data).affectedKeys.hasOnly(['points', 'lastActivityAt', 'insuraPointsLifetime']) &&
+                     request.resource.data.points == resource.data.points + getPointsForActivity(request.resource.data.activityType) &&
+                     isValidActivity(request.resource.data.activityType) &&
+                     isNotDuplicate() &&
+                     request.resource.data.insuraPointsLifetime == resource.data.insuraPointsLifetime + getPointsForActivity(request.resource.data.activityType);
     }
   }
 }
