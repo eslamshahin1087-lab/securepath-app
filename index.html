@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecurePath - وجهتك الآمنة للتأمين</title>
     
-    <!-- الخطوط الحديثة (Inter للإنجليزية والأرقام + Tajawal للعربية) -->
+    <!-- الخطوط الحديثة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
@@ -20,144 +20,173 @@
 
         body {
             font-family: 'Tajawal', 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #f5f7fa, #e9edf5, #dce3f0, #c9d6e8);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            /* الخلفية الأساسية: Navy Gradient */
+            background: linear-gradient(145deg, #0B132B 0%, #1A2A47 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* عناصر زخرفية ذهبية في الخلفية (دوائر ضبابية) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 1100px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 50px;
-            padding: 45px 55px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 60px;
+            padding: 50px 60px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.15);
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
 
-        /* ---------- الشعار الجديد (Logo + Icon) ---------- */
+        /* ---------- الشعار الجديد (ذهب + Navy) ---------- */
         .logo-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
         .logo-icon {
             display: inline-block;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(145deg, #6C3CE1, #8B5CF6);
-            border-radius: 18px;
-            padding: 8px;
-            box-shadow: 0 8px 16px -4px rgba(108, 60, 225, 0.3);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(145deg, #D4AF37, #E8C84A);
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .logo-icon:hover {
+            transform: scale(1.05) rotate(-2deg);
         }
         .logo-icon svg {
             display: block;
             width: 100%;
             height: 100%;
-            fill: none;
-            stroke: white;
-            stroke-width: 2;
+            fill: #0B132B; /* لون Navy من الداخل */
+            stroke: #0B132B;
+            stroke-width: 1.5;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
         .logo-text {
             font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 800;
-            color: #1a1a2e;
+            color: #FFFFFF;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         .logo-text span {
-            color: #6C3CE1;
-            background: #ede7ff;
-            padding: 0 12px;
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 0 14px;
             border-radius: 30px;
             font-weight: 800;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         /* البادج (العلامة المميزة) */
         .badge {
             display: inline-block;
-            background: #6C3CE1;
-            color: white;
-            padding: 8px 28px;
+            background: rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(4px);
+            color: #E8C84A;
+            padding: 8px 30px;
             border-radius: 50px;
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(108, 60, 225, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             font-family: 'Inter', sans-serif;
         }
 
         /* النص الرئيسي */
         h1 {
             font-family: 'Tajawal', sans-serif;
-            font-size: 58px;
+            font-size: 60px;
             font-weight: 800;
-            color: #1a1a2e;
+            color: #FFFFFF;
             line-height: 1.2;
             margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
         h1 .highlight {
-            background: linear-gradient(135deg, #6C3CE1, #FF6B35);
+            background: linear-gradient(135deg, #D4AF37, #F5D060);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* الشعار الجديد (Slogan) */
+        /* الشعار النصي (Slogan) ذهبي */
         .slogan {
             font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 600;
-            color: #4a4a6a;
+            color: #B0B9C9;
             margin-bottom: 20px;
             letter-spacing: -0.3px;
-            background: rgba(255, 255, 255, 0.5);
-            display: inline-block;
-            padding: 0 25px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
         }
         .slogan em {
             font-style: normal;
-            color: #6C3CE1;
-            background: rgba(108, 60, 225, 0.1);
-            padding: 0 10px;
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0 12px;
             border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
         }
 
         .sub-text {
             font-size: 20px;
-            color: #5a5a7a;
+            color: #B0B9C9;
             max-width: 700px;
             margin: 0 auto 35px;
             line-height: 1.9;
             font-weight: 400;
+            opacity: 0.9;
         }
 
-        /* الميزات */
+        /* الميزات (بطاقات شفافة) */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -166,34 +195,37 @@
         }
 
         .feature-item {
-            background: white;
-            padding: 25px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            padding: 30px 15px;
             border-radius: 30px;
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid #f0f0f0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.4);
         }
         .feature-item:hover {
-            transform: translateY(-10px);
-            border-color: #6C3CE1;
-            box-shadow: 0 20px 30px -10px rgba(108, 60, 225, 0.15);
+            transform: translateY(-12px);
+            border-color: #D4AF37;
+            box-shadow: 0 20px 40px -12px rgba(212, 175, 55, 0.2);
+            background: rgba(212, 175, 55, 0.05);
         }
 
         .feature-item .icon svg {
             display: inline-block;
             margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.2));
         }
         .feature-item h3 {
             font-family: 'Tajawal', sans-serif;
-            font-size: 18px;
-            color: #1a1a2e;
+            font-size: 20px;
+            color: #FFFFFF;
             margin-bottom: 8px;
             font-weight: 700;
         }
         .feature-item p {
             font-family: 'Inter', 'Tajawal', sans-serif;
             font-size: 14px;
-            color: #6b6b8a;
+            color: #8E99B3;
             font-weight: 400;
         }
 
@@ -201,28 +233,30 @@
         .stats {
             display: flex;
             justify-content: center;
-            gap: 40px;
+            gap: 50px;
             margin: 35px 0;
             flex-wrap: wrap;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            padding-top: 35px;
         }
         .stats-item strong {
             font-family: 'Inter', sans-serif;
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 800;
             letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #D4AF37, #F5D060);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .stats-item span {
             font-family: 'Inter', 'Tajawal', sans-serif;
             font-size: 16px;
-            color: #666;
+            color: #8E99B3;
             display: block;
             font-weight: 500;
+            margin-top: 5px;
         }
-        .stats-item .purple { color: #6C3CE1; }
-        .stats-item .orange { color: #FF6B35; }
-        .stats-item .green { color: #2A9D8F; }
 
         /* الأزرار */
         .cta-buttons {
@@ -230,19 +264,19 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 35px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #6C3CE1, #8B5CF6);
-            color: white;
-            padding: 18px 50px;
+            background: linear-gradient(135deg, #D4AF37, #E8C84A);
+            color: #0B132B;
+            padding: 18px 55px;
             border-radius: 60px;
             font-size: 22px;
-            font-weight: 700;
+            font-weight: 800;
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 15px 25px -8px rgba(108, 60, 225, 0.4);
+            box-shadow: 0 15px 30px -8px rgba(212, 175, 55, 0.3);
             border: none;
             cursor: pointer;
             display: inline-block;
@@ -250,58 +284,53 @@
         }
         .btn-primary:hover {
             transform: scale(1.05);
-            box-shadow: 0 20px 35px -8px rgba(108, 60, 225, 0.6);
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0) scale(1.05); }
-            25% { transform: translateX(-5px) scale(1.05); }
-            75% { transform: translateX(5px) scale(1.05); }
+            box-shadow: 0 25px 40px -10px rgba(212, 175, 55, 0.5);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #1a1a2e;
-            padding: 18px 40px;
+            color: #D4AF37;
+            padding: 18px 45px;
             border-radius: 60px;
             font-size: 20px;
             font-weight: 700;
             text-decoration: none;
-            border: 2px solid #d0d0e0;
+            border: 2px solid rgba(212, 175, 55, 0.4);
             transition: all 0.3s ease;
             display: inline-block;
             font-family: 'Tajawal', sans-serif;
+            backdrop-filter: blur(4px);
         }
         .btn-secondary:hover {
-            border-color: #6C3CE1;
-            color: #6C3CE1;
-            background: rgba(108, 60, 225, 0.05);
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
         }
 
         .footer {
-            margin-top: 40px;
-            color: #8888aa;
+            margin-top: 45px;
+            color: #5A6A8A;
             font-size: 14px;
-            border-top: 1px solid rgba(0,0,0,0.05);
+            border-top: 1px solid rgba(255,255,255,0.03);
             padding-top: 25px;
             font-family: 'Inter', 'Tajawal', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         /* تجاوب مع الجوال */
         @media (max-width: 768px) {
-            .container { padding: 30px 20px; }
-            h1 { font-size: 34px; }
-            .slogan { font-size: 20px; padding: 0 15px; }
+            .container { padding: 30px 20px; border-radius: 30px; }
+            h1 { font-size: 36px; }
+            .slogan { font-size: 20px; }
             .sub-text { font-size: 17px; }
             .btn-primary { font-size: 18px; padding: 15px 30px; }
             .btn-secondary { font-size: 16px; padding: 15px 25px; }
             .features { grid-template-columns: 1fr; }
             .cta-buttons { flex-direction: column; align-items: center; }
-            .stats { gap: 20px; }
-            .stats-item strong { font-size: 24px; }
+            .stats { gap: 25px; }
+            .stats-item strong { font-size: 26px; }
             .logo-text { font-size: 26px; }
-            .logo-icon { width: 40px; height: 40px; }
+            .logo-icon { width: 45px; height: 45px; padding: 8px; }
         }
     </style>
 </head>
@@ -309,9 +338,9 @@
 
     <div class="container">
 
-        <!-- الشعار الجديد (أيقونة + نص) -->
+        <!-- الشعار الجديد (أيقونة ذهبية + نص) -->
         <div class="logo-wrapper">
-            <!-- أيقونة الدرع (SecurePath Icon) -->
+            <!-- أيقونة الدرع المذهبة -->
             <div class="logo-icon">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -331,7 +360,7 @@
             طريقك نحو <span class="highlight">التأمين</span> <br> الذكي والآمن
         </h1>
 
-        <!-- الشعار النصي الجديد (Slogan) - تم التغيير إلى Your insurance Ecosystem -->
+        <!-- الشعار النصي الجديد (ذهبي) -->
         <div class="slogan">
             Your <em>insurance</em> Ecosystem
         </div>
@@ -345,7 +374,7 @@
         <div class="features">
             <div class="feature-item">
                 <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#6C3CE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         <path d="M9 12l2 2 4-4"/>
                     </svg>
@@ -355,7 +384,7 @@
             </div>
             <div class="feature-item">
                 <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
                 </span>
@@ -364,7 +393,7 @@
             </div>
             <div class="feature-item">
                 <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#2A9D8F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M12 6v6l4 2"/>
                     </svg>
@@ -377,20 +406,20 @@
         <!-- الإحصاءات -->
         <div class="stats">
             <div class="stats-item">
-                <strong class="purple">+500</strong>
+                <strong>+500</strong>
                 <span>عميل نشط</span>
             </div>
             <div class="stats-item">
-                <strong class="orange">+1.2k</strong>
+                <strong>+1.2k</strong>
                 <span>نقطة ممنوحة</span>
             </div>
             <div class="stats-item">
-                <strong class="green">15%</strong>
+                <strong>15%</strong>
                 <span>أقصى خصم</span>
             </div>
         </div>
 
-        <!-- الأزرار (تم إصلاح الرابط المعطل الذي كان يعطي 404) -->
+        <!-- الأزرار -->
         <div class="cta-buttons">
             <a href="wathiqati-app.html" class="btn-primary">
                 🚀 ابدأ الآن مجاناً
