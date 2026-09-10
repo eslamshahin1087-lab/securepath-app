@@ -39,7 +39,7 @@
 | **المصادقة**          | Firebase Authentication (بريد إلكتروني/كلمة مرور)               |
 | **تخزين المستندات**   | Cloudinary (Unsigned Upload Presets)                            |
 | **الاستضافة**         | GitHub Pages (رابط GitHub Pages الافتراضي — بدون دومين مخصص)    |
-| **النشر على أندرويد** | APK مبني من الـ PWA (`SecurePath-Production.apk`)               |
+| **النشر على أندرويد** | APK مبني من الـ PWA — يُوزَّع عبر GitHub Releases (غير متتبَّع في المستودع نفسه) |
 | **اللغة**             | عربي (افتراضي، RTL) / إنجليزي — تبديل فوري داخل التطبيق         |
 
 ---
@@ -54,12 +54,14 @@ securepath-app/
 ├── manifest.json                    # إعداد الـ PWA (اسم، أيقونات، ألوان)
 ├── sw.js                            # Service Worker (كاش + عمل أوفلاين)
 ├── securepath-firebase-migration.js # سكربت Node.js لإدارة حسابات اختبار/أدمن عبر Firebase Admin SDK
-├── package.json                     # تبعيات سكربت الإدارة (firebase-admin)
+├── firebase.json                    # إعداد Firestore (rules + indexes فقط - الاستضافة عبر GitHub Pages)
+├── firestore.rules / firestore.indexes.json
+├── functions/                       # Cloud Functions (مسار ترقية مستقبلي لـ Blaze - غير مُفعّل حاليًا)
 ├── .well-known/                     # ملفات تحقق/ربط (Digital Asset Links لأندرويد، إلخ)
-├── icon-192.png / icon-512.png / icon-512-maskable.png / apple-touch-icon.png
-├── SecurePath.apk / SecurePath-Production.apk
-└── SecurePath-Production-SHA256.txt
+└── icon-192.png / icon-512.png / icon-512-maskable.png / apple-touch-icon.png
 ```
+
+> ملاحظة: ملفات الـ APK (`SecurePath.apk` / `SecurePath-Production.apk`) غير متتبَّعة في المستودع - يتم توزيعها عبر GitHub Releases بدلاً من ذلك.
 
 > ملاحظة: لا يوجد ملف `CNAME` في المستودع حاليًا، وبالتالي لا يوجد دومين مخصص مربوط بالـ Pages في الوقت الحالي.
 
@@ -138,7 +140,7 @@ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId
 ```
 clients · policies · documents · products · offers · leads · appointments
 complaints · companyAds · pointsLog · notifications · settings · admin
-insuranceAssessments · insuranceTypes · insuranceAds · claims · renewals
+insuranceAssessments · insuranceTypes · claims · renewals
 payments · messages · activity · companies · users
 ```
 
@@ -149,14 +151,14 @@ payments · messages · activity · companies · users
 - **توثيق البريد الإلكتروني إلزامي** لتسجيل الدخول (`user.emailVerified`)، إلا للحسابات على دومين مستثنى صراحة عبر `VERIFICATION_EXEMPT_DOMAINS` داخل `wathiqati-app.html` — **يُستخدم فقط لدومينات تملكها بالكامل**.
 - سكربت `securepath-firebase-migration.js` هو الطريقة **الأكثر أمانًا** لتفعيل حسابات اختبار: يستخدم Firebase Admin SDK لتحديد حسابات بعينها (بالبريد/UID صراحة) وتعيين `emailVerified = true` عبر Custom Claims من جهة السيرفر — **بدون** الاعتماد على الدومين وحده كإثبات ملكية. يُفضَّل الانتقال التدريجي لهذه الطريقة بدلًا من الاستثناء بالدومين على العميل إن أمكن.
 - لا تضع ملف `service-account.json` الخاص بـ Firebase Admin في المستودع أبدًا — مرره عبر متغير بيئة `FIREBASE_SERVICE_ACCOUNT_JSON`.
-- تأكد دائمًا من إحكام **Firestore Security Rules** من داخل Firebase Console (غير مُدارة داخل هذا المستودع).
+- **Firestore Security Rules** مُدارة داخل هذا المستودع (`firestore.rules`) وتُنشر عبر `firebase deploy --only firestore:rules` — تأكد أن أي تعديل على مجموعة بيانات جديدة (collection) في الكود مصحوب بقاعدة مطابقة هنا.
 
 ---
 
 ## 🚀 النشر
 
 - **الويب:** يُنشر تلقائيًا عبر GitHub Pages على الرابط الافتراضي `https://eslamshahin1087-lab.github.io/securepath-app/` — بدون دومين مخصص حاليًا.
-- **أندرويد:** يُبنى APK من الـ PWA (`SecurePath.apk` / `SecurePath-Production.apk`)، مع بصمة توثيق SHA-256 في `SecurePath-Production-SHA256.txt` لكل إصدار إنتاجي.
+- **أندرويد:** يُبنى APK من الـ PWA ويُوزَّع عبر [GitHub Releases](https://github.com/eslamshahin1087-lab/securepath-app/releases) لهذا المستودع (غير متتبَّع كملف داخل الكود)، مع نشر بصمة SHA-256 لكل إصدار مع الـ Release نفسه.
 
 ---
 
