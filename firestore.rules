@@ -234,12 +234,5 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
-    // 'insuranceAds' appears to be a second, older name for the same
-    // "company ads" feature as 'companyAds' - see the report for why
-    // this should be consolidated to one collection.
-    match /insuranceAds/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
   }
 }
