@@ -1,0 +1,58 @@
+SecurePath (Wathiqati) - Proprietary License
+Copyright (c) 2026 Eslam Shahin. All Rights Reserved.
+
+SECUREPATH / WATHIQATI PROPRIETARY SOFTWARE LICENSE
+====================================================
+
+This software, including but not limited to the source code,
+documentation, design assets, database schemas, and any related
+files contained in this repository (collectively, the "Software"),
+is the exclusive property of Eslam Shahin ("the Owner").
+
+1. NO LICENSE GRANTED
+   No license, express or implied, is granted to any person or
+   entity to use, copy, modify, merge, publish, distribute,
+   sublicense, sell, or otherwise exploit the Software, in whole
+   or in part, without the prior written permission of the Owner.
+
+2. RESTRICTIONS
+   You may NOT:
+   a. Copy, reproduce, or redistribute the Software.
+   b. Modify, adapt, translate, or create derivative works.
+   c. Reverse engineer, decompile, or disassemble the Software.
+   d. Use the Software or any part of it for commercial purposes.
+   e. Remove or alter any copyright, trademark, or attribution
+      notices.
+   f. Use the "SecurePath" or "Wathiqati" name, logo, or branding
+      without written authorization.
+
+3. INSURANCE REGULATORY NOTICE
+   SecurePath operates as a licensed insurance intermediary
+   registered with the Financial Regulatory Authority of Egypt
+   (FRA License No. 38062). This Software is provided to support
+   that regulated activity only. It does not itself constitute
+   an insurance product, policy, or coverage of any kind.
+
+4. THIRD-PARTY COMPONENTS
+   Portions of this Software rely on third-party services and
+   libraries (Firebase, Cloudinary, and others). Those components
+   remain subject to their respective licenses and terms of
+   service, which the user must comply with separately.
+
+5. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+   NONINFRINGEMENT.
+
+6. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL THE OWNER BE LIABLE FOR ANY CLAIM, DAMAGES,
+   OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR
+   OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+7. CONTACT
+   For licensing, partnership, or commercial inquiries:
+   Eslam Shahin - GitHub: @eslamshahin1087-lab
+
+END OF LICENSE
