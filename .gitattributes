@@ -1,0 +1,25 @@
+# Normalize line endings for all text files
+* text=auto eol=lf
+
+# Shell scripts MUST use LF
+*.sh text eol=lf
+
+# Windows scripts use CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.apk binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# Exclude from export
+.github/ export-ignore
+scripts/ export-ignore
+.gitattributes export-ignore
