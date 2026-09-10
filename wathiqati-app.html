@@ -10771,12 +10771,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             p.push(db.collection('companyAds').get().then(function(s) {
                 STATE.companyAds = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
-            }).catch(function(e) {
-                return db.collection('insuranceAds').get().then(function(s) {
-                    STATE.companyAds = s.docs.map(function(d) { var x = d.data() || {};
-                        x.id = d.id; return x; });
-                }).catch(function() { STATE.companyAds = []; });
-            }));
+            }).catch(function(e) { console.warn('Company ads load failed', e);
+                STATE.companyAds = []; }));
             p.push(db.collection('insuranceAssessments').doc(uid).get().then(function(doc) {
                 if (doc.exists) { STATE.insuranceAssessments[uid] = doc.data() || {};
                     assessmentCache[uid] = doc.data() || {}; }
