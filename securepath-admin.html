@@ -57,6 +57,9 @@
      ::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: var(--radius-full); }
     h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 800; color: var(--text); }
     .text-muted { color: var(--muted); }
+    .client-link { color: var(--blue); font-weight: 700; text-decoration: none; cursor: pointer; border-bottom: 1px dashed transparent; transition: all var(--transition-base); }
+    .client-link:hover { color: var(--navy); border-bottom-color: var(--gold); }
+    [data-theme="dark"] .client-link { color: #9CC9FF; }
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 22px; border-radius: var(--radius-md); font-weight: 700; font-size: 13px; transition: all var(--transition-bounce); border: 1.5px solid transparent; }
     .btn:active { transform: scale(0.96); }
     .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border-color: var(--gold); box-shadow: var(--shadow-gold); }
@@ -95,14 +98,24 @@
     .sidebar .brand .brand-name { font-size: 18px; font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .sidebar .brand .brand-sub { font-size: 9px; opacity: 0.5; display: block; -webkit-text-fill-color: rgba(255,255,255,0.5); }
     .sidebar .nav { padding-top: 8px; flex: 1; overflow-y: auto; }
-    .sidebar .nav .nav-section { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.2); padding: 10px 12px 4px; font-weight: 700; }
-    .sidebar .nav button { width: 100%; background: transparent; color: rgba(255,255,255,0.6); text-align: right; padding: 8px 12px; border-radius: var(--radius-md); margin: 1px 0; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 10px; transition: all var(--transition-base); position: relative; }
-    .sidebar .nav button .icon { width: 24px; font-size: 16px; text-align: center; opacity: 0.7; }
+    .sidebar .nav .nav-section { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.35); padding: 10px 12px 6px; font-weight: 700; margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+    .sidebar .nav .nav-section:first-child { margin-top: 0; }
+    .sidebar .nav .nav-section::before { content: ''; width: 12px; height: 2px; border-radius: 2px; background: var(--gold); opacity: 0.7; flex-shrink: 0; }
+    .sidebar .nav button { width: 100%; background: transparent; color: rgba(255,255,255,0.65); text-align: right; padding: 7px 10px; border-radius: var(--radius-md); margin: 2px 0; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 10px; transition: all var(--transition-bounce); position: relative; }
+    .sidebar .nav button .icon { width: 30px; height: 30px; font-size: 14px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255,255,255,0.06); opacity: 0.85; transition: all var(--transition-bounce); }
+    .sidebar .nav button:nth-of-type(5n+1) .icon { color: #FFDD9E; background: rgba(242,189,99,0.18); }
+    .sidebar .nav button:nth-of-type(5n+2) .icon { color: #9CC9FF; background: rgba(46,103,177,0.24); }
+    .sidebar .nav button:nth-of-type(5n+3) .icon { color: #86E3B8; background: rgba(22,128,91,0.24); }
+    .sidebar .nav button:nth-of-type(5n+4) .icon { color: #CBB8FF; background: rgba(114,85,183,0.26); }
+    .sidebar .nav button:nth-of-type(5n) .icon { color: #FFB3A8; background: rgba(201,84,62,0.24); }
     .sidebar .nav button:hover { background: rgba(255,255,255,0.08); color: #fff; transform: translateX(-4px); }
+    .sidebar .nav button:hover .icon { transform: scale(1.12) rotate(-4deg); opacity: 1; }
     .sidebar .nav button.active { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); box-shadow: var(--shadow-gold); }
-    .sidebar .nav button.active .icon { opacity: 1; }
+    .sidebar .nav button.active .icon { opacity: 1; color: var(--navy); background: rgba(14,42,92,0.12); }
     .sidebar .nav button.active::before { content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 4px; height: 24px; background: var(--gold); border-radius: 0 4px 4px 0; }
     .sidebar .nav button .badge { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 9px; padding: 1px 6px; min-width: 18px; text-align: center; background: var(--red); color: #fff; border-radius: var(--radius-full); }
+    .sidebar .nav button .badge:not(.hidden) { animation: navBadgePulse 1.8s ease-in-out infinite; }
+    @keyframes navBadgePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(201,84,62,0.55); } 50% { box-shadow: 0 0 0 5px rgba(201,84,62,0); } }
     .sidebar .footer { flex-shrink: 0; color: rgba(255,255,255,0.4); font-size: 11px; border-top: 1px solid rgba(255,255,255,0.05); padding: 12px 6px 4px; }
     .sidebar .footer #userEmail { display: block; margin-bottom: 8px; font-weight: 600; color: rgba(255,255,255,0.7); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sidebar .footer .logout-btn { width: 100%; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); padding: 8px; border-radius: var(--radius-md); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -114,12 +127,18 @@
     .topbar { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-soft); padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; flex-wrap: wrap; gap: 10px; min-height: 68px; transition: background var(--transition-base), border-color var(--transition-base); }
     [data-theme="dark"] .topbar { background: rgba(15, 23, 36, 0.85); border-bottom-color: var(--line); }
     .topbar .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .topbar .topbar-left .page-icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--gold-soft), var(--gold-soft)); display: grid; place-items: center; font-size: 18px; color: var(--navy); }
+    .topbar .topbar-left .page-icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--gold-soft), var(--gold-soft)); display: grid; place-items: center; font-size: 18px; color: var(--navy); transition: all var(--transition-bounce); }
+    .topbar .topbar-left .page-icon.c-blue { background: var(--blue-light); color: var(--blue); }
+    .topbar .topbar-left .page-icon.c-green { background: var(--green-light); color: var(--green); }
+    .topbar .topbar-left .page-icon.c-purple { background: var(--purple-light); color: var(--purple); }
+    .topbar .topbar-left .page-icon.c-red { background: var(--red-light); color: var(--red); }
     .topbar h1 { font-size: 18px; margin: 0; color: var(--text); }
     .topbar .topbar-sub { font-size: 11px; color: var(--muted); }
      .topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
      .menu-toggle { display: none; width: 38px; height: 38px; border-radius: var(--radius-md); background: var(--gold-soft); color: var(--navy); font-size: 17px; }
+     .connection-status-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; }
      .connection-status { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; padding: 6px 10px; border-radius: var(--radius-full); background: var(--paper); border: 1px solid var(--line-soft); }
+     .sync-time { font-size: 9px; color: var(--muted); padding: 0 10px; opacity: 0.75; }
      .connection-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
      .connection-status.offline::before { background: var(--red); box-shadow: 0 0 0 3px var(--red-light); }
      .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 90; background: rgba(7,29,64,.52); backdrop-filter: blur(3px); }
@@ -144,7 +163,8 @@
     [data-theme="dark"] .stat-card { background: linear-gradient(135deg, var(--paper-dark) 0%, var(--navy-dark) 100%); }
     .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
     .stat-card .stat-icon { font-size: 26px; display: block; }
-     .stat-card .stat-icon { width: 46px; height: 46px; margin: 0 auto 10px; display: grid; place-items: center; border-radius: 15px; color: var(--navy); background: var(--gold-soft); }
+     .stat-card .stat-icon { width: 46px; height: 46px; margin: 0 auto 10px; display: grid; place-items: center; border-radius: 15px; color: var(--navy); background: var(--gold-soft); transition: transform var(--transition-bounce); }
+     .stat-card:hover .stat-icon { transform: scale(1.1) rotate(-4deg); }
      .stat-card:nth-child(4n+1) .stat-icon { color: var(--blue); background: var(--blue-light); }
      .stat-card:nth-child(4n+2) .stat-icon { color: var(--green); background: var(--green-light); }
      .stat-card:nth-child(4n+3) .stat-icon { color: var(--red); background: var(--red-light); }
@@ -360,8 +380,8 @@
     #unauthorized .box .btn { width: 100%; justify-content: center; }
 
     @media (max-width: 1200px) { .payment-summary { grid-template-columns: repeat(2, 1fr); } .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } }
-     @media (max-width: 992px) { .sidebar { width: var(--sidebar-collapsed); padding: 12px 8px; } .sidebar .brand .brand-name, .sidebar .brand .brand-sub { display: none; } .sidebar .nav button .label { display: none; } .sidebar .nav button .icon { width: 100%; font-size: 18px; } .sidebar .nav button { padding: 10px; justify-content: center; } .sidebar .nav button .badge { position: absolute; top: 2px; left: 2px; font-size: 8px; padding: 1px 6px; min-width: 14px; } .sidebar .footer { display: none; } .main { margin-right: var(--sidebar-collapsed); width: calc(100% - var(--sidebar-collapsed)); } .modal .form-grid { grid-template-columns: 1fr; } }
-     @media (max-width: 768px) { .payment-summary { grid-template-columns: 1fr; } .grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .content { padding: 14px; } .topbar { padding: 10px 14px; flex-direction: row; align-items: center; gap: 8px; } .topbar .topbar-left { min-width: 0; flex: 1; } .topbar .topbar-left > div:last-child { min-width: 0; } .topbar h1, .topbar-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .topbar h1 { font-size: 16px; } .topbar .actions { justify-content: flex-end; } .topbar .actions .btn:not(#darkModeToggle) { display: none; } .menu-toggle { display: grid; place-items: center; } .connection-status { display: none; } .sidebar { width: min(290px, 86vw); transform: translateX(110%); transition: transform var(--transition-base); box-shadow: var(--shadow-xl); } .sidebar.open { transform: translateX(0); } .sidebar .brand .brand-name, .sidebar .brand .brand-sub, .sidebar .nav button .label { display: block; } .sidebar .nav button .icon { width: 24px; font-size: 16px; } .sidebar .nav button { padding: 10px 12px; justify-content: flex-start; } .sidebar .footer { display: block; } .main { margin-right: 0; width: 100%; } .toolbar { flex-direction: column; align-items: stretch; padding: 10px 14px; } .toolbar .search { max-width: 100%; } .modal { padding: 18px 14px; } .login-box { padding: 24px 16px; } }
+     @media (max-width: 992px) { .sidebar { width: var(--sidebar-collapsed); padding: 12px 8px; } .sidebar .brand .brand-name, .sidebar .brand .brand-sub { display: none; } .sidebar .nav button .label { display: none; } .sidebar .nav button .icon { width: 34px; height: 34px; font-size: 16px; } .sidebar .nav button { padding: 10px; justify-content: center; } .sidebar .nav button .badge { position: absolute; top: 2px; left: 2px; font-size: 8px; padding: 1px 6px; min-width: 14px; } .sidebar .footer { display: none; } .main { margin-right: var(--sidebar-collapsed); width: calc(100% - var(--sidebar-collapsed)); } .modal .form-grid { grid-template-columns: 1fr; } }
+     @media (max-width: 768px) { .payment-summary { grid-template-columns: 1fr; } .grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .content { padding: 14px; } .topbar { padding: 10px 14px; flex-direction: row; align-items: center; gap: 8px; } .topbar .topbar-left { min-width: 0; flex: 1; } .topbar .topbar-left > div:last-child { min-width: 0; } .topbar h1, .topbar-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .topbar h1 { font-size: 16px; } .topbar .actions { justify-content: flex-end; } .topbar .actions .btn:not(#darkModeToggle) { display: none; } .menu-toggle { display: grid; place-items: center; } .connection-status-wrap { display: none; } .sidebar { width: min(290px, 86vw); transform: translateX(110%); transition: transform var(--transition-base); box-shadow: var(--shadow-xl); } .sidebar.open { transform: translateX(0); } .sidebar .brand .brand-name, .sidebar .brand .brand-sub, .sidebar .nav button .label { display: block; } .sidebar .nav button .icon { width: 30px; height: 30px; font-size: 14px; } .sidebar .nav button { padding: 10px 12px; justify-content: flex-start; } .sidebar .footer { display: block; } .main { margin-right: 0; width: 100%; } .toolbar { flex-direction: column; align-items: stretch; padding: 10px 14px; } .toolbar .search { max-width: 100%; } .modal { padding: 18px 14px; } .login-box { padding: 24px 16px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
 </head>
@@ -440,7 +460,7 @@
         <header class="topbar">
            <div class="topbar-left"><button class="menu-toggle" aria-label="فتح القائمة" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><div class="page-icon" id="pageIcon"><i class="fas fa-chart-pie"></i></div><div><h1 id="title">لوحة التحكم</h1><div class="topbar-sub" id="pageSub">نظرة عامة</div></div></div>
           <div class="actions">
-             <span class="connection-status" id="connectionStatus">متصل</span>
+             <span class="connection-status-wrap"><span class="connection-status" id="connectionStatus">متصل</span><span class="sync-time" id="lastSyncTime"></span></span>
             <button class="btn btn-outline btn-sm" id="darkModeToggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
             <button class="btn btn-dark btn-sm" onclick="openModal('clientModal')"><i class="fas fa-user-plus"></i> عميل</button>
             <button class="btn btn-primary btn-sm" onclick="openPolicyModal()"><i class="fas fa-file-signature"></i> وثيقة</button>
@@ -928,6 +948,11 @@
     const formatBytes = (b) => { if (!Number.isFinite(b) || b < 0) return '—'; if (b < 1024) return b + ' B'; if (b < 1048576) return (b / 1024).toFixed(1) + ' KB'; return (b / 1048576).toFixed(2) + ' MB'; };
 
     const clientName = (id) => { if (!id) return '—'; const c = APP_STATE.clients.find(x => x.id === id || x.uid === id || x.clientId === id); return c ? (c.fullName || c.name || c.username || id) : id; };
+    const clientLink = (id, displayName) => {
+      const n = displayName || clientName(id);
+      if (!id) return esc(n || '—');
+      return `<a href="javascript:void(0)" class="client-link" onclick="event.stopPropagation();openClientProfile('${esc(id)}')" title="عرض ملف العميل الكامل">${esc(n || '—')}</a>`;
+    };
      const $ = (id) => document.getElementById(id);
      function setConnectionState(state, message) {
        const el = $('connectionStatus');
@@ -936,6 +961,8 @@
        el.textContent = message || (online ? 'متصل' : 'غير متصل');
        el.classList.toggle('offline', !online);
        el.title = APP_STATE.lastSyncAt ? `آخر مزامنة: ${date(APP_STATE.lastSyncAt)}` : '';
+       const syncEl = $('lastSyncTime');
+       if (syncEl) syncEl.textContent = APP_STATE.lastSyncAt ? 'آخر مزامنة: ' + ago(APP_STATE.lastSyncAt) : '';
      }
 
     // ===== Insurance Types (40+ Types) =====
@@ -1495,7 +1522,7 @@
           </select></td>
           <td>${date(l.createdAt)}</td>
           <td>${marked ? '<span class="lead-mark-badge"><i class="fas fa-bookmark"></i> Marked</span>' : '<span class="text-muted">—</span>'}</td>
-          <td><button class="btn btn-outline btn-xs" onclick="deleteLead('${safeId}')"><i class="fas fa-trash"></i></button></td>
+          <td><button class="btn btn-danger btn-xs" title="حذف العميل المحتمل" onclick="deleteLead('${safeId}')"><i class="fas fa-trash"></i></button></td>
         </tr>`;
       }).join('') : `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted,#999);">لا يوجد عملاء محتملون بعد</td></tr>`;
       const total = (APP_STATE.leads || []).length;
@@ -1552,7 +1579,7 @@
       if (q) list = list.filter(a => [a.clientName, a.notes, a.type].join(' ').toLowerCase().includes(q));
       body.innerHTML = list.length ? list.map(a => `
         <tr>
-          <td>${esc(a.clientName || clientName(a.clientId))}</td>
+          <td>${clientLink(a.clientId, a.clientName)}</td>
           <td>${esc(APPT_TYPE_LABELS[a.type] || a.type || '—')}</td>
           <td>${esc(a.date || '—')}</td>
           <td>${esc(a.time || '—')}</td>
@@ -1560,7 +1587,7 @@
           <td><select onchange="updateAppointmentStatus('${a.id}', this.value)" style="padding:4px 8px;border-radius:6px;">
             ${Object.keys(APPT_STATUS_LABELS).map(s => `<option value="${s}" ${((a.status || 'pending') === s) ? 'selected' : ''}>${APPT_STATUS_LABELS[s]}</option>`).join('')}
           </select></td>
-          <td><button class="btn btn-outline btn-xs" onclick="deleteAppointment('${a.id}')"><i class="fas fa-trash"></i></button></td>
+          <td><button class="btn btn-danger btn-xs" title="حذف الموعد" onclick="deleteAppointment('${a.id}')"><i class="fas fa-trash"></i></button></td>
         </tr>`).join('') : `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted,#999);">لا توجد مواعيد بعد</td></tr>`;
     }
 
@@ -1603,7 +1630,7 @@
       if (q) list = list.filter(c => [c.clientName, c.subject, c.details, c.type].join(' ').toLowerCase().includes(q));
       body.innerHTML = list.length ? list.map(c => `
         <tr>
-          <td>${esc(c.clientName || clientName(c.clientId))}${c.clientPhone ? '<br><span style="font-size:11px;color:var(--muted,#999);">' + esc(c.clientPhone) + '</span>' : ''}</td>
+          <td>${clientLink(c.clientId, c.clientName)}${c.clientPhone ? '<br><span style="font-size:11px;color:var(--muted,#999);">' + esc(c.clientPhone) + '</span>' : ''}</td>
           <td>${esc(c.type || '—')}</td>
           <td>${esc(c.subject || '—')}</td>
           <td>${esc(c.policyNumber || '—')}</td>
@@ -1612,7 +1639,7 @@
             ${Object.keys(COMPLAINT_STATUS_LABELS).map(s => `<option value="${s}" ${((c.status || 'pending') === s) ? 'selected' : ''}>${COMPLAINT_STATUS_LABELS[s]}</option>`).join('')}
           </select></td>
           <td>${date(c.createdAt)}</td>
-          <td><button class="btn btn-outline btn-xs" onclick="deleteComplaint('${c.id}')"><i class="fas fa-trash"></i></button></td>
+          <td><button class="btn btn-danger btn-xs" title="حذف الشكوى" onclick="deleteComplaint('${c.id}')"><i class="fas fa-trash"></i></button></td>
         </tr>`).join('') : `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted,#999);">لا توجد شكاوى بعد</td></tr>`;
     }
 
@@ -1763,7 +1790,7 @@
       document.getElementById('sActive').textContent = active + ' سارية';
 
       const expHtml = APP_STATE.policies.filter(p => daysUntil(p.endDate) >= 0 && daysUntil(p.endDate) <= 45).sort((a, b) => daysUntil(a.endDate) - daysUntil(b.endDate)).slice(0, 8).map(p =>
-        `<div class="list-item"><div class="list-content"><h4>${esc(clientName(p.clientId || p.uid))}</h4><p>${esc(getCompanyName(p.company))} • ${esc(p.policyNumber)} • ${date(p.endDate)} <span class="badge badge-danger">${daysUntil(p.endDate)} يوم</span></p></div></div>`
+        `<div class="list-item"><div class="list-content"><h4>${clientLink(p.clientId || p.uid)}</h4><p>${esc(getCompanyName(p.company))} • ${esc(p.policyNumber)} • ${date(p.endDate)} <span class="badge badge-danger">${daysUntil(p.endDate)} يوم</span></p></div></div>`
       ).join('');
       document.getElementById('dashExpiring').innerHTML = expHtml || '<div class="empty">لا توجد وثائق منتهية قريباً</div>';
 
@@ -1875,7 +1902,7 @@
           `<td>${esc(c.phone||'—')}</td><td>${pc}</td><td><strong class="points-positive">${pointNumber(c.insuraPoints || 0)}</strong></td><td>${cc}</td><td>${esc(msgs[0]?.text||'—')}</td>`+
           `<td>${unread ? '<span class="badge badge-danger">جديد</span>' : '<span class="badge badge-success">نشط</span>'}</td>`+
           `<td>${marked ? '<span class="client-mark-badge"><i class="fas fa-bookmark"></i> Marked</span>' : '<span class="text-muted">—</span>'}</td>`+
-          `<td><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-outline btn-xs" onclick="openClientChat('${esc(cid)}')"><i class="fas fa-comment"></i></button><button class="btn btn-outline btn-xs" onclick="openPolicyModal('${esc(cid)}')"><i class="fas fa-plus"></i></button><button class="btn btn-outline btn-xs" onclick="openClientProfile('${esc(cid)}')"><i class="fas fa-eye"></i></button></div></td></tr>`;
+          `<td><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-outline btn-xs" title="محادثة مع العميل" onclick="openClientChat('${esc(cid)}')"><i class="fas fa-comment"></i></button><button class="btn btn-outline btn-xs" title="إضافة وثيقة" onclick="openPolicyModal('${esc(cid)}')"><i class="fas fa-plus"></i></button><button class="btn btn-outline btn-xs" title="عرض ملف العميل" onclick="openClientProfile('${esc(cid)}')"><i class="fas fa-eye"></i></button></div></td></tr>`;
       }).join('');
       document.getElementById('clientsBody').innerHTML = html || '<tr><td colspan="10"><div class="empty">لا يوجد عملاء</div></td></tr>';
       updateClientBulkToolbar();
@@ -1887,7 +1914,7 @@
         const days = daysUntil(p.endDate);
         const badge = days < 0 ? 'badge-danger' : days <= 30 ? 'badge-warning' : 'badge-success';
         const label = days < 0 ? 'منتهية' : days <= 30 ? 'تنتهي قريباً' : 'سارية';
-        return `<tr><td>${esc(clientName(p.clientId||p.uid))}</td><td>${getTypeBadge(p.type)}</td><td>${esc(getCompanyName(p.company))}</td><td>${esc(p.policyNumber)}</td><td>${Number(p.premium||0).toLocaleString()} EGP</td><td>${date(p.endDate)}</td><td><span class="badge ${badge}">${label}</span></td></tr>`;
+        return `<tr><td>${clientLink(p.clientId||p.uid)}</td><td>${getTypeBadge(p.type)}</td><td>${esc(getCompanyName(p.company))}</td><td>${esc(p.policyNumber)}</td><td>${Number(p.premium||0).toLocaleString()} EGP</td><td>${date(p.endDate)}</td><td><span class="badge ${badge}">${label}</span></td></tr>`;
       }).join('');
       document.getElementById('policiesBody').innerHTML = html || '<tr><td colspan="7"><div class="empty">لا توجد وثائق</div></td></tr>';
     }
@@ -1909,7 +1936,7 @@
         const prem = policy ? Number(policy.premium) || 0 : 0;
         const paid = APP_STATE.payments.filter(pmt => pmt.policyId === p.policyId).reduce((s, pmt) => s + (Number(pmt.amount) || 0), 0);
         const rem = Math.max(0, prem - paid);
-        return `<tr><td>${esc(clientName(p.clientId||p.uid))}</td><td>${esc(policy?.policyNumber||'—')}</td><td>${Number(prem).toLocaleString()} EGP</td><td><span class="badge badge-success">${Number(p.amount||0).toLocaleString()} EGP</span></td><td><span class="badge ${rem>0?'badge-warning':'badge-success'}">${rem.toLocaleString()} EGP</span></td><td>${date(p.date)}</td><td><span class="badge badge-info">${esc(p.method||'—')}</span></td></tr>`;
+        return `<tr><td>${clientLink(p.clientId||p.uid)}</td><td>${esc(policy?.policyNumber||'—')}</td><td>${Number(prem).toLocaleString()} EGP</td><td><span class="badge badge-success">${Number(p.amount||0).toLocaleString()} EGP</span></td><td><span class="badge ${rem>0?'badge-warning':'badge-success'}">${rem.toLocaleString()} EGP</span></td><td>${date(p.date)}</td><td><span class="badge badge-info">${esc(p.method||'—')}</span></td></tr>`;
       }).join('');
       document.getElementById('paymentsBody').innerHTML = html || '<tr><td colspan="7"><div class="empty">لا توجد مدفوعات</div></td></tr>';
     }
@@ -1921,7 +1948,7 @@
         const statusMap = { approved: 'success', rejected: 'danger', settled: 'info' };
         const cls = statusMap[c.status] || 'warning';
         const label = c.status === 'approved' ? 'معتمد' : c.status === 'rejected' ? 'مرفوض' : c.status === 'settled' ? 'مسوى' : 'قيد المراجعة';
-        return `<tr><td>${esc(clientName(c.clientId||c.uid))}</td><td>${esc(c.type)}</td><td>${esc(c.policyNumber||policy?.policyNumber||'—')}</td><td>${Number(c.amount||0).toLocaleString()} EGP</td><td><span class="badge badge-${cls}">${label}</span></td><td>${date(c.updatedAt||c.createdAt)}</td><td><select onchange="changeClaim('${c.id}',this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid var(--line);font-size:12px;background:#fff"><option value="">تحديث</option><option value="under_review">قيد المراجعة</option><option value="approved">معتمد</option><option value="settled">مسوى</option><option value="rejected">مرفوض</option></select></td></tr>`;
+        return `<tr><td>${clientLink(c.clientId||c.uid)}</td><td>${esc(c.type)}</td><td>${esc(c.policyNumber||policy?.policyNumber||'—')}</td><td>${Number(c.amount||0).toLocaleString()} EGP</td><td><span class="badge badge-${cls}">${label}</span></td><td>${date(c.updatedAt||c.createdAt)}</td><td><select onchange="changeClaim('${c.id}',this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid var(--line);font-size:12px;background:#fff"><option value="">تحديث</option><option value="under_review">قيد المراجعة</option><option value="approved">معتمد</option><option value="settled">مسوى</option><option value="rejected">مرفوض</option></select></td></tr>`;
       }).join('');
       document.getElementById('claimsBody').innerHTML = html || '<tr><td colspan="7"><div class="empty">لا توجد مطالبات</div></td></tr>';
     }
@@ -1933,7 +1960,7 @@
         const badge = st === 'pending' ? 'badge-warning' : st === 'approved' || st === 'verified' ? 'badge-success' : st === 'rejected' ? 'badge-danger' : 'badge-gray';
         const label = st === 'pending' ? 'قيد المراجعة' : st === 'approved' || st === 'verified' ? 'معتمد' : st === 'rejected' ? 'مرفوض' : '—';
         const hasData = !!(d.dataUrl || d.downloadURL || d.fileUrl || d.url);
-        return `<tr><td>${esc(clientName(d.clientId||d.uid))}</td><td>${esc(d.fileName||'—')}</td><td>${esc(d.fileType||d.category||'—')}</td><td>${(d.uploadedBy === 'agent' || d.role === 'admin') ? '<span class="badge badge-info">أدمن</span>' : '<span class="badge badge-success">عميل</span>'}</td><td><span class="badge ${badge}">${label}</span></td><td>${date(d.createdAt)}</td><td><div style="display:flex;gap:4px;flex-wrap:wrap">${hasData ? `<button class="btn btn-outline btn-xs" onclick="openDocumentById('${d.id}')"><i class="fas fa-eye"></i></button>` : ''}${st === 'pending' ? `<button class="btn btn-success btn-xs" onclick="verifyDocument('${d.id}','approved')"><i class="fas fa-check"></i></button><button class="btn btn-danger btn-xs" onclick="verifyDocument('${d.id}','rejected')"><i class="fas fa-times"></i></button>` : ''}</div></td></tr>`;
+        return `<tr><td>${clientLink(d.clientId||d.uid)}</td><td>${esc(d.fileName||'—')}</td><td>${esc(d.fileType||d.category||'—')}</td><td>${(d.uploadedBy === 'agent' || d.role === 'admin') ? '<span class="badge badge-info">أدمن</span>' : '<span class="badge badge-success">عميل</span>'}</td><td><span class="badge ${badge}">${label}</span></td><td>${date(d.createdAt)}</td><td><div style="display:flex;gap:4px;flex-wrap:wrap">${hasData ? `<button class="btn btn-outline btn-xs" title="معاينة المستند" onclick="openDocumentById('${d.id}')"><i class="fas fa-eye"></i></button>` : ''}${st === 'pending' ? `<button class="btn btn-success btn-xs" title="اعتماد المستند" onclick="verifyDocument('${d.id}','approved')"><i class="fas fa-check"></i></button><button class="btn btn-danger btn-xs" title="رفض المستند" onclick="verifyDocument('${d.id}','rejected')"><i class="fas fa-times"></i></button>` : ''}</div></td></tr>`;
       }).join('');
       document.getElementById('documentsBody').innerHTML = html || '<tr><td colspan="7"><div class="empty">لا توجد مستندات</div></td></tr>';
     }
@@ -1990,7 +2017,7 @@
         const badge = isExpired ? 'badge-danger' : isActive ? 'badge-success' : 'badge-gray';
         const label = isExpired ? 'منتهي' : isActive ? 'نشط' : 'مسودة';
         const img = o.imageUrl && o.imageUrl.startsWith('http') ? `<img src="${esc(o.imageUrl)}" alt="${esc(o.name)}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="font-size:48px;opacity:0.3;"><i class="fas fa-tag"></i></div>`;
-        return `<div class="product-card"><div class="image" style="height:140px;background:linear-gradient(135deg, var(--navy-100), var(--paper));position:relative;">${img}<div style="position:absolute;top:10px;right:10px;z-index:2;"><span class="badge ${badge}">${label}</span></div>${o.discount ? `<div style="position:absolute;bottom:10px;right:10px;background:var(--gold);color:var(--navy);padding:4px 12px;border-radius:var(--radius-full);font-weight:900;font-size:14px;">-${o.discount}%</div>` : ''}</div><div class="body"><div class="meta"><span><i class="fas fa-building"></i> ${esc(o.companyName||o.company||'—')}</span><span class="separator">|</span><span><i class="fas fa-list-ul"></i> ${esc(o.typeName||o.type||'—')}</span></div><h4>${esc(o.name)} <span style="font-size:11px;color:var(--muted);font-weight:400;">#${esc(o.code||'')}</span></h4><p>${esc(o.description||'')}</p><div class="product-tags">${o.discount ? `<span class="badge badge-gold"><i class="fas fa-percent"></i> خصم ${o.discount}%</span>` : ''}${o.startDate ? `<span class="badge badge-info"><i class="fas fa-calendar-alt"></i> من ${date(o.startDate)}</span>` : ''}${o.endDate ? `<span class="badge badge-info"><i class="fas fa-calendar-alt"></i> إلى ${date(o.endDate)}</span>` : ''}</div><div class="product-actions"><button class="btn btn-outline btn-xs" onclick="editOffer('${o.id||''}')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-xs" onclick="deleteOffer('${o.id||''}')"><i class="fas fa-trash"></i></button><button class="btn btn-success btn-xs" onclick="toggleOfferStatus('${o.id||''}')">${isActive ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button></div></div></div>`;
+        return `<div class="product-card"><div class="image" style="height:140px;background:linear-gradient(135deg, var(--navy-100), var(--paper));position:relative;">${img}<div style="position:absolute;top:10px;right:10px;z-index:2;"><span class="badge ${badge}">${label}</span></div>${o.discount ? `<div style="position:absolute;bottom:10px;right:10px;background:var(--gold);color:var(--navy);padding:4px 12px;border-radius:var(--radius-full);font-weight:900;font-size:14px;">-${o.discount}%</div>` : ''}</div><div class="body"><div class="meta"><span><i class="fas fa-building"></i> ${esc(o.companyName||o.company||'—')}</span><span class="separator">|</span><span><i class="fas fa-list-ul"></i> ${esc(o.typeName||o.type||'—')}</span></div><h4>${esc(o.name)} <span style="font-size:11px;color:var(--muted);font-weight:400;">#${esc(o.code||'')}</span></h4><p>${esc(o.description||'')}</p><div class="product-tags">${o.discount ? `<span class="badge badge-gold"><i class="fas fa-percent"></i> خصم ${o.discount}%</span>` : ''}${o.startDate ? `<span class="badge badge-info"><i class="fas fa-calendar-alt"></i> من ${date(o.startDate)}</span>` : ''}${o.endDate ? `<span class="badge badge-info"><i class="fas fa-calendar-alt"></i> إلى ${date(o.endDate)}</span>` : ''}</div><div class="product-actions"><button class="btn btn-outline btn-xs" title="تعديل العرض" onclick="editOffer('${o.id||''}')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-xs" title="حذف العرض" onclick="deleteOffer('${o.id||''}')"><i class="fas fa-trash"></i></button><button class="btn btn-success btn-xs" title="${isActive ? 'إيقاف العرض' : 'تفعيل العرض'}" onclick="toggleOfferStatus('${o.id||''}')">${isActive ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button></div></div></div>`;
       }).join('');
     }
 
@@ -2170,7 +2197,7 @@
                 ${a.link ? `<span class="badge badge-gold"><i class="fas fa-link"></i> رابط مرفق</span>` : ''}
               </div>
               <div class="product-actions">
-                <button class="btn btn-outline btn-xs" onclick="openAdModal('${a.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline btn-xs" title="تعديل الإعلان" onclick="openAdModal('${a.id}')"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-danger btn-xs" onclick="deleteAd('${a.id}')"><i class="fas fa-trash"></i></button>
                 <button class="btn btn-success btn-xs" onclick="toggleAdStatus('${a.id}')">
                   ${isActive ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}
@@ -2206,7 +2233,7 @@
       const html = ids.map(id => {
         const msgs = APP_STATE.messages.filter(m => (m.clientId || m.uid) === id).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
         const unread = msgs.some(m => m.sender === 'client' && !m.autoReply && !m.readByAdmin);
-        return `<div class="list-item ${unread ? 'unread' : ''}" onclick="openClientChat('${id}')"><div class="list-content"><h4>${esc(clientName(id))}${unread ? ' <span class="badge badge-danger">جديد</span>' : ''}</h4><p>${esc(msgs[0]?.text||'')} • ${ago(msgs[0]?.createdAt)} • ${msgs.length} رسائل</p></div></div>`;
+        return `<div class="list-item ${unread ? 'unread' : ''}" onclick="openClientChat('${id}')"><div class="list-content"><h4>${clientLink(id)}${unread ? ' <span class="badge badge-danger">جديد</span>' : ''}</h4><p>${esc(msgs[0]?.text||'')} • ${ago(msgs[0]?.createdAt)} • ${msgs.length} رسائل</p></div></div>`;
       }).join('');
       document.getElementById('conversationList').innerHTML = html || '<div class="empty">لا توجد محادثات</div>';
     }
@@ -2214,7 +2241,7 @@
     function renderRenewals() {
       const q = (document.getElementById('renewalSearch')?.value || '').toLowerCase();
       const list = APP_STATE.policies.filter(p => daysUntil(p.endDate) >= 0 && daysUntil(p.endDate) <= 45).filter(p => [clientName(p.clientId || p.uid), p.policyNumber, getCompanyName(p.company)].join(' ').toLowerCase().includes(q)).sort((a, b) => daysUntil(a.endDate) - daysUntil(b.endDate));
-      const html = list.map(p => `<tr><td>${esc(clientName(p.clientId||p.uid))}</td><td>${esc(p.policyNumber)}</td><td>${esc(getCompanyName(p.company))}</td><td>${date(p.endDate)}</td><td>${daysUntil(p.endDate)} يوم</td><td><button class="btn btn-primary btn-xs" onclick="sendRenewalReminder('${p.clientId||p.uid}','${p.id||''}')"><i class="fas fa-bell"></i> تذكير</button></td></tr>`).join('');
+      const html = list.map(p => `<tr><td>${clientLink(p.clientId||p.uid)}</td><td>${esc(p.policyNumber)}</td><td>${esc(getCompanyName(p.company))}</td><td>${date(p.endDate)}</td><td>${daysUntil(p.endDate)} يوم</td><td><button class="btn btn-primary btn-xs" onclick="sendRenewalReminder('${p.clientId||p.uid}','${p.id||''}')"><i class="fas fa-bell"></i> تذكير</button></td></tr>`).join('');
       document.getElementById('renewalsBody').innerHTML = html || '<tr><td colspan="6"><div class="empty">لا توجد تجديدات</div></td></tr>';
     }
 
@@ -2262,7 +2289,7 @@
         const isPub = p.status === 'published' || p.published === true;
         const badge = isPub ? 'badge-success' : p.status === 'archived' ? 'badge-danger' : 'badge-warning';
         const label = isPub ? 'منشور' : p.status === 'archived' ? 'مؤرشف' : 'مسودة';
-        return `<div class="product-card"><div class="image">${img}<div class="status-badge"><span class="badge ${badge}">${label}</span></div></div><div class="body"><div class="meta"><span><i class="fas fa-building"></i> ${esc(company)}</span><span class="separator">|</span><span>${typeIcon} ${esc(typeName)}</span></div><h4>${esc(p.name)}</h4><p>${esc(p.description||'لا يوجد وصف')}</p>${feats.length ? '<ul>'+feats.slice(0,3).map(x => `<li>${esc(x)}</li>`).join('')+(feats.length>3?`<li style="list-style:none;color:var(--muted);font-size:10px;">+ ${feats.length-3} مميزات أخرى</li>`:'')+'</ul>' : ''}<div class="product-tags">${Number(p.premium||0)>0 ? `<span class="badge badge-info"><i class="fas fa-coins"></i> ${Number(p.premium).toLocaleString()} EGP/سنة</span>` : ''}${isPub ? '<span class="badge badge-success"><i class="fas fa-circle"></i> متاح</span>' : '<span class="badge badge-gray"><i class="fas fa-clock"></i> غير منشور</span>'}</div><div class="product-actions"><button class="btn btn-outline btn-xs" onclick="editProduct('${p.id||''}')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-xs" onclick="deleteProduct('${p.id||''}')"><i class="fas fa-trash"></i></button><button class="btn btn-success btn-xs" onclick="toggleProductStatus('${p.id||''}')">${isPub ? '<i class="fas fa-archive"></i>' : '<i class="fas fa-rocket"></i>'}</button></div></div></div>`;
+        return `<div class="product-card"><div class="image">${img}<div class="status-badge"><span class="badge ${badge}">${label}</span></div></div><div class="body"><div class="meta"><span><i class="fas fa-building"></i> ${esc(company)}</span><span class="separator">|</span><span>${typeIcon} ${esc(typeName)}</span></div><h4>${esc(p.name)}</h4><p>${esc(p.description||'لا يوجد وصف')}</p>${feats.length ? '<ul>'+feats.slice(0,3).map(x => `<li>${esc(x)}</li>`).join('')+(feats.length>3?`<li style="list-style:none;color:var(--muted);font-size:10px;">+ ${feats.length-3} مميزات أخرى</li>`:'')+'</ul>' : ''}<div class="product-tags">${Number(p.premium||0)>0 ? `<span class="badge badge-info"><i class="fas fa-coins"></i> ${Number(p.premium).toLocaleString()} EGP/سنة</span>` : ''}${isPub ? '<span class="badge badge-success"><i class="fas fa-circle"></i> متاح</span>' : '<span class="badge badge-gray"><i class="fas fa-clock"></i> غير منشور</span>'}</div><div class="product-actions"><button class="btn btn-outline btn-xs" title="تعديل المنتج" onclick="editProduct('${p.id||''}')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-xs" title="حذف المنتج" onclick="deleteProduct('${p.id||''}')"><i class="fas fa-trash"></i></button><button class="btn btn-success btn-xs" title="${isPub ? 'أرشفة المنتج' : 'نشر المنتج'}" onclick="toggleProductStatus('${p.id||''}')">${isPub ? '<i class="fas fa-archive"></i>' : '<i class="fas fa-rocket"></i>'}</button></div></div></div>`;
       }).join('');
     }
 
@@ -2313,14 +2340,14 @@
         const score = Number(a.score);
         const scoreHtml = Number.isFinite(score) ? `<span class="badge ${score < 50 ? 'badge-danger' : 'badge-success'}">${score}%</span>` : '—';
         const valid = APP_STATE.policies.filter(p => (p.clientId === clientId || p.uid === clientId) && daysUntil(p.endDate) >= 0).length;
-        return `<tr><td>${esc(a.name||clientName(clientId))}</td><td>${esc(a.ownerType === 'yes' ? 'شركة' : 'فرد')}</td><td>${esc(a.businessActivity||a.occupation||'—')}</td><td>${valid}</td><td>${scoreHtml}</td><td>${esc(a.status||a.label||'—')}</td><td>${date(a.updatedAt||a.timestamp)}</td></tr>`;
+        return `<tr><td>${clientLink(clientId, a.name)}</td><td>${esc(a.ownerType === 'yes' ? 'شركة' : 'فرد')}</td><td>${esc(a.businessActivity||a.occupation||'—')}</td><td>${valid}</td><td>${scoreHtml}</td><td>${esc(a.status||a.label||'—')}</td><td>${date(a.updatedAt||a.timestamp)}</td></tr>`;
       }).join('');
       document.getElementById('assessmentsBody').innerHTML = html || '<tr><td colspan="7"><div class="empty">لا توجد تقييمات</div></td></tr>';
     }
 
     function renderNotifications() {
       const html = APP_STATE.notifications.slice(0, 50).map(n =>
-        `<div class="list-item"><div class="list-content"><h4><i class="fas fa-bell"></i> ${esc(n.title||'إشعار')} — ${esc(clientName(n.clientId||n.uid))}</h4><p>${esc(n.body||'')} • ${date(n.createdAt)}</p></div></div>`
+        `<div class="list-item"><div class="list-content"><h4><i class="fas fa-bell"></i> ${esc(n.title||'إشعار')} — ${clientLink(n.clientId||n.uid)}</h4><p>${esc(n.body||'')} • ${date(n.createdAt)}</p></div></div>`
       ).join('');
       document.getElementById('notificationsList').innerHTML = html || '<div class="empty">لا توجد إشعارات</div>';
     }
@@ -2889,7 +2916,12 @@
       const docs = APP_STATE.documents.filter(x => x.clientId === cid || x.uid === cid);
       const payments = APP_STATE.payments.filter(x => x.clientId === cid || x.uid === cid);
       const claims = APP_STATE.claims.filter(x => x.clientId === cid || x.uid === cid);
+      const leads = (APP_STATE.leads || []).filter(x => x.clientId === cid);
+      const appts = (APP_STATE.appointments || []).filter(x => x.clientId === cid);
+      const complaints = (APP_STATE.complaints || []).filter(x => x.clientId === cid);
+      const pointsBalance = Number(c.insuraPoints || 0);
       let html = `<div class="grid grid-4" style="margin-bottom:16px"><div class="card stat-card"><div class="label">الوثائق</div><div class="value" style="font-size:24px">${policies.length}</div></div><div class="card stat-card"><div class="label">المطالبات</div><div class="value" style="font-size:24px">${claims.length}</div></div><div class="card stat-card"><div class="label">المدفوعات</div><div class="value" style="font-size:24px">${payments.length}</div></div><div class="card stat-card"><div class="label">المستندات</div><div class="value" style="font-size:24px">${docs.length}</div></div></div>`;
+      html += `<div class="grid grid-4" style="margin-bottom:16px"><div class="card stat-card clickable" role="button" tabindex="0" onclick="showView('leads')"><div class="label">فرص البيع</div><div class="value" style="font-size:24px">${leads.length}</div></div><div class="card stat-card clickable" role="button" tabindex="0" onclick="showView('appointments')"><div class="label">المواعيد</div><div class="value" style="font-size:24px">${appts.length}</div></div><div class="card stat-card clickable" role="button" tabindex="0" onclick="showView('complaints')"><div class="label">الشكاوى</div><div class="value" style="font-size:24px">${complaints.length}</div></div><div class="card stat-card clickable" role="button" tabindex="0" onclick="showClientPoints('${esc(cid)}')"><div class="label">رصيد النقاط</div><div class="value" style="font-size:24px">${pointsBalance.toLocaleString()}</div></div></div>`;
       html += `<div class="card"><div class="card-header"><h3>الوثائق</h3></div><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>النوع</th><th>الشركة</th><th>رقم الوثيقة</th><th>الانتهاء</th><th>القسط</th><th>المدفوع</th></tr></thead><tbody>`;
       html += policies.map(p => {
         const paid = APP_STATE.payments.filter(pmt => pmt.policyId === p.id).reduce((s, pmt) => s + (Number(pmt.amount) || 0), 0);
@@ -2903,6 +2935,15 @@
         const label = st === 'pending' ? 'قيد المراجعة' : st === 'approved' || st === 'verified' ? 'معتمد' : st === 'rejected' ? 'مرفوض' : '—';
         return `<tr><td>${esc(d.fileName||'—')}</td><td>${esc(d.fileType||'—')}</td><td><span class="badge ${badge}">${label}</span></td><td>${date(d.createdAt)}</td></tr>`;
       }).join('') || '<tr><td colspan="4"><div class="empty">لا توجد مستندات</div></td></tr>';
+      html += `</tbody></table></div></div></div>`;
+      html += `<div class="card" style="margin-top:16px"><div class="card-header"><h3>فرص البيع (Leads)</h3></div><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>المصدر</th><th>الحالة</th><th>التفاصيل</th><th>التاريخ</th></tr></thead><tbody>`;
+      html += leads.map(l => `<tr><td>${esc(LEAD_SOURCE_LABELS[l.source] || l.source || '—')}</td><td>${esc(LEAD_STATUS_LABELS[l.status] || l.status || 'جديد')}</td><td>${esc(l.message || l.insuranceType || '—')}</td><td>${date(l.createdAt)}</td></tr>`).join('') || '<tr><td colspan="4"><div class="empty">لا توجد فرص بيع</div></td></tr>';
+      html += `</tbody></table></div></div></div>`;
+      html += `<div class="card" style="margin-top:16px"><div class="card-header"><h3>المواعيد</h3></div><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>النوع</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>`;
+      html += appts.map(a => `<tr><td>${esc(APPT_TYPE_LABELS[a.type] || a.type || '—')}</td><td>${esc(APPT_STATUS_LABELS[a.status] || a.status || 'قيد المراجعة')}</td><td>${date(a.date || a.createdAt)}</td></tr>`).join('') || '<tr><td colspan="3"><div class="empty">لا توجد مواعيد</div></td></tr>';
+      html += `</tbody></table></div></div></div>`;
+      html += `<div class="card" style="margin-top:16px"><div class="card-header"><h3>الشكاوى</h3></div><div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>النوع</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>`;
+      html += complaints.map(cm => `<tr><td>${esc(cm.type || cm.subject || '—')}</td><td>${esc(COMPLAINT_STATUS_LABELS[cm.status] || cm.status || 'قيد المراجعة')}</td><td>${date(cm.createdAt)}</td></tr>`).join('') || '<tr><td colspan="3"><div class="empty">لا توجد شكاوى</div></td></tr>';
       html += `</tbody></table></div></div></div>`;
       document.getElementById('profileBody').innerHTML = html;
     }
@@ -2921,7 +2962,7 @@
         const days = daysUntil(p.endDate);
         const badge = days < 0 ? 'badge-danger' : days <= 30 ? 'badge-warning' : 'badge-success';
         const label = days < 0 ? 'منتهية' : days <= 30 ? 'تنتهي قريباً' : 'سارية';
-        return `<tr><td>${esc(clientName(p.clientId||p.uid))}</td><td>${getTypeBadge(p.type)}</td><td>${esc(p.policyNumber||'—')}</td><td>${date(p.endDate)}</td><td><span class="badge ${badge}">${label}</span></td></tr>`;
+        return `<tr><td>${clientLink(p.clientId||p.uid)}</td><td>${getTypeBadge(p.type)}</td><td>${esc(p.policyNumber||'—')}</td><td>${date(p.endDate)}</td><td><span class="badge ${badge}">${label}</span></td></tr>`;
       }).join('') || '<tr><td colspan="5"><div class="empty">لا توجد وثائق</div></td></tr>';
       html += `</tbody></table></div></div></div>`;
       document.getElementById('companyProfileBody').innerHTML = html;
@@ -2937,9 +2978,11 @@
       if (target) target.classList.add('active');
       const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
        const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
+       const iconColors = { clients: 'c-blue', policies: 'c-green', claims: 'c-red', documents: 'c-purple', appointments: 'c-blue', complaints: 'c-red', renewals: 'c-green', products: 'c-purple', reports: 'c-purple', assessments: 'c-green', compliance: 'c-green', messages: 'c-blue', notifications: 'c-red', activity: 'c-purple', companyAds: 'c-purple', leads: 'c-blue' };
       const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
       document.getElementById('title').textContent = titles[view] || view;
        document.getElementById('pageIcon').innerHTML = `<i class="fas ${icons[view] || 'fa-chart-pie'}" aria-hidden="true"></i>`;
+       document.getElementById('pageIcon').className = 'page-icon' + (iconColors[view] ? ' ' + iconColors[view] : '');
       document.getElementById('pageSub').textContent = subs[view] || '';
        toggleSidebar(false);
        if (window.location.hash !== '#' + view) history.replaceState(null, '', '#' + view);
@@ -3051,7 +3094,7 @@
       const logFiltered = logs.filter(l => [l.clientName, l.category, l.descriptionAr, l.descriptionEn, clientName(l.clientId)].join(' ').toLowerCase().includes(logQ)).sort((a,b) => ms(b.createdAt) - ms(a.createdAt));
       $('pointsLogCount') && ($('pointsLogCount').textContent = pointNumber(logFiltered.length));
       const logBody = $('pointsLogBody');
-      if (logBody) logBody.innerHTML = logFiltered.slice(0, 300).map(l => `<tr><td>${pointsDate(l.createdAt)}</td><td><b>${esc(l.clientName || clientName(l.clientId) || '—')}</b></td><td><span class="badge badge-info">${esc(pointsCategoryName(l.category))}</span></td><td class="${Number(l.points) < 0 ? 'points-negative' : 'points-positive'}"><strong>${Number(l.points) > 0 ? '+' : ''}${pointNumber(l.points)}</strong></td><td>${esc(l.descriptionAr || l.descriptionEn || '—')}</td></tr>`).join('') || '<tr><td colspan="5"><div class="empty">لا يوجد سجل نقاط</div></td></tr>';
+      if (logBody) logBody.innerHTML = logFiltered.slice(0, 300).map(l => `<tr><td>${pointsDate(l.createdAt)}</td><td><b>${clientLink(l.clientId, l.clientName)}</b></td><td><span class="badge badge-info">${esc(pointsCategoryName(l.category))}</span></td><td class="${Number(l.points) < 0 ? 'points-negative' : 'points-positive'}"><strong>${Number(l.points) > 0 ? '+' : ''}${pointNumber(l.points)}</strong></td><td>${esc(l.descriptionAr || l.descriptionEn || '—')}</td></tr>`).join('') || '<tr><td colspan="5"><div class="empty">لا يوجد سجل نقاط</div></td></tr>';
 
       const dash = $('dashboardPointsSummary');
       if (dash) dash.innerHTML = `<div class="dashboard-points-summary"><div><span>الرصيد الحالي</span><strong>${pointNumber(totalCurrent)}</strong></div><div><span>إجمالي المكتسب</span><strong>${pointNumber(totalLifetime)}</strong></div><div><span>المستبدل</span><strong>${pointNumber(totalRedeemed)}</strong></div><button class="btn btn-primary btn-sm" onclick="showView('points')">عرض التفاصيل <i class="fas fa-arrow-left"></i></button></div>`;
