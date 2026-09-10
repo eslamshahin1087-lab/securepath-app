@@ -44,4 +44,4 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-        ci: add deploy workflow
+              uses: actions/deploy-pages@v4
