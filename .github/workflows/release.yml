@@ -1,0 +1,46 @@
+name: Publish Release Checksums
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  checksums:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Download APK asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/apk
+          gh release download "${{ github.event.release.tag_name }}" \
+             --pattern "*.apk" --dir /tmp/apk
+          ls -la /tmp/apk
+
+      - name: Generate checksums
+        run: |
+          APK=$(ls /tmp/apk/*.apk | head -1)
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+          chmod +x scripts/generate-checksums.sh
+          ./scripts/generate-checksums.sh "$APK" "$VERSION" \
+            "${{ github.event.release.html_url }}"
+
+      - name: Commit & push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add releases/
+          git diff --staged --quiet || \
+            git commit -m "chore(releases): update checksums for ${{ github.event.release.tag_name }}"
+          git push
