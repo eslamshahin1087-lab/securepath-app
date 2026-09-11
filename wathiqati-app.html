@@ -1147,6 +1147,250 @@
             line-height: 1.7;
         }
 
+        /* ===== ROBOT TIPS WIDGET ===== */
+        .robot-tips-container {
+            position: fixed;
+            bottom: calc(100px + var(--safe-area-bottom, 0px));
+            left: 16px;
+            z-index: 950;
+            display: none;
+            pointer-events: none;
+        }
+
+        .robot-tips-container.show {
+            display: block;
+        }
+
+        .robot-bubble {
+            position: absolute;
+            bottom: 78px;
+            left: 0;
+            width: 260px;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFD 100%);
+            border: 1.5px solid rgba(242, 189, 99, 0.55);
+            border-radius: 18px;
+            padding: 14px 16px 12px;
+            box-shadow: 0 12px 36px rgba(14, 42, 92, 0.18),
+                        0 0 0 0 rgba(242, 189, 99, 0.4);
+            font-size: 11.5px;
+            line-height: 1.75;
+            color: var(--slate, #25324A);
+            font-family: "Cairo", var(--font-ar);
+            transform-origin: bottom left;
+            opacity: 0;
+            transform: scale(0.7) translateY(10px);
+            transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        html.dark-mode .robot-bubble {
+            background: linear-gradient(145deg, #1A2236 0%, #0F1522 100%);
+            color: #E8EDF5;
+            border-color: rgba(242, 189, 99, 0.45);
+        }
+
+        .robot-bubble.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            animation: robotBubbleGlow 3.5s ease-in-out infinite;
+        }
+
+        @keyframes robotBubbleGlow {
+            0%, 100% {
+                box-shadow: 0 12px 36px rgba(14, 42, 92, 0.18),
+                            0 0 0 0 rgba(242, 189, 99, 0.4);
+            }
+            50% {
+                box-shadow: 0 14px 40px rgba(14, 42, 92, 0.22),
+                            0 0 24px 4px rgba(242, 189, 99, 0.22);
+            }
+        }
+
+        .robot-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 26px;
+            width: 0;
+            height: 0;
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-top: 12px solid rgba(242, 189, 99, 0.55);
+        }
+
+        .robot-bubble::before {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 27px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 11px solid #FFFFFF;
+            z-index: 1;
+        }
+
+        html.dark-mode .robot-bubble::before {
+            border-top-color: #1A2236;
+        }
+
+        .robot-bubble-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--gold, #F2BD63);
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .robot-bubble-title svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .robot-bubble-text {
+            font-size: 11px;
+            line-height: 1.7;
+            color: var(--slate, #25324A);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        html.dark-mode .robot-bubble-text {
+            color: #E8EDF5;
+        }
+
+        .robot-bubble-close {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(14, 42, 92, 0.06);
+            border: none;
+            color: var(--muted, #718096);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .robot-bubble-close:hover {
+            background: rgba(201, 84, 62, 0.12);
+            color: var(--red, #C9543E);
+        }
+
+        .robot-fab {
+            position: relative;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F0F5FC 100%);
+            border: 2px solid rgba(242, 189, 99, 0.6);
+            box-shadow: 0 10px 28px rgba(14, 42, 92, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: robotFloat 3s ease-in-out infinite;
+            pointer-events: auto;
+        }
+
+        html.dark-mode .robot-fab {
+            background: linear-gradient(145deg, #1E2942 0%, #0F1522 100%);
+            border-color: rgba(242, 189, 99, 0.7);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .robot-fab:hover {
+            transform: scale(1.08);
+        }
+
+        .robot-fab:active {
+            transform: scale(0.95);
+        }
+
+        .robot-fab svg {
+            width: 34px;
+            height: 34px;
+            fill: none;
+            stroke: var(--navy, #0E2A5C);
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s ease;
+        }
+
+        html.dark-mode .robot-fab svg {
+            stroke: var(--gold, #F2BD63);
+        }
+
+        .robot-fab .robot-eyes {
+            animation: robotBlink 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes robotFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(-2deg);
+            }
+        }
+
+        @keyframes robotBlink {
+            0%, 90%, 100% { opacity: 1; }
+            93%, 97% { opacity: 0.15; }
+        }
+
+        .robot-fab .robot-pulse {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(242, 189, 99, 0.4);
+            animation: robotPulseRing 2.6s ease-out infinite;
+            pointer-events: none;
+        }
+
+        .robot-fab .robot-pulse:nth-child(2) {
+            animation-delay: 1.3s;
+        }
+
+        @keyframes robotPulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .robot-bubble-text strong {
+            color: var(--gold, #F2BD63);
+            font-weight: 800;
+        }
+
         .broker-disclosure-text strong {
             color: var(--gold);
             font-weight: 800;
@@ -5436,7 +5680,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             <div class="companies-slider-section home-partners">
                 <div class="slider-title" id="companiesSliderTitle">
                     <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18"/></svg></span></span>
-                    شركاؤنا في النجاح <span>·</span> <span id="companiesCount">0</span> شركة
+                    <span id="companiesSliderTitleText">شركاؤنا في النجاح</span> <span>·</span> <span id="companiesCount">0</span> <span id="companiesCountLabel">شركة</span>
                 </div>
                 <div class="slider-wrapper" id="companiesSlider" role="region" aria-label="Insurance companies">
                     <div class="slider-track" id="sliderTrack" role="list"></div>
@@ -5498,6 +5742,29 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             </div>
             <div class="policies home-policies-list" id="homePoliciesList"></div>
 
+            <div class="robot-tips-container" id="robotTipsContainer">
+                <div class="robot-bubble" id="robotBubble">
+                    <button class="robot-bubble-close" onclick="closeRobotBubble(event)" aria-label="إغلاق">✕</button>
+                    <div class="robot-bubble-title">
+                        <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></svg>
+                        <span id="robotBubbleTitle">نصيحة تأمينية</span>
+                    </div>
+                    <p class="robot-bubble-text" id="robotBubbleText"></p>
+                </div>
+                <button class="robot-fab" id="robotFab" onclick="toggleRobotBubble()" aria-label="مساعد النصائح">
+                    <span class="robot-pulse"></span>
+                    <span class="robot-pulse"></span>
+                    <svg viewBox="0 0 24 24">
+                        <rect x="4" y="8" width="16" height="12" rx="3"/>
+                        <path d="M12 8V5"/>
+                        <circle cx="12" cy="4" r="1"/>
+                        <circle cx="9" cy="13" r="0.8" class="robot-eyes" fill="currentColor"/>
+                        <circle cx="15" cy="13" r="0.8" class="robot-eyes" fill="currentColor"/>
+                        <path d="M9 17h6"/>
+                        <path d="M2 12v3M22 12v3"/>
+                    </svg>
+                </button>
+            </div>
             <button class="whatsapp-fab home-whatsapp-fab" id="whatsappFab" aria-label="WhatsApp">
                 <span class="pulse-ring wa"></span>
                 <span class="pulse-ring wa"></span>
@@ -6424,6 +6691,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 loginSwitch: 'ليس لديك حساب؟ ',
                 loginSwitchLink: 'إنشاء حساب جديد',
                 loginTagline: 'Insurance Ecosystem',
+                companiesSliderTitleText: 'شركاؤنا في النجاح',
+                companiesCountLabel: 'شركة',
+                robotBubbleTitle: 'نصيحة تأمينية',
+                robotBubbleClose: 'إغلاق',
                 signupTitle: '✨ إنشاء حساب جديد',
                 signupLangLabel: '🌐 لغة التطبيق',
                 regFullNameLabel: 'الاسم الرباعي',
@@ -6844,6 +7115,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 chatTitle: 'SecurePath Agent',
                 chatNow: 'Now',
                 chatWelcome: '👋 Welcome to SecurePath!<br>How can I help you today?',
+                companiesSliderTitleText: 'Our Partners in Success',
+                companiesCountLabel: 'companies',
+                robotBubbleTitle: 'Insurance Tip',
+                robotBubbleClose: 'Close',
                 badgeActive: 'Active',
                 badgeExpiring: 'Expiring Soon',
                 badgeExpired: 'Expired',
@@ -7087,6 +7362,13 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             ensureLanguageToggle();
             var waFab = document.getElementById('whatsappFab');
             if (waFab) waFab.style.display = (id === 'home') ? 'flex' : 'none';
+            if (id === 'home') {
+                setTimeout(showRobotOnHome, 400);
+            } else {
+                var robotC = document.getElementById('robotTipsContainer');
+                if (robotC) robotC.classList.remove('show');
+                hideRobotBubble();
+            }
             if (id === 'appointments') renderAppointments();
             if (id === 'analytics') renderAnalytics();
             if (id === 'profileEdit') loadProfileForEdit();
@@ -7313,6 +7595,96 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // ============================================================ //
         // LANGUAGE TOGGLE - FULLY UPDATES ALL TEXTS                   //
         // ============================================================ //
+        // ============================================================ //
+        // ROBOT TIPS - مساعد النصائح التأمينية                          //
+        // ============================================================ //
+        var ROBOT_TIPS = [
+            { ar: 'راجع وثيقتك قبل التجديد — ظروفك تتغير كل سنة!', en: 'Review your policy before renewal — your circumstances change every year!' },
+            { ar: 'التأمين الشامل للسيارة يحمي سيارتك أيضاً، وليس الطرف الآخر فقط.', en: 'Comprehensive car insurance protects your car too, not just the other party.' },
+            { ar: 'وثّق أي حادث بالصور فوراً — هذا يسرّع المطالبة كثيراً.', en: 'Document any incident with photos immediately — this greatly speeds up claims.' },
+            { ar: 'الوسيط المرخص لا يكلّفك أكثر، لكنه يوفّر عليك وقتاً وجهداً.', en: 'A licensed broker does not cost you more, but saves you time and effort.' },
+            { ar: 'لو عندك عائلة تعتمد عليك، فكر في تأمين الحياة.', en: 'If you have a family depending on you, consider life insurance.' },
+            { ar: 'تأمين السفر ضروري قبل أي رحلة خارج مصر.', en: 'Travel insurance is essential before any trip abroad.' },
+            { ar: 'اسأل دائماً عن نسبة التحمل قبل توقيع أي وثيقة.', en: 'Always ask about the deductible before signing any policy.' },
+            { ar: 'لا تعتمد فقط على تأمين الشركة — قد ينتهي بمجرد ترك العمل.', en: "Don't rely only on employer insurance — it may end when you leave the job." },
+            { ar: 'وثيقة تأمين المنزل تغطي أيضاً السرقة وتسرب المياه.', en: 'Home insurance also covers theft and water leaks.' },
+            { ar: 'راجع تغطيتك بعد أي حدث كبير: زواج، مولود، بيت جديد.', en: 'Review your coverage after any major event: marriage, baby, new home.' }
+        ];
+        var _robotTipIndex = 0;
+        var _robotTimer = null;
+        var _robotBubbleVisible = false;
+
+        function _getRandomTip() {
+            var idx = Math.floor(Math.random() * ROBOT_TIPS.length);
+            if (idx === _robotTipIndex && ROBOT_TIPS.length > 1) {
+                idx = (idx + 1) % ROBOT_TIPS.length;
+            }
+            _robotTipIndex = idx;
+            return ROBOT_TIPS[idx];
+        }
+
+        function showRobotTip() {
+            var bubble = document.getElementById('robotBubble');
+            var textEl = document.getElementById('robotBubbleText');
+            if (!bubble || !textEl) return;
+            var tip = _getRandomTip();
+            var lang = STATE.language || 'ar';
+            textEl.textContent = lang === 'ar' ? tip.ar : tip.en;
+            bubble.classList.add('show');
+            _robotBubbleVisible = true;
+        }
+
+        function hideRobotBubble() {
+            var bubble = document.getElementById('robotBubble');
+            if (bubble) bubble.classList.remove('show');
+            _robotBubbleVisible = false;
+        }
+
+        function toggleRobotBubble() {
+            if (_robotBubbleVisible) {
+                hideRobotBubble();
+            } else {
+                showRobotTip();
+            }
+        }
+
+        function closeRobotBubble(evt) {
+            if (evt) evt.stopPropagation();
+            hideRobotBubble();
+        }
+
+        function startRobotTipsTimer() {
+            if (_robotTimer) clearInterval(_robotTimer);
+            _robotTimer = setInterval(function() {
+                if (STATE.currentUser && document.getElementById('home') && document.getElementById('home').classList.contains('active')) {
+                    showRobotTip();
+                    setTimeout(function() {
+                        hideRobotBubble();
+                    }, 12000);
+                }
+            }, 45000);
+        }
+
+        function showRobotOnHome() {
+            var container = document.getElementById('robotTipsContainer');
+            if (!container) return;
+            if (STATE.currentUser) {
+                container.classList.add('show');
+                // عرض نصيحة ترحيبية بعد فتح الصفحة
+                setTimeout(function() {
+                    if (document.getElementById('home') && document.getElementById('home').classList.contains('active')) {
+                        showRobotTip();
+                        setTimeout(function() {
+                            hideRobotBubble();
+                        }, 12000);
+                    }
+                }, 1500);
+                startRobotTipsTimer();
+            } else {
+                container.classList.remove('show');
+            }
+        }
+
         function toggleLanguage() {
             STATE.language = STATE.language === 'ar' ? 'en' : 'ar';
             saveLanguagePreference();
@@ -7716,6 +8088,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             activeObjectUrls = [];
             var chat = document.getElementById('chatMessages');
             if (chat) chat.innerHTML = '<div class="msg agent">' + getText('chatWelcome') + '<span class="msg-time">' + getText('chatNow') + '</span></div>';
+            var robotContainer = document.getElementById('robotTipsContainer');
+            if (robotContainer) robotContainer.classList.remove('show');
+            hideRobotBubble();
+            if (_robotTimer) { clearInterval(_robotTimer); _robotTimer = null; }
         }
 
         // ============================================================ //
@@ -10741,6 +11117,14 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             setPlaceholder('complaintSubject', STATE.language === 'ar' ? 'مثال: تأخر في معالجة المطالبة' : 'e.g. Delay in claim processing');
             setPlaceholder('complaintDetails', STATE.language === 'ar' ? 'اذكر تفاصيل الشكوى بالتفصيل...' : 'Provide detailed complaint description...');
             setPlaceholder('complaintPolicy', STATE.language === 'ar' ? 'رقم الوثيقة المرتبطة بالشكوى' : 'Policy number related to the complaint');
+            // ترجمة شريط الشركاء
+            var sliderTitleEl = document.getElementById('companiesSliderTitleText');
+            if (sliderTitleEl) sliderTitleEl.textContent = t('companiesSliderTitleText');
+            var companiesCountLabelEl = document.getElementById('companiesCountLabel');
+            if (companiesCountLabelEl) companiesCountLabelEl.textContent = t('companiesCountLabel');
+            // ترجمة فقاعة الروبوت
+            var robotTitleEl = document.getElementById('robotBubbleTitle');
+            if (robotTitleEl) robotTitleEl.textContent = t('robotBubbleTitle');
             applyBrokerDisclosure();
             // update dynamic forms
             updateComplaintForm();
