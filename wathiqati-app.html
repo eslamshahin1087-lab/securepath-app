@@ -16,7 +16,7 @@
     <link rel="icon" href="icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
     </script>
@@ -1010,7 +1010,7 @@
         }
 
         .brand-premium {
-            padding: 20px 20px 16px;
+            padding: 24px 20px 20px;
             text-align: center;
             animation: slideDown 0.6s ease;
         }
@@ -1031,7 +1031,7 @@
             width: min(220px, 75%);
             max-height: 120px;
             object-fit: contain;
-            margin: 0 auto 10px;
+            margin: 0 auto 6px;
             filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
         }
 
@@ -1040,6 +1040,116 @@
             font-size: 12px;
             font-weight: 600;
             letter-spacing: 1px;
+        }
+
+        @keyframes disclosureCardEnter {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes disclosureGlow {
+            0%, 100% {
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                            0 0 0 0 rgba(242, 189, 99, 0);
+                border-color: rgba(242, 189, 99, 0.25);
+            }
+            50% {
+                box-shadow: 0 6px 28px rgba(0, 0, 0, 0.22),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                            0 0 20px 0 rgba(242, 189, 99, 0.18);
+                border-color: rgba(242, 189, 99, 0.45);
+            }
+        }
+
+        @keyframes disclosureLineShimmer {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scaleX(0.6);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        .broker-disclosure-card {
+            margin: 16px auto 4px;
+            max-width: 320px;
+            padding: 12px 16px;
+            background: linear-gradient(145deg,
+                        rgba(255, 255, 255, 0.09) 0%,
+                        rgba(255, 255, 255, 0.045) 100%);
+            border: 1px solid rgba(242, 189, 99, 0.25);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            animation: disclosureCardEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both,
+                       disclosureGlow 4s ease-in-out 1s infinite;
+        }
+
+        .broker-disclosure-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 25%;
+            right: 25%;
+            height: 1.5px;
+            background: linear-gradient(90deg,
+                        transparent,
+                        var(--gold) 50%,
+                        transparent);
+            transform-origin: center;
+            animation: disclosureLineShimmer 3.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .broker-disclosure-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 0%,
+                        rgba(242, 189, 99, 0.08),
+                        transparent 60%);
+            pointer-events: none;
+            animation: disclosureGlow 5s ease-in-out infinite;
+        }
+
+        .broker-disclosure-text {
+            color: rgba(255, 255, 255, 0.88);
+            font-family: "Cairo", var(--font-ar);
+            font-size: 9.5px;
+            line-height: 1.75;
+            font-weight: 500;
+            text-align: center;
+            white-space: pre-line;
+            letter-spacing: 0.1px;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        html[dir="ltr"] .broker-disclosure-text {
+            font-family: "Plus Jakarta Sans", var(--font-ui);
+            font-size: 9px;
+            letter-spacing: 0.15px;
+            line-height: 1.7;
+        }
+
+        .broker-disclosure-text strong {
+            color: var(--gold);
+            font-weight: 800;
         }
 
         .signup-disclosure {
@@ -5144,8 +5254,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
                 </div>
                 <img class="brand-logo-full" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
-                <div class="brand-tagline securepath-advisory" id="loginTagline">مرحباً في منظومتك التأمينية الرقمية</div>
-                <p id="brokerDisclosureFooter" style="font-size:9px;color:rgba(255,255,255,0.65);margin-top:8px;line-height:1.6;padding:0 10px;">هذا التطبيق منصة تعريفية بخدمات وسيط تأمين حر مرخّص من الهيئة العامة للرقابة المالية، ولا يمثل شركة تأمين بعينها.</p>
+                <div class="brand-tagline securepath-advisory" id="loginTagline">Insurance Ecosystem</div>
+                <div class="broker-disclosure-card">
+                    <p id="brokerDisclosureFooter" class="broker-disclosure-text"></p>
+                </div>
             </div>
             <div class="login-card">
                 <!-- Offer referral banner (shown when offer_ref is present) -->
@@ -5176,7 +5288,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
                 </div>
                 <img class="brand-logo-full" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 80'><path d='M30,15 L55,25 L55,50 C55,65 30,75 30,75 C30,75 5,65 5,50 L5,25 Z' fill='%23F2BD63'/><path d='M30,22 L47,30 L47,48 C47,58 30,66 30,66 C30,66 13,58 13,48 L13,30 Z' fill='%230E2A5C'/><text x='70' y='42' font-family='Tajawal,sans-serif' font-weight='900' font-size='24' fill='%23FFFFFF'>SecurePath</text><text x='72' y='58' font-family='Cairo,sans-serif' font-size='10' fill='%23FFF2D7' letter-spacing='1'>INSURANCE ECOSYSTEM</text></svg>">
-                <p id="signupDisclosure" class="signup-disclosure">(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)</p>
+                <div class="broker-disclosure-card" style="margin-top:14px;">
+                    <p id="signupDisclosure" class="broker-disclosure-text" style="text-align:center;"></p>
+                </div>
             </div>
             <div class="login-card">
                 <!-- Offer referral banner (shown when offer_ref is present) -->
@@ -6309,7 +6423,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 loginBtn: '🚀 دخول المنصة',
                 loginSwitch: 'ليس لديك حساب؟ ',
                 loginSwitchLink: 'إنشاء حساب جديد',
-                loginTagline: 'مرحباً في منظومتك التأمينية الرقمية',
+                loginTagline: 'Insurance Ecosystem',
                 signupTitle: '✨ إنشاء حساب جديد',
                 signupLangLabel: '🌐 لغة التطبيق',
                 regFullNameLabel: 'الاسم الرباعي',
@@ -6399,7 +6513,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 referralCodeLabel: 'كود الدعوة الخاص بك',
                 referralShareBtn: '📤 مشاركة رابط الدعوة',
                 signupDisclosure: '(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)',
-                brokerDisclosure: '(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)',
+                brokerDisclosure: 'منصة تعريفية وتوعوية هدفها خدمة حاملي وثائق التأمين،\nولا تمثل شركة تأمين بعينها.\n\nيتم عرض الشركات والمنتجات المرخّصة من الهيئة العامة للرقابة المالية (FRA).\nحال الرغبة في الحصول على مزيد من المعلومات،\nيُرجى التواصل مع الوسيط المرخّص الحر بكود FRA 38062.',
                 accountOffers: 'العروض والخصومات',
                 noOffers: 'لا توجد عروض حالياً',
                 noOffersText: 'سيتم إضافة عروض وخصومات جديدة قريباً',
@@ -6582,7 +6696,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 loginBtn: '🚀 Login',
                 loginSwitch: "Don't have an account? ",
                 loginSwitchLink: 'Create new account',
-                loginTagline: 'Welcome to your digital insurance ecosystem',
+                loginTagline: 'Insurance Ecosystem',
                 signupTitle: '✨ Create New Account',
                 signupLangLabel: '🌐 App Language',
                 regFullNameLabel: 'Full Name',
@@ -6671,7 +6785,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 referralBackBtn: 'Back',
                 referralCodeLabel: 'Your referral code',
                 referralShareBtn: '📤 Share referral link',
-                brokerDisclosure: 'This app is an informational platform for the services of an independent insurance broker licensed by the Financial Regulatory Authority, and does not represent any single insurance company. Offers from several licensed companies are shown here, and the final contract is completed directly with the licensed company or broker.',
+                brokerDisclosure: 'An informational and awareness platform serving insurance policyholders,\nnot representing any single insurance company.\n\nLicensed companies and products approved by the Financial Regulatory Authority (FRA) are displayed.\nFor more information,\nplease contact the licensed independent broker under FRA code 38062.',
                 accountOffers: 'Offers & Discounts',
                 accountOffersSub: 'Latest exclusive offers',
                 accountCompanyAds: 'Ads',
@@ -9197,13 +9311,13 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         }
 
         function applyBrokerDisclosure() {
-            var s = STATE.brokerSettings || {},
-                lang = STATE.language || 'ar',
-                el = document.getElementById('brokerDisclosureFooter');
-            if (!el) return;
-            var base = getText('brokerDisclosure');
-            var extra = s.brokerLicenseNumber ? (lang === 'ar' ? ' — رقم الترخيص: ' + s.brokerLicenseNumber : ' — License No.: ' + s.brokerLicenseNumber) : '';
-            el.textContent = base + extra;
+            var disclosure = getText('brokerDisclosure');
+            var footer = document.getElementById('brokerDisclosureFooter');
+            if (footer) footer.textContent = disclosure;
+            var signup = document.getElementById('signupDisclosure');
+            if (signup) signup.textContent = disclosure;
+            var tagline = document.getElementById('loginTagline');
+            if (tagline) tagline.textContent = getText('loginTagline');
         }
 
         function logLead(source, details) {
@@ -10627,6 +10741,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             setPlaceholder('complaintSubject', STATE.language === 'ar' ? 'مثال: تأخر في معالجة المطالبة' : 'e.g. Delay in claim processing');
             setPlaceholder('complaintDetails', STATE.language === 'ar' ? 'اذكر تفاصيل الشكوى بالتفصيل...' : 'Provide detailed complaint description...');
             setPlaceholder('complaintPolicy', STATE.language === 'ar' ? 'رقم الوثيقة المرتبطة بالشكوى' : 'Policy number related to the complaint');
+            applyBrokerDisclosure();
             // update dynamic forms
             updateComplaintForm();
             updateAppointmentForm();
@@ -10874,6 +10989,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             initFormBindings();
             ensureLanguageToggle();
             updateAllTexts();
+            applyBrokerDisclosure();
             loadBrokerSettings();
             updateCharCount();
             updateComplaintCharCount();
