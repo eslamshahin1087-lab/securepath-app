@@ -1,3 +1,24 @@
-
 # Built APKs are distributed via GitHub Releases, not tracked in git history.
 *.apk
+
+# ===== Python helper scripts =====
+fix_*.py
+
+# ===== Backup files =====
+*.backup
+*.backup.*
+*.theme-backup
+*.landing-backup
+
+# ===== Temp files =====
+classes.txt
+*.tmp
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== IDE =====
+.vscode/
+.idea/

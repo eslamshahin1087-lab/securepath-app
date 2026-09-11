@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secure PATH — لوحة التحكم</title>
+  <title>SecurePath Admin — لوحة التحكم</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -34,7 +34,7 @@
       --sidebar-width: 240px; --sidebar-collapsed: 72px;
       --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
       --transition-base: 0.25s ease; --transition-bounce: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      --font: 'Cairo', sans-serif; --font-heading: 'Tajawal', sans-serif;
+      --font: 'Cairo', sans-serif; --font-heading: 'Cairo', sans-serif;
     }
     [data-theme="dark"] {
        --navy: #102542; --navy-dark: #071321; --navy-light: #1d4168; --navy-50: #14263b; --navy-100: #1a3048; --navy-200: #2d4660;
@@ -383,7 +383,301 @@
      @media (max-width: 992px) { .sidebar { width: var(--sidebar-collapsed); padding: 12px 8px; } .sidebar .brand .brand-name, .sidebar .brand .brand-sub { display: none; } .sidebar .nav button .label { display: none; } .sidebar .nav button .icon { width: 34px; height: 34px; font-size: 16px; } .sidebar .nav button { padding: 10px; justify-content: center; } .sidebar .nav button .badge { position: absolute; top: 2px; left: 2px; font-size: 8px; padding: 1px 6px; min-width: 14px; } .sidebar .footer { display: none; } .main { margin-right: var(--sidebar-collapsed); width: calc(100% - var(--sidebar-collapsed)); } .modal .form-grid { grid-template-columns: 1fr; } }
      @media (max-width: 768px) { .payment-summary { grid-template-columns: 1fr; } .grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .content { padding: 14px; } .topbar { padding: 10px 14px; flex-direction: row; align-items: center; gap: 8px; } .topbar .topbar-left { min-width: 0; flex: 1; } .topbar .topbar-left > div:last-child { min-width: 0; } .topbar h1, .topbar-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .topbar h1 { font-size: 16px; } .topbar .actions { justify-content: flex-end; } .topbar .actions .btn:not(#darkModeToggle) { display: none; } .menu-toggle { display: grid; place-items: center; } .connection-status-wrap { display: none; } .sidebar { width: min(290px, 86vw); transform: translateX(110%); transition: transform var(--transition-base); box-shadow: var(--shadow-xl); } .sidebar.open { transform: translateX(0); } .sidebar .brand .brand-name, .sidebar .brand .brand-sub, .sidebar .nav button .label { display: block; } .sidebar .nav button .icon { width: 30px; height: 30px; font-size: 14px; } .sidebar .nav button { padding: 10px 12px; justify-content: flex-start; } .sidebar .footer { display: block; } .main { margin-right: 0; width: 100%; } .toolbar { flex-direction: column; align-items: stretch; padding: 10px 14px; } .toolbar .search { max-width: 100%; } .modal { padding: 18px 14px; } .login-box { padding: 24px 16px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
-  </style>
+  
+    /* ============================================================
+       SECUREPATH ADMIN - Enhanced Visual Layer (v1)
+       ============================================================ */
+
+    /* ----- Logo (Login Screen) ----- */
+    .logo.logo-custom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .logo.logo-custom .logo-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 32px -8px rgba(242, 189, 99, 0.5),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: logoEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .logo.logo-custom .logo-icon:hover {
+      transform: scale(1.08) rotate(-4deg);
+      box-shadow: 0 18px 44px -10px rgba(242, 189, 99, 0.65);
+    }
+
+    .logo.logo-custom .logo-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--navy-dark);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @keyframes logoEntry {
+      0% { opacity: 0; transform: translateY(-16px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ----- Brand (Sidebar) ----- */
+    .brand.brand-custom {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: background 0.3s ease;
+    }
+
+    .brand.brand-custom:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .brand.brand-custom .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 12px;
+      padding: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 8px 20px -6px rgba(242, 189, 99, 0.45),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .brand.brand-custom:hover .brand-icon {
+      transform: scale(1.06) rotate(-3deg);
+    }
+
+    .brand.brand-custom .brand-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--navy-dark);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand.brand-custom .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand.brand-custom .brand-name {
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.3px;
+      line-height: 1.1;
+    }
+
+    .brand.brand-custom .brand-name .accent {
+      color: var(--gold);
+    }
+
+    .brand.brand-custom .brand-sub {
+      font-family: 'Cairo', sans-serif;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      line-height: 1.2;
+    }
+
+    /* ----- Dark Mode Toggle - Enhanced ----- */
+    #darkModeToggle {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    #darkModeToggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      background: rgba(242, 189, 99, 0.12);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    #darkModeToggle:active {
+      transform: scale(0.95) rotate(0deg);
+    }
+
+    #darkModeToggle i {
+      transition: transform 0.4s ease;
+    }
+
+    #darkModeToggle:hover i {
+      transform: rotate(20deg);
+    }
+
+    /* ----- Global Smooth Transitions ----- */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ----- Cards - Enhanced Shadows ----- */
+    .card,
+    .stat-card,
+    .type-card,
+    .product-card {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+    }
+
+    .card:hover,
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ----- Buttons - Enhanced ----- */
+    .btn {
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:not(:disabled):hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:not(:disabled):active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy-dark);
+      box-shadow: 0 6px 18px -6px rgba(242, 189, 99, 0.45);
+    }
+
+    .btn-primary:not(:disabled):hover {
+      box-shadow: 0 10px 26px -8px rgba(242, 189, 99, 0.6);
+    }
+
+    /* ----- Sidebar Nav - Enhanced ----- */
+    .sidebar .nav button {
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+
+    .sidebar .nav button::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) scaleY(0);
+      width: 3px;
+      height: 60%;
+      background: var(--gold);
+      border-radius: 3px 0 0 3px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .sidebar .nav button.active::before {
+      transform: translateY(-50%) scaleY(1);
+    }
+
+    .sidebar .nav button:not(.active):hover {
+      background: rgba(242, 189, 99, 0.06);
+      transform: translateX(-2px);
+    }
+
+    /* ----- TopBar - Enhanced ----- */
+    .topbar {
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* ----- Tables - Enhanced Row Hover ----- */
+    tbody tr {
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(242, 189, 99, 0.04);
+    }
+
+    /* ----- Badges - Enhanced ----- */
+    .badge {
+      transition: all 0.2s ease;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .badge:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ----- Inputs - Enhanced Focus ----- */
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus,
+    .toolbar .search input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(242, 189, 99, 0.15);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    /* ----- Scrollbar - Enhanced ----- */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(14, 42, 92, 0.2);
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: rgba(242, 189, 99, 0.2);
+    }
+
+    /* ----- Reduced Motion ----- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    </style>
 </head>
 <body>
 
@@ -400,7 +694,7 @@
   <!-- ===== LOGIN ===== -->
   <div id="login">
     <div class="login-box">
-      <div class="logo"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50,10 L90,25 L90,65 C90,80 50,95 50,95 C50,95 10,80 10,65 L10,25 Z' fill='%23F2BD63'/><path d='M50,20 L80,32 L80,60 C80,72 50,84 50,84 C50,84 20,72 20,60 L20,32 Z' fill='%230E2A5C'/></svg>" alt="Secure PATH"></div>
+      <div class="logo logo-custom" aria-label="SecurePath"><div class="logo-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg></div></div>
       <h1>Secure PATH</h1>
       <p class="subtitle">مركز تشغيل الوسيط</p>
       <div id="loginErr" style="color:var(--red);font-size:13px;margin-bottom:12px"></div>
@@ -419,7 +713,7 @@
     <div class="shell">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <div class="brand"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50,10 L90,25 L90,65 C90,80 50,95 50,95 C50,95 10,80 10,65 L10,25 Z' fill='%23F2BD63'/><path d='M50,20 L80,32 L80,60 C80,72 50,84 50,84 C50,84 20,72 20,60 L20,32 Z' fill='%230E2A5C'/></svg>" alt="Secure PATH"><div><span class="brand-name">Secure PATH</span><span class="brand-sub">لوحة التحكم</span></div></div>
+        <div class="brand brand-custom"><div class="brand-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><div class="brand-text"><span class="brand-name">SecurePath</span><span class="brand-sub">Insurance Ecosystem</span></div></div>
         <nav class="nav">
           <div class="nav-section">الرئيسية</div>
           <button data-view="dashboard" onclick="showView('dashboard',this)"><span class="icon"><i class="fas fa-chart-pie"></i></span><span class="label">لوحة التحكم</span></button>
