@@ -3,437 +3,699 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurePath - وجهتك الآمنة للتأمين</title>
-    
-    <!-- الخطوط الحديثة -->
+    <meta name="description" content="SecurePath - منصة التأمين الذكية. توعية تأمينية، نقاط ولاء، وخصومات حقيقية.">
+    <meta name="theme-color" content="#0E2A5C">
+    <title>SecurePath — Insurance Ecosystem | واثقتي</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        /* إعادة ضبط الصفحة */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --navy: #0E2A5C;
+            --navy-2: #163E7A;
+            --navy-3: #071D40;
+            --gold: #F2BD63;
+            --gold-2: #FFD98F;
+            --gold-soft: #FFF2D7;
+            --paper: #F5F8FC;
+            --slate: #25324A;
+            --muted: #718096;
+            --gradient-gold: linear-gradient(135deg, var(--gold), var(--gold-2));
+            --gradient-navy: linear-gradient(145deg, var(--navy-3), var(--navy) 70%);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Tajawal', 'Inter', sans-serif;
-            /* الخلفية الأساسية: Navy Gradient */
-            background: linear-gradient(145deg, #0B132B 0%, #1A2A47 100%);
+            font-family: 'Cairo', 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--gradient-navy);
             min-height: 100vh;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            top: -20%; right: -10%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(242, 189, 99, 0.12) 0%, transparent 70%);
+        }
+        body::after {
+            bottom: -30%; left: -10%;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(242, 189, 99, 0.06) 0%, transparent 70%);
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .lang-toggle {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(242, 189, 99, 0.3);
+            color: #FFFFFF;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        html[dir="ltr"] .lang-toggle { left: auto; right: 18px; }
+        .lang-toggle:hover {
+            background: rgba(242, 189, 99, 0.15);
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        /* ===== HERO CARD ===== */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1060px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 36px;
+            padding: 46px 44px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 rgba(242, 189, 99, 0.1);
+            border: 1px solid rgba(242, 189, 99, 0.15);
+            text-align: center;
+            animation: heroEnter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 20%; right: 20%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: lineShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes heroEnter {
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes lineShimmer {
+            0%, 100% { opacity: 0.4; transform: scaleX(0.5); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        /* ===== LOGO ===== */
+        .logo-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
+            gap: 10px;
+            margin-bottom: 26px;
         }
-
-        /* عناصر زخرفية ذهبية في الخلفية (دوائر ضبابية) */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
-
-        body::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1100px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 60px;
-            padding: 50px 60px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            text-align: center;
-            transition: all 0.4s ease;
-        }
-
-        /* ---------- الشعار الجديد (ذهب + Navy) ---------- */
-        .logo-wrapper {
+        .logo-icon {
+            width: 54px;
+            height: 54px;
+            background: var(--gradient-gold);
+            border-radius: 17px;
+            padding: 11px;
+            box-shadow: 0 12px 28px -8px rgba(242, 189, 99, 0.5);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .logo-icon {
-            display: inline-block;
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(145deg, #D4AF37, #E8C84A);
-            border-radius: 20px;
-            padding: 10px;
-            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3);
-            transition: transform 0.3s ease;
         }
         .logo-icon:hover {
-            transform: scale(1.05) rotate(-2deg);
+            transform: scale(1.1) rotate(-4deg);
         }
         .logo-icon svg {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: #0B132B; /* لون Navy من الداخل */
-            stroke: #0B132B;
-            stroke-width: 1.5;
+            width: 100%; height: 100%;
+            fill: none;
+            stroke: var(--navy-3);
+            stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-
         .logo-text {
-            font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 34px;
-            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            font-size: 30px;
+            font-weight: 900;
             color: #FFFFFF;
             letter-spacing: -0.5px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
         }
-        .logo-text span {
-            color: #D4AF37;
-            background: rgba(212, 175, 55, 0.15);
-            padding: 0 14px;
-            border-radius: 30px;
-            font-weight: 800;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+        .logo-text .accent {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        /* البادج (العلامة المميزة) */
-        .badge {
-            display: inline-block;
-            background: rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(4px);
-            color: #E8C84A;
-            padding: 8px 30px;
-            border-radius: 50px;
-            font-size: 14px;
+        .logo-tagline {
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-2);
             font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            font-family: 'Inter', sans-serif;
+            opacity: 0.85;
+            margin-top: 2px;
         }
 
-        /* النص الرئيسي */
+        /* ===== BADGE ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(242, 189, 99, 0.12);
+            color: var(--gold-2);
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(242, 189, 99, 0.28);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .badge .dot {
+            width: 6px; height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: badgePulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(242, 189, 99, 0.6);
+        }
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.7; }
+        }
+
+        /* ===== HEADINGS ===== */
         h1 {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 60px;
-            font-weight: 800;
-            color: #FFFFFF;
-            line-height: 1.2;
-            margin-bottom: 10px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
+            font-size: 46px;
+            font-weight: 900;
+            line-height: 1.18;
+            margin-bottom: 14px;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+            letter-spacing: -0.5px;
         }
         h1 .highlight {
-            background: linear-gradient(135deg, #D4AF37, #F5D060);
+            background: var(--gradient-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* الشعار النصي (Slogan) ذهبي */
         .slogan {
-            font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 28px;
-            font-weight: 600;
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
             color: #B0B9C9;
-            margin-bottom: 20px;
-            letter-spacing: -0.3px;
+            margin-bottom: 18px;
+            letter-spacing: 0.3px;
         }
         .slogan em {
             font-style: normal;
-            color: #D4AF37;
-            background: rgba(212, 175, 55, 0.1);
-            padding: 0 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            padding: 0 8px;
         }
 
         .sub-text {
-            font-size: 20px;
+            font-size: 16px;
             color: #B0B9C9;
-            max-width: 700px;
-            margin: 0 auto 35px;
+            max-width: 660px;
+            margin: 0 auto 32px;
             line-height: 1.9;
-            font-weight: 400;
-            opacity: 0.9;
+            font-weight: 500;
+            opacity: 0.95;
         }
+        .sub-text .hl { color: var(--gold-2); font-weight: 700; }
 
-        /* الميزات (بطاقات شفافة) */
+        /* ===== FEATURES ===== */
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-            margin: 35px 0;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin: 38px 0 10px;
         }
-
         .feature-item {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.035);
             backdrop-filter: blur(8px);
-            padding: 30px 15px;
-            border-radius: 30px;
+            -webkit-backdrop-filter: blur(8px);
+            padding: 26px 18px;
+            border-radius: 22px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(242, 189, 99, 0.12);
+            box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
+            animation: cardEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .feature-item:nth-child(1) { animation-delay: 0.15s; }
+        .feature-item:nth-child(2) { animation-delay: 0.3s; }
+        .feature-item:nth-child(3) { animation-delay: 0.45s; }
+        @keyframes cardEnter {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         .feature-item:hover {
-            transform: translateY(-12px);
-            border-color: #D4AF37;
-            box-shadow: 0 20px 40px -12px rgba(212, 175, 55, 0.2);
-            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 24px 44px -14px rgba(242, 189, 99, 0.3);
+            background: rgba(242, 189, 99, 0.06);
         }
-
+        .feature-item .icon {
+            width: 56px; height: 56px;
+            margin: 0 auto 14px;
+            background: rgba(242, 189, 99, 0.1);
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(242, 189, 99, 0.2);
+        }
+        .feature-item:hover .icon {
+            background: rgba(242, 189, 99, 0.2);
+            transform: rotate(-4deg) scale(1.08);
+        }
         .feature-item .icon svg {
-            display: inline-block;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.2));
+            width: 27px; height: 27px;
+            stroke: var(--gold);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
         .feature-item h3 {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 20px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 17px;
             color: #FFFFFF;
-            margin-bottom: 8px;
-            font-weight: 700;
+            margin-bottom: 6px;
+            font-weight: 800;
         }
         .feature-item p {
-            font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 14px;
+            font-size: 13px;
             color: #8E99B3;
-            font-weight: 400;
+            font-weight: 500;
+            line-height: 1.7;
         }
 
-        /* الإحصاءات */
+        /* ===== STATS ===== */
         .stats {
             display: flex;
             justify-content: center;
-            gap: 50px;
-            margin: 35px 0;
+            gap: 40px;
+            margin: 40px 0 10px;
             flex-wrap: wrap;
-            border-top: 1px solid rgba(212, 175, 55, 0.1);
-            padding-top: 35px;
+            border-top: 1px solid rgba(242, 189, 99, 0.12);
+            padding-top: 32px;
+        }
+        .stats-item {
+            text-align: center;
+            min-width: 100px;
         }
         .stats-item strong {
-            font-family: 'Inter', sans-serif;
-            font-size: 34px;
-            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #D4AF37, #F5D060);
+            background: var(--gradient-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: block;
         }
         .stats-item span {
-            font-family: 'Inter', 'Tajawal', sans-serif;
-            font-size: 16px;
+            font-size: 12.5px;
             color: #8E99B3;
+            font-weight: 600;
+            margin-top: 4px;
             display: block;
-            font-weight: 500;
-            margin-top: 5px;
         }
 
-        /* الأزرار */
+        /* ===== CTA ===== */
         .cta-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
             justify-content: center;
-            margin-top: 35px;
+            margin-top: 36px;
         }
-
         .btn-primary {
-            background: linear-gradient(135deg, #D4AF37, #E8C84A);
-            color: #0B132B;
-            padding: 18px 55px;
+            background: var(--gradient-gold);
+            color: var(--navy-3);
+            padding: 16px 40px;
             border-radius: 60px;
-            font-size: 22px;
-            font-weight: 800;
+            font-size: 16.5px;
+            font-weight: 900;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 15px 30px -8px rgba(212, 175, 55, 0.3);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 14px 30px -8px rgba(242, 189, 99, 0.45);
             border: none;
             cursor: pointer;
-            display: inline-block;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
         }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transition: left 0.6s ease;
+        }
+        .btn-primary:hover::before { left: 100%; }
         .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 25px 40px -10px rgba(212, 175, 55, 0.5);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 22px 42px -10px rgba(242, 189, 99, 0.6);
         }
-
+        .btn-primary:active {
+            transform: translateY(-1px) scale(0.99);
+        }
         .btn-secondary {
             background: transparent;
-            color: #D4AF37;
-            padding: 18px 45px;
+            color: var(--gold);
+            padding: 16px 34px;
             border-radius: 60px;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 15.5px;
+            font-weight: 800;
             text-decoration: none;
-            border: 2px solid rgba(212, 175, 55, 0.4);
+            border: 2px solid rgba(242, 189, 99, 0.4);
             transition: all 0.3s ease;
-            display: inline-block;
-            font-family: 'Tajawal', sans-serif;
-            backdrop-filter: blur(4px);
+            font-family: 'Cairo', sans-serif;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-secondary:hover {
-            border-color: #D4AF37;
-            background: rgba(212, 175, 55, 0.08);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            background: rgba(242, 189, 99, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(242, 189, 99, 0.15);
         }
 
+        /* ===== FRA DISCLOSURE ===== */
+        .fra-disclosure {
+            margin-top: 32px;
+            padding: 18px 22px;
+            background: rgba(242, 189, 99, 0.06);
+            border: 1px solid rgba(242, 189, 99, 0.22);
+            border-radius: 16px;
+            font-size: 12px;
+            line-height: 1.85;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            font-weight: 500;
+        }
+        .fra-disclosure strong { color: var(--gold); font-weight: 800; }
+
+        /* ===== FOOTER ===== */
         .footer {
-            margin-top: 45px;
+            margin-top: 32px;
             color: #5A6A8A;
-            font-size: 14px;
-            border-top: 1px solid rgba(255,255,255,0.03);
-            padding-top: 25px;
-            font-family: 'Inter', 'Tajawal', sans-serif;
-            letter-spacing: 0.5px;
+            font-size: 12.5px;
+            text-align: center;
+            letter-spacing: 0.4px;
+            font-weight: 500;
+        }
+        .footer .sep { color: var(--gold); margin: 0 8px; opacity: 0.6; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body { padding: 16px 12px; }
+            .hero { padding: 30px 20px; border-radius: 26px; }
+            .lang-toggle { top: 12px; left: 12px; padding: 6px 14px; font-size: 12px; }
+            html[dir="ltr"] .lang-toggle { left: auto; right: 12px; }
+            h1 { font-size: 30px; line-height: 1.2; }
+            .slogan { font-size: 15px; }
+            .sub-text { font-size: 14px; margin-bottom: 22px; }
+            .logo-text { font-size: 22px; }
+            .logo-icon { width: 44px; height: 44px; padding: 9px; border-radius: 14px; }
+            .logo-tagline { font-size: 10px; letter-spacing: 2px; }
+            .features { grid-template-columns: 1fr; gap: 12px; margin-top: 26px; }
+            .cta-buttons { flex-direction: column; align-items: stretch; gap: 12px; }
+            .btn-primary, .btn-secondary {
+                justify-content: center;
+                width: 100%;
+                padding: 15px 24px;
+                font-size: 15px;
+            }
+            .stats { gap: 20px; padding-top: 22px; margin-top: 26px; }
+            .stats-item strong { font-size: 22px; }
+            .stats-item span { font-size: 11.5px; }
+            .badge { font-size: 11px; padding: 6px 16px; }
+            .fra-disclosure { padding: 14px 16px; font-size: 11px; }
         }
 
-        /* تجاوب مع الجوال */
-        @media (max-width: 768px) {
-            .container { padding: 30px 20px; border-radius: 30px; }
-            h1 { font-size: 36px; }
-            .slogan { font-size: 20px; }
-            .sub-text { font-size: 17px; }
-            .btn-primary { font-size: 18px; padding: 15px 30px; }
-            .btn-secondary { font-size: 16px; padding: 15px 25px; }
-            .features { grid-template-columns: 1fr; }
-            .cta-buttons { flex-direction: column; align-items: center; }
-            .stats { gap: 25px; }
-            .stats-item strong { font-size: 26px; }
-            .logo-text { font-size: 26px; }
-            .logo-icon { width: 45px; height: 45px; padding: 8px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
 
-        <!-- الشعار الجديد (أيقونة ذهبية + نص) -->
+    <div class="hero">
+
+        <!-- LOGO -->
         <div class="logo-wrapper">
-            <!-- أيقونة الدرع المذهبة -->
-            <div class="logo-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    <path d="M9 12l2 2 4-4" />
-                </svg>
+            <div class="logo-row">
+                <div class="logo-icon" aria-label="SecurePath">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/>
+                        <path d="m8 12 2.5 2.5L16 9"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="accent">Secure</span>Path
+                </div>
             </div>
-            <div class="logo-text">
-                <span>Secure</span>Path
-            </div>
+            <div class="logo-tagline">Insurance Ecosystem</div>
         </div>
 
-        <!-- البادج -->
-        <div class="badge">✨ رؤيتك التأمينية الآمنة</div>
+        <!-- BADGE -->
+        <div class="badge">
+            <span class="dot"></span>
+            <span id="badgeText">منصة توعوية مرخّصة</span>
+        </div>
 
-        <!-- العنوان الرئيسي -->
-        <h1>
-            طريقك نحو <span class="highlight">التأمين</span> <br> الذكي والآمن
-        </h1>
+        <!-- HEADLINE -->
+        <h1 id="headline"></h1>
 
-        <!-- الشعار النصي الجديد (ذهبي) -->
+        <!-- SLOGAN -->
         <div class="slogan">
             Your <em>insurance</em> Ecosystem
         </div>
 
-        <p class="sub-text">
-            منصة متكاملة للتوعية التأمينية، كسب النقاط، والحصول على خصومات حقيقية. <br>
-            انطلق في رحلتك الآن واجعل تأمينك أكثر وعياً.
-        </p>
+        <!-- SUBTEXT -->
+        <p class="sub-text" id="subText"></p>
 
-        <!-- الميزات -->
+        <!-- FEATURES -->
         <div class="features">
             <div class="feature-item">
-                <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
+                <div class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/>
+                        <path d="m8 12 2.5 2.5L16 9"/>
                     </svg>
-                </span>
-                <h3>توعية تأمينية</h3>
-                <p>محتوى تفاعلي يزيد وعيك التأميني</p>
+                </div>
+                <h3 id="feat1Title"></h3>
+                <p id="feat1Desc"></p>
             </div>
             <div class="feature-item">
-                <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                <div class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2Z"/>
                     </svg>
-                </span>
-                <h3>نظام النقاط</h3>
-                <p>اكسب نقاط مقابل كل نشاط تقوم به</p>
+                </div>
+                <h3 id="feat2Title"></h3>
+                <p id="feat2Desc"></p>
             </div>
             <div class="feature-item">
-                <span class="icon">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
+                <div class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3 2"/>
                     </svg>
-                </span>
-                <h3>خصومات حقيقية</h3>
-                <p>حوّل نقاطك إلى خصومات على وثائقك</p>
+                </div>
+                <h3 id="feat3Title"></h3>
+                <p id="feat3Desc"></p>
             </div>
         </div>
 
-        <!-- الإحصاءات -->
+        <!-- STATS -->
         <div class="stats">
             <div class="stats-item">
-                <strong>+500</strong>
-                <span>عميل نشط</span>
+                <strong>FRA</strong>
+                <span id="stat1Label"></span>
             </div>
             <div class="stats-item">
-                <strong>+1.2k</strong>
-                <span>نقطة ممنوحة</span>
+                <strong>+10</strong>
+                <span id="stat2Label"></span>
             </div>
             <div class="stats-item">
                 <strong>15%</strong>
-                <span>أقصى خصم</span>
+                <span id="stat3Label"></span>
             </div>
         </div>
 
-        <!-- الأزرار -->
+        <!-- CTA -->
         <div class="cta-buttons">
-            <a href="wathiqati-app.html" class="btn-primary">
-                🚀 ابدأ الآن مجاناً
-            </a>
-            <a href="https://path-1a672.web.app" class="btn-secondary" target="_blank">
-                تعرف على المزيد
-            </a>
+            <a href="wathiqati-app.html" class="btn-primary" id="ctaPrimary"></a>
+            <a href="https://wa.me/201123152500" target="_blank" rel="noopener" class="btn-secondary" id="ctaSecondary"></a>
         </div>
 
+        <!-- FRA DISCLOSURE -->
+        <div class="fra-disclosure" id="fraDisclosure"></div>
+
+        <!-- FOOTER -->
         <div class="footer">
-            © 2026 SecurePath | منصة التوعية التأمينية المتكاملة
+            © 2026 SecurePath <span class="sep">·</span>
+            <span id="footerText"></span>
         </div>
 
     </div>
+
+    <script>
+        // ============================================================
+        //  الترجمة الكاملة لصفحة الهبوط
+        // ============================================================
+        var LANDING_TEXTS = {
+            ar: {
+                badgeText: 'منصة توعوية مرخّصة',
+                headline: 'طريقك نحو <span class="highlight">تأمين</span><br><span>ذكي وآمن</span>',
+                subText: 'منصة متكاملة <span class="hl">للتوعية التأمينية</span>، ومتابعة وثائقك، والحصول على خصومات حقيقية.<br>ابدأ رحلتك الآن واجعل تأمينك أكثر وعياً.',
+                feat1Title: 'توعية تأمينية',
+                feat1Desc: 'محتوى تفاعلي يزيد وعيك التأميني',
+                feat2Title: 'نظام النقاط',
+                feat2Desc: 'اكسب نقاطاً مقابل كل سلوك تأميني سليم',
+                feat3Title: 'خصومات حقيقية',
+                feat3Desc: 'حوّل نقاطك إلى خصومات على وثائقك',
+                stat1Label: 'رقم الترخيص 38062',
+                stat2Label: 'شركات تأمين مرخّصة',
+                stat3Label: 'أقصى خصم بالنقاط',
+                ctaPrimary: '🚀 ابدأ الآن مجاناً',
+                ctaSecondary: '💬 تواصل مع وسيط مرخّص',
+                fraDisclosure: 'منصة تعريفية وتوعوية هدفها خدمة حاملي وثائق التأمين، ولا تمثل شركة تأمين بعينها. يتم عرض الشركات والمنتجات المرخّصة من الهيئة العامة للرقابة المالية (FRA)، وحال الرغبة في الحصول على مزيد من المعلومات يُرجى التواصل مع الوسيط المرخّص الحر بكود <strong>FRA 38062</strong>.',
+                footerText: 'منصة التوعية التأمينية المتكاملة'
+            },
+            en: {
+                badgeText: 'Licensed Awareness Platform',
+                headline: 'Your path to <span class="highlight">smart</span><br><span>and safe insurance</span>',
+                subText: 'An integrated <span class="hl">insurance awareness</span> platform. Track your policies and unlock real discounts.<br>Start your journey today and make your insurance smarter.',
+                feat1Title: 'Insurance Awareness',
+                feat1Desc: 'Interactive content that boosts your knowledge',
+                feat2Title: 'Rewards Points',
+                feat2Desc: 'Earn points for every healthy insurance habit',
+                feat3Title: 'Real Discounts',
+                feat3Desc: 'Turn your points into real policy discounts',
+                stat1Label: 'License No. 38062',
+                stat2Label: 'Licensed insurers',
+                stat3Label: 'Max reward discount',
+                ctaPrimary: '🚀 Start Free Now',
+                ctaSecondary: '💬 Contact a licensed broker',
+                fraDisclosure: 'An informational and awareness platform serving insurance policyholders, not representing any single insurance company. Licensed companies and products approved by the Financial Regulatory Authority (FRA) are displayed. For more information, please contact the licensed independent broker under FRA code <strong>38062</strong>.',
+                footerText: 'The Integrated Insurance Awareness Platform'
+            }
+        };
+
+        var LANDING_LANG = 'ar';
+
+        // اكتشاف لغة المتصفح عند أول زيارة
+        function detectInitialLanguage() {
+            try {
+                var saved = localStorage.getItem('SecurePath_landing_lang');
+                if (saved === 'en' || saved === 'ar') return saved;
+            } catch (e) {}
+            var navLang = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+            return navLang.indexOf('ar') === 0 ? 'ar' : 'en';
+        }
+
+        function applyLandingLang() {
+            var isAr = LANDING_LANG === 'ar';
+            var T = LANDING_TEXTS[LANDING_LANG];
+
+            document.documentElement.lang = isAr ? 'ar' : 'en';
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+            var tBtn = document.getElementById('langToggle');
+            if (tBtn) tBtn.textContent = isAr ? 'EN' : 'عربي';
+
+            function setHTML(id, html) {
+                var el = document.getElementById(id);
+                if (el) el.innerHTML = html;
+            }
+            function setText(id, txt) {
+                var el = document.getElementById(id);
+                if (el) el.textContent = txt;
+            }
+
+            setText('badgeText', T.badgeText);
+            setHTML('headline', T.headline);
+            setHTML('subText', T.subText);
+            setText('feat1Title', T.feat1Title);
+            setText('feat1Desc', T.feat1Desc);
+            setText('feat2Title', T.feat2Title);
+            setText('feat2Desc', T.feat2Desc);
+            setText('feat3Title', T.feat3Title);
+            setText('feat3Desc', T.feat3Desc);
+            setText('stat1Label', T.stat1Label);
+            setText('stat2Label', T.stat2Label);
+            setText('stat3Label', T.stat3Label);
+            setHTML('ctaPrimary', T.ctaPrimary);
+            setHTML('ctaSecondary', T.ctaSecondary);
+            setHTML('fraDisclosure', T.fraDisclosure);
+            setText('footerText', T.footerText);
+        }
+
+        function toggleLang() {
+            LANDING_LANG = LANDING_LANG === 'ar' ? 'en' : 'ar';
+            try { localStorage.setItem('SecurePath_landing_lang', LANDING_LANG); } catch (e) {}
+            applyLandingLang();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            LANDING_LANG = detectInitialLanguage();
+            applyLandingLang();
+        });
+    </script>
 
 </body>
 </html>
