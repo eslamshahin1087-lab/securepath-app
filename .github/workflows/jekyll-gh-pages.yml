@@ -1,51 +1,71 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+#!/usr/bin/env bash
+#
+# generate-checksums.sh — record the SHA-256 checksum of a published SecurePath
+# (Wathiqati) APK release into releases/checksums.txt and releases/releases.json.
+#
+# Usage:
+#   generate-checksums.sh <path-to-apk> <version> <release-url>
+#
+# Called by .github/workflows/release.yml after a GitHub Release is published.
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+set -euo pipefail
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+APK_PATH="${1:?Usage: generate-checksums.sh <apk-path> <version> <release-url>}"
+VERSION="${2:?Usage: generate-checksums.sh <apk-path> <version> <release-url>}"
+RELEASE_URL="${3:?Usage: generate-checksums.sh <apk-path> <version> <release-url>}"
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+if [ ! -f "$APK_PATH" ]; then
+  echo "generate-checksums.sh: APK file not found: $APK_PATH" >&2
+  exit 1
+fi
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+if ! command -v jq >/dev/null 2>&1; then
+  echo "generate-checksums.sh: jq is required but not installed" >&2
+  exit 1
+fi
 
-jobs:
-  # Build job
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RELEASES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)/releases"
+mkdir -p "$RELEASES_DIR"
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+APK_NAME="$(basename "$APK_PATH")"
+SHA256="$(sha256sum "$APK_PATH" | awk '{print $1}')"
+FILE_SIZE="$(stat -c%s "$APK_PATH" 2>/dev/null || stat -f%z "$APK_PATH")"
+DATE_UTC="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+# --- checksums.txt: human-readable, append-only log -------------------------
+CHECKSUMS_FILE="$RELEASES_DIR/checksums.txt"
+touch "$CHECKSUMS_FILE"
+echo "${SHA256}  ${APK_NAME}  (v${VERSION}, ${DATE_UTC})" >> "$CHECKSUMS_FILE"
+
+# --- releases.json: machine-readable, consumed by the PWA -------------------
+RELEASES_JSON="$RELEASES_DIR/releases.json"
+if [ ! -f "$RELEASES_JSON" ]; then
+  echo '{"releases": []}' > "$RELEASES_JSON"
+fi
+
+TMP_JSON="$(mktemp)"
+jq \
+  --arg version "$VERSION" \
+  --arg filename "$APK_NAME" \
+  --arg sha256 "$SHA256" \
+  --arg url "$RELEASE_URL" \
+  --arg date "$DATE_UTC" \
+  --argjson size "$FILE_SIZE" \
+  '
+  .releases = (
+    [.releases[]? | select(.version != $version)]
+    + [{
+        version: $version,
+        filename: $filename,
+        sha256: $sha256,
+        size_bytes: $size,
+        url: $url,
+        published_at: $date
+      }]
+  ) |
+  .latest = $version
+  ' "$RELEASES_JSON" > "$TMP_JSON"
+mv "$TMP_JSON" "$RELEASES_JSON"
+
+echo "generate-checksums.sh: recorded checksum for v${VERSION}: ${SHA256}"
