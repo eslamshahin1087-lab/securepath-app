@@ -29,3 +29,7 @@ securepath-admin.html.*
 backup-local/
 fix.py
 securepath-admin.html.*
+add_icons.py
+index.html.before-icons
+*.before-*
+add_*.py
