@@ -1104,7 +1104,7 @@
   </div>
 
   <!-- Company Modal -->
-  <div id="companyModal" class="overlay"><div class="modal"><div class="modal-header"><h2><i class="fas fa-building"></i> إضافة شركة</h2><button class="modal-close" onclick="closeModal('companyModal')"><i class="fas fa-times"></i></button></div><div class="field"><label>اسم الشركة</label><input id="coName" placeholder="اسم الشركة"></div><div class="field"><label>لوجو (URL)</label><input id="coLogo" placeholder="https://example.com/logo.png"></div><div class="field"><label>وصف</label><textarea id="coDesc" rows="2" placeholder="وصف الشركة"></textarea></div><div id="coErr" class="error"></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('companyModal')">إلغاء</button><button class="btn btn-primary" id="createCompanyBtn" onclick="createCompany()">حفظ</button></div></div></div>
+  <div id="companyModal" class="overlay"><div class="modal"><div class="modal-header"><h2><i class="fas fa-building"></i> <span id="companyModalTitle">إضافة شركة</span></h2><button class="modal-close" onclick="closeModal('companyModal')"><i class="fas fa-times"></i></button></div><div class="field"><label>اسم الشركة (عربي) *</label><input id="coName" placeholder="اسم الشركة"></div><div class="field"><label>اسم الشركة (إنجليزي)</label><input id="coNameEn" placeholder="Company name in English"></div><div class="field"><label>رقم الترخيص (FRA)</label><input id="coLicense" placeholder="مثال: 38062"></div><div class="field"><label>الحالة</label><select id="coStatus"><option value="active">نشط</option><option value="inactive">متوقف</option></select></div><div class="field"><label>شعار الشركة (Logo)</label><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><input type="file" id="coLogoFile" accept="image/*" onchange="handleCompanyLogoUpload(event)" style="display:none;"><button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('coLogoFile').click()"><i class="fas fa-upload"></i> اختر ملف</button><span id="coLogoStatus" style="font-size:12px;color:var(--muted);">لم يتم اختيار ملف</span></div><input id="coLogo" type="hidden"><div id="coLogoPreviewWrap" style="margin-top:10px;display:none;"><img id="coLogoPreview" style="max-width:80px;max-height:80px;border-radius:12px;border:1px solid var(--line);padding:4px;background:#fff;"></div></div><div class="field"><label>وصف</label><textarea id="coDesc" rows="2" placeholder="وصف الشركة"></textarea></div><div id="coErr" class="error"></div><div id="coLoading" style="display:none;text-align:center;padding:10px;color:var(--muted);font-size:13px;"><i class="fas fa-spinner fa-spin"></i> جاري الرفع...</div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('companyModal')">إلغاء</button><button class="btn btn-primary" id="createCompanyBtn" onclick="createCompany(document.getElementById('createCompanyBtn').dataset.editId)">حفظ</button></div></div></div>
 
   <!-- Type Modal -->
   <div id="typeModal" class="overlay"><div class="modal"><div class="modal-header"><h2><i class="fas fa-list-ul"></i> إضافة نوع</h2><button class="modal-close" onclick="closeModal('typeModal')"><i class="fas fa-times"></i></button></div><div class="field"><label>اسم النوع</label><input id="tName" placeholder="مثال: تأمين السيارات"></div><div class="field"><label>الوصف</label><textarea id="tDesc" rows="2" placeholder="وصف النوع"></textarea></div><div class="field"><label>اللون</label><select id="tColor"><option value="medical">طبي</option><option value="life">حياة</option><option value="car">سيارات</option><option value="property">ممتلكات</option><option value="travel">سفر</option><option value="engineering">هندسي</option><option value="liability">مسؤولية</option><option value="marine">بحري</option><option value="agriculture">زراعي</option><option value="cyber">سيبراني</option><option value="health">صحي</option><option value="investment">استثماري</option><option value="pension">معاشات</option><option value="export">صادرات</option><option value="micro">متناهي الصغر</option><option value="takaful">تكافلي</option><option value="other">أخرى</option></select></div><div id="tErr" class="error"></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('typeModal')">إلغاء</button><button class="btn btn-primary" id="createTypeBtn" onclick="createInsuranceType()">حفظ</button></div></div></div>
@@ -2548,7 +2548,7 @@
         const policyCount = APP_STATE.policies.filter(p => p.company === c.id || p.company === c.name).length;
         const productCount = APP_STATE.products.filter(p => p.company === c.id || p.company === c.name || p.companyName === c.name).length;
         const logo = c.logo ? `<img src="${esc(c.logo)}" alt="${esc(c.name)}">` : esc(c.name.slice(0,2));
-        html += `<div class="company-card" onclick="openCompanyProfile('${c.id}')"><div class="logo">${logo}</div><div class="info"><h4>${esc(c.name)}</h4><p>${policyCount} وثيقة • ${productCount} منتج</p></div><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openCompanyProfile('${c.id}')"><i class="fas fa-eye"></i></button></div>`;
+        html += `<div class="company-card" onclick="openCompanyProfile('${c.id}')"><div class="logo">${logo}</div><div class="info"><h4>${esc(c.name)}</h4><p>${policyCount} وثيقة • ${productCount} منتج</p></div><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openCompanyProfile('${c.id}')" title="عرض"><i class="fas fa-eye"></i></button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editCompany('${c.id}')" title="تعديل"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteCompany('${c.id}')" title="حذف"><i class="fas fa-trash"></i></button></div></div>`;
       });
       html += '</div>';
       document.getElementById('companiesList').innerHTML = html;
@@ -2935,18 +2935,87 @@
       toast('✅ تم تحديث الحالة');
     }
 
-    async function createCompany() {
+
+    // ============================================================
+    // Company Management - Helpers
+    // ============================================================
+    const ADMIN_CLOUDINARY_CLOUD = 'zs4wny34';
+    const ADMIN_CLOUDINARY_PRESET = 'securepath_docs';
+    const ADMIN_CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/' + ADMIN_CLOUDINARY_CLOUD + '/auto/upload';
+
+    function editCompany(id) {
+      const companies = (APP_STATE.companies || []);
+      const company = companies.find(c => c.id === id);
+      if (!company) { toast('❌ لم يتم العثور على الشركة', true); return; }
+      openCompanyModal(id, company);
+    }
+
+    function deleteCompany(id) {
+      const companies = (APP_STATE.companies || []);
+      const company = companies.find(c => c.id === id);
+      if (!company) { toast('❌ لم يتم العثور على الشركة', true); return; }
+      if (!confirm('هل أنت متأكد من حذف شركة "' + (company.name || id) + '"؟\nلا يمكن التراجع عن هذه العملية.')) return;
+      db.collection('companies').doc(id).delete()
+        .then(() => { refreshCollection('companies'); toast('✅ تم حذف الشركة'); })
+        .catch(e => toast('❌ فشل الحذف: ' + e.message, true));
+    }
+
+    function handleCompanyLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) { toast('❌ يجب اختيار ملف صورة', true); return; }
+      if (file.size > 5 * 1024 * 1024) { toast('❌ حجم الملف أكبر من 5MB', true); return; }
+      const status = document.getElementById('coLogoStatus');
+      const loading = document.getElementById('coLoading');
+      status.textContent = 'جاري الرفع...';
+      loading.style.display = 'block';
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', ADMIN_CLOUDINARY_PRESET);
+      fetch(ADMIN_CLOUDINARY_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(data => {
+          if (data.secure_url) {
+            document.getElementById('coLogo').value = data.secure_url;
+            document.getElementById('coLogoPreview').src = data.secure_url;
+            document.getElementById('coLogoPreviewWrap').style.display = 'block';
+            status.textContent = '✅ تم الرفع بنجاح';
+          } else {
+            status.textContent = '❌ فشل الرفع';
+            toast('❌ فشل رفع الشعار', true);
+          }
+        })
+        .catch(e => {
+          status.textContent = '❌ خطأ: ' + e.message;
+          toast('❌ خطأ في الرفع', true);
+        })
+        .finally(() => { loading.style.display = 'none'; });
+    }
+
+    async function createCompany(editId) {
       const name = document.getElementById('coName').value.trim();
+      const nameEn = document.getElementById('coNameEn') ? document.getElementById('coNameEn').value.trim() : '';
+      const licenseNumber = document.getElementById('coLicense') ? document.getElementById('coLicense').value.trim() : '';
+      const status = document.getElementById('coStatus') ? document.getElementById('coStatus').value : 'active';
+      const logo = document.getElementById('coLogo').value.trim();
+      const description = document.getElementById('coDesc').value.trim();
       const err = document.getElementById('coErr');
       if (!name) { err.textContent = 'أدخل اسم الشركة'; return; }
-      showLoading('createCompanyBtn', 'جاري الحفظ...');
-      const id = slugify(name);
+      const isEdit = !!editId;
+      showLoading('createCompanyBtn', isEdit ? 'جاري التحديث...' : 'جاري الحفظ...');
+      const id = isEdit ? editId : slugify(name);
+      const data = { id, name, nameEn, licenseNumber, status, logo, description, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+      if (!isEdit) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       try {
-        await db.collection('companies').doc(id).set({ id, name, logo: document.getElementById('coLogo').value.trim(), description: document.getElementById('coDesc').value.trim() });
+        if (isEdit) {
+          await db.collection('companies').doc(id).update(data);
+        } else {
+          await db.collection('companies').doc(id).set(data);
+        }
         await refreshCollection('companies');
         hideLoading('createCompanyBtn');
         closeModal('companyModal');
-        toast('✅ تمت إضافة الشركة');
+        toast(isEdit ? '✅ تم تحديث الشركة' : '✅ تمت إضافة الشركة');
       } catch (e) { hideLoading('createCompanyBtn'); err.textContent = '❌ ' + e.message; }
     }
 
@@ -3307,7 +3376,41 @@
     function openPolicyModal(cid) { if (cid === undefined) cid = ''; refreshAllSelects(); document.getElementById('pClient').value = cid || ''; document.getElementById('pErr').textContent = ''; openModal('policyModal'); }
     function openPaymentModal(cid) { if (cid === undefined) cid = ''; refreshAllSelects(); document.getElementById('payClient').value = cid || ''; refreshPolicySelect('payClient', 'payPolicy'); document.getElementById('payDate').value = new Date().toISOString().slice(0, 10); document.getElementById('payAmount').value = ''; document.getElementById('payRemaining').value = '0'; document.getElementById('payErr').textContent = ''; openModal('paymentModal'); }
     function openClaimModal(cid) { if (cid === undefined) cid = ''; refreshAllSelects(); document.getElementById('clClient').value = cid || ''; refreshPolicySelect('clClient', 'clPolicy'); document.getElementById('clErr').textContent = ''; openModal('claimModal'); }
-    function openCompanyModal() { document.getElementById('coErr').textContent = ''; document.getElementById('coName').value = ''; document.getElementById('coLogo').value = ''; document.getElementById('coDesc').value = ''; openModal('companyModal'); }
+    function openCompanyModal(editId, editData) {
+      document.getElementById('coErr').textContent = '';
+      document.getElementById('coName').value = '';
+      document.getElementById('coNameEn').value = '';
+      document.getElementById('coLicense').value = '';
+      document.getElementById('coStatus').value = 'active';
+      document.getElementById('coLogo').value = '';
+      document.getElementById('coDesc').value = '';
+      document.getElementById('coLogoFile').value = '';
+      document.getElementById('coLogoStatus').textContent = 'لم يتم اختيار ملف';
+      document.getElementById('coLogoPreviewWrap').style.display = 'none';
+      const title = document.getElementById('companyModalTitle');
+      const btn = document.getElementById('createCompanyBtn');
+      if (editId && editData) {
+        title.textContent = 'تعديل شركة';
+        btn.textContent = 'تحديث';
+        btn.dataset.editId = editId;
+        document.getElementById('coName').value = editData.name || '';
+        document.getElementById('coNameEn').value = editData.nameEn || '';
+        document.getElementById('coLicense').value = editData.licenseNumber || '';
+        document.getElementById('coStatus').value = editData.status || 'active';
+        document.getElementById('coLogo').value = editData.logo || '';
+        document.getElementById('coDesc').value = editData.description || '';
+        if (editData.logo) {
+          document.getElementById('coLogoPreview').src = editData.logo;
+          document.getElementById('coLogoPreviewWrap').style.display = 'block';
+          document.getElementById('coLogoStatus').textContent = 'شعار محفوظ';
+        }
+      } else {
+        title.textContent = 'إضافة شركة';
+        btn.textContent = 'حفظ';
+        delete btn.dataset.editId;
+      }
+      openModal('companyModal');
+    }
     function openTypeModal() { document.getElementById('tErr').textContent = ''; document.getElementById('tName').value = ''; document.getElementById('tDesc').value = ''; openModal('typeModal'); }
 
     // ================================================================
@@ -3468,7 +3571,7 @@
        });
        setConnectionState(navigator.onLine ? 'online' : 'offline', navigator.onLine ? 'متصل' : 'غير متصل');
        document.querySelectorAll('.overlay').forEach(overlay => overlay.addEventListener('click', e => {
-         if (e.target === overlay) overlay.classList.remove('show');
+         if (e.target === overlay && !e.target.closest(".modal") && overlay.classList.contains("show")) { setTimeout(() => { if (overlay.classList.contains("show")) overlay.classList.remove("show"); }, 100); }
        }));
        document.addEventListener('keydown', e => {
          if (e.key === 'Escape') {
