@@ -7809,47 +7809,48 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         // Pre-built placeholder accounts on this domain (no real inbox)
         // are exempt from the mandatory email-verification check below.
         // Only use for domains you fully control end-to-end.
-        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+                // ============================================================ //
+        // EMAIL VERIFICATION GATE                                       //
+        // ============================================================ //
+        // SECURITY NOTE: Domain-based exemptions are DISABLED.
+        // All accounts must have a verified email address before login.
+        // To create test/admin accounts, use Firebase Admin SDK to set
+        // emailVerified = true (see securepath-firebase-migration.js).
+        var VERIFICATION_EXEMPT_DOMAINS = [];
 
         function isVerificationExemptEmail(email) {
-            var e = String(email || '').trim().toLowerCase();
-            var at = e.lastIndexOf('@');
-            if (at < 0) return false;
-            var domain = e.slice(at + 1);
-            return VERIFICATION_EXEMPT_DOMAINS.indexOf(domain) !== -1;
+            // SECURITY: Domain-based exemptions are disabled.
+            // This function always returns false. Kept for backward
+            // compatibility in case it is referenced elsewhere.
+            return false;
         }
 
         function finishClientLogin(credential, identifier) {
             var user = credential && credential.user;
             if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
-            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
+            if (!user.emailVerified) {
                 return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
             }
             return getClientProfile(user.uid, user.email).then(function(profile) {
                 if (!profile) {
-                    // Exempt (placeholder/test) accounts are allowed in even if the
-                    // signup flow that normally writes clients/{uid} never ran for
-                    // them — auto-provision a minimal profile instead of blocking.
-                    if (isVerificationExemptEmail(user.email)) {
-                        var emailLocal = String(user.email || '').split('@')[0] || 'client';
-                        var stub = {
-                            fullName: emailLocal,
-                            email: user.email || '',
-                            username: emailLocal,
-                            role: 'client',
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            language: STATE.language || 'ar',
-                            onboardingSeen: false
-                        };
-                        var ref = db.collection('clients').doc(user.uid);
-                        return ref.set(stub, { merge: true }).then(function() {
-                            return ref.get();
-                        }).then(function(doc) {
-                            return { ref: ref, data: doc.data() || stub };
-                        });
-                    }
-                    throw { code: 'client/profile-not-found', message: 'Client profile not found.' };
+                    // SECURITY: Auto-provision a minimal profile for accounts
+                    // verified manually via Admin SDK but with no Firestore doc.
+                    var emailLocal = String(user.email || '').split('@')[0] || 'client';
+                    var stub = {
+                        fullName: emailLocal,
+                        email: user.email || '',
+                        username: emailLocal,
+                        role: 'client',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        language: STATE.language || 'ar',
+                        onboardingSeen: false
+                    };
+                    var ref = db.collection('clients').doc(user.uid);
+                    return ref.set(stub, { merge: true }).then(function() {
+                        return { ref: ref, data: stub };
+                    });
                 }
+
                 return profile;
             }).then(function(profile) {
                 var name = verifyClientIdentity(profile, user, identifier);
@@ -8006,10 +8007,6 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     STATE.offerReferralId = null;
                     STATE.offerReferralName = null;
                     STATE.offerReferralCompany = null;
-                }
-                if (isVerificationExemptEmail(email)) {
-                    return finishClientLogin(cred, email).then(function() { hideLoading('signupBtn'); });
-                }
                 return cred.user.sendEmailVerification().catch(function() {}).then(function() {
                     return auth.signOut().catch(function() {});
                 }).then(function() {
