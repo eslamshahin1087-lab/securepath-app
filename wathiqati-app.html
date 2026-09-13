@@ -5530,7 +5530,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
                 <div class="field"><label id="loginEmailLabel">اسم المستخدم أو البريد الإلكتروني</label><input type="text" id="loginEmail" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="اسم المستخدم أو البريد الإلكتروني"></div>
                 <div class="field"><label id="loginPassLabel">كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password" placeholder="••••••••"></div>
-                <div class="forgot-password-link" onclick="openForgotPassword()">نسيت كلمة المرور؟</div>
+                <div class="forgot-password-link" id="forgotPasswordLink" onclick="openForgotPassword()">نسيت كلمة المرور؟</div>
                 <button class="btn-primary" id="loginBtn" onclick="handleLogin()">🚀 دخول المنصة</button>
                 <div class="switch-auth" id="loginSwitch">ليس لديك حساب؟ <b onclick="showScreen('signup')">إنشاء حساب جديد</b></div>
             </div>
@@ -5620,7 +5620,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div id="forgotSuccess" style="color:var(--green);font-size:12px;margin-bottom:10px;display:none;"></div>
                 <div class="field"><label id="forgotEmailLabel">البريد الإلكتروني</label><input type="email" id="forgotEmail" placeholder="name@domain.com"></div>
                 <button class="btn-primary" id="forgotBtn" onclick="handleForgotPassword()">📧 إرسال رابط إعادة التعيين</button>
-                <div class="switch-auth" style="margin-top:12px;"><b onclick="closeModal('forgotPasswordModal')">العودة إلى تسجيل الدخول</b></div>
+                <div class="switch-auth" style="margin-top:12px;"><b id="forgotBackToLogin" onclick="closeModal('forgotPasswordModal')">العودة إلى تسجيل الدخول</b></div>
             </div>
         </div>
 
@@ -5656,15 +5656,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <div class="stats">
                     <div class="stat">
                         <b id="statActiveCount">0</b>
-                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-9"/></svg></span> وثائق سارية</span>
+                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-9"/></svg></span> <span id="statActiveLabel">وثائق سارية</span></span>
                     </div>
                     <div class="stat">
                         <b id="statExpiringCount">0</b>
-                        <span class="icon-orange"><span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> تجديد قريب</span>
+                        <span class="icon-orange"><span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> <span id="statExpiringLabel">تجديد قريب</span></span>
                     </div>
                     <div class="stat">
                         <b id="statDocsCount">0</b>
-                        <span class="icon-green"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span> مستندات مفعلة</span>
+                        <span class="icon-green"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span> <span id="statDocsLabel">مستندات مفعلة</span></span>
                     </div>
                 </div>
             </div>
@@ -6049,7 +6049,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                         <img id="accAvatarImg" src="" alt="Profile" style="display:none;">
                         <span class="initials" id="accAvatarInitials">م</span>
                         <div class="upload-overlay">
-                            <span>📷<br><span style="font-size:10px;">تغيير</span></span>
+                            <span>📷<br><span style="font-size:10px;" id="accAvatarChangeLabel">تغيير</span></span>
                         </div>
                     </div>
                     <input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="uploadProfilePicture(event)">
@@ -6157,7 +6157,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                         <div class="ac-icon gold"><span class="app-icon animated spin"><svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM2 7h20v3H2z"/><path d="M12 7v13M12 7c-4 0-6-2-4-4 2-2 4 1 4 4Zm0 0c4 0 6-2 4-4-2-2-4 1-4 4Z"/></svg></span></div>
                         <div class="ac-info"><span class="ac-title" id="accountWheel">جرب حظك</span><span class="ac-sub" id="accountWheelSub">اربح جوائز حصرية</span></div>
                         <span class="ac-arrow">›</span>
-                        <span class="ac-badge gold">🎰 جديد</span>
+                        <span class="ac-badge gold" id="wheelNewBadge">🎰 جديد</span>
                     </div>
                     <div class="acc-card" onclick="shareAppLink()">
                         <div class="ac-icon gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8 15.8 6.2M8.2 13.2l7.6 4.6"/></svg></span></div>
@@ -6203,31 +6203,31 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                             <img id="profilePicEditImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
                             <span class="initials" id="profilePicEditInitials" style="font-size:32px;">م</span>
                             <div class="upload-overlay">
-                                <span>📷<br><span style="font-size:10px;">تغيير</span></span>
+                                <span>📷<br><span style="font-size:10px;" id="profileEditAvatarChangeLabel">تغيير</span></span>
                             </div>
                         </div>
                     </div>
                     <input type="file" id="profilePicEditInput" accept="image/*" style="display:none;" onchange="uploadProfilePictureEdit(event)">
-                    <p style="font-size:10px;color:var(--muted);margin-top:4px;">انقر على الصورة لتغييرها</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:4px;" id="profileEditAvatarHint">انقر على الصورة لتغييرها</p>
                 </div>
 
-                <div class="field"><label>الاسم الرباعي <span class="required">*</span></label><input type="text" id="editFullName" placeholder="الاسم الكامل"></div>
-                <div class="field"><label>البريد الإلكتروني <span class="required">*</span></label><input type="email" id="editEmail" placeholder="name@domain.com"></div>
-                <div class="field"><label>رقم الهاتف <span class="required">*</span></label><input type="tel" id="editPhone" placeholder="01012345678"></div>
-                <div class="field"><label>الوظيفة / المهنة <span class="required">*</span></label><input type="text" id="editOccupation" placeholder="مهندس، طبيب، محاسب"></div>
-                <div class="field"><label>نوع العميل</label>
-                    <select id="editClientType"><option value="individual">فردي</option><option value="corporate">جماعي (شركة / مؤسسة)</option></select>
+                <div class="field"><label id="profileEditFullNameLabel">الاسم الرباعي <span class="required">*</span></label><input type="text" id="editFullName" placeholder="الاسم الكامل"></div>
+                <div class="field"><label id="profileEditEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="editEmail" placeholder="name@domain.com"></div>
+                <div class="field"><label id="profileEditPhoneLabel">رقم الهاتف <span class="required">*</span></label><input type="tel" id="editPhone" placeholder="01012345678"></div>
+                <div class="field"><label id="profileEditOccupationLabel">الوظيفة / المهنة <span class="required">*</span></label><input type="text" id="editOccupation" placeholder="مهندس، طبيب، محاسب"></div>
+                <div class="field"><label id="profileEditClientTypeLabel">نوع العميل</label>
+                    <select id="editClientType"><option value="individual" id="profileEditClientTypeIndividual">فردي</option><option value="corporate" id="profileEditClientTypeCorporate">جماعي (شركة / مؤسسة)</option></select>
                 </div>
-                <div class="field" id="editBusinessFields" style="display:none;"><label>اسم المنشأة / الشركة</label><input type="text" id="editBusinessName" placeholder="اسم الشركة"></div>
-                <div class="field" id="editBusinessActivityField" style="display:none;"><label>نشاط المنشأة</label><input type="text" id="editBusinessActivity" placeholder="نشاط الشركة"></div>
-                <div class="field" id="editEmployeesField" style="display:none;"><label>عدد الموظفين</label><input type="number" id="editEmployees" placeholder="عدد الموظفين"></div>
+                <div class="field" id="editBusinessFields" style="display:none;"><label id="profileEditBusinessNameLabel">اسم المنشأة / الشركة</label><input type="text" id="editBusinessName" placeholder="اسم الشركة"></div>
+                <div class="field" id="editBusinessActivityField" style="display:none;"><label id="profileEditBusinessActivityLabel">نشاط المنشأة</label><input type="text" id="editBusinessActivity" placeholder="نشاط الشركة"></div>
+                <div class="field" id="editEmployeesField" style="display:none;"><label id="profileEditEmployeesLabel">عدد الموظفين</label><input type="number" id="editEmployees" placeholder="عدد الموظفين"></div>
                 <button class="btn-primary" id="profileSaveBtn" onclick="saveProfile()">💾 حفظ التغييرات</button>
                 <div class="field" style="margin-top:16px;border-top:1px solid var(--line);padding-top:16px;">
-                    <label style="font-size:13px;font-weight:700;color:var(--slate);">🔑 تغيير كلمة المرور</label>
-                    <div class="field"><label>كلمة المرور الحالية</label><input type="password" id="editCurrentPassword" placeholder="••••••••"></div>
-                    <div class="field"><label>كلمة المرور الجديدة</label><input type="password" id="editNewPassword" placeholder="•••••••• (8 أحرف على الأقل، حرف ورقم)"></div>
-                    <div class="field"><label>تأكيد كلمة المرور الجديدة</label><input type="password" id="editConfirmPassword" placeholder="••••••••"></div>
-                    <button class="btn-secondary" onclick="changePassword()" style="margin-top:0;">🔒 تغيير كلمة المرور</button>
+                    <label style="font-size:13px;font-weight:700;color:var(--slate);" id="changePasswordSectionLabel">🔑 تغيير كلمة المرور</label>
+                    <div class="field"><label id="currentPasswordLabel">كلمة المرور الحالية</label><input type="password" id="editCurrentPassword" placeholder="••••••••"></div>
+                    <div class="field"><label id="newPasswordLabel">كلمة المرور الجديدة</label><input type="password" id="editNewPassword" placeholder="•••••••• (8 أحرف على الأقل، حرف ورقم)"></div>
+                    <div class="field"><label id="confirmNewPasswordLabel">تأكيد كلمة المرور الجديدة</label><input type="password" id="editConfirmPassword" placeholder="••••••••"></div>
+                    <button class="btn-secondary" id="changePasswordBtn" onclick="changePassword()" style="margin-top:0;">🔒 تغيير كلمة المرور</button>
                 </div>
             </div>
         </div>
@@ -6265,18 +6265,18 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             </div>
             <div id="analyticsContainer">
                 <div class="analytics-grid" id="analyticsGrid">
-                    <div class="analytics-card"><div class="analytics-number" id="analyticsPolicies">0</div><div class="analytics-label">إجمالي الوثائق</div><div class="analytics-change up">↑ 12%</div></div>
-                    <div class="analytics-card"><div class="analytics-number" id="analyticsActive">0</div><div class="analytics-label">وثائق سارية</div><div class="analytics-change up">↑ 8%</div></div>
-                    <div class="analytics-card"><div class="analytics-number" id="analyticsScore">0%</div><div class="analytics-label">مؤشر الحماية</div><div class="analytics-change up">↑ 5%</div></div>
-                    <div class="analytics-card"><div class="analytics-number" id="analyticsRenewals">0</div><div class="analytics-label">تجديدات قريبة</div><div class="analytics-change down">⚠️ تنبيه</div></div>
+                    <div class="analytics-card"><div class="analytics-number" id="analyticsPolicies">0</div><div class="analytics-label" id="analyticsLabelTotal">إجمالي الوثائق</div><div class="analytics-change up">↑ 12%</div></div>
+                    <div class="analytics-card"><div class="analytics-number" id="analyticsActive">0</div><div class="analytics-label" id="analyticsLabelActive">وثائق سارية</div><div class="analytics-change up">↑ 8%</div></div>
+                    <div class="analytics-card"><div class="analytics-number" id="analyticsScore">0%</div><div class="analytics-label" id="analyticsLabelScore">مؤشر الحماية</div><div class="analytics-change up">↑ 5%</div></div>
+                    <div class="analytics-card"><div class="analytics-number" id="analyticsRenewals">0</div><div class="analytics-label" id="analyticsLabelRenewals">تجديدات قريبة</div><div class="analytics-change down" id="analyticsAlertLabel">⚠️ تنبيه</div></div>
                 </div>
                 <div style="padding:0 14px 14px;">
                     <div style="background:var(--card);border-radius:var(--radius-md);padding:16px;border:1px solid var(--line);margin-bottom:10px;">
-                        <h4 style="font-family:var(--font-ar);color:var(--slate);margin:0 0 8px;">📊 توزيع التغطيات</h4>
+                        <h4 style="font-family:var(--font-ar);color:var(--slate);margin:0 0 8px;" id="analyticsCoverageDistTitle">📊 توزيع التغطيات</h4>
                         <div id="coverageDistribution" style="font-size:12px;color:var(--muted);">لا توجد بيانات كافية</div>
                     </div>
                     <div style="background:var(--card);border-radius:var(--radius-md);padding:16px;border:1px solid var(--line);">
-                        <h4 style="font-family:var(--font-ar);color:var(--slate);margin:0 0 8px;">📈 تطور مؤشر الحماية</h4>
+                        <h4 style="font-family:var(--font-ar);color:var(--slate);margin:0 0 8px;" id="analyticsScoreHistoryTitle">📈 تطور مؤشر الحماية</h4>
                         <div id="scoreHistory" style="font-size:12px;color:var(--muted);">لا توجد بيانات تاريخية</div>
                     </div>
                 </div>
@@ -6304,13 +6304,13 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 <button class="export-btn" onclick="exportData('csv')"><span class="export-icon">📑</span>CSV</button>
             </div>
             <div style="padding:0 14px;font-size:12px;color:var(--muted);">
-                <p>📌 سيتم تصدير البيانات التالية:</p>
+                <p id="exportIntroText">📌 سيتم تصدير البيانات التالية:</p>
                 <ul style="padding-right:20px;margin:6px 0;">
-                    <li>الملف الشخصي ومعلومات الاتصال</li>
-                    <li>قائمة الوثائق التأمينية</li>
-                    <li>سجل المدفوعات والفواتير</li>
-                    <li>نتائج تقييم الحماية</li>
-                    <li>المواعيد والإشعارات</li>
+                    <li id="exportItem1">الملف الشخصي ومعلومات الاتصال</li>
+                    <li id="exportItem2">قائمة الوثائق التأمينية</li>
+                    <li id="exportItem3">سجل المدفوعات والفواتير</li>
+                    <li id="exportItem4">نتائج تقييم الحماية</li>
+                    <li id="exportItem5">المواعيد والإشعارات</li>
                 </ul>
             </div>
         </div>
@@ -6461,10 +6461,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </h2>
                 <div class="sub" style="margin-bottom:12px;" id="termsSub">يرجى قراءة الشروط والأحكام بعناية قبل الموافقة</div>
                 <div class="terms-text" id="termsText">
-                    <p><strong>أولاً: البيانات بصحة الإقرار</strong></p>
-                    <p>بتقديمها أو بإدخالها يقوم المستخدم بتقديم البيانات والمعلومات والمستندات التي تكون صحيحة ودقيقة وكاملة، ويضمن أن جميع البيانات التي يدخلها أو يقدمها هي صحيحة وحديثة، وأنه مخول قانوناً بتقديمها، ويتحمل وحده المسؤولية القانونية الكاملة عن صحة البيانات، وأي تغيير يطرأ عليها، كما يلتزم المستخدم بتحديث بياناته كلما كانت غير محدثة أو غير صحيحة أو مضللة أو منتحلة، وقد تنشأ أضرار أو مسؤوليات نتيجة تقديم بيانات غير صحيحة أو مشاركة البيانات ومعالجتها وجمعها على الموافقة.</p>
-                    <p><strong>ثانياً: الموافقة على جمع ومعالجة البيانات الشخصية</strong></p>
-                    <p>يمنح المستخدم موافقته الصريحة والواضحة على هذه الشروط والأحكام، ويمنح التطبيق الموافقة على جمع بياناته الشخصية ومعالجتها وحفظها واستخدامها بالقدر اللازم لتقديم الخدمات التي يوفرها، وذلك داخل جمهورية مصر العربية، ومشاركة البيانات والمعلومات التي قام بإدخالها مع شركات التأمين المرخص لها أو الجهات أو الوسطاء المرخص لهم قانوناً، وذلك للأغراض التالية: دراسة احتياجات المستخدم لتقديم الحل أو التغطية التأمينية الأنسب لاحتياجاته، المساعدة في اختيار الخدمات أو العروض التي يطلبها المستخدم، التواصل مع المستخدم بشأن الخدمات المقدمة، تحسين جودة الخدمات المقدمة من خلال التطبيق. وذلك بالقدر اللازم فقط لتحقيق الأغراض المشار إليها، وفقاً لأحكام القوانين واللوائح النافذة ذات الصلة، بما في ذلك قانون حماية البيانات الشخصية المصري رقم 151 لسنة 2020.</p>
+                    <p><strong id="termsFirstTitle">أولاً: البيانات بصحة الإقرار</strong></p>
+                    <p id="termsFirstText">بتقديمها أو بإدخالها يقوم المستخدم بتقديم البيانات والمعلومات والمستندات التي تكون صحيحة ودقيقة وكاملة، ويضمن أن جميع البيانات التي يدخلها أو يقدمها هي صحيحة وحديثة، وأنه مخول قانوناً بتقديمها، ويتحمل وحده المسؤولية القانونية الكاملة عن صحة البيانات، وأي تغيير يطرأ عليها، كما يلتزم المستخدم بتحديث بياناته كلما كانت غير محدثة أو غير صحيحة أو مضللة أو منتحلة، وقد تنشأ أضرار أو مسؤوليات نتيجة تقديم بيانات غير صحيحة أو مشاركة البيانات ومعالجتها وجمعها على الموافقة.</p>
+                    <p><strong id="termsSecondTitle">ثانياً: الموافقة على جمع ومعالجة البيانات الشخصية</strong></p>
+                    <p id="termsSecondText">يمنح المستخدم موافقته الصريحة والواضحة على هذه الشروط والأحكام، ويمنح التطبيق الموافقة على جمع بياناته الشخصية ومعالجتها وحفظها واستخدامها بالقدر اللازم لتقديم الخدمات التي يوفرها، وذلك داخل جمهورية مصر العربية، ومشاركة البيانات والمعلومات التي قام بإدخالها مع شركات التأمين المرخص لها أو الجهات أو الوسطاء المرخص لهم قانوناً، وذلك للأغراض التالية: دراسة احتياجات المستخدم لتقديم الحل أو التغطية التأمينية الأنسب لاحتياجاته، المساعدة في اختيار الخدمات أو العروض التي يطلبها المستخدم، التواصل مع المستخدم بشأن الخدمات المقدمة، تحسين جودة الخدمات المقدمة من خلال التطبيق. وذلك بالقدر اللازم فقط لتحقيق الأغراض المشار إليها، وفقاً لأحكام القوانين واللوائح النافذة ذات الصلة، بما في ذلك قانون حماية البيانات الشخصية المصري رقم 151 لسنة 2020.</p>
                     <p><strong id="termsThirdTitle">ثالثاً: صفة التطبيق ونطاق عمله</strong></p>
                     <p id="termsThirdText">(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)</p>
                 </div>
@@ -6561,7 +6561,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                             <svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-11.1 6.6L4 20l1.9-4.6A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8.2 8.6c.2-.5.5-.7.9-.7h.7c.2 0 .4.2.5.5l.7 1.7c.1.3 0 .5-.2.7l-.7.6c.5 1 1.3 1.8 2.3 2.3l.6-.7c.2-.2.4-.3.7-.2l1.7.7c.3.1.5.3.5.5v.7c0 .4-.2.7-.7.9-2 .4-5.9-2.6-6.9-5.1-.2-.6-.2-1.3-.1-1.9Z"/></svg>
                         </div>
                         <span class="so-label" id="shareOfferViaWhatsapp">واتساب</span>
-                        <span class="so-badge">سريع</span>
+                        <span class="so-badge" id="shareViaWhatsappBadge">سريع</span>
                     </div>
                     <!-- Messenger (Facebook Messenger) -->
                     <div class="share-option-modern messenger" onclick="shareOfferVia('messenger')">
@@ -6569,7 +6569,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                             <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.4 2 11.9c0 2.9 1.3 5.5 3.3 7.3l-.8 2.9 3.1-1.7c.8.2 1.7.4 2.6.4 5.5 0 10-4.4 10-9.9S17.5 2 12 2zm1.4 12.7l-2.7-2.9-5.2 2.9 5.7-6.1 2.8 2.9 5.1-2.9-5.7 6.1z"/></svg>
                         </div>
                         <span class="so-label" id="shareOfferViaMessenger">مسنجر</span>
-                        <span class="so-badge">مباشر</span>
+                        <span class="so-badge" id="shareViaMessengerBadge">مباشر</span>
                     </div>
                     <!-- Copy Link -->
                     <div class="share-option-modern copy" onclick="shareOfferVia('copy')">
@@ -6577,7 +6577,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                             <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                         </div>
                         <span class="so-label" id="shareOfferViaCopy">نسخ الرابط</span>
-                        <span class="so-badge">نسخ</span>
+                        <span class="so-badge" id="shareViaCopyBadge">نسخ</span>
                     </div>
                 </div>
                 <div class="share-link-display" id="shareOfferLinkDisplay">
@@ -6704,7 +6704,76 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 loginSwitch: 'ليس لديك حساب؟ ',
                 loginSwitchLink: 'إنشاء حساب جديد',
                 loginTagline: 'Insurance Ecosystem',
-                companiesSliderTitleText: 'شركاؤنا في النجاح',
+                forgotPasswordLink: 'نسيت كلمة المرور؟',
+                forgotBackToLogin: 'العودة إلى تسجيل الدخول',
+                onboardingSkip: 'تخطي',
+                policyLife: 'تأمين الحياة',
+                policyMedical: 'تأمين طبي',
+                policyCar: 'تأمين سيارات',
+                policyProperty: 'تأمين ممتلكات',
+                policyTravel: 'تأمين سفر',
+                policyLiability: 'تأمين مسؤولية',
+                policyMarine: 'تأمين بحري',
+                policyEngineering: 'تأمين هندسي',
+                policyAgriculture: 'تأمين زراعي',
+                policyCyber: 'تأمين إلكتروني',
+                policyNone: 'لا أملك وثائق تأمين حالياً',
+                statActiveLabel: 'وثائق سارية',
+                statExpiringLabel: 'تجديد قريب',
+                statDocsLabel: 'مستندات مفعلة',
+                wheelNewBadge: '🎰 جديد',
+                markAllReadBtn: 'تحديد الكل كمقروء',
+                profileSaveBtn: '💾 حفظ التغييرات',
+                btnDownloadDoc: 'تحميل / فتح المستند',
+                docPreviewClose: 'إغلاق',
+                gpsTripTitleText: 'رحلة قيادة بتتبع GPS',
+                gpsTripSub: 'راقب سرعتك بشكل حي واكسب نقاطاً عند الالتزام بحد السرعة',
+                uploadCatId: 'هوية شخصية',
+                uploadCatLicense: 'رخصة قيادة/مركبة',
+                uploadCatMedical: 'تقرير طبي',
+                uploadCatCommercial: 'سجل تجاري',
+                uploadCatPolicy: 'وثيقة تأمين',
+                termsThirdTitle: 'ثالثاً: صفة التطبيق ونطاق عمله',
+                termsThirdText: '(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)',
+                termsFirstTitle: 'أولاً: البيانات بصحة الإقرار',
+                termsFirstText: 'بتقديمها أو بإدخالها يقوم المستخدم بتقديم البيانات والمعلومات والمستندات التي تكون صحيحة ودقيقة وكاملة، ويضمن أن جميع البيانات التي يدخلها أو يقدمها هي صحيحة وحديثة، وأنه مخول قانوناً بتقديمها، ويتحمل وحده المسؤولية القانونية الكاملة عن صحة البيانات، وأي تغيير يطرأ عليها، كما يلتزم المستخدم بتحديث بياناته كلما كانت غير محدثة أو غير صحيحة أو مضللة أو منتحلة، وقد تنشأ أضرار أو مسؤوليات نتيجة تقديم بيانات غير صحيحة أو مشاركة البيانات ومعالجتها وجمعها على الموافقة.',
+                termsSecondTitle: 'ثانياً: الموافقة على جمع ومعالجة البيانات الشخصية',
+                termsSecondText: 'يمنح المستخدم موافقته الصريحة والواضحة على هذه الشروط والأحكام، ويمنح التطبيق الموافقة على جمع بياناته الشخصية ومعالجتها وحفظها واستخدامها بالقدر اللازم لتقديم الخدمات التي يوفرها، وذلك داخل جمهورية مصر العربية، ومشاركة البيانات والمعلومات التي قام بإدخالها مع شركات التأمين المرخص لها أو الجهات أو الوسطاء المرخص لهم قانوناً، وذلك للأغراض التالية: دراسة احتياجات المستخدم لتقديم الحل أو التغطية التأمينية الأنسب لاحتياجاته، المساعدة في اختيار الخدمات أو العروض التي يطلبها المستخدم، التواصل مع المستخدم بشأن الخدمات المقدمة، تحسين جودة الخدمات المقدمة من خلال التطبيق. وذلك بالقدر اللازم فقط لتحقيق الأغراض المشار إليها، وفقاً لأحكام القوانين واللوائح النافذة ذات الصلة، بما في ذلك قانون حماية البيانات الشخصية المصري رقم 151 لسنة 2020.',
+                appointmentBtn: '📅 حجز الموعد',
+                accAvatarChangeLabel: 'تغيير',
+                profileEditAvatarChangeLabel: 'تغيير',
+                profileEditAvatarHint: 'انقر على الصورة لتغييرها',
+                profileEditFullNameLabel: 'الاسم الرباعي',
+                profileEditEmailLabel: 'البريد الإلكتروني',
+                profileEditPhoneLabel: 'رقم الهاتف',
+                profileEditOccupationLabel: 'الوظيفة / المهنة',
+                profileEditClientTypeLabel: 'نوع العميل',
+                profileEditClientTypeIndividual: 'فردي',
+                profileEditClientTypeCorporate: 'جماعي (شركة / مؤسسة)',
+                profileEditBusinessNameLabel: 'اسم المنشأة / الشركة',
+                profileEditBusinessActivityLabel: 'نشاط المنشأة',
+                profileEditEmployeesLabel: 'عدد الموظفين',
+                changePasswordSectionLabel: '🔑 تغيير كلمة المرور',
+                currentPasswordLabel: 'كلمة المرور الحالية',
+                newPasswordLabel: 'كلمة المرور الجديدة',
+                confirmNewPasswordLabel: 'تأكيد كلمة المرور الجديدة',
+                changePasswordBtn: '🔒 تغيير كلمة المرور',
+                analyticsLabelTotal: 'إجمالي الوثائق',
+                analyticsLabelActive: 'وثائق سارية',
+                analyticsLabelScore: 'مؤشر الحماية',
+                analyticsLabelRenewals: 'تجديدات قريبة',
+                analyticsAlertLabel: '⚠️ تنبيه',
+                analyticsCoverageDistTitle: '📊 توزيع التغطيات',
+                analyticsScoreHistoryTitle: '📈 تطور مؤشر الحماية',
+                exportIntroText: '📌 سيتم تصدير البيانات التالية:',
+                exportItem1: 'الملف الشخصي ومعلومات الاتصال',
+                exportItem2: 'قائمة الوثائق التأمينية',
+                exportItem3: 'سجل المدفوعات والفواتير',
+                exportItem4: 'نتائج تقييم الحماية',
+                exportItem5: 'المواعيد والإشعارات',
+                shareViaWhatsappBadge: 'سريع',
+                shareViaMessengerBadge: 'مباشر',
+                shareViaCopyBadge: 'نسخ',
                 companiesCountLabel: 'شركة',
                 robotBubbleTitle: 'نصيحة تأمينية',
                 robotBubbleClose: 'إغلاق',
@@ -6798,7 +6867,6 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 referralShareBtn: '📤 مشاركة رابط الدعوة',
                 signupDisclosure: '(SecurePath - منصة تعريفية و توعوية هدفها خدمة حاملي وثائق التأمين و لا تمثل شركة تأمين بعينها. و يتم عرض منتجات شركات التامين المرخصة من الــFRA و حال الرغبة في الحصول عرض تأمين يتم التعامل بنظام احالة الطلب الي وسيط التأمين المرخص من الهيئة تحت رقم نرخيص - FRA 38062)',
                 brokerDisclosure: 'منصة تعريفية وتوعوية هدفها خدمة حاملي وثائق التأمين،\nولا تمثل شركة تأمين بعينها.\n\nيتم عرض الشركات والمنتجات المرخّصة من الهيئة العامة للرقابة المالية (FRA).\nحال الرغبة في الحصول على مزيد من المعلومات،\nيُرجى التواصل مع الوسيط المرخّص الحر بكود FRA 38062.',
-                accountOffers: 'العروض والخصومات',
                 noOffers: 'لا توجد عروض حالياً',
                 noOffersText: 'سيتم إضافة عروض وخصومات جديدة قريباً',
                 documentsTitle: 'المستندات والملفات',
@@ -6981,6 +7049,76 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 loginSwitch: "Don't have an account? ",
                 loginSwitchLink: 'Create new account',
                 loginTagline: 'Insurance Ecosystem',
+                forgotPasswordLink: 'Forgot password?',
+                forgotBackToLogin: 'Back to login',
+                onboardingSkip: 'Skip',
+                policyLife: 'Life insurance',
+                policyMedical: 'Medical insurance',
+                policyCar: 'Car insurance',
+                policyProperty: 'Property insurance',
+                policyTravel: 'Travel insurance',
+                policyLiability: 'Liability insurance',
+                policyMarine: 'Marine insurance',
+                policyEngineering: 'Engineering insurance',
+                policyAgriculture: 'Agricultural insurance',
+                policyCyber: 'Cyber insurance',
+                policyNone: 'I don\u2019t currently have any insurance policies',
+                statActiveLabel: 'Active policies',
+                statExpiringLabel: 'Renewal due soon',
+                statDocsLabel: 'Verified documents',
+                wheelNewBadge: '🎰 New',
+                markAllReadBtn: 'Mark all as read',
+                profileSaveBtn: '💾 Save Changes',
+                btnDownloadDoc: 'Download / Open document',
+                docPreviewClose: 'Close',
+                gpsTripTitleText: 'GPS-tracked driving trip',
+                gpsTripSub: 'Monitor your speed live and earn points for staying within the limit',
+                uploadCatId: 'Personal ID',
+                uploadCatLicense: 'Driving license / vehicle registration',
+                uploadCatMedical: 'Medical report',
+                uploadCatCommercial: 'Commercial registration',
+                uploadCatPolicy: 'Insurance policy',
+                termsThirdTitle: 'Third: The App\u2019s Role and Scope',
+                termsThirdText: '(SecurePath is an informational and awareness platform that aims to serve insurance policyholders and does not represent any specific insurance company. Products from FRA-licensed insurance companies are displayed, and if you wish to obtain an insurance quote, your request will be handled through referral to the insurance broker licensed by the Authority under license number FRA 38062.)',
+                termsFirstTitle: 'First: Accuracy of Submitted Data',
+                termsFirstText: 'By submitting or entering data, the user provides information and documents that are true, accurate and complete, and guarantees that all data entered or submitted is correct and up to date and that they are legally authorized to provide it. The user bears full legal responsibility for the accuracy of the data and any changes to it, and undertakes to update their data whenever it becomes outdated, incorrect, misleading, or falsified. Damages or liabilities may arise from providing inaccurate data or from sharing, processing and collecting data based on this consent.',
+                termsSecondTitle: 'Second: Consent to Collect and Process Personal Data',
+                termsSecondText: 'The user grants explicit and clear consent to these Terms and Conditions, and grants the application consent to collect, process, store and use their personal data to the extent necessary to provide its services, within the Arab Republic of Egypt, and to share the data and information entered with licensed insurance companies or legally licensed entities or brokers, for the following purposes: studying the user\u2019s needs to offer the most suitable insurance solution or coverage, assisting in selecting the services or offers requested by the user, communicating with the user regarding the services provided, and improving the quality of services provided through the application. This is done only to the extent necessary to achieve the purposes mentioned, in accordance with the relevant applicable laws and regulations, including the Egyptian Personal Data Protection Law No. 151 of 2020.',
+                appointmentBtn: '📅 Book Appointment',
+                accAvatarChangeLabel: 'Change',
+                profileEditAvatarChangeLabel: 'Change',
+                profileEditAvatarHint: 'Tap the photo to change it',
+                profileEditFullNameLabel: 'Full Name',
+                profileEditEmailLabel: 'Email',
+                profileEditPhoneLabel: 'Phone Number',
+                profileEditOccupationLabel: 'Occupation',
+                profileEditClientTypeLabel: 'Client Type',
+                profileEditClientTypeIndividual: 'Individual',
+                profileEditClientTypeCorporate: 'Corporate (company / organization)',
+                profileEditBusinessNameLabel: 'Company / Organization Name',
+                profileEditBusinessActivityLabel: 'Business Activity',
+                profileEditEmployeesLabel: 'Number of Employees',
+                changePasswordSectionLabel: '🔑 Change Password',
+                currentPasswordLabel: 'Current Password',
+                newPasswordLabel: 'New Password',
+                confirmNewPasswordLabel: 'Confirm New Password',
+                changePasswordBtn: '🔒 Change Password',
+                analyticsLabelTotal: 'Total Policies',
+                analyticsLabelActive: 'Active Policies',
+                analyticsLabelScore: 'Protection Score',
+                analyticsLabelRenewals: 'Upcoming Renewals',
+                analyticsAlertLabel: '⚠️ Alert',
+                analyticsCoverageDistTitle: '📊 Coverage Distribution',
+                analyticsScoreHistoryTitle: '📈 Protection Score Trend',
+                exportIntroText: '📌 The following data will be exported:',
+                exportItem1: 'Profile and contact information',
+                exportItem2: 'List of insurance policies',
+                exportItem3: 'Payment and billing history',
+                exportItem4: 'Protection assessment results',
+                exportItem5: 'Appointments and notifications',
+                shareViaWhatsappBadge: 'Fast',
+                shareViaMessengerBadge: 'Direct',
+                shareViaCopyBadge: 'Copy',
                 signupTitle: '✨ Create New Account',
                 signupLangLabel: '🌐 App Language',
                 regFullNameLabel: 'Full Name',
@@ -11173,15 +11311,110 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             shareOfferLinkLabel: 'shareOfferLinkLabel',
             offerReferralBanner: 'offerReferralBanner',
             offerReferralBannerCta: 'offerReferralBannerCta',
-            offerShareBtn: 'offerShareBtn'
+            offerShareBtn: 'offerShareBtn',
+            forgotPasswordLink: 'forgotPasswordLink',
+            forgotBackToLogin: 'forgotBackToLogin',
+            onboardingSkip: 'onboardingSkip',
+            policyLife: 'policyLife',
+            policyMedical: 'policyMedical',
+            policyCar: 'policyCar',
+            policyProperty: 'policyProperty',
+            policyTravel: 'policyTravel',
+            policyLiability: 'policyLiability',
+            policyMarine: 'policyMarine',
+            policyEngineering: 'policyEngineering',
+            policyAgriculture: 'policyAgriculture',
+            policyCyber: 'policyCyber',
+            policyNone: 'policyNone',
+            statActiveLabel: 'statActiveLabel',
+            statExpiringLabel: 'statExpiringLabel',
+            statDocsLabel: 'statDocsLabel',
+            wheelNewBadge: 'wheelNewBadge',
+            markAllReadBtn: 'markAllReadBtn',
+            profileSaveBtn: 'profileSaveBtn',
+            btnDownloadDoc: 'btnDownloadDoc',
+            docPreviewClose: 'docPreviewClose',
+            gpsTripTitleText: 'gpsTripTitleText',
+            gpsTripSub: 'gpsTripSub',
+            uploadCatId: 'uploadCatId',
+            uploadCatLicense: 'uploadCatLicense',
+            uploadCatMedical: 'uploadCatMedical',
+            uploadCatCommercial: 'uploadCatCommercial',
+            uploadCatPolicy: 'uploadCatPolicy',
+            termsThirdTitle: 'termsThirdTitle',
+            termsThirdText: 'termsThirdText',
+            termsFirstTitle: 'termsFirstTitle',
+            termsFirstText: 'termsFirstText',
+            termsSecondTitle: 'termsSecondTitle',
+            termsSecondText: 'termsSecondText',
+            appointmentBtn: 'appointmentBtn',
+            accAvatarChangeLabel: 'accAvatarChangeLabel',
+            profileEditAvatarChangeLabel: 'profileEditAvatarChangeLabel',
+            profileEditAvatarHint: 'profileEditAvatarHint',
+            profileEditFullNameLabel: 'profileEditFullNameLabel',
+            profileEditEmailLabel: 'profileEditEmailLabel',
+            profileEditPhoneLabel: 'profileEditPhoneLabel',
+            profileEditOccupationLabel: 'profileEditOccupationLabel',
+            profileEditClientTypeLabel: 'profileEditClientTypeLabel',
+            profileEditClientTypeIndividual: 'profileEditClientTypeIndividual',
+            profileEditClientTypeCorporate: 'profileEditClientTypeCorporate',
+            profileEditBusinessNameLabel: 'profileEditBusinessNameLabel',
+            profileEditBusinessActivityLabel: 'profileEditBusinessActivityLabel',
+            profileEditEmployeesLabel: 'profileEditEmployeesLabel',
+            changePasswordSectionLabel: 'changePasswordSectionLabel',
+            currentPasswordLabel: 'currentPasswordLabel',
+            newPasswordLabel: 'newPasswordLabel',
+            confirmNewPasswordLabel: 'confirmNewPasswordLabel',
+            changePasswordBtn: 'changePasswordBtn',
+            analyticsLabelTotal: 'analyticsLabelTotal',
+            analyticsLabelActive: 'analyticsLabelActive',
+            analyticsLabelScore: 'analyticsLabelScore',
+            analyticsLabelRenewals: 'analyticsLabelRenewals',
+            analyticsAlertLabel: 'analyticsAlertLabel',
+            analyticsCoverageDistTitle: 'analyticsCoverageDistTitle',
+            analyticsScoreHistoryTitle: 'analyticsScoreHistoryTitle',
+            exportIntroText: 'exportIntroText',
+            exportItem1: 'exportItem1',
+            exportItem2: 'exportItem2',
+            exportItem3: 'exportItem3',
+            exportItem4: 'exportItem4',
+            exportItem5: 'exportItem5',
+            shareViaWhatsappBadge: 'shareViaWhatsappBadge',
+            shareViaMessengerBadge: 'shareViaMessengerBadge',
+            shareViaCopyBadge: 'shareViaCopyBadge'
         };
+
+        function setTranslatedContent(el, text) {
+            if (!el) return;
+            var childEls = Array.prototype.filter.call(el.childNodes, function(n) { return n.nodeType === 1; });
+            if (childEls.length === 0) {
+                el.textContent = text;
+                return;
+            }
+            // Element has child nodes (icon spans, required-field markers, etc.) -
+            // update only the text node(s) so icons/markers survive language switches.
+            var textNodes = Array.prototype.filter.call(el.childNodes, function(n) { return n.nodeType === 3 && n.nodeValue.trim() !== ''; });
+            if (textNodes.length > 0) {
+                textNodes[0].nodeValue = (textNodes[0].nodeValue.match(/^\s*/) || [''])[0] + text + (textNodes[0].nodeValue.match(/\s*$/) || [''])[0];
+                for (var i = 1; i < textNodes.length; i++) textNodes[i].nodeValue = '';
+                return;
+            }
+            // No standalone text node (e.g. text wrapped in its own <span>) -
+            // target the last child if it isn't an icon element, otherwise append text.
+            var lastChild = childEls[childEls.length - 1];
+            if (lastChild && !/(app-icon|icon-)/.test(lastChild.className || '')) {
+                lastChild.textContent = text;
+            } else {
+                el.appendChild(document.createTextNode(' ' + text));
+            }
+        }
 
         function updateAllTexts() {
             var t = function(key) { return getText(key); };
             Object.keys(I18N_IDS).forEach(function(key) {
                 var id = I18N_IDS[key];
                 var el = document.getElementById(id);
-                if (el) el.textContent = t(key);
+                if (el) setTranslatedContent(el, t(key));
             });
             setHTML('loginSwitch', esc(t('loginSwitch')) + '<b onclick="showScreen(\'signup\')">' + esc(t('loginSwitchLink')) + '</b>');
             setHTML('signupSwitch', esc(t('signupSwitch')) + '<b onclick="showScreen(\'login\')">' + esc(t('signupSwitchLink')) + '</b>');
