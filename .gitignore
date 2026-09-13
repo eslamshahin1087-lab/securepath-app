@@ -33,3 +33,10 @@ add_icons.py
 index.html.before-icons
 *.before-*
 add_*.py
+service-account.json
+node_modules/
+package-lock.json
+add-admin-claim.js
+add-admin-claim.js
+published-rules.txt
+.firebaserc
