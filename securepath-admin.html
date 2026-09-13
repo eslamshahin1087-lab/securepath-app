@@ -1053,9 +1053,15 @@
             <div class="card"><div class="card-body"><h3 style="font-size:18px;display:flex;align-items:center;gap:10px;"><i class="fas fa-check-circle" style="color:var(--gold);"></i> مركز الامتثال</h3><p style="line-height:1.8;font-size:14px;color:var(--text-secondary)">جميع البيانات محفوظة ومشفرة وفق أعلى المعايير.</p></div></div>
           </div>
 
-          <!-- Notifications -->
+                    <!-- Notifications -->
           <div id="v-notifications" class="view">
-            <div class="card"><div class="card-header"><h3>الإشعارات</h3></div><div id="notificationsList" class="card-body"></div></div>
+            <div class="card">
+              <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+                <h3>الإشعارات</h3>
+                <button class="btn btn-primary btn-sm" onclick="openBroadcastModal()"><i class="fas fa-bullhorn"></i> إشعار جماعي</button>
+              </div>
+              <div id="notificationsList" class="card-body"></div>
+            </div>
           </div>
 
           <!-- Activity -->
@@ -1115,6 +1121,57 @@
   <!-- Offer Modal -->
   <div id="offerModal" class="overlay"><div class="modal" style="width:min(850px,96vw)"><div class="modal-header"><h2><i class="fas fa-tag"></i> إضافة عرض</h2><button class="modal-close" onclick="closeModal('offerModal')"><i class="fas fa-times"></i></button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>اسم العرض</label><input id="offerName" placeholder="اسم العرض"></div><div class="field"><label>رمز العرض</label><input id="offerCode" placeholder="مثال: MED20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>شركة التأمين</label><select id="offerCompany"><option value="">اختر الشركة</option></select></div><div class="field"><label>نوع التأمين</label><select id="offerType"><option value="">اختر النوع</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>نسبة الخصم (%)</label><input id="offerDiscount" type="number" placeholder="0" min="0" max="100"></div><div class="field"><label>الحالة</label><select id="offerStatus"><option value="active">نشط</option><option value="expired">منتهي</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>تاريخ البداية</label><input id="offerStart" type="date"></div><div class="field"><label>تاريخ الانتهاء</label><input id="offerEnd" type="date"></div></div><div class="field"><label>الوصف</label><textarea id="offerDesc" rows="2" placeholder="وصف العرض"></textarea></div><div class="field"><label>صورة (URL)</label><input id="offerImage" placeholder="https://example.com/offer.jpg"></div><div id="offerErr" class="error"></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('offerModal')">إلغاء</button><button class="btn btn-primary" id="createOfferBtn" onclick="createOffer()">حفظ</button></div></div></div>
 
+
+  <!-- Broadcast Notification Modal -->
+  <div id="broadcastNotificationModal" class="overlay">
+    <div class="modal" style="width:min(560px,96vw)">
+      <div class="modal-header">
+        <h2><i class="fas fa-bullhorn"></i> إشعار جماعي</h2>
+        <button class="modal-close" onclick="closeModal('broadcastNotificationModal')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="field">
+        <label>عنوان الإشعار <span style="color:var(--red)">*</span></label>
+        <input id="bnTitle" placeholder="مثال: تحديث مهم لجميع العملاء" maxlength="100">
+      </div>
+
+      <div class="field">
+        <label>نص الإشعار <span style="color:var(--red)">*</span></label>
+        <textarea id="bnBody" rows="3" placeholder="اكتب نص الإشعار الذي سيظهر لكل عميل..." maxlength="500"></textarea>
+      </div>
+
+      <div class="field">
+        <label>النوع</label>
+        <select id="bnType">
+          <option value="info">ℹ️ معلومات</option>
+          <option value="success">✅ نجاح / تهانينا</option>
+          <option value="warning">⚠️ تحذير</option>
+          <option value="promo">🎁 عرض / ترويجي</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الفئة المستهدفة</label>
+        <select id="bnTarget">
+          <option value="all">👥 كل العملاء (الذين لديهم حساب)</option>
+          <option value="active">🟢 العملاء النشطون فقط</option>
+          <option value="expiring">⏰ لديهم وثيقة تنتهي خلال 45 يوم</option>
+          <option value="withPoints">⭐ لديهم رصيد نقاط</option>
+        </select>
+      </div>
+
+      <div id="bnPreview" style="padding:12px;background:var(--paper);border-radius:var(--radius-md);border:1px dashed var(--line);font-size:12px;color:var(--muted);">
+        سيتم إرسال الإشعار لـ <b id="bnCount">0</b> عميل
+      </div>
+
+      <div id="bnErr" class="error"></div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('broadcastNotificationModal')">إلغاء</button>
+        <button class="btn btn-primary" id="bnSendBtn" onclick="sendBroadcastNotification()"><i class="fas fa-paper-plane"></i> إرسال</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Manual Points Modal -->
   <div id="manualPointsModal" class="overlay">
@@ -3640,7 +3697,113 @@
     }
 // ================================================================
     // 17. RENDER ALL & INIT
+    // ================================================================    // ================================================================
+    // BROADCAST NOTIFICATIONS (Admin only)
     // ================================================================
+    function getBroadcastTargets(targetType) {
+      const clients = APP_STATE.clients || [];
+      if (targetType === 'all') return clients;
+      if (targetType === 'active') return clients.filter(c => (c.status || 'active') === 'active');
+      if (targetType === 'expiring') {
+        const now = Date.now();
+        const cutoff = now + 45 * 24 * 60 * 60 * 1000;
+        const policies = APP_STATE.policies || [];
+        const expiringClientIds = new Set();
+        policies.forEach(p => {
+          if (!p.endDate) return;
+          const end = new Date(p.endDate).getTime();
+          if (end > now && end <= cutoff) expiringClientIds.add(p.clientId || p.uid);
+        });
+        return clients.filter(c => expiringClientIds.has(c.uid || c.id));
+      }
+      if (targetType === 'withPoints') return clients.filter(c => Number(c.insuraPoints || 0) > 0);
+      return clients;
+    }
+
+    function openBroadcastModal() {
+      document.getElementById('bnTitle').value = '';
+      document.getElementById('bnBody').value = '';
+      document.getElementById('bnType').value = 'info';
+      document.getElementById('bnTarget').value = 'all';
+      document.getElementById('bnErr').textContent = '';
+      updateBroadcastPreview();
+      // Live update preview on target change
+      const sel = document.getElementById('bnTarget');
+      sel.onchange = updateBroadcastPreview;
+      openModal('broadcastNotificationModal');
+    }
+
+    function updateBroadcastPreview() {
+      const targetType = document.getElementById('bnTarget').value;
+      const targets = getBroadcastTargets(targetType);
+      document.getElementById('bnCount').textContent = targets.length;
+    }
+
+    async function sendBroadcastNotification() {
+      const title = (document.getElementById('bnTitle').value || '').trim();
+      const body = (document.getElementById('bnBody').value || '').trim();
+      const type = document.getElementById('bnType').value;
+      const targetType = document.getElementById('bnTarget').value;
+      const errEl = document.getElementById('bnErr');
+      const btn = document.getElementById('bnSendBtn');
+
+      errEl.textContent = '';
+      if (!title) { errEl.textContent = 'العنوان مطلوب'; return; }
+      if (!body) { errEl.textContent = 'النص مطلوب'; return; }
+      if (title.length > 100) { errEl.textContent = 'العنوان طويل جداً (100 حرف كحد أقصى)'; return; }
+      if (body.length > 500) { errEl.textContent = 'النص طويل جداً (500 حرف كحد أقصى)'; return; }
+
+      const targets = getBroadcastTargets(targetType);
+      if (!targets.length) { errEl.textContent = 'لا يوجد عملاء مطابقون للفئة المختارة'; return; }
+
+      if (!confirm(`سيتم إرسال الإشعار إلى ${targets.length} عميل. هل أنت متأكد؟`)) return;
+
+      btn.disabled = true;
+      btn.textContent = 'جارٍ الإرسال...';
+
+      try {
+        const adminEmail = (APP_STATE.currentUser && APP_STATE.currentUser.email) || 'admin';
+        const broadcastId = 'bc_' + Date.now();
+
+        // Firestore batch limit = 500
+        const BATCH_SIZE = 450;
+        let sentCount = 0;
+
+        for (let i = 0; i < targets.length; i += BATCH_SIZE) {
+          const chunk = targets.slice(i, i + BATCH_SIZE);
+          const batch = db.batch();
+
+          chunk.forEach(c => {
+            const ref = db.collection('notifications').doc();
+            batch.set(ref, {
+              clientId: c.uid || c.id,
+              uid: c.uid || c.id,
+              title: title,
+              body: body,
+              type: type,
+              read: false,
+              broadcastId: broadcastId,
+              sentBy: adminEmail,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          });
+
+          await batch.commit();
+          sentCount += chunk.length;
+          btn.textContent = `تم ${sentCount}/${targets.length}...`;
+        }
+
+        toast(`✅ تم إرسال الإشعار إلى ${sentCount} عميل بنجاح`);
+        closeModal('broadcastNotificationModal');
+      } catch (e) {
+        console.error('Broadcast failed:', e);
+        errEl.textContent = 'فشل الإرسال: ' + (e.message || e.code || 'خطأ غير معروف');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال';
+      }
+    }
+
     function renderAll() {
       var steps = [
         ['renderDashboard', renderDashboard], ['renderHomeContent', renderHomeContent], ['renderClients', renderClients],
