@@ -1115,7 +1115,47 @@
   <!-- Offer Modal -->
   <div id="offerModal" class="overlay"><div class="modal" style="width:min(850px,96vw)"><div class="modal-header"><h2><i class="fas fa-tag"></i> إضافة عرض</h2><button class="modal-close" onclick="closeModal('offerModal')"><i class="fas fa-times"></i></button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>اسم العرض</label><input id="offerName" placeholder="اسم العرض"></div><div class="field"><label>رمز العرض</label><input id="offerCode" placeholder="مثال: MED20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>شركة التأمين</label><select id="offerCompany"><option value="">اختر الشركة</option></select></div><div class="field"><label>نوع التأمين</label><select id="offerType"><option value="">اختر النوع</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>نسبة الخصم (%)</label><input id="offerDiscount" type="number" placeholder="0" min="0" max="100"></div><div class="field"><label>الحالة</label><select id="offerStatus"><option value="active">نشط</option><option value="expired">منتهي</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div class="field"><label>تاريخ البداية</label><input id="offerStart" type="date"></div><div class="field"><label>تاريخ الانتهاء</label><input id="offerEnd" type="date"></div></div><div class="field"><label>الوصف</label><textarea id="offerDesc" rows="2" placeholder="وصف العرض"></textarea></div><div class="field"><label>صورة (URL)</label><input id="offerImage" placeholder="https://example.com/offer.jpg"></div><div id="offerErr" class="error"></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('offerModal')">إلغاء</button><button class="btn btn-primary" id="createOfferBtn" onclick="createOffer()">حفظ</button></div></div></div>
 
-  <!-- ===== COMPANY AD MODAL (محسّن) ===== -->
+
+  <!-- Manual Points Modal -->
+  <div id="manualPointsModal" class="overlay">
+    <div class="modal" style="width:min(520px,96vw)">
+      <div class="modal-header">
+        <h2><i class="fas fa-star"></i> تعديل النقاط يدوياً</h2>
+        <button class="modal-close" onclick="closeModal('manualPointsModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="field">
+        <label>العميل</label>
+        <input id="mpClientName" readonly style="background:var(--paper);cursor:not-allowed">
+        <input id="mpClientUid" type="hidden">
+      </div>
+      <div class="field">
+        <label>نوع العملية</label>
+        <select id="mpOperation">
+          <option value="add">إضافة نقاط (+)</option>
+          <option value="deduct">خصم نقاط (−)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>عدد النقاط</label>
+        <input id="mpAmount" type="number" min="1" max="10000" placeholder="مثال: 100">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">
+          <b>100 نقطة = 1% خصم</b> • الحد الأقصى 1500 نقطة (15%)
+        </div>
+      </div>
+      <div class="field">
+        <label>السبب / الوصف <span style="color:var(--red)">*</span></label>
+        <input id="mpReason" placeholder="مثال: مكافأة إضافية، تصحيح يدوي...">
+      </div>
+      <div id="mpErr" class="error"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('manualPointsModal')">إلغاء</button>
+        <button class="btn btn-primary" id="mpSaveBtn" onclick="saveManualPoints()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  
+<!-- ===== COMPANY AD MODAL (محسّن) ===== -->
   <div id="adModal" class="overlay">
     <div class="modal" style="width:min(850px,96vw)">
       <div class="modal-header">
@@ -3514,7 +3554,91 @@
       document.body.appendChild(modal);
     }
 
+        // ================================================================
+    // MANUAL POINTS ADJUSTMENT (Admin only)
     // ================================================================
+    function openManualPointsModal(uid) {
+      const c = (APP_STATE.clients || []).find(x => (x.uid || x.id) === uid);
+      if (!c) { toast('❌ لم يُعثر على العميل', true); return; }
+      document.getElementById('mpClientUid').value = uid;
+      document.getElementById('mpClientName').value = (c.fullName || c.name || c.username || 'عميل') + ' — ' + (c.email || c.phone || '');
+      document.getElementById('mpOperation').value = 'add';
+      document.getElementById('mpAmount').value = '';
+      document.getElementById('mpReason').value = '';
+      document.getElementById('mpErr').textContent = '';
+      openModal('manualPointsModal');
+    }
+
+    async function saveManualPoints() {
+      const uid = document.getElementById('mpClientUid').value;
+      const op = document.getElementById('mpOperation').value;
+      const amount = Number(document.getElementById('mpAmount').value);
+      const reason = (document.getElementById('mpReason').value || '').trim();
+      const errEl = document.getElementById('mpErr');
+      const btn = document.getElementById('mpSaveBtn');
+
+      errEl.textContent = '';
+      if (!uid) { errEl.textContent = 'معرّف العميل مفقود'; return; }
+      if (!amount || amount <= 0) { errEl.textContent = 'يجب إدخال عدد نقاط أكبر من صفر'; return; }
+      if (amount > 10000) { errEl.textContent = 'الحد الأقصى للعملية الواحدة 10000 نقطة'; return; }
+      if (!reason) { errEl.textContent = 'يجب إدخال سبب التعديل'; return; }
+
+      const delta = (op === 'deduct') ? -amount : amount;
+      const c = (APP_STATE.clients || []).find(x => (x.uid || x.id) === uid);
+      const currentBalance = Number(c?.insuraPoints || 0);
+
+      if (op === 'deduct' && amount > currentBalance) {
+        errEl.textContent = 'لا يمكن خصم أكثر من الرصيد الحالي (' + currentBalance + ' نقطة)';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'جارٍ الحفظ...';
+
+      try {
+        const adminEmail = (APP_STATE.currentUser && APP_STATE.currentUser.email) || 'admin';
+
+        // 1. Update clients doc
+        const clientRef = db.collection('clients').doc(uid);
+        const updates = {
+          insuraPoints: firebase.firestore.FieldValue.increment(delta)
+        };
+        if (delta > 0) {
+          updates.insuraPointsLifetime = firebase.firestore.FieldValue.increment(delta);
+        }
+        await clientRef.update(updates);
+
+        // 2. Add pointsLog entry
+        await db.collection('pointsLog').add({
+          clientId: uid,
+          uid: uid,
+          clientName: c?.fullName || c?.name || c?.username || 'عميل',
+          points: delta,
+          category: 'manual',
+          descriptionAr: reason,
+          descriptionEn: reason,
+          awardedBy: adminEmail,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        toast('✅ تم تعديل النقاط بنجاح (' + (delta > 0 ? '+' : '') + delta + ')');
+        closeModal('manualPointsModal');
+
+        // Refresh UI
+        await loadPointsData(true);
+        try { await loadCollection('clients'); } catch (e) {}
+        renderPointsAdmin();
+        renderClients();
+        renderDashboard();
+      } catch (e) {
+        console.error('Manual points save failed:', e);
+        errEl.textContent = 'فشل الحفظ: ' + (e.message || e.code || 'خطأ غير معروف');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'حفظ';
+      }
+    }
+// ================================================================
     // 17. RENDER ALL & INIT
     // ================================================================
     function renderAll() {
