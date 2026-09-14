@@ -678,6 +678,7 @@
     }
     
     </style>
+<link rel="stylesheet" href="smart-assessment.css">
 </head>
 <body>
 
@@ -2424,9 +2425,183 @@
       const title = esc(doc.fileName || 'المستند');
       const mime = String(doc.mimeType || '').toLowerCase();
       if (mime.indexOf('image/') === 0 || /^data:image\//i.test(url)) {
-        win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>body{margin:0;background:#111;display:grid;place-items:center;min-height:100vh}img{max-width:100%;max-height:100vh;object-fit:contain}</style></head><body><img src="${url}" alt="${title}"></body></html>`);
+        win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>body{margin:0;background:#111;display:grid;place-items:center;min-height:100vh}img{max-width:100%;max-height:100vh;object-fit:contain}</style></head><body><img src="${url}" alt="${title}"><!-- ═══════════════════════════════════════════════════════════
+     قسم تقييمات حالات الحماية — Protection Assessments
+     ═══════════════════════════════════════════════════════════ -->
+<section id="protectionAssessmentsSection" class="admin-section">
+  <div class="section-header">
+    <h2>🛡️ تقييمات حالات الحماية</h2>
+    <div class="section-actions">
+      <select id="filterRisk">
+        <option value="">كل المستويات</option>
+        <option value="مرتفع">مرتفع</option>
+        <option value="متوسط">متوسط</option>
+        <option value="منخفض">منخفض</option>
+      </select>
+      <select id="filterProduct">
+        <option value="">كل المنتجات</option>
+        <option value="LIFE">حياة</option>
+        <option value="HEALTH">صحي</option>
+        <option value="MOTOR">سيارات</option>
+        <option value="HOME">منازل</option>
+        <option value="TRAVEL">سفر</option>
+      </select>
+      <input type="search" id="searchClient" placeholder="🔍 ابحث بالاسم...">
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-value" id="statTotal">0</span>
+      <span class="stat-label">إجمالي التقييمات</span>
+    </div>
+    <div class="stat-card stat-high">
+      <span class="stat-value" id="statHigh">0</span>
+      <span class="stat-label">مخاطر مرتفعة</span>
+    </div>
+    <div class="stat-card stat-converted">
+      <span class="stat-value" id="statConverted">0</span>
+      <span class="stat-label">تم التحويل</span>
+    </div>
+  </div>
+
+  <div id="assessmentsList" class="assessments-list">
+    <p class="empty">جاري التحميل...</p>
+  </div>
+</section>
+</body>
+</html>`);
       } else if (mime === 'application/pdf' || /^data:application\/pdf/i.test(url)) {
-        win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title></head><body style="margin:0"><embed src="${url}" type="application/pdf" width="100%" height="100%" style="position:fixed;inset:0;border:0"></body></html>`);
+        win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title></head><body style="margin:0"><embed src="${url}" type="application/pdf" width="100%" height="100%" style="position:fixed;inset:0;border:0">/* ═══ Admin Protection Assessments ═══ */
+.admin-section { margin: 2rem 0; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.section-actions select,
+.section-actions input {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  border: 2px solid #e2e8f0;
+}
+
+.stat-value { display: block; font-size: 2rem; font-weight: 800; color: #1e40af; }
+.stat-label { display: block; color: #64748b; font-size: 0.85rem; margin-top: 0.35rem; }
+.stat-high .stat-value { color: #dc2626; }
+.stat-converted .stat-value { color: #059669; }
+
+.assessments-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.assessment-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  border-right: 5px solid #94a3b8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s;
+}
+
+.assessment-card:hover { transform: translateY(-3px); }
+
+.assessment-card.risk-high   { border-right-color: #dc2626; }
+.assessment-card.risk-medium { border-right-color: #f59e0b; }
+.assessment-card.risk-low    { border-right-color: #10b981; }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.card-header h3 { margin: 0; color: #1e293b; font-size: 1.1rem; }
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-risk-high   { background: #fee2e2; color: #991b1b; }
+.badge-risk-medium { background: #fef3c7; color: #92400e; }
+.badge-risk-low    { background: #d1fae5; color: #065f46; }
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: auto;
+}
+
+.status-new       { background: #dbeafe; color: #1e40af; }
+.status-reviewed  { background: #e0e7ff; color: #3730a3; }
+.status-contacted { background: #fef3c7; color: #92400e; }
+.status-converted { background: #d1fae5; color: #065f46; }
+
+.card-body p { margin: 0.35rem 0; color: #475569; font-size: 0.9rem; }
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.card-actions button {
+  padding: 0.45rem 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #334155;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.card-actions button:hover { background: #e2e8f0; }
+
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 2rem;
+  font-style: italic;
+}
+</body></html>`);
       } else {
         win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${title}</title><style>body{font-family:Arial;max-width:680px;margin:60px auto;padding:20px;line-height:1.8}a{display:inline-block;padding:12px 20px;background:#F2BD63;color:#0E2A5C;text-decoration:none;border-radius:10px;font-weight:700}
     /* ===== INSURAPOINTS ADMIN ===== */
@@ -4091,5 +4266,7 @@
        });
     });
   </script>
+})();
+</script>
 </body>
 </html>

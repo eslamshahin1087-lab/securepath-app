@@ -5587,6 +5587,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
     #home *,#home *::before,#home *::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="smart-assessment.css">
 </head>
 <body>
 
@@ -11962,5 +11964,142 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         console.log('🔗 Copy Link uses a clean link/copy icon.');
         console.log('📱 Removed Twitter, Email, and Native share for a cleaner experience.');
     </script>
+<!-- ═══════════════════════════════════════════════════════════
+     قسم التحليل الذكي — Smart Assessment
+     ═══════════════════════════════════════════════════════════ -->
+<section id="smartAssessment" class="smart-assessment">
+  <div class="smart-header">
+    <div class="smart-icon">🧠</div>
+    <h2 data-i18n="smart_title">تحليل الحماية الذكي</h2>
+    <p data-i18n="smart_subtitle">أجب على أسئلة قصيرة لنقدم لك توصية مخصصة</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="smartProgress" style="width: 0%"></div>
+    </div>
+    <span class="step-counter">الخطوة <span id="currentStep">1</span> من 5</span>
+  </div>
+
+  <!-- الخطوة 1 -->
+  <div class="smart-step active" data-step="1">
+    <h3>📋 بياناتك الأساسية</h3>
+    <div class="form-grid">
+      <label>الاسم الكامل
+        <input type="text" id="fullName" required placeholder="مثال: أحمد محمد">
+      </label>
+      <label>العمر
+        <input type="number" id="age" min="18" max="80" required placeholder="30">
+      </label>
+      <label>الجنس
+        <select id="gender">
+          <option value="male">ذكر</option>
+          <option value="female">أنثى</option>
+        </select>
+      </label>
+      <label>الحالة الاجتماعية
+        <select id="maritalStatus">
+          <option value="single">أعزب</option>
+          <option value="married">متزوج</option>
+          <option value="divorced">مطلق</option>
+          <option value="widowed">أرمل</option>
+        </select>
+      </label>
+      <label>عدد المعالين
+        <input type="number" id="dependents" min="0" max="10" value="0">
+      </label>
+      <label>المدينة
+        <input type="text" id="city" value="القاهرة">
+      </label>
+    </div>
+  </div>
+
+  <!-- الخطوة 2 -->
+  <div class="smart-step" data-step="2">
+    <h3>💰 وضعك المالي</h3>
+    <div class="form-grid">
+      <label>الدخل الشهري (جنيه)
+        <input type="number" id="monthlyIncome" min="0" step="500" placeholder="10000">
+      </label>
+      <label>هل لديك وثائق تأمين حالية؟
+        <select id="hasExisting">
+          <option value="no">لا</option>
+          <option value="yes">نعم</option>
+        </select>
+      </label>
+      <div id="existingPoliciesWrap" class="hidden" style="grid-column: 1 / -1;">
+        <label>أنواع الوثائق الحالية</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="LIFE"> حياة</label>
+          <label><input type="checkbox" value="HEALTH"> صحي</label>
+          <label><input type="checkbox" value="MOTOR"> سيارات</label>
+          <label><input type="checkbox" value="HOME"> منازل</label>
+          <label><input type="checkbox" value="TRAVEL"> سفر</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- الخطوة 3 -->
+  <div class="smart-step" data-step="3">
+    <h3>🏥 حالتك الصحية</h3>
+    <div class="form-grid">
+      <label>الطول (سم) <input type="number" id="height" value="170"></label>
+      <label>الوزن (كجم) <input type="number" id="weight" value="70"></label>
+      <label>هل تدخن؟
+        <select id="smoker"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>أمراض مزمنة؟
+        <select id="chronicDisease"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>تاريخ عائلي لأمراض خطيرة؟
+        <select id="familyHistory"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>مستوى النشاط
+        <select id="activityLevel">
+          <option value="low">منخفض</option>
+          <option value="medium" selected>متوسط</option>
+          <option value="high">عالي</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!-- الخطوة 4 -->
+  <div class="smart-step" data-step="4">
+    <h3>🚗 نمط حياتك</h3>
+    <div class="form-grid">
+      <label>هل تملك سيارة؟
+        <select id="hasCar"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>هل تملك منزلًا؟
+        <select id="hasHome"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>صاحب عمل حر؟
+        <select id="businessOwner"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>تسافر كثيرًا؟
+        <select id="frequentTravel"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+      <label>وظيفة بدنية شاقة؟
+        <select id="physicalJob"><option value="no">لا</option><option value="yes">نعم</option></select>
+      </label>
+    </div>
+  </div>
+
+  <!-- الخطوة 5 -->
+  <div class="smart-step" data-step="5">
+    <h3>✅ مراجعة نهائية</h3>
+    <div id="reviewSummary" class="review-summary"></div>
+  </div>
+
+  <!-- أزرار التنقل -->
+  <div class="smart-nav">
+    <button id="smartPrev" class="btn-secondary" disabled>← السابق</button>
+    <button id="smartNext" class="btn-primary">التالي →</button>
+    <button id="smartSubmit" class="btn-success hidden">🚀 تحليل احتياجي</button>
+  </div>
+
+  <!-- النتيجة -->
+  <div id="smartResult" class="smart-result hidden"></div>
+</section><script src="securepath-smart-engine.js"></script>
+<script src="smart-assessment-ui.js"></script>
 </body>
 </html>
