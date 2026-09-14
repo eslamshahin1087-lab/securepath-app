@@ -1326,6 +1326,117 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
+        /* ===== INSURANCE TIPS TABS & AWARENESS VIDEOS ===== */
+        .tips-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 14px 12px;
+        }
+
+        .tips-tab {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 12px;
+            font-family: var(--font-ar);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tips-tab.active {
+            background: linear-gradient(135deg, var(--navy) 0%, #16407A 100%);
+            border-color: var(--navy);
+            color: #fff;
+        }
+
+        .video-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .video-card:active {
+            transform: scale(0.98);
+        }
+
+        .video-thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(242, 189, 99, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .video-play-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--navy);
+            margin-left: 3px;
+        }
+
+        .video-card-body {
+            padding: 10px 12px;
+        }
+
+        .video-card-body h3 {
+            font-family: var(--font-ar);
+            font-size: 13px;
+            color: var(--slate);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .video-embed-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .video-embed-box iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        html.dark-mode .tips-tab {
+            background: #1E2942;
+        }
+
         html.dark-mode .robot-fab {
             background: linear-gradient(145deg, #1E2942 0%, #0F1522 100%);
             border-color: rgba(242, 189, 99, 0.7);
@@ -5978,7 +6089,12 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
                 <div class="page-actions"><button class="btn-gold-small" onclick="showScreen('home')" id="insuranceTipsBackBtn"><span class="app-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></span> العودة</button></div>
             </div>
+            <div class="tips-tabs" id="tipsTabs">
+                <button class="tips-tab active" id="tipsTabArticles" onclick="switchTipsTab('articles')">📖 <span id="tipsTabArticlesLabel">نصائح</span></button>
+                <button class="tips-tab" id="tipsTabVideos" onclick="switchTipsTab('videos')">🎬 <span id="tipsTabVideosLabel">فيديوهات</span></button>
+            </div>
             <div id="insuranceTipsList" style="padding:0 14px 14px;"></div>
+            <div id="insuranceVideosList" style="padding:0 14px 14px;display:none;"></div>
         </div>
 
         <!-- ============================================================ -->
@@ -6392,6 +6508,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             </div>
         </div>
 
+        <div class="overlay" id="videoPlayerModal">
+            <div class="sheet">
+                <div class="grabber"></div>
+                <div class="close-x" onclick="closeVideoModal()">✕</div>
+                <h2 id="videoModalTitle" style="font-size:14px;"></h2>
+                <div class="video-embed-box" id="videoEmbedContainer"></div>
+            </div>
+        </div>
+
         <div class="overlay" id="redeemPointsModal">
             <div class="sheet">
                 <div class="grabber"></div>
@@ -6668,6 +6793,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             insuranceAssessments: {},
             offers: [],
             companyAds: [],
+            awarenessVideos: [],
+            tipsTab: 'articles',
             brokerSettings: null,
             appointments: [],
             wheelLastSpin: null,
@@ -6848,6 +6975,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 companyAdsBackBtn: 'العودة',
                 noCompanyAds: 'لا توجد إعلانات حالياً',
                 noCompanyAdsText: 'ستظهر هنا إعلانات التي يضيفها الأدمن',
+                tipsTabArticlesLabel: 'نصائح',
+                tipsTabVideosLabel: 'فيديوهات',
+                noVideos: 'لا توجد فيديوهات حالياً',
+                noVideosText: 'ستظهر هنا فيديوهات التوعية التأمينية التي يضيفها الأدمن',
                 accountCompare: 'قارن عروض التأمين',
                 accountCompareSub: 'قارن الأسعار والتغطيات بسهولة',
                 compareOffersTitle: 'قارن عروض التأمين',
@@ -7190,6 +7321,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 companyAdsBackBtn: 'Back',
                 noCompanyAds: 'No advertisements right now',
                 noCompanyAdsText: 'Insurance company advertisements added by the admin will appear here',
+                tipsTabArticlesLabel: 'Tips',
+                tipsTabVideosLabel: 'Videos',
+                noVideos: 'No videos right now',
+                noVideosText: 'Insurance awareness videos added by the admin will appear here',
                 accountCompare: 'Compare Insurance Offers',
                 accountCompareSub: 'Compare prices and coverage easily',
                 compareOffersTitle: 'Compare Insurance Offers',
@@ -7528,7 +7663,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             if (id === 'documents') renderDocumentsList(STATE.documents);
             if (id === 'companyAds') renderCompanyAdsList();
             if (id === 'compareOffers') renderCompareOffers();
-            if (id === 'insuranceTips') renderInsuranceTips();
+            if (id === 'insuranceTips') { switchTipsTab(STATE.tipsTab || 'articles');
+                renderInsuranceTips(); }
             if (id === 'referral') renderReferralScreen();
             if (id === 'pointsHub') renderPointsHub();
             if (id === 'login') {
@@ -9727,6 +9863,71 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             }).join('');
         }
 
+        function switchTipsTab(tab) {
+            STATE.tipsTab = tab;
+            var articlesBtn = document.getElementById('tipsTabArticles'),
+                videosBtn = document.getElementById('tipsTabVideos'),
+                articlesList = document.getElementById('insuranceTipsList'),
+                videosList = document.getElementById('insuranceVideosList');
+            if (articlesBtn) articlesBtn.classList.toggle('active', tab === 'articles');
+            if (videosBtn) videosBtn.classList.toggle('active', tab === 'videos');
+            if (articlesList) articlesList.style.display = (tab === 'articles') ? 'block' : 'none';
+            if (videosList) videosList.style.display = (tab === 'videos') ? 'block' : 'none';
+            if (tab === 'videos') renderVideosList();
+        }
+
+        function extractYouTubeId(url) {
+            var s = String(url || '').trim();
+            var m = s.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+            return m ? m[1] : '';
+        }
+
+        function visibleVideos() {
+            return (STATE.awarenessVideos || []).filter(function(v) {
+                return v.active !== false && extractYouTubeId(v.youtubeUrl);
+            }).sort(function(a, b) {
+                var oa = (typeof a.order === 'number') ? a.order : 999,
+                    ob = (typeof b.order === 'number') ? b.order : 999;
+                if (oa !== ob) return oa - ob;
+                return dateMillis(b.createdAt) - dateMillis(a.createdAt);
+            });
+        }
+
+        function renderVideosList() {
+            var lang = STATE.language || 'ar';
+            var c = document.getElementById('insuranceVideosList');
+            if (!c) return;
+            var list = visibleVideos();
+            if (!list.length) {
+                c.innerHTML = '<div class="empty-state">' + iconSvg('briefcase', 'icon-navy') + '<h3>' + esc(getText('noVideos')) + '</h3><p>' + esc(getText('noVideosText')) + '</p></div>';
+                return;
+            }
+            c.innerHTML = list.map(function(v) {
+                var id = extractYouTubeId(v.youtubeUrl),
+                    title = lang === 'ar' ? (v.titleAr || v.titleEn || '') : (v.titleEn || v.titleAr || ''),
+                    thumb = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+                return '<div class="video-card" onclick="openVideoModal(\'' + esc(id) + '\',\'' + esc((title || '').replace(/'/g, '')) + '\')">' +
+                    '<div class="video-thumb"><img src="' + esc(thumb) + '" alt="' + esc(title) + '" loading="lazy">' +
+                    '<div class="video-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>' +
+                    '<div class="video-card-body"><h3>' + esc(title) + '</h3></div></div>';
+            }).join('');
+        }
+
+        function openVideoModal(youtubeId, title) {
+            if (!youtubeId) return;
+            var box = document.getElementById('videoEmbedContainer'),
+                titleEl = document.getElementById('videoModalTitle');
+            if (titleEl) titleEl.textContent = title || '';
+            if (box) box.innerHTML = '<iframe src="https://www.youtube.com/embed/' + esc(youtubeId) + '?autoplay=1&rel=0" title="' + esc(title || '') + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+            openModal('videoPlayerModal');
+        }
+
+        function closeVideoModal() {
+            var box = document.getElementById('videoEmbedContainer');
+            if (box) box.innerHTML = '';
+            closeModal('videoPlayerModal');
+        }
+
         // ============================================================ //
         // REFERRAL PROGRAM                                              //
         // ============================================================ //
@@ -11381,7 +11582,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             exportItem5: 'exportItem5',
             shareViaWhatsappBadge: 'shareViaWhatsappBadge',
             shareViaMessengerBadge: 'shareViaMessengerBadge',
-            shareViaCopyBadge: 'shareViaCopyBadge'
+            shareViaCopyBadge: 'shareViaCopyBadge',
+            tipsTabArticlesLabel: 'tipsTabArticlesLabel',
+            tipsTabVideosLabel: 'tipsTabVideosLabel'
         };
 
         function setTranslatedContent(el, text) {
@@ -11585,6 +11788,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Company ads load failed', e);
                 STATE.companyAds = []; }));
+            p.push(db.collection('awarenessVideos').get().then(function(s) {
+                STATE.awarenessVideos = s.docs.map(function(d) { var x = d.data() || {};
+                    x.id = d.id; return x; });
+            }).catch(function(e) { console.warn('Awareness videos load failed', e);
+                STATE.awarenessVideos = []; }));
             p.push(db.collection('insuranceAssessments').doc(uid).get().then(function(doc) {
                 if (doc.exists) { STATE.insuranceAssessments[uid] = doc.data() || {};
                     assessmentCache[uid] = doc.data() || {}; }
