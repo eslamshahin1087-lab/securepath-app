@@ -320,4 +320,21 @@ const SmartEngine = (() => {
       console.error('[SmartEngine] syncToAdmin failed:', e.message);
       return null;
     }
-  }   
+  }  
+
+  // ═══════════════════════════════════════════════════════════════
+  // API عام
+  // ═══════════════════════════════════════════════════════════════
+  return {
+    run: run,
+    buildProfile: buildProfile,
+    calculateRiskScore: calculateRiskScore,
+    matchProducts: matchProducts,
+    generateRecommendations: generateRecommendations,
+    PRODUCT_NAMES_AR: PRODUCT_NAMES_AR,
+    JOURNEY_STAGES: JOURNEY_STAGES,
+    trackJourney: trackJourney,
+  };
+})();
+
+if (typeof window !== 'undefined') window.SmartEngine = SmartEngine;
