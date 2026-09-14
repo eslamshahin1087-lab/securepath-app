@@ -5588,7 +5588,253 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 }
 </style>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="smart-assessment.css">
+<style>
+/* ===== Smart Assessment (inlined) ===== */
+/* ═══════════════════════════════════════════════════════════════
+   Smart Assessment Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.smart-assessment {
+  max-width: 760px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;
+  direction: rtl;
+}
+
+.smart-assessment.hidden { display: none; }
+
+.smart-header { text-align: center; margin-bottom: 2rem; }
+
+.smart-icon {
+  font-size: 4rem;
+  display: inline-block;
+  animation: smartPulse 2s infinite;
+}
+
+@keyframes smartPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+
+.smart-header h2 {
+  margin: 0.5rem 0;
+  color: #1e293b;
+  font-size: 1.75rem;
+}
+
+.smart-header p {
+  color: #64748b;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: width 0.4s ease;
+  border-radius: 4px;
+}
+
+.step-counter {
+  display: inline-block;
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* الخطوات */
+.smart-step { display: none; animation: smartFadeIn 0.3s ease; }
+.smart-step.active { display: block; }
+
+@keyframes smartFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.smart-step h3 {
+  color: #1e40af;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+/* النماذج */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #374151;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-grid input,
+.form-grid select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-group label {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* أزرار التنقل */
+.smart-nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.smart-nav button {
+  padding: 0.85rem 1.75rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.2s;
+  font-family: inherit;
+}
+
+.smart-nav button:hover:not(:disabled) { transform: translateY(-2px); }
+.smart-nav button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
+.hidden { display: none !important; }
+
+/* المراجعة */
+.review-summary {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px dashed #cbd5e1;
+}
+
+.review-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.review-item:last-child { border-bottom: none; }
+
+/* النتيجة */
+.smart-result {
+  margin-top: 2rem;
+  padding: 1.75rem;
+  background: #f0f9ff;
+  border-right: 5px solid #3b82f6;
+  border-radius: 12px;
+  animation: smartFadeIn 0.5s ease;
+}
+
+.result-headline {
+  font-size: 1.4rem;
+  color: #1e40af;
+  margin: 0 0 1rem;
+}
+
+.result-badges { margin-bottom: 1.5rem; }
+
+.result-badge {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0.2rem;
+}
+
+.badge-high   { background: #fee2e2; color: #991b1b; }
+.badge-medium { background: #fef3c7; color: #92400e; }
+.badge-low    { background: #d1fae5; color: #065f46; }
+
+.smart-result h4 {
+  margin: 1.25rem 0 0.5rem;
+  color: #1e293b;
+  font-size: 1.05rem;
+}
+
+.smart-result ul, .smart-result ol {
+  padding-right: 1.25rem;
+  color: #334155;
+  line-height: 1.8;
+}
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.result-actions button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+</style>
 </head>
 <body>
 
@@ -5853,6 +6099,12 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                             <span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8 14a6 6 0 1 1 8 0c-1 1-1.5 2-1.5 4h-5C9.5 16 9 15 8 14Z"/></svg></span>
                         </div>
                         <span class="quick-label" id="quickAdvice">طلب نصيحة</span>
+                    </div>
+                    <div class="quick-card" onclick="showScreen('smartAssessment')">
+                        <div class="qicon purple icon-purple">
+                            <span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.1 3.9 2.2 5.1.6.7 1 1.4 1 2.4V17h7.6v-.5c0-1 .4-1.7 1-2.4C17.9 12.9 19 11.4 19 9a7 7 0 0 0-7-7Z"/><path d="M9.5 21h5M10 19h4"/></svg></span>
+                        </div>
+                        <span class="quick-label" id="quickSmart">التحليل الذكي</span>
                     </div>
                 </div>
             </div>
@@ -6752,6 +7004,178 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- SMART ASSESSMENT — التحليل الذكي (Smart Matching Engine)     -->
+        <!-- ============================================================ -->
+        <div class="screen smart-assessment-screen" id="smartAssessment">
+            <div class="page-top">
+                <div class="page-left">
+                    <h1 id="smartAssessmentTitle">
+                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.1 3.9 2.2 5.1.6.7 1 1.4 1 2.4V17h7.6v-.5c0-1 .4-1.7 1-2.4C17.9 12.9 19 11.4 19 9a7 7 0 0 0-7-7Z"/><path d="M9.5 21h5M10 19h4"/></svg></span></span>
+                        تحليل الحماية الذكي
+                    </h1>
+                    <p id="smartAssessmentSub">أجب على أسئلة قصيرة لنقدم لك توصية مخصصة</p>
+                </div>
+                <div class="page-actions"><button class="btn-gold-small" onclick="showScreen('home')" id="smartAssessmentBackBtn"><span class="app-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></span> العودة</button></div>
+            </div>
+            <section class="smart-assessment">
+              <div class="smart-header">
+                <div class="progress-bar">
+                  <div class="progress-fill" id="smartProgress" style="width: 0%"></div>
+                </div>
+                <span class="step-counter">الخطوة <span id="currentStep">1</span> من 5</span>
+              </div>
+
+              <!-- الخطوة 1 -->
+              <div class="smart-step active" data-step="1">
+                <h3>📋 بياناتك الأساسية</h3>
+                <div class="form-grid">
+                  <label>الاسم الكامل
+                    <input type="text" id="fullName" required placeholder="مثال: أحمد محمد">
+                  </label>
+                  <label>العمر
+                    <input type="number" id="age" min="18" max="80" required placeholder="30">
+                  </label>
+                  <label>الجنس
+                    <select id="gender">
+                      <option value="male">ذكر</option>
+                      <option value="female">أنثى</option>
+                    </select>
+                  </label>
+                  <label>الحالة الاجتماعية
+                    <select id="maritalStatus">
+                      <option value="single">أعزب</option>
+                      <option value="married">متزوج</option>
+                      <option value="divorced">مطلق</option>
+                      <option value="widowed">أرمل</option>
+                    </select>
+                  </label>
+                  <label>عدد المعالين
+                    <input type="number" id="dependents" min="0" max="10" value="0">
+                  </label>
+                  <label>المدينة
+                    <input type="text" id="city" value="القاهرة">
+                  </label>
+                </div>
+              </div>
+
+              <!-- الخطوة 2 -->
+              <div class="smart-step" data-step="2">
+                <h3>💰 وضعك المالي</h3>
+                <div class="form-grid">
+                  <label>الدخل الشهري (جنيه)
+                    <input type="number" id="monthlyIncome" min="0" step="500" placeholder="10000">
+                  </label>
+                  <label>هل لديك وثائق تأمين حالية؟
+                    <select id="hasExisting">
+                      <option value="no">لا</option>
+                      <option value="yes">نعم</option>
+                    </select>
+                  </label>
+                  <div id="existingPoliciesWrap" class="hidden" style="grid-column: 1 / -1;">
+                    <label>أنواع الوثائق الحالية</label>
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" value="LIFE"> حياة</label>
+                      <label><input type="checkbox" value="HEALTH"> صحي</label>
+                      <label><input type="checkbox" value="MOTOR"> سيارات</label>
+                      <label><input type="checkbox" value="HOME"> منازل</label>
+                      <label><input type="checkbox" value="TRAVEL"> سفر</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- الخطوة 3 -->
+              <div class="smart-step" data-step="3">
+                <h3>🏥 حالتك الصحية</h3>
+                <div class="form-grid">
+                  <label>الطول (سم) <input type="number" id="height" value="170"></label>
+                  <label>الوزن (كجم) <input type="number" id="weight" value="70"></label>
+                  <label>هل تدخن؟
+                    <select id="smoker"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>أمراض مزمنة؟
+                    <select id="chronicDisease"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>تاريخ عائلي لأمراض خطيرة؟
+                    <select id="familyHistory"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>مستوى النشاط
+                    <select id="activityLevel">
+                      <option value="low">منخفض</option>
+                      <option value="medium" selected>متوسط</option>
+                      <option value="high">عالي</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <!-- الخطوة 4 -->
+              <div class="smart-step" data-step="4">
+                <h3>🚗 نمط حياتك</h3>
+                <div class="form-grid">
+                  <label>هل تملك سيارة؟
+                    <select id="hasCar"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>هل تملك منزلًا؟
+                    <select id="hasHome"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>صاحب عمل حر؟
+                    <select id="businessOwner"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>تسافر كثيرًا؟
+                    <select id="frequentTravel"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                  <label>وظيفة بدنية شاقة؟
+                    <select id="physicalJob"><option value="no">لا</option><option value="yes">نعم</option></select>
+                  </label>
+                </div>
+
+                <div id="businessDetailsWrap" class="hidden" style="margin-top:14px;">
+                  <h4 style="margin:0 0 8px;font-size:14px;">🏢 بيانات نشاطك التجاري</h4>
+                  <div class="form-grid">
+                    <label>نوع النشاط
+                      <select id="businessType">
+                        <option value="company">شركة / مكتب خدمي</option>
+                        <option value="factory">مصنع / منشأة صناعية</option>
+                        <option value="retail">متجر / محل تجاري</option>
+                        <option value="other">أخرى</option>
+                      </select>
+                    </label>
+                    <label>عدد الموظفين
+                      <input type="number" id="businessEmployees" min="0" step="1" value="0" placeholder="0">
+                    </label>
+                    <label>هل تمتلك أو تستأجر مقرًا/مصنعًا/محلًا؟
+                      <select id="businessPremises"><option value="no">لا</option><option value="yes">نعم</option></select>
+                    </label>
+                    <label>هل يمتلك النشاط سيارات أو معدات نقل؟
+                      <select id="businessVehicles"><option value="no">لا</option><option value="yes">نعم</option></select>
+                    </label>
+                    <label>القيمة التقديرية لأصول النشاط (جنيه)
+                      <input type="number" id="businessAssetsValue" min="0" step="5000" placeholder="مثال: 200000">
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- الخطوة 5 -->
+              <div class="smart-step" data-step="5">
+                <h3>✅ مراجعة نهائية</h3>
+                <div id="reviewSummary" class="review-summary"></div>
+              </div>
+
+              <!-- أزرار التنقل -->
+              <div class="smart-nav">
+                <button id="smartPrev" class="btn-secondary" disabled>← السابق</button>
+                <button id="smartNext" class="btn-primary">التالي →</button>
+                <button id="smartSubmit" class="btn-success hidden">🚀 تحليل احتياجي</button>
+              </div>
+
+              <!-- النتيجة -->
+              <div id="smartResult" class="smart-result hidden"></div>
+            </section>
+        </div>
+
     </div>
 
     <!-- ============================================================ -->
@@ -6937,11 +7361,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 quickProducts: 'المنتجات',
                 quickAssessment: 'فحص الحماية',
                 quickAdvice: 'طلب نصيحة',
+                quickSmart: 'التحليل الذكي',
                 myPoliciesTitle: 'وثائقي التأمينية',
                 viewAllLink: 'عرض الكل →',
                 assessmentResultTitle: 'نتيجة تقييم الحماية',
                 assessmentResultSub: 'تحليل شامل لحالتك التأمينية',
                 assessmentBackBtn: 'العودة',
+                smartAssessmentTitle: 'تحليل الحماية الذكي',
+                smartAssessmentSub: 'أجب على أسئلة قصيرة لنقدم لك توصية مخصصة',
+                smartAssessmentBackBtn: 'العودة',
                 adviceTitle: 'طلب نصيحة تأمينية',
                 adviceSub: 'اختر طريقة التواصل المفضلة',
                 adviceBackBtn: 'العودة',
@@ -7283,11 +7711,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 quickProducts: 'Products',
                 quickAssessment: 'Protection Check',
                 quickAdvice: 'Request Advice',
+                quickSmart: 'Smart Analysis',
                 myPoliciesTitle: 'My Insurance Policies',
                 viewAllLink: 'View All →',
                 assessmentResultTitle: 'Protection Assessment',
                 assessmentResultSub: 'Comprehensive analysis with recommendations',
                 assessmentBackBtn: 'Back',
+                smartAssessmentTitle: 'Smart Protection Analysis',
+                smartAssessmentSub: 'Answer a few quick questions for a personalized recommendation',
+                smartAssessmentBackBtn: 'Back',
                 adviceTitle: 'Request Insurance Advice',
                 adviceSub: 'Choose your preferred method',
                 adviceBackBtn: 'Back',
@@ -11325,11 +11757,15 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             quickProducts: 'quickProducts',
             quickAssessment: 'quickAssessment',
             quickAdvice: 'quickAdvice',
+            quickSmart: 'quickSmart',
             myPoliciesTitle: 'myPoliciesTitle',
             viewAllLink: 'viewAllLink',
             assessmentResultTitle: 'assessmentResultTitle',
             assessmentResultSub: 'assessmentResultSub',
             assessmentBackBtn: 'assessmentBackBtn',
+            smartAssessmentTitle: 'smartAssessmentTitle',
+            smartAssessmentSub: 'smartAssessmentSub',
+            smartAssessmentBackBtn: 'smartAssessmentBackBtn',
             adviceTitle: 'adviceTitle',
             adviceSub: 'adviceSub',
             adviceBackBtn: 'adviceBackBtn',
@@ -11964,142 +12400,613 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         console.log('🔗 Copy Link uses a clean link/copy icon.');
         console.log('📱 Removed Twitter, Email, and Native share for a cleaner experience.');
     </script>
-<!-- ═══════════════════════════════════════════════════════════
-     قسم التحليل الذكي — Smart Assessment
-     ═══════════════════════════════════════════════════════════ -->
-<section id="smartAssessment" class="smart-assessment">
-  <div class="smart-header">
-    <div class="smart-icon">🧠</div>
-    <h2 data-i18n="smart_title">تحليل الحماية الذكي</h2>
-    <p data-i18n="smart_subtitle">أجب على أسئلة قصيرة لنقدم لك توصية مخصصة</p>
-    <div class="progress-bar">
-      <div class="progress-fill" id="smartProgress" style="width: 0%"></div>
-    </div>
-    <span class="step-counter">الخطوة <span id="currentStep">1</span> من 5</span>
-  </div>
+<script>
+/* ===== SecurePath Smart Matching Engine (inlined) ===== */
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * SecurePath Smart Matching Engine (SSME)
+ * محرك ذكي لتحليل احتياجات العميل التأمينية وربطه بالمنتج المناسب
+ * ═══════════════════════════════════════════════════════════════════
+ * Version: 1.0.0
+ * License: FRA 38062 — SecurePath (واثقتي)
+ * ═══════════════════════════════════════════════════════════════════
+ */
 
-  <!-- الخطوة 1 -->
-  <div class="smart-step active" data-step="1">
-    <h3>📋 بياناتك الأساسية</h3>
-    <div class="form-grid">
-      <label>الاسم الكامل
-        <input type="text" id="fullName" required placeholder="مثال: أحمد محمد">
-      </label>
-      <label>العمر
-        <input type="number" id="age" min="18" max="80" required placeholder="30">
-      </label>
-      <label>الجنس
-        <select id="gender">
-          <option value="male">ذكر</option>
-          <option value="female">أنثى</option>
-        </select>
-      </label>
-      <label>الحالة الاجتماعية
-        <select id="maritalStatus">
-          <option value="single">أعزب</option>
-          <option value="married">متزوج</option>
-          <option value="divorced">مطلق</option>
-          <option value="widowed">أرمل</option>
-        </select>
-      </label>
-      <label>عدد المعالين
-        <input type="number" id="dependents" min="0" max="10" value="0">
-      </label>
-      <label>المدينة
-        <input type="text" id="city" value="القاهرة">
-      </label>
-    </div>
-  </div>
+const SmartEngine = (() => {
+  'use strict';
 
-  <!-- الخطوة 2 -->
-  <div class="smart-step" data-step="2">
-    <h3>💰 وضعك المالي</h3>
-    <div class="form-grid">
-      <label>الدخل الشهري (جنيه)
-        <input type="number" id="monthlyIncome" min="0" step="500" placeholder="10000">
-      </label>
-      <label>هل لديك وثائق تأمين حالية؟
-        <select id="hasExisting">
-          <option value="no">لا</option>
-          <option value="yes">نعم</option>
-        </select>
-      </label>
-      <div id="existingPoliciesWrap" class="hidden" style="grid-column: 1 / -1;">
-        <label>أنواع الوثائق الحالية</label>
-        <div class="checkbox-group">
-          <label><input type="checkbox" value="LIFE"> حياة</label>
-          <label><input type="checkbox" value="HEALTH"> صحي</label>
-          <label><input type="checkbox" value="MOTOR"> سيارات</label>
-          <label><input type="checkbox" value="HOME"> منازل</label>
-          <label><input type="checkbox" value="TRAVEL"> سفر</label>
-        </div>
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 1: أوزان الخوارزمية
+  // ═══════════════════════════════════════════════════════════════
+  const WEIGHTS = {
+    age:              0.15,
+    maritalStatus:    0.08,
+    dependents:       0.12,
+    city:             0.05,
+    income:           0.18,
+    existingCoverage: 0.10,
+    healthScore:      0.10,
+    smoking:          0.06,
+    chronicDisease:   0.08,
+    insuraPoints:     0.05,
+    activityLevel:    0.03,
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 2: كتالوج المنتجات
+  // ═══════════════════════════════════════════════════════════════
+  const PRODUCT_CATALOG = {
+    LIFE:       { minAge: 18, maxAge: 65, minIncome: 5000,  riskFactors: ['dependents', 'married'], arName: 'تأمين الحياة' },
+    HEALTH:     { minAge: 0,  maxAge: 70, minIncome: 3000,  riskFactors: ['chronicDisease', 'smoker'], arName: 'التأمين الصحي' },
+    MOTOR:      { minAge: 18, maxAge: 75, minIncome: 2000,  riskFactors: ['hasCar'], arName: 'تأمين السيارات' },
+    HOME:       { minAge: 21, maxAge: 70, minIncome: 4000,  riskFactors: ['hasHome'], arName: 'تأمين المنازل' },
+    TRAVEL:     { minAge: 18, maxAge: 80, minIncome: 1000,  riskFactors: ['frequentTravel'], arName: 'تأمين السفر' },
+    DISABILITY: { minAge: 18, maxAge: 60, minIncome: 6000,  riskFactors: ['physicalJob'], arName: 'تأمين العجز' },
+    CRITICAL:   { minAge: 25, maxAge: 60, minIncome: 8000,  riskFactors: ['familyHistory'], arName: 'تأمين الأمراض الحرجة' },
+    BUSINESS:   { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['businessOwner'], arName: 'تأمين الأعمال (مسؤولية عامة)' },
+    FACTORY:    { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['isFactoryOwner', 'hasBusinessPremises'], arName: 'تأمين المصانع والمنشآت الصناعية', requiresBusinessOwner: true },
+    COMMERCIAL_PROPERTY: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasBusinessPremises'], arName: 'تأمين المحال والممتلكات التجارية', requiresBusinessOwner: true },
+    GROUP_HEALTH: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasEmployees'], arName: 'التأمين الصحي الجماعي للموظفين', requiresBusinessOwner: true },
+    COMMERCIAL_FLEET: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasBusinessVehicles'], arName: 'تأمين أسطول السيارات والمعدات التجارية', requiresBusinessOwner: true },
+  };
+
+  const PRODUCT_NAMES_AR = Object.fromEntries(
+    Object.entries(PRODUCT_CATALOG).map(([k, v]) => [k, v.arName])
+  );
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 3: بناء الملف الشخصي
+  // ═══════════════════════════════════════════════════════════════
+  function buildProfile(inputs) {
+    return {
+      age:              parseInt(inputs.age) || 30,
+      gender:           inputs.gender || 'male',
+      maritalStatus:    inputs.maritalStatus || 'single',
+      dependents:       parseInt(inputs.dependents) || 0,
+      city:             inputs.city || 'Cairo',
+      monthlyIncome:    parseFloat(inputs.monthlyIncome) || 0,
+      existingPolicies: inputs.existingPolicies || [],
+      height:           parseFloat(inputs.height) || 170,
+      weight:           parseFloat(inputs.weight) || 70,
+      smoker:           inputs.smoker === 'yes',
+      chronicDisease:   inputs.chronicDisease === 'yes',
+      hasCar:           inputs.hasCar === 'yes',
+      hasHome:          inputs.hasHome === 'yes',
+      businessOwner:    inputs.businessOwner === 'yes',
+      businessType:     inputs.businessType || null,
+      businessEmployees: parseInt(inputs.businessEmployees) || 0,
+      hasBusinessPremises: inputs.businessPremises === 'yes',
+      hasBusinessVehicles: inputs.businessVehicles === 'yes',
+      businessAssetsValue: parseFloat(inputs.businessAssetsValue) || 0,
+      isFactoryOwner:   inputs.businessOwner === 'yes' && inputs.businessType === 'factory',
+      hasEmployees:     (parseInt(inputs.businessEmployees) || 0) > 0,
+      frequentTravel:   inputs.frequentTravel === 'yes',
+      physicalJob:      inputs.physicalJob === 'yes',
+      familyHistory:    inputs.familyHistory === 'yes',
+      insuraPoints:     parseInt(inputs.insuraPoints) || 0,
+      activityLevel:    inputs.activityLevel || 'medium',
+      timestamp:        new Date().toISOString(),
+      userId:           inputs.userId || null,
+      fullName:         inputs.fullName || 'عميل جديد',
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 4: حساب مؤشر المخاطر
+  // ═══════════════════════════════════════════════════════════════
+  function calculateRiskScore(profile) {
+    let risk = 0;
+
+    if (profile.age > 50)       risk += 25;
+    else if (profile.age > 40)  risk += 15;
+    else if (profile.age > 30)  risk += 8;
+
+    const bmi = profile.weight / Math.pow(profile.height / 100, 2);
+    if (bmi < 18.5)       risk += 10;
+    else if (bmi > 30)    risk += 20;
+    else if (bmi > 25)    risk += 10;
+
+    if (profile.smoker)         risk += 15;
+    if (profile.chronicDisease) risk += 20;
+    if (profile.familyHistory)  risk += 10;
+
+    if (profile.activityLevel === 'high') risk -= 10;
+    if (profile.insuraPoints > 500)       risk -= 5;
+
+    return Math.max(0, Math.min(100, risk));
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 5: مطابقة المنتجات
+  // ═══════════════════════════════════════════════════════════════
+  function matchProducts(profile, riskScore) {
+    const scores = {};
+
+    for (const [key, rules] of Object.entries(PRODUCT_CATALOG)) {
+      const reasons = [];
+
+      if (profile.age < rules.minAge || profile.age > rules.maxAge) {
+        scores[key] = { score: 0, eligible: false, reasons: ['العمر خارج النطاق'] };
+        continue;
+      }
+
+      if (profile.monthlyIncome < rules.minIncome) {
+        scores[key] = { score: 0, eligible: false, reasons: ['الدخل أقل من الحد الأدنى'] };
+        continue;
+      }
+
+      if (rules.requiresBusinessOwner && !profile.businessOwner) {
+        scores[key] = { score: 0, eligible: false, reasons: ['خاص بأصحاب الأعمال فقط'] };
+        continue;
+      }
+
+      let score = 30;
+
+      for (const factor of rules.riskFactors) {
+        const matched =
+          profile[factor] ||
+          (factor === 'married' && profile.maritalStatus === 'married');
+        if (matched) {
+          score += 15;
+          reasons.push(`✓ يتوافق مع: ${factor}`);
+        }
+      }
+
+      if (riskScore > 60) {
+        score += 20;
+        reasons.push('✓ ضرورة عالية بسبب المخاطر الصحية');
+      }
+
+      if (profile.insuraPoints > 300) {
+        score += 10;
+        reasons.push('✓ خصم متاح من InsuraPoints');
+      }
+
+      if (profile.dependents > 0 && key === 'LIFE') {
+        score += 15;
+        reasons.push(`✓ لديك ${profile.dependents} معالين`);
+      }
+
+      if ((key === 'FACTORY' || key === 'COMMERCIAL_PROPERTY') && profile.businessAssetsValue > 100000) {
+        score += 15;
+        reasons.push('✓ قيمة أصول عالية تستدعي تغطية أوسع');
+      }
+
+      if (key === 'GROUP_HEALTH' && profile.businessEmployees >= 5) {
+        score += 15;
+        reasons.push(`✓ فريق من ${profile.businessEmployees} موظفين يستحق باقة جماعية`);
+      }
+
+      scores[key] = {
+        score: Math.min(100, score),
+        eligible: true,
+        reasons,
+        priority: score > 70 ? 'HIGH' : score > 45 ? 'MEDIUM' : 'LOW',
+      };
+    }
+
+    return Object.entries(scores)
+      .filter(([, v]) => v.eligible)
+      .sort((a, b) => b[1].score - a[1].score)
+      .map(([k, v]) => ({ product: k, productNameAr: PRODUCT_NAMES_AR[k], ...v }));
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 6: التوصيات
+  // ═══════════════════════════════════════════════════════════════
+  function detectCoverageGaps(profile) {
+    const gaps = [];
+    const covered = (profile.existingPolicies || []).map(p => p.type);
+
+    if (!covered.includes('HEALTH'))
+      gaps.push({ type: 'HEALTH', typeAr: 'التأمين الصحي', severity: 'HIGH', reason: 'لا يوجد تأمين صحي' });
+
+    if (!covered.includes('LIFE') && profile.dependents > 0)
+      gaps.push({ type: 'LIFE', typeAr: 'تأمين الحياة', severity: 'CRITICAL', reason: 'معالون بدون تأمين حياة' });
+
+    if (!covered.includes('MOTOR') && profile.hasCar)
+      gaps.push({ type: 'MOTOR', typeAr: 'تأمين السيارات', severity: 'HIGH', reason: 'سيارة بدون تأمين' });
+
+    if (!covered.includes('HOME') && profile.hasHome)
+      gaps.push({ type: 'HOME', typeAr: 'تأمين المنازل', severity: 'MEDIUM', reason: 'منزل بدون تأمين' });
+
+    return gaps;
+  }
+
+  function calculateEstimatedDiscount(profile) {
+    if (profile.insuraPoints > 1000) return 15;
+    if (profile.insuraPoints > 500)  return 10;
+    if (profile.insuraPoints > 200)  return 5;
+    return 0;
+  }
+
+  function buildActionItems(matches, gaps, profile) {
+    const items = [];
+    if (gaps.some(g => g.severity === 'CRITICAL'))
+      items.push('⚠️ أولوية قصوى: سد فجوة تأمين الحياة');
+    if (matches[0]) items.push(`اطلب عرض سعر لـ ${matches[0].productNameAr}`);
+    if (profile.businessOwner) {
+      if (profile.isFactoryOwner) items.push('🏭 راجع تغطية أعطال الآلات والحريق لمنشأتك الصناعية');
+      if (profile.hasBusinessPremises && !profile.isFactoryOwner) items.push('🏢 قيّم تغطية ممتلكات مقر نشاطك التجاري');
+      if (profile.hasEmployees) items.push(`👥 لديك ${profile.businessEmployees} موظف/موظفين — قارن باقات التأمين الصحي الجماعي`);
+      if (profile.hasBusinessVehicles) items.push('🚚 قارن عروض تأمين أسطول السيارات والمعدات التجارية');
+    }
+    if (profile.insuraPoints > 200) items.push('استبدل نقاطك للحصول على خصم');
+    items.push('جدّد وثائقك قبل انتهائها بـ 30 يومًا');
+    return items;
+  }
+
+  function generateRecommendations(matches, profile, riskScore) {
+    const top = matches[0];
+    const gaps = detectCoverageGaps(profile);
+
+    return {
+      headline: top
+        ? `التوصية الأولى: ${top.productNameAr} (توافق ${top.score}%)`
+        : 'نحتاج لمزيد من المعلومات لتقديم توصية دقيقة',
+      primaryRecommendation: top ? top.product : null,
+      primaryRecommendationAr: top ? top.productNameAr : null,
+      alternativeRecommendations: matches.slice(1, 4).map(m => m.product),
+      coverageGaps: gaps,
+      riskLevel: riskScore > 60 ? 'مرتفع' : riskScore > 35 ? 'متوسط' : 'منخفض',
+      estimatedDiscount: calculateEstimatedDiscount(profile),
+      actionItems: buildActionItems(matches, gaps, profile),
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 7: تتبع الرحلة
+  // ═══════════════════════════════════════════════════════════════
+  const JOURNEY_STAGES = [
+    'PROFILED', 'ASSESSED', 'MATCHED', 'QUOTED',
+    'CONTACTED', 'CONVERTED', 'RENEWED', 'LAPSED',
+  ];
+
+  async function trackJourney(userId, stage, metadata = {}) {
+    if (!window.firebase?.firestore || !userId) return;
+    try {
+      const db = firebase.firestore();
+      await db.collection('journeyTracking').add({
+        userId,
+        stage,
+        metadata,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      console.warn('[SmartEngine] trackJourney failed:', e.message);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // القسم 8: المزامنة مع لوحة الأدمن
+  // ═══════════════════════════════════════════════════════════════
+    async function syncToAdmin(assessment) {
+    if (!window.firebase?.firestore) return null;
+    try {
+      const db = firebase.firestore();
+
+      // ═══════════════════════════════════════════════════════════
+      // 1. اكتب التفاصيل الكاملة في protectionAssessments
+      // ═══════════════════════════════════════════════════════════
+      const ref = await db.collection('protectionAssessments').add({
+        clientId: assessment.clientId,
+        clientName: assessment.clientName,
+        profile: assessment.profile,
+        riskScore: assessment.riskScore,
+        matches: assessment.matches,
+        recommendations: assessment.recommendations,
+        riskLevel: assessment.recommendations.riskLevel,
+        primaryRecommendation: assessment.recommendations.primaryRecommendation,
+        primaryRecommendationAr: assessment.recommendations.primaryRecommendationAr,
+        engineVersion: assessment.engineVersion,
+        source: 'smart-engine',
+        status: 'new',
+        reviewedBy: null,
+        adminNotes: '',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      // ═══════════════════════════════════════════════════════════
+      // 2. ⭐ اكتب أيضًا في insuranceAssessments (للظهور في لوحة الأدمن)
+      // ═══════════════════════════════════════════════════════════
+      if (assessment.clientId) {
+        const statusAr =
+          assessment.recommendations.riskLevel === 'مرتفع' ? 'يحتاج تحسين عاجل' :
+          assessment.recommendations.riskLevel === 'متوسط' ? 'يحتاج تحسين' :
+          'ممتاز';
+
+        await db.collection('insuranceAssessments').doc(assessment.clientId).set({
+          score: 100 - assessment.riskScore,
+          status: statusAr,
+          activeCount: (assessment.profile.existingPolicies || []).length,
+          ownedCount: (assessment.profile.existingPolicies || []).length,
+          gaps: assessment.recommendations.coverageGaps.map(g => g.type),
+          recommendations: assessment.recommendations.actionItems,
+          factors: [
+            { name: 'profileCompleteness', value: 15, max: 15 },
+            { name: 'coverageBreadth', value: 30, max: 45 },
+            { name: 'activePolicies', value: (assessment.profile.existingPolicies || []).length * 5, max: 20 },
+            { name: 'verifiedDocuments', value: 5, max: 10 },
+            { name: 'smartEngine', value: assessment.matches[0]?.score || 0, max: 10 },
+          ],
+          source: 'smart-engine',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        console.log('✅ [SmartEngine] كتب في insuranceAssessments:', assessment.clientId);
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      // 3. إشعار
+      // ═══════════════════════════════════════════════════════════
+      await db.collection('adminNotifications').add({
+        type: 'NEW_ASSESSMENT',
+        priority: assessment.recommendations.riskLevel === 'مرتفع' ? 'HIGH' : 'NORMAL',
+        clientName: assessment.clientName,
+        assessmentId: ref.id,
+        productRecommendation: assessment.recommendations.primaryRecommendationAr,
+        riskLevel: assessment.recommendations.riskLevel,
+        read: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return ref.id;
+    } catch (e) {
+      console.error('[SmartEngine] syncToAdmin failed:', e.message);
+      return null;
+    }
+  }  
+
+  
+
+  // ═══════════════════════════════════════════════════════════════
+  // 9. الدالة الرئيسية (Main Entry Point)
+  // ═══════════════════════════════════════════════════════════════
+  async function run(userInputs) {
+    const profile = buildProfile(userInputs);
+    const riskScore = calculateRiskScore(profile);
+    const matches = matchProducts(profile, riskScore);
+    const recommendations = generateRecommendations(matches, profile, riskScore);
+
+    const result = {
+      clientId: userInputs.userId || null,
+      clientName: profile.fullName,
+      profile,
+      riskScore,
+      matches,
+      recommendations,
+      engineVersion: '1.0.0',
+    };
+
+    const assessmentId = await syncToAdmin(result);
+    await trackJourney(userInputs.userId, 'ASSESSED', { riskScore, assessmentId });
+
+    return { ...result, assessmentId };
+  }
+// ═══════════════════════════════════════════════════════════════
+  // API عام
+  // ═══════════════════════════════════════════════════════════════
+  return {
+    run: run,
+    buildProfile: buildProfile,
+    calculateRiskScore: calculateRiskScore,
+    matchProducts: matchProducts,
+    generateRecommendations: generateRecommendations,
+    PRODUCT_NAMES_AR: PRODUCT_NAMES_AR,
+    JOURNEY_STAGES: JOURNEY_STAGES,
+    trackJourney: trackJourney,
+  };
+})();
+
+if (typeof window !== 'undefined') window.SmartEngine = SmartEngine;
+</script>
+<script>
+/* ===== Smart Assessment UI Controller (inlined) ===== */
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * Smart Assessment UI Controller
+ * واجهة استمارة التحليل الذكي (5 خطوات)
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+const SmartAssessmentUI = (() => {
+  'use strict';
+
+  let currentStep = 1;
+  const TOTAL_STEPS = 5;
+
+  function $(id) { return document.getElementById(id); }
+
+  function updateProgress() {
+    const pct = (currentStep / TOTAL_STEPS) * 100;
+    if ($('smartProgress')) $('smartProgress').style.width = pct + '%';
+    if ($('currentStep')) $('currentStep').textContent = currentStep;
+
+    document.querySelectorAll('.smart-step').forEach(el => {
+      el.classList.toggle('active', parseInt(el.dataset.step) === currentStep);
+    });
+
+    if ($('smartPrev')) $('smartPrev').disabled = currentStep === 1;
+    if ($('smartNext')) $('smartNext').classList.toggle('hidden', currentStep === TOTAL_STEPS);
+    if ($('smartSubmit')) $('smartSubmit').classList.toggle('hidden', currentStep !== TOTAL_STEPS);
+
+    if (currentStep === TOTAL_STEPS) buildReview();
+  }
+
+  function collectInputs() {
+    const existingPolicies = Array.from(
+      document.querySelectorAll('#existingPoliciesWrap input:checked')
+    ).map(cb => ({ type: cb.value }));
+
+    const user = window.firebase?.auth?.().currentUser;
+
+    return {
+      userId: user?.uid || null,
+      fullName: $('fullName')?.value || user?.displayName || 'عميل جديد',
+      age: $('age')?.value,
+      gender: $('gender')?.value,
+      maritalStatus: $('maritalStatus')?.value,
+      dependents: $('dependents')?.value,
+      city: $('city')?.value,
+      monthlyIncome: $('monthlyIncome')?.value,
+      existingPolicies,
+      height: $('height')?.value,
+      weight: $('weight')?.value,
+      smoker: $('smoker')?.value,
+      chronicDisease: $('chronicDisease')?.value,
+      familyHistory: $('familyHistory')?.value,
+      activityLevel: $('activityLevel')?.value,
+      hasCar: $('hasCar')?.value,
+      hasHome: $('hasHome')?.value,
+      businessOwner: $('businessOwner')?.value,
+      businessType: $('businessType')?.value,
+      businessEmployees: $('businessEmployees')?.value,
+      businessPremises: $('businessPremises')?.value,
+      businessVehicles: $('businessVehicles')?.value,
+      businessAssetsValue: $('businessAssetsValue')?.value,
+      frequentTravel: $('frequentTravel')?.value,
+      physicalJob: $('physicalJob')?.value,
+      insuraPoints: window.currentUserPoints || 0,
+    };
+  }
+
+  function buildReview() {
+    const i = collectInputs();
+    if (!$('reviewSummary')) return;
+    $('reviewSummary').innerHTML = `
+      <div class="review-item"><strong>الاسم:</strong> ${i.fullName}</div>
+      <div class="review-item"><strong>العمر:</strong> ${i.age} سنة</div>
+      <div class="review-item"><strong>الحالة:</strong> ${i.maritalStatus}</div>
+      <div class="review-item"><strong>المعالون:</strong> ${i.dependents}</div>
+      <div class="review-item"><strong>الدخل:</strong> ${i.monthlyIncome} جنيه</div>
+      <div class="review-item"><strong>مدخن:</strong> ${i.smoker === 'yes' ? 'نعم' : 'لا'}</div>
+      <div class="review-item"><strong>أمراض مزمنة:</strong> ${i.chronicDisease === 'yes' ? 'نعم' : 'لا'}</div>
+      <div class="review-item"><strong>سيارة:</strong> ${i.hasCar === 'yes' ? 'نعم' : 'لا'}</div>
+      <div class="review-item"><strong>منزل:</strong> ${i.hasHome === 'yes' ? 'نعم' : 'لا'}</div>
+      ${i.businessOwner === 'yes' ? `
+      <div class="review-item"><strong>صاحب عمل:</strong> نعم (${
+        { company: 'شركة/مكتب خدمي', factory: 'مصنع/منشأة صناعية', retail: 'متجر/محل تجاري', other: 'أخرى' }[i.businessType] || i.businessType
+      })</div>
+      <div class="review-item"><strong>عدد الموظفين:</strong> ${i.businessEmployees || 0}</div>
+      <div class="review-item"><strong>مقر/مصنع/محل:</strong> ${i.businessPremises === 'yes' ? 'نعم' : 'لا'}</div>
+      <div class="review-item"><strong>سيارات/معدات النشاط:</strong> ${i.businessVehicles === 'yes' ? 'نعم' : 'لا'}</div>
+      <div class="review-item"><strong>قيمة أصول النشاط:</strong> ${i.businessAssetsValue ? i.businessAssetsValue + ' جنيه' : 'غير محدد'}</div>
+      ` : ''}
+    `;
+  }
+
+  async function submit() {
+    const btn = $('smartSubmit');
+    if (!btn) return;
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = '⏳ جاري التحليل...';
+
+    try {
+      const inputs = collectInputs();
+
+      if (!inputs.age || !inputs.monthlyIncome) {
+        throw new Error('يرجى إكمال البيانات الأساسية (العمر والدخل)');
+      }
+
+      const result = await SmartEngine.run(inputs);
+      renderResult(result);
+
+      if (typeof SmartEngine.trackJourney === 'function') {
+        await SmartEngine.trackJourney(inputs.userId, 'MATCHED', {
+          assessmentId: result.assessmentId,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      alert('حدث خطأ: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  }
+
+  function renderResult(result) {
+    const el = $('smartResult');
+    if (!el) return;
+    el.classList.remove('hidden');
+    const r = result.recommendations;
+    const riskClass = r.riskLevel === 'مرتفع' ? 'high' : r.riskLevel === 'متوسط' ? 'medium' : 'low';
+
+    el.innerHTML = `
+      <h3 class="result-headline">${r.headline}</h3>
+      <div class="result-badges">
+        <span class="result-badge badge-${riskClass}">مستوى المخاطر: ${r.riskLevel}</span>
+        ${r.estimatedDiscount > 0
+          ? `<span class="result-badge badge-low">خصم ${r.estimatedDiscount}% متاح</span>`
+          : ''}
       </div>
-    </div>
-  </div>
 
-  <!-- الخطوة 3 -->
-  <div class="smart-step" data-step="3">
-    <h3>🏥 حالتك الصحية</h3>
-    <div class="form-grid">
-      <label>الطول (سم) <input type="number" id="height" value="170"></label>
-      <label>الوزن (كجم) <input type="number" id="weight" value="70"></label>
-      <label>هل تدخن؟
-        <select id="smoker"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>أمراض مزمنة؟
-        <select id="chronicDisease"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>تاريخ عائلي لأمراض خطيرة؟
-        <select id="familyHistory"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>مستوى النشاط
-        <select id="activityLevel">
-          <option value="low">منخفض</option>
-          <option value="medium" selected>متوسط</option>
-          <option value="high">عالي</option>
-        </select>
-      </label>
-    </div>
-  </div>
+      <h4>🎯 التوصيات البديلة:</h4>
+      <ul>
+        ${r.alternativeRecommendations.length
+          ? r.alternativeRecommendations.map(p => `<li>${SmartEngine.PRODUCT_NAMES_AR[p] || p}</li>`).join('')
+          : '<li>لا توجد توصيات بديلة</li>'}
+      </ul>
 
-  <!-- الخطوة 4 -->
-  <div class="smart-step" data-step="4">
-    <h3>🚗 نمط حياتك</h3>
-    <div class="form-grid">
-      <label>هل تملك سيارة؟
-        <select id="hasCar"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>هل تملك منزلًا؟
-        <select id="hasHome"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>صاحب عمل حر؟
-        <select id="businessOwner"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>تسافر كثيرًا؟
-        <select id="frequentTravel"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-      <label>وظيفة بدنية شاقة؟
-        <select id="physicalJob"><option value="no">لا</option><option value="yes">نعم</option></select>
-      </label>
-    </div>
-  </div>
+      <h4>⚠️ الفجوات التأمينية:</h4>
+      <ul>
+        ${r.coverageGaps.length
+          ? r.coverageGaps.map(g =>
+              `<li><strong>${g.typeAr}</strong>: ${g.reason} <em>(${g.severity})</em></li>`
+            ).join('')
+          : '<li>لا توجد فجوات حالية — تغطيتك شاملة 👌</li>'}
+      </ul>
 
-  <!-- الخطوة 5 -->
-  <div class="smart-step" data-step="5">
-    <h3>✅ مراجعة نهائية</h3>
-    <div id="reviewSummary" class="review-summary"></div>
-  </div>
+      <h4>📋 خطواتك القادمة:</h4>
+      <ol>${r.actionItems.map(a => `<li>${a}</li>`).join('')}</ol>
 
-  <!-- أزرار التنقل -->
-  <div class="smart-nav">
-    <button id="smartPrev" class="btn-secondary" disabled>← السابق</button>
-    <button id="smartNext" class="btn-primary">التالي →</button>
-    <button id="smartSubmit" class="btn-success hidden">🚀 تحليل احتياجي</button>
-  </div>
+      <div class="result-actions">
+        <button class="btn-primary"
+          onclick="SmartAssessmentUI.requestQuote('${r.primaryRecommendation || ''}')">
+          📩 اطلب عرض سعر
+        </button>
+        <button class="btn-secondary" onclick="window.print()">🖨️ طباعة التقرير</button>
+      </div>
+    `;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-  <!-- النتيجة -->
-  <div id="smartResult" class="smart-result hidden"></div>
-</section><script src="securepath-smart-engine.js"></script>
-<script src="smart-assessment-ui.js"></script>
+  function requestQuote(product) {
+    if (typeof window.requestQuote === 'function') {
+      window.requestQuote(product);
+    } else {
+      alert('سيتم التواصل معك قريبًا لعرض سعر ' + (SmartEngine.PRODUCT_NAMES_AR[product] || product));
+    }
+  }
+
+  function init() {
+    if (!$('smartAssessment')) return;
+
+    $('smartNext')?.addEventListener('click', () => {
+      if (currentStep < TOTAL_STEPS) { currentStep++; updateProgress(); }
+    });
+    $('smartPrev')?.addEventListener('click', () => {
+      if (currentStep > 1) { currentStep--; updateProgress(); }
+    });
+    $('smartSubmit')?.addEventListener('click', submit);
+
+    $('hasExisting')?.addEventListener('change', e => {
+      $('existingPoliciesWrap')?.classList.toggle('hidden', e.target.value === 'no');
+    });
+
+    $('businessOwner')?.addEventListener('change', e => {
+      $('businessDetailsWrap')?.classList.toggle('hidden', e.target.value === 'no');
+    });
+
+    updateProgress();
+  }
+
+  return { init, submit, requestQuote, collectInputs };
+})();
+
+document.addEventListener('DOMContentLoaded', () => SmartAssessmentUI.init());
+</script>
 </body>
 </html>
