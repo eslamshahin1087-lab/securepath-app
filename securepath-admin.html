@@ -729,6 +729,7 @@
           <button data-view="renewals" onclick="showView('renewals',this)"><span class="icon"><i class="fas fa-sync-alt"></i></span><span class="label">التجديدات</span></button>
           <button data-view="offers" onclick="showView('offers',this)"><span class="icon"><i class="fas fa-tags"></i></span><span class="label">العروض</span></button>
           <button data-view="companyAds" onclick="showView('companyAds',this)"><span class="icon"><i class="fas fa-bullhorn"></i></span><span class="label">إعلانات</span></button>
+          <button data-view="videos" onclick="showView('videos',this)"><span class="icon"><i class="fas fa-film"></i></span><span class="label">فيديوهات توعية</span></button>
           <button data-view="leads" onclick="showView('leads',this)"><span class="icon"><i class="fas fa-user-tag"></i></span><span class="label">العملاء المحتملون</span><b id="leadsBadge" class="badge hidden">0</b></button>
           <div class="nav-section">الإعدادات</div>
           <button data-view="brokerSettings" onclick="showView('brokerSettings',this)"><span class="icon"><i class="fas fa-id-card"></i></span><span class="label">بيانات الوسيط</span></button>
@@ -903,6 +904,17 @@
               </div>
             </div>
             <div class="grid grid-3" id="adsGrid"></div>
+          </div>
+
+          <!-- Awareness Videos -->
+          <div id="v-videos" class="view">
+            <div class="toolbar">
+              <div class="search"><input id="videoSearch" oninput="renderVideosAdmin()" placeholder="ابحث بعنوان الفيديو"></div>
+              <div class="actions">
+                <button class="btn btn-primary" onclick="openVideoAdminModal()"><i class="fas fa-film"></i> إضافة فيديو</button>
+              </div>
+            </div>
+            <div class="grid grid-3" id="videosGrid"></div>
           </div>
 
           <!-- Leads (العملاء المحتملون) -->
@@ -1275,6 +1287,52 @@
     </div>
   </div>
 
+  <div id="videoModal" class="overlay">
+    <div class="modal" style="width:min(700px,96vw)">
+      <div class="modal-header">
+        <h2><i class="fas fa-film"></i> <span id="videoModalTitleAdmin">إضافة فيديو توعية</span></h2>
+        <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>عنوان الفيديو (عربي) <span style="color:var(--red)">*</span></label>
+          <input id="videoTitleAr" placeholder="مثال: ما هو التأمين الشامل؟">
+        </div>
+        <div class="field">
+          <label>عنوان الفيديو (إنجليزي)</label>
+          <input id="videoTitleEn" placeholder="e.g. What is comprehensive insurance?">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>رابط يوتيوب <span style="color:var(--red)">*</span></label>
+        <input id="videoYoutubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>الحالة</label>
+          <select id="videoStatus">
+            <option value="active">نشط (يظهر للعملاء)</option>
+            <option value="inactive">متوقف (مخفي)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>ترتيب العرض (اختياري)</label>
+          <input id="videoOrder" type="number" placeholder="0">
+        </div>
+      </div>
+
+      <div id="videoErr" class="error"></div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('videoModal')">إلغاء</button>
+        <button class="btn btn-primary" id="createVideoBtn" onclick="saveVideoAdmin()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Profile Modals -->
   <div id="clientProfileModal" class="overlay"><div class="modal" style="width:min(900px,96vw)"><div class="modal-header"><div><h2 id="profileName" style="margin:0;font-size:20px">ملف العميل</h2><div id="profileMeta" style="font-size:13px;color:var(--muted)"></div></div><button class="modal-close" onclick="closeModal('clientProfileModal')"><i class="fas fa-times"></i></button></div><div id="profileBody"></div></div></div>
   <div id="companyProfileModal" class="overlay"><div class="modal" style="width:min(900px,96vw)"><div class="modal-header"><div><h2 id="companyProfileName" style="margin:0;font-size:20px">شركة التأمين</h2><div id="companyProfileMeta" style="font-size:13px;color:var(--muted)"></div></div><button class="modal-close" onclick="closeModal('companyProfileModal')"><i class="fas fa-times"></i></button></div><div id="companyProfileBody"></div></div></div>
@@ -1317,7 +1375,7 @@
     const APP_STATE = {
       clients: [], policies: [], payments: [], claims: [], documents: [],
       messages: [], notifications: [], activity: [], products: [], companies: [],
-      assessments: [], types: [], offers: [], companyAds: [], leads: [], pointsLog: [],
+      assessments: [], types: [], offers: [], companyAds: [], awarenessVideos: [], leads: [], pointsLog: [],
       appointments: [], complaints: [],
        loaded: false, currentUser: null, currentChat: null,
        syncing: false, lastSyncAt: null, syncErrors: []
@@ -1668,7 +1726,7 @@
        setConnectionState('online', 'جاري المزامنة…');
        var existingBanner = document.getElementById('dataLoadErrorBanner');
        if (existingBanner) existingBanner.style.display = 'none';
-      const names = ['clients', 'policies', 'payments', 'claims', 'documents', 'messages', 'notifications', 'activity', 'products', 'companies', 'insuranceAssessments', 'insuranceTypes', 'offers', 'companyAds', 'pointsLog'];
+      const names = ['clients', 'policies', 'payments', 'claims', 'documents', 'messages', 'notifications', 'activity', 'products', 'companies', 'insuranceAssessments', 'insuranceTypes', 'offers', 'companyAds', 'awarenessVideos', 'pointsLog'];
       const results = await Promise.all(names.map(n => loadCollection(n)));
       names.forEach((n, i) => {
         if (n === 'insuranceAssessments') APP_STATE.assessments = results[i];
@@ -2618,6 +2676,162 @@
       toast(newStatus === 'active' ? '✅ تم التفعيل' : '⏸️ تم الإيقاف');
     }
 
+    function extractYouTubeIdAdmin(url) {
+      const s = String(url || '').trim();
+      const m = s.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+      return m ? m[1] : '';
+    }
+
+    function openVideoAdminModal(videoId) {
+      document.getElementById('videoErr').textContent = '';
+      document.getElementById('videoModalTitleAdmin').textContent = videoId ? 'تعديل فيديو' : 'إضافة فيديو توعية';
+      document.getElementById('createVideoBtn').textContent = videoId ? '🔄 تحديث' : 'حفظ';
+
+      document.getElementById('videoTitleAr').value = '';
+      document.getElementById('videoTitleEn').value = '';
+      document.getElementById('videoYoutubeUrl').value = '';
+      document.getElementById('videoStatus').value = 'active';
+      document.getElementById('videoOrder').value = '';
+
+      if (videoId) {
+        const v = APP_STATE.awarenessVideos?.find(x => x.id === videoId);
+        if (v) {
+          document.getElementById('videoTitleAr').value = v.titleAr || '';
+          document.getElementById('videoTitleEn').value = v.titleEn || '';
+          document.getElementById('videoYoutubeUrl').value = v.youtubeUrl || '';
+          document.getElementById('videoStatus').value = v.active === false ? 'inactive' : 'active';
+          document.getElementById('videoOrder').value = (typeof v.order === 'number') ? v.order : '';
+          document.getElementById('createVideoBtn').dataset.videoId = videoId;
+        }
+      } else {
+        document.getElementById('createVideoBtn').dataset.videoId = '';
+      }
+
+      openModal('videoModal');
+    }
+
+    async function saveVideoAdmin() {
+      const titleAr = document.getElementById('videoTitleAr').value.trim();
+      const youtubeUrl = document.getElementById('videoYoutubeUrl').value.trim();
+      const err = document.getElementById('videoErr');
+      err.textContent = '';
+
+      if (!titleAr || !youtubeUrl) {
+        err.textContent = '⚠️ يرجى إدخال عنوان الفيديو ورابط يوتيوب';
+        return;
+      }
+      if (!extractYouTubeIdAdmin(youtubeUrl)) {
+        err.textContent = '⚠️ رابط اليوتيوب غير صالح';
+        return;
+      }
+
+      const videoId = document.getElementById('createVideoBtn').dataset.videoId;
+      const isEdit = !!videoId;
+      const orderVal = document.getElementById('videoOrder').value;
+
+      const data = {
+        titleAr,
+        titleEn: document.getElementById('videoTitleEn').value.trim(),
+        youtubeUrl,
+        active: document.getElementById('videoStatus').value === 'active',
+        order: orderVal !== '' ? Number(orderVal) : null,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      if (!isEdit) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+
+      showLoading('createVideoBtn', isEdit ? 'جاري التحديث...' : 'جاري الحفظ...');
+
+      try {
+        let saved;
+        if (isEdit) {
+          await updateDocument('awarenessVideos', videoId, data);
+          saved = { id: videoId, ...data };
+          const idx = APP_STATE.awarenessVideos.findIndex(v => v.id === videoId);
+          if (idx > -1) APP_STATE.awarenessVideos[idx] = saved;
+        } else {
+          const ref = await db.collection('awarenessVideos').add(data);
+          saved = { id: ref.id, ...data };
+          if (!APP_STATE.awarenessVideos) APP_STATE.awarenessVideos = [];
+          APP_STATE.awarenessVideos.push(saved);
+        }
+        hideLoading('createVideoBtn');
+        closeModal('videoModal');
+        renderVideosAdmin();
+        toast(isEdit ? '✅ تم تحديث الفيديو' : '✅ تم إضافة الفيديو');
+      } catch (e) {
+        hideLoading('createVideoBtn');
+        err.textContent = '❌ ' + e.message;
+        toast('❌ فشل الحفظ', true);
+      }
+    }
+
+    function renderVideosAdmin() {
+      const q = (document.getElementById('videoSearch')?.value || '').toLowerCase();
+      const videos = (APP_STATE.awarenessVideos || []).filter(v =>
+        [v.titleAr, v.titleEn].join(' ').toLowerCase().includes(q)
+      );
+
+      const grid = document.getElementById('videosGrid');
+      if (!grid) return;
+
+      if (!videos.length) {
+        grid.innerHTML = '<div class="empty" style="grid-column:span 3;padding:60px 20px;">لا توجد فيديوهات</div>';
+        return;
+      }
+
+      grid.innerHTML = videos.map(v => {
+        const isActive = v.active !== false;
+        const badge = isActive ? 'badge-success' : 'badge-gray';
+        const label = isActive ? 'نشط' : 'متوقف';
+        const ytId = extractYouTubeIdAdmin(v.youtubeUrl);
+        const thumb = ytId ? `<img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" alt="${esc(v.titleAr)}" style="width:100%;height:100%;object-fit:cover;">` :
+          `<div style="font-size:48px;opacity:0.3;"><i class="fas fa-film"></i></div>`;
+
+        return `
+          <div class="product-card">
+            <div class="image" style="height:140px;background:linear-gradient(135deg, var(--navy-100), var(--paper));position:relative;">
+              ${thumb}
+              <div style="position:absolute;top:10px;right:10px;z-index:2;">
+                <span class="badge ${badge}">${label}</span>
+              </div>
+            </div>
+            <div class="body">
+              <h4>${esc(v.titleAr)}</h4>
+              ${v.titleEn ? `<p>${esc(v.titleEn)}</p>` : ''}
+              <div class="product-tags">
+                ${typeof v.order === 'number' ? `<span class="badge badge-info"><i class="fas fa-sort-numeric-down"></i> ترتيب ${v.order}</span>` : ''}
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-outline btn-xs" title="تعديل الفيديو" onclick="openVideoAdminModal('${v.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deleteVideoAdmin('${v.id}')"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-success btn-xs" onclick="toggleVideoStatusAdmin('${v.id}')">
+                  ${isActive ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}
+                </button>
+                <a href="${esc(v.youtubeUrl)}" target="_blank" class="btn btn-outline btn-xs" style="text-decoration:none;"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function deleteVideoAdmin(id) {
+      if (!confirm('هل أنت متأكد من حذف هذا الفيديو؟')) return;
+      await deleteDocument('awarenessVideos', id);
+      APP_STATE.awarenessVideos = APP_STATE.awarenessVideos?.filter(v => v.id !== id) || [];
+      toast('✅ تم الحذف');
+      renderVideosAdmin();
+    }
+
+    async function toggleVideoStatusAdmin(id) {
+      const v = APP_STATE.awarenessVideos?.find(x => x.id === id);
+      if (!v) { toast('❌ غير موجود', true); return; }
+      const newActive = !(v.active !== false);
+      await updateDocument('awarenessVideos', id, { active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      await refreshCollection('awarenessVideos');
+      toast(newActive ? '✅ تم التفعيل' : '⏸️ تم الإيقاف');
+    }
+
     function renderConversations() {
       const ids = [];
       APP_STATE.messages.forEach(m => { const id = m.clientId || m.uid; if (id && !ids.includes(id)) ids.push(id); });
@@ -3436,10 +3650,10 @@
       document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
       const target = el || document.querySelector(`[data-view="${view}"]`);
       if (target) target.classList.add('active');
-      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
-       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
-       const iconColors = { clients: 'c-blue', policies: 'c-green', claims: 'c-red', documents: 'c-purple', appointments: 'c-blue', complaints: 'c-red', renewals: 'c-green', products: 'c-purple', reports: 'c-purple', assessments: 'c-green', compliance: 'c-green', messages: 'c-blue', notifications: 'c-red', activity: 'c-purple', companyAds: 'c-purple', leads: 'c-blue' };
-      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
+      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', videos: 'فيديوهات توعية', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
+       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', videos: 'fa-film', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
+       const iconColors = { clients: 'c-blue', policies: 'c-green', claims: 'c-red', documents: 'c-purple', appointments: 'c-blue', complaints: 'c-red', renewals: 'c-green', products: 'c-purple', reports: 'c-purple', assessments: 'c-green', compliance: 'c-green', messages: 'c-blue', notifications: 'c-red', activity: 'c-purple', companyAds: 'c-purple', videos: 'c-purple', leads: 'c-blue' };
+      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', videos: 'إدارة فيديوهات التوعية', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
       document.getElementById('title').textContent = titles[view] || view;
        document.getElementById('pageIcon').innerHTML = `<i class="fas ${icons[view] || 'fa-chart-pie'}" aria-hidden="true"></i>`;
        document.getElementById('pageIcon').className = 'page-icon' + (iconColors[view] ? ' ' + iconColors[view] : '');
@@ -3808,7 +4022,7 @@
       var steps = [
         ['renderDashboard', renderDashboard], ['renderHomeContent', renderHomeContent], ['renderClients', renderClients],
         ['renderPolicies', renderPolicies], ['renderPayments', renderPayments], ['renderClaims', renderClaims],
-        ['renderDocuments', renderDocuments], ['renderOffers', renderOffers], ['renderCompanyAds', renderCompanyAds],
+        ['renderDocuments', renderDocuments], ['renderOffers', renderOffers], ['renderCompanyAds', renderCompanyAds], ['renderVideosAdmin', renderVideosAdmin],
         ['renderConversations', renderConversations], ['renderRenewals', renderRenewals], ['renderCompanies', renderCompanies],
         ['renderInsuranceTypes', renderInsuranceTypes], ['renderProducts', renderProducts], ['renderReports', renderReports],
         ['renderAssessments', renderAssessments], ['renderPointsAdmin', renderPointsAdmin], ['renderNotifications', renderNotifications],
