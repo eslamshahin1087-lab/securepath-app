@@ -322,7 +322,33 @@ const SmartEngine = (() => {
     }
   }  
 
+  
+
   // ═══════════════════════════════════════════════════════════════
+  // 9. الدالة الرئيسية (Main Entry Point)
+  // ═══════════════════════════════════════════════════════════════
+  async function run(userInputs) {
+    const profile = buildProfile(userInputs);
+    const riskScore = calculateRiskScore(profile);
+    const matches = matchProducts(profile, riskScore);
+    const recommendations = generateRecommendations(matches, profile, riskScore);
+
+    const result = {
+      clientId: userInputs.userId || null,
+      clientName: profile.fullName,
+      profile,
+      riskScore,
+      matches,
+      recommendations,
+      engineVersion: '1.0.0',
+    };
+
+    const assessmentId = await syncToAdmin(result);
+    await trackJourney(userInputs.userId, 'ASSESSED', { riskScore, assessmentId });
+
+    return { ...result, assessmentId };
+  }
+// ═══════════════════════════════════════════════════════════════
   // API عام
   // ═══════════════════════════════════════════════════════════════
   return {
