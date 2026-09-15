@@ -6411,7 +6411,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         <!-- ============================================================ -->
         <!-- ACCOUNT SCREEN - ENHANCED with profile picture              -->
         <!-- ============================================================ -->
-        <div class="screen" id="account">
+        <div class="screen" id="account" data-no-icon-normalize="1">
             <!-- Header -->
             <div class="account-header">
                 <div class="profile-pic-wrapper" onclick="document.getElementById('profilePicInput').click()">
@@ -6438,7 +6438,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             <div class="account-body">
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionProfile">👤 الملف الشخصي</div>
+                    <div class="section-label" id="accountSectionProfile">الملف الشخصي</div>
                     <div class="section-divider"></div>
                     <div class="acc-card" onclick="showScreen('profileEdit')">
                         <div class="ac-icon navy"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m4 16 10-10 4 4L8 20l-4 1 1-5Z"/><path d="m13 7 4 4"/></svg></span></div>
@@ -6448,7 +6448,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionServices">🛡️ الخدمات التأمينية</div>
+                    <div class="section-label" id="accountSectionServices">الخدمات التأمينية</div>
                     <div class="section-divider"></div>
                     <div class="acc-card" onclick="runFullAssessment()">
                         <div class="ac-icon gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-9"/></svg></span></div>
@@ -6488,24 +6488,24 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionLegal">⚖️ القوانين والسياسات</div>
+                    <div class="section-label" id="accountSectionLegal">القوانين والسياسات</div>
                     <div class="section-divider"></div>
                     <div class="acc-card" onclick="openPrivacyModal()">
                         <div class="ac-icon purple"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg></span></div>
                         <div class="ac-info"><span class="ac-title" id="accountPrivacyPolicy">سياسة الخصوصية</span><span class="ac-sub" id="accountPrivacyPolicySub">اطلع على سياسة حماية بياناتك</span></div>
                         <span class="ac-arrow">›</span>
-                        <span class="ac-badge gold" id="privacyBadge">📜</span>
+                        <span class="ac-badge gold" id="privacyBadge">مهم</span>
                     </div>
                     <div class="acc-card" onclick="openComplaintsModal()">
                         <div class="ac-icon red"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg></span></div>
                         <div class="ac-info"><span class="ac-title" id="accountComplaints">تقديم شكوى</span><span class="ac-sub" id="accountComplaintsSub">تواصل مع إدارة الشكاوى</span></div>
                         <span class="ac-arrow">›</span>
-                        <span class="ac-badge gold" id="complaintsBadge">📩</span>
+                        <span class="ac-badge gold" id="complaintsBadge">دعم</span>
                     </div>
                 </div>
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionSupport">💬 التواصل والدعم</div>
+                    <div class="section-label" id="accountSectionSupport">التواصل والدعم</div>
                     <div class="section-divider"></div>
                     <div class="acc-card" onclick="showScreen('appointments')">
                         <div class="ac-icon navy"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></div>
@@ -6521,13 +6521,13 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionFun">🎁 ترفيه ومشاركة</div>
+                    <div class="section-label" id="accountSectionFun">ترفيه ومشاركة</div>
                     <div class="section-divider"></div>
                     <div class="acc-card highlight" onclick="openWheelModal()">
                         <div class="ac-icon gold"><span class="app-icon animated spin"><svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM2 7h20v3H2z"/><path d="M12 7v13M12 7c-4 0-6-2-4-4 2-2 4 1 4 4Zm0 0c4 0 6-2 4-4-2-2-4 1-4 4Z"/></svg></span></div>
                         <div class="ac-info"><span class="ac-title" id="accountWheel">جرب حظك</span><span class="ac-sub" id="accountWheelSub">اربح جوائز حصرية</span></div>
                         <span class="ac-arrow">›</span>
-                        <span class="ac-badge gold" id="wheelNewBadge">🎰 جديد</span>
+                        <span class="ac-badge gold" id="wheelNewBadge">جديد</span>
                     </div>
                     <div class="acc-card" onclick="shareAppLink()">
                         <div class="ac-icon gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8 15.8 6.2M8.2 13.2l7.6 4.6"/></svg></span></div>
@@ -6537,7 +6537,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 </div>
 
                 <div class="acc-section">
-                    <div class="section-label" id="accountSectionAccount">⚙️ الحساب</div>
+                    <div class="section-label" id="accountSectionAccount">الحساب</div>
                     <div class="section-divider"></div>
                     <div class="acc-card" onclick="handleLogout()" style="border-color:var(--red);">
                         <div class="ac-icon red"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span></div>
@@ -7285,7 +7285,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 statActiveLabel: 'وثائق سارية',
                 statExpiringLabel: 'تجديد قريب',
                 statDocsLabel: 'مستندات مفعلة',
-                wheelNewBadge: '🎰 جديد',
+                wheelNewBadge: 'جديد',
                 markAllReadBtn: 'تحديد الكل كمقروء',
                 profileSaveBtn: '💾 حفظ التغييرات',
                 btnDownloadDoc: 'تحميل / فتح المستند',
@@ -7556,16 +7556,16 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 assessmentStep4: '✅ استمر في متابعة وثائقك الحالية',
                 assessmentStep5: '🔄 قم بتجديد الوثائق قبل موعد انتهائها',
                 assessmentStep6: '📈 تابع مؤشر الحماية الخاص بك بانتظام',
-                accountSectionProfile: '👤 الملف الشخصي',
-                accountSectionServices: '🛡️ الخدمات التأمينية',
-                accountSectionSupport: '💬 التواصل والدعم',
-                accountSectionFun: '🎁 ترفيه ومشاركة',
-                accountSectionAccount: '⚙️ الحساب',
+                accountSectionProfile: 'الملف الشخصي',
+                accountSectionServices: 'الخدمات التأمينية',
+                accountSectionSupport: 'التواصل والدعم',
+                accountSectionFun: 'ترفيه ومشاركة',
+                accountSectionAccount: 'الحساب',
                 accStatPolicies: 'وثائق',
                 accStatActive: 'سارية',
                 accStatScore: 'مؤشر الحماية',
                 liveChatBadge: 'متاح',
-                accountSectionLegal: '⚖️ القوانين والسياسات',
+                accountSectionLegal: 'القوانين والسياسات',
                 accountPrivacyPolicy: 'سياسة الخصوصية',
                 accountPrivacyPolicySub: 'اطلع على سياسة حماية بياناتك',
                 accountComplaints: 'تقديم شكوى',
@@ -7638,7 +7638,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 statActiveLabel: 'Active policies',
                 statExpiringLabel: 'Renewal due soon',
                 statDocsLabel: 'Verified documents',
-                wheelNewBadge: '🎰 New',
+                wheelNewBadge: 'New',
                 markAllReadBtn: 'Mark all as read',
                 profileSaveBtn: '💾 Save Changes',
                 btnDownloadDoc: 'Download / Open document',
@@ -7909,16 +7909,16 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 assessmentStep4: '✅ Continue monitoring your current policies',
                 assessmentStep5: '🔄 Renew policies before their expiry date',
                 assessmentStep6: '📈 Track your protection score regularly',
-                accountSectionProfile: '👤 Profile',
-                accountSectionServices: '🛡️ Insurance Services',
-                accountSectionSupport: '💬 Support & Communication',
-                accountSectionFun: '🎁 Fun & Sharing',
-                accountSectionAccount: '⚙️ Account',
+                accountSectionProfile: 'Profile',
+                accountSectionServices: 'Insurance Services',
+                accountSectionSupport: 'Support & Communication',
+                accountSectionFun: 'Fun & Sharing',
+                accountSectionAccount: 'Account',
                 accStatPolicies: 'Policies',
                 accStatActive: 'Active',
                 accStatScore: 'Score',
                 liveChatBadge: 'Available',
-                accountSectionLegal: '⚖️ Legal & Policies',
+                accountSectionLegal: 'Legal & Policies',
                 accountPrivacyPolicy: 'Privacy Policy',
                 accountPrivacyPolicySub: 'Learn how we protect your data',
                 accountComplaints: 'Submit a Complaint',
