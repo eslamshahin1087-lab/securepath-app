@@ -7202,6 +7202,17 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         };
         if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
+        // ═══════════════════════════════════════════════════
+// 🔐 تفعيل الدخول التلقائي (حفظ الجلسة بشكل دائم)
+// ═══════════════════════════════════════════════════
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() => {
+    console.log('✅ Auth persistence: LOCAL (الدخول التلقائي مفعّل)');
+  })
+  .catch((error) => {
+    console.error('❌ خطأ في setPersistence:', error);
+  });
+
         var auth = firebase.auth();
         var db = firebase.firestore();
 
