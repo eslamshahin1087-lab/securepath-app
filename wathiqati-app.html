@@ -5588,251 +5588,352 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 }
 </style>
 <link rel="manifest" href="manifest.json">
+
 <style>
-/* ===== Smart Assessment (inlined) ===== */
-/* ═══════════════════════════════════════════════════════════════
-   Smart Assessment Styles
-   ═══════════════════════════════════════════════════════════════ */
-
-.smart-assessment {
-  max-width: 760px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-  border-radius: 20px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;
-  direction: rtl;
+/* ===== SecurePath Smart Assessment — Insurance Needs Analysis ===== */
+.smart-assessment-screen .smart-assessment{
+  max-width:760px;
+  margin:18px auto 24px;
+  padding:18px;
+  background:var(--card,#fff);
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-lg,24px);
+  box-shadow:var(--shadow-lg,0 18px 45px rgba(14,42,92,.15));
+  font-family:var(--font-ar,"Tajawal",sans-serif);
+  direction:rtl;
 }
-
-.smart-assessment.hidden { display: none; }
-
-.smart-header { text-align: center; margin-bottom: 2rem; }
-
-.smart-icon {
-  font-size: 4rem;
-  display: inline-block;
-  animation: smartPulse 2s infinite;
+.smart-assessment-screen .smart-header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  padding:10px 0 14px;
+  background:linear-gradient(180deg,var(--card,#fff) 84%,rgba(255,255,255,0));
 }
-
-@keyframes smartPulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.1); }
+.smart-assessment-screen .smart-progress-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
 }
-
-.smart-header h2 {
-  margin: 0.5rem 0;
-  color: #1e293b;
-  font-size: 1.75rem;
+.smart-assessment-screen .smart-section-kicker{
+  color:var(--gold,#F2BD63);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.7px;
+  text-transform:uppercase;
 }
-
-.smart-header p {
-  color: #64748b;
-  margin: 0.5rem 0 1.5rem;
+.smart-assessment-screen .step-counter{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  color:var(--navy,#0E2A5C);
+  font-weight:800;
+  font-size:11px;
 }
-
-.progress-bar {
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  margin: 1rem 0;
-  overflow: hidden;
+.smart-assessment-screen .progress-bar{
+  height:7px;
+  background:rgba(14,42,92,.08);
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:999px;
+  overflow:hidden;
 }
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  transition: width 0.4s ease;
-  border-radius: 4px;
+.smart-assessment-screen .progress-fill{
+  height:100%;
+  width:0;
+  background:var(--gradient-gold,linear-gradient(135deg,#F2BD63,#FFD98F));
+  border-radius:999px;
+  transition:width .35s ease;
+  box-shadow:0 0 14px rgba(242,189,99,.28);
 }
-
-.step-counter {
-  display: inline-block;
-  color: #3b82f6;
-  font-weight: 700;
-  font-size: 0.9rem;
+.smart-assessment-screen .smart-step{
+  display:none;
+  animation:smartStepIn .28s ease;
 }
-
-/* الخطوات */
-.smart-step { display: none; animation: smartFadeIn 0.3s ease; }
-.smart-step.active { display: block; }
-
-@keyframes smartFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+.smart-assessment-screen .smart-step.active{display:block}
+@keyframes smartStepIn{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:translateY(0)}
 }
-
-.smart-step h3 {
-  color: #1e40af;
-  margin-bottom: 1.5rem;
-  font-size: 1.25rem;
+.smart-assessment-screen .smart-step h3{
+  margin:4px 0 6px;
+  color:var(--navy,#0E2A5C);
+  font-size:16px;
+  font-weight:900;
 }
-
-/* النماذج */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+.smart-assessment-screen .smart-step .step-help{
+  color:var(--muted,#718096);
+  font-size:11px;
+  line-height:1.7;
+  margin-bottom:14px;
 }
-
-.form-grid label {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  color: #374151;
-  gap: 0.5rem;
-  font-size: 0.95rem;
+.smart-assessment-screen .smart-subsection{
+  margin:14px 0;
+  padding:12px;
+  background:linear-gradient(145deg,var(--paper,#F5F8FC),var(--card,#fff));
+  border:1px solid var(--line,#E2E9F2);
+  border-right:3px solid var(--gold,#F2BD63);
+  border-radius:var(--radius-md,16px);
 }
-
-.form-grid input,
-.form-grid select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #fff;
+.smart-assessment-screen .smart-subsection h4{
+  margin:0 0 10px;
+  color:var(--navy,#0E2A5C);
+  font-size:12px;
+  font-weight:900;
 }
-
-.form-grid input:focus,
-.form-grid select:focus {
-  border-color: #3b82f6;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+.smart-assessment-screen .form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
 }
-
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+.smart-assessment-screen .form-grid .full{grid-column:1/-1}
+.smart-assessment-screen .form-grid label,
+.smart-assessment-screen .radio-grid label,
+.smart-assessment-screen .check-card{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  color:var(--slate,#25324A);
+  font-size:11px;
+  font-weight:800;
 }
-
-.checkbox-group label {
-  flex-direction: row;
-  align-items: center;
-  gap: 0.35rem;
-  font-weight: 500;
-  padding: 0.4rem 0.75rem;
-  background: #f1f5f9;
-  border-radius: 8px;
-  cursor: pointer;
+.smart-assessment-screen .form-grid input,
+.smart-assessment-screen .form-grid select,
+.smart-assessment-screen .form-grid textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-sm,10px);
+  background:var(--paper,#F5F8FC);
+  color:var(--slate,#25324A);
+  font-family:inherit;
+  font-size:12px;
+  outline:none;
+  transition:.2s ease;
 }
-
-/* أزرار التنقل */
-.smart-nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  margin-top: 2rem;
+.smart-assessment-screen .form-grid textarea{min-height:72px;resize:vertical}
+.smart-assessment-screen .form-grid input:focus,
+.smart-assessment-screen .form-grid select:focus,
+.smart-assessment-screen .form-grid textarea:focus{
+  border-color:var(--gold,#F2BD63);
+  box-shadow:0 0 0 3px rgba(242,189,99,.16);
+  background:var(--card,#fff);
 }
-
-.smart-nav button {
-  padding: 0.85rem 1.75rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.15s, opacity 0.2s;
-  font-family: inherit;
+.smart-assessment-screen .radio-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:8px;
 }
-
-.smart-nav button:hover:not(:disabled) { transform: translateY(-2px); }
-.smart-nav button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: #fff;
+.smart-assessment-screen .radio-card{
+  position:relative;
+  cursor:pointer;
 }
-
-.btn-secondary {
-  background: #e5e7eb;
-  color: #374151;
+.smart-assessment-screen .radio-card input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
 }
-
-.btn-success {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
+.smart-assessment-screen .radio-card span{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:62px;
+  padding:10px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-md,16px);
+  background:var(--card,#fff);
+  color:var(--slate,#25324A);
+  font-size:11px;
+  font-weight:900;
+  transition:.2s ease;
 }
-
-.hidden { display: none !important; }
-
-/* المراجعة */
-.review-summary {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 2px dashed #cbd5e1;
+.smart-assessment-screen .radio-card span::before{
+  content:"";
+  width:10px;height:10px;flex:0 0 10px;
+  border:2px solid var(--gold,#F2BD63);
+  border-radius:50%;
 }
-
-.review-item {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #e2e8f0;
-  color: #334155;
+.smart-assessment-screen .radio-card input:checked+span{
+  border-color:var(--gold,#F2BD63);
+  background:var(--gold-soft,#FFF2D7);
+  box-shadow:0 8px 20px rgba(14,42,92,.07);
 }
-
-.review-item:last-child { border-bottom: none; }
-
-/* النتيجة */
-.smart-result {
-  margin-top: 2rem;
-  padding: 1.75rem;
-  background: #f0f9ff;
-  border-right: 5px solid #3b82f6;
-  border-radius: 12px;
-  animation: smartFadeIn 0.5s ease;
+.smart-assessment-screen .radio-card input:checked+span::before{
+  background:var(--gold,#F2BD63);
+  box-shadow:inset 0 0 0 2px var(--gold-soft,#FFF2D7);
 }
-
-.result-headline {
-  font-size: 1.4rem;
-  color: #1e40af;
-  margin: 0 0 1rem;
+.smart-assessment-screen .checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
 }
-
-.result-badges { margin-bottom: 1.5rem; }
-
-.result-badge {
-  display: inline-block;
-  padding: 0.3rem 0.85rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin: 0.2rem;
+.smart-assessment-screen .check-card{
+  flex-direction:row;
+  align-items:center;
+  padding:9px 10px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-sm,10px);
+  background:var(--card,#fff);
+  cursor:pointer;
 }
-
-.badge-high   { background: #fee2e2; color: #991b1b; }
-.badge-medium { background: #fef3c7; color: #92400e; }
-.badge-low    { background: #d1fae5; color: #065f46; }
-
-.smart-result h4 {
-  margin: 1.25rem 0 0.5rem;
-  color: #1e293b;
-  font-size: 1.05rem;
+.smart-assessment-screen .check-card input{
+  width:17px;height:17px;
+  accent-color:var(--gold,#F2BD63);
+  flex:0 0 17px;
 }
-
-.smart-result ul, .smart-result ol {
-  padding-right: 1.25rem;
-  color: #334155;
-  line-height: 1.8;
+.smart-assessment-screen .smart-callout{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:var(--radius-sm,10px);
+  background:linear-gradient(135deg,rgba(242,189,99,.16),rgba(242,189,99,.05));
+  border:1px solid rgba(242,189,99,.32);
+  color:var(--navy,#0E2A5C);
+  font-size:10.5px;
+  line-height:1.7;
+  font-weight:700;
 }
-
-.result-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
+.smart-assessment-screen .smart-nav{
+  display:flex;
+  gap:8px;
+  margin-top:16px;
 }
-
-.result-actions button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
+.smart-assessment-screen .smart-nav button{
+  flex:1;
+  min-height:44px;
+}
+.smart-assessment-screen .smart-nav .smart-submit-btn{
+  background:var(--gradient-gold,linear-gradient(135deg,#F2BD63,#FFD98F));
+  color:var(--navy,#0E2A5C);
+  font-weight:900;
+}
+.smart-assessment-screen .review-summary{
+  display:grid;
+  gap:8px;
+}
+.smart-assessment-screen .review-group{
+  padding:12px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-md,16px);
+  background:var(--paper,#F5F8FC);
+}
+.smart-assessment-screen .review-group h4{
+  margin:0 0 8px;
+  color:var(--navy,#0E2A5C);
+  font-size:12px;
+  font-weight:900;
+}
+.smart-assessment-screen .review-item{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:6px 0;
+  border-bottom:1px dashed var(--line,#E2E9F2);
+  color:var(--slate,#25324A);
+  font-size:10.5px;
+}
+.smart-assessment-screen .review-item:last-child{border-bottom:0}
+.smart-assessment-screen .smart-result{
+  margin-top:16px;
+  padding:15px;
+  background:var(--paper,#F5F8FC);
+  border:1px solid var(--line,#E2E9F2);
+  border-right:4px solid var(--gold,#F2BD63);
+  border-radius:var(--radius-md,16px);
+}
+.smart-assessment-screen .result-headline{
+  color:var(--navy,#0E2A5C);
+  font-size:16px;
+  font-weight:900;
+  line-height:1.55;
+  margin:0 0 8px;
+}
+.smart-assessment-screen .result-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.smart-assessment-screen .result-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:9.5px;
+  font-weight:900;
+}
+.smart-assessment-screen .badge-high{background:var(--red-light,#FFF0ED);color:var(--red,#C9543E)}
+.smart-assessment-screen .badge-medium{background:var(--gold-soft,#FFF2D7);color:#8A6D1B}
+.smart-assessment-screen .badge-low{background:var(--green-light,#E6F7ED);color:var(--green,#16805B)}
+.smart-assessment-screen .need-list{
+  display:grid;
+  gap:8px;
+  margin:10px 0 0;
+}
+.smart-assessment-screen .need-card{
+  padding:10px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-sm,10px);
+  background:var(--card,#fff);
+}
+.smart-assessment-screen .need-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.smart-assessment-screen .need-name{
+  color:var(--navy,#0E2A5C);
+  font-size:11px;
+  font-weight:900;
+}
+.smart-assessment-screen .need-score{
+  color:#8A6D1B;
+  font-size:10px;
+  font-weight:900;
+}
+.smart-assessment-screen .need-meter{
+  height:5px;
+  margin:6px 0;
+  background:rgba(14,42,92,.08);
+  border-radius:999px;
+  overflow:hidden;
+}
+.smart-assessment-screen .need-meter i{
+  display:block;height:100%;
+  background:var(--gradient-gold,linear-gradient(135deg,#F2BD63,#FFD98F));
+  border-radius:999px;
+}
+.smart-assessment-screen .need-reason{
+  color:var(--muted,#718096);
+  font-size:9.5px;
+  line-height:1.65;
+}
+.smart-assessment-screen .gap-list,
+.smart-assessment-screen .action-list{
+  margin:8px 0 0;
+  padding-right:17px;
+  color:var(--slate,#25324A);
+  font-size:10.5px;
+  line-height:1.75;
+}
+.smart-assessment-screen .result-actions{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+.smart-assessment-screen .result-actions button{flex:1;min-height:42px}
+html.dark-mode .smart-assessment-screen .smart-header{
+  background:linear-gradient(180deg,var(--card,#141A28) 84%,rgba(20,26,40,0));
+}
+html.dark-mode .smart-assessment-screen .radio-card span,
+html.dark-mode .smart-assessment-screen .check-card,
+html.dark-mode .smart-assessment-screen .need-card{background:#111827}
+html.dark-mode .smart-assessment-screen .form-grid input,
+html.dark-mode .smart-assessment-screen .form-grid select,
+html.dark-mode .smart-assessment-screen .form-grid textarea{background:#0F172A}
+@media (max-width:600px){
+  .smart-assessment-screen .smart-assessment{margin:10px 10px 18px;padding:13px}
+  .smart-assessment-screen .form-grid,
+  .smart-assessment-screen .radio-grid,
+  .smart-assessment-screen .checkbox-grid{grid-template-columns:1fr}
+  .smart-assessment-screen .smart-nav,
+  .smart-assessment-screen .result-actions{flex-direction:column}
 }
 </style>
 </head>
@@ -7007,174 +7108,183 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
         <!-- ============================================================ -->
         <!-- SMART ASSESSMENT — التحليل الذكي (Smart Matching Engine)     -->
         <!-- ============================================================ -->
-        <div class="screen smart-assessment-screen" id="smartAssessment">
-            <div class="page-top">
-                <div class="page-left">
-                    <h1 id="smartAssessmentTitle">
-                        <span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.1 3.9 2.2 5.1.6.7 1 1.4 1 2.4V17h7.6v-.5c0-1 .4-1.7 1-2.4C17.9 12.9 19 11.4 19 9a7 7 0 0 0-7-7Z"/><path d="M9.5 21h5M10 19h4"/></svg></span></span>
-                        تحليل الحماية الذكي
-                    </h1>
-                    <p id="smartAssessmentSub">أجب على أسئلة قصيرة لنقدم لك توصية مخصصة</p>
-                </div>
-                <div class="page-actions"><button class="btn-gold-small" onclick="showScreen('home')" id="smartAssessmentBackBtn"><span class="app-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></span> العودة</button></div>
-            </div>
-            <section class="smart-assessment">
-              <div class="smart-header">
-                <div class="progress-bar">
-                  <div class="progress-fill" id="smartProgress" style="width: 0%"></div>
-                </div>
-                <span class="step-counter">الخطوة <span id="currentStep">1</span> من 5</span>
-              </div>
+        
+<div class="screen smart-assessment-screen" id="smartAssessment">
+  <div class="page-top">
+    <div class="page-left">
+      <h1 id="smartAssessmentTitle">
+        <span class="icon-gold"><span class="app-icon"><svg viewBox="0 0 24 24"><path d="M12 2 20 6v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4Z"/><path d="m9 12 2 2 4-5"/></svg></span></span>
+        التحليل الذكي
+      </h1>
+      <p id="smartAssessmentSub">تحليل احتياج تأميني مبني على المخاطر والأصول والالتزامات وليس على العمر والدخل فقط</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn-gold-small" onclick="showScreen('home')" id="smartAssessmentBackBtn">
+        <span class="app-icon"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></span>
+        العودة
+      </button>
+    </div>
+  </div>
 
-              <!-- الخطوة 1 -->
-              <div class="smart-step active" data-step="1">
-                <h3>📋 بياناتك الأساسية</h3>
-                <div class="form-grid">
-                  <label>الاسم الكامل
-                    <input type="text" id="fullName" required placeholder="مثال: أحمد محمد">
-                  </label>
-                  <label>العمر
-                    <input type="number" id="age" min="18" max="80" required placeholder="30">
-                  </label>
-                  <label>الجنس
-                    <select id="gender">
-                      <option value="male">ذكر</option>
-                      <option value="female">أنثى</option>
-                    </select>
-                  </label>
-                  <label>الحالة الاجتماعية
-                    <select id="maritalStatus">
-                      <option value="single">أعزب</option>
-                      <option value="married">متزوج</option>
-                      <option value="divorced">مطلق</option>
-                      <option value="widowed">أرمل</option>
-                    </select>
-                  </label>
-                  <label>عدد المعالين
-                    <input type="number" id="dependents" min="0" max="10" value="0">
-                  </label>
-                  <label>المدينة
-                    <input type="text" id="city" value="القاهرة">
-                  </label>
-                </div>
-              </div>
+  <section class="smart-assessment">
+    <div class="smart-header">
+      <div class="smart-progress-meta">
+        <span class="smart-section-kicker">Insurance Needs Analysis</span>
+        <span class="step-counter">المرحلة <span id="currentStep">1</span> من <span id="smartTotalSteps">7</span></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="smartProgress" style="width:0%"></div></div>
+    </div>
 
-              <!-- الخطوة 2 -->
-              <div class="smart-step" data-step="2">
-                <h3>💰 وضعك المالي</h3>
-                <div class="form-grid">
-                  <label>الدخل الشهري (جنيه)
-                    <input type="number" id="monthlyIncome" min="0" step="500" placeholder="10000">
-                  </label>
-                  <label>هل لديك وثائق تأمين حالية؟
-                    <select id="hasExisting">
-                      <option value="no">لا</option>
-                      <option value="yes">نعم</option>
-                    </select>
-                  </label>
-                  <div id="existingPoliciesWrap" class="hidden" style="grid-column: 1 / -1;">
-                    <label>أنواع الوثائق الحالية</label>
-                    <div class="checkbox-group">
-                      <label><input type="checkbox" value="LIFE"> حياة</label>
-                      <label><input type="checkbox" value="HEALTH"> صحي</label>
-                      <label><input type="checkbox" value="MOTOR"> سيارات</label>
-                      <label><input type="checkbox" value="HOME"> منازل</label>
-                      <label><input type="checkbox" value="TRAVEL"> سفر</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <!-- 1: نوع العميل -->
+    <div class="smart-step active" data-step="1">
+      <h3>1. تحديد نوع العميل</h3>
+      <p class="step-help">نحدد أولًا الإطار التحليلي لأن احتياجات الفرد والأسرة تختلف جذريًا عن احتياجات الشركة أو المنشأة الصناعية.</p>
+      <div class="radio-grid">
+        <label class="radio-card"><input type="radio" name="clientType" id="clientTypeIndividual" value="individual" checked><span>👤 فرد / أسرة</span></label>
+        <label class="radio-card"><input type="radio" name="clientType" id="clientTypeCorporate" value="corporate"><span>🏢 شركة / مؤسسة / صاحب نشاط</span></label>
+      </div>
+      <div class="smart-callout">ستتغير الأسئلة تلقائيًا حسب اختيارك، وسيتم بناء أولويات التغطيات وفقًا لإجاباتك الفعلية.</div>
+    </div>
 
-              <!-- الخطوة 3 -->
-              <div class="smart-step" data-step="3">
-                <h3>🏥 حالتك الصحية</h3>
-                <div class="form-grid">
-                  <label>الطول (سم) <input type="number" id="height" value="170"></label>
-                  <label>الوزن (كجم) <input type="number" id="weight" value="70"></label>
-                  <label>هل تدخن؟
-                    <select id="smoker"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>أمراض مزمنة؟
-                    <select id="chronicDisease"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>تاريخ عائلي لأمراض خطيرة؟
-                    <select id="familyHistory"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>مستوى النشاط
-                    <select id="activityLevel">
-                      <option value="low">منخفض</option>
-                      <option value="medium" selected>متوسط</option>
-                      <option value="high">عالي</option>
-                    </select>
-                  </label>
-                </div>
-              </div>
-
-              <!-- الخطوة 4 -->
-              <div class="smart-step" data-step="4">
-                <h3>🚗 نمط حياتك</h3>
-                <div class="form-grid">
-                  <label>هل تملك سيارة؟
-                    <select id="hasCar"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>هل تملك منزلًا؟
-                    <select id="hasHome"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>صاحب عمل حر؟
-                    <select id="businessOwner"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>تسافر كثيرًا؟
-                    <select id="frequentTravel"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                  <label>وظيفة بدنية شاقة؟
-                    <select id="physicalJob"><option value="no">لا</option><option value="yes">نعم</option></select>
-                  </label>
-                </div>
-
-                <div id="businessDetailsWrap" class="hidden" style="margin-top:14px;">
-                  <h4 style="margin:0 0 8px;font-size:14px;">🏢 بيانات نشاطك التجاري</h4>
-                  <div class="form-grid">
-                    <label>نوع النشاط
-                      <select id="businessType">
-                        <option value="company">شركة / مكتب خدمي</option>
-                        <option value="factory">مصنع / منشأة صناعية</option>
-                        <option value="retail">متجر / محل تجاري</option>
-                        <option value="other">أخرى</option>
-                      </select>
-                    </label>
-                    <label>عدد الموظفين
-                      <input type="number" id="businessEmployees" min="0" step="1" value="0" placeholder="0">
-                    </label>
-                    <label>هل تمتلك أو تستأجر مقرًا/مصنعًا/محلًا؟
-                      <select id="businessPremises"><option value="no">لا</option><option value="yes">نعم</option></select>
-                    </label>
-                    <label>هل يمتلك النشاط سيارات أو معدات نقل؟
-                      <select id="businessVehicles"><option value="no">لا</option><option value="yes">نعم</option></select>
-                    </label>
-                    <label>القيمة التقديرية لأصول النشاط (جنيه)
-                      <input type="number" id="businessAssetsValue" min="0" step="5000" placeholder="مثال: 200000">
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- الخطوة 5 -->
-              <div class="smart-step" data-step="5">
-                <h3>✅ مراجعة نهائية</h3>
-                <div id="reviewSummary" class="review-summary"></div>
-              </div>
-
-              <!-- أزرار التنقل -->
-              <div class="smart-nav">
-                <button id="smartPrev" class="btn-secondary" disabled>← السابق</button>
-                <button id="smartNext" class="btn-primary">التالي →</button>
-                <button id="smartSubmit" class="btn-success hidden">🚀 تحليل احتياجي</button>
-              </div>
-
-              <!-- النتيجة -->
-              <div id="smartResult" class="smart-result hidden"></div>
-            </section>
+    <!-- 2: التحليل الشخصي -->
+    <div class="smart-step" data-step="2">
+      <h3>2. التحليل الشخصي والأسري</h3>
+      <p class="step-help">نقيس مصادر الخطر التي قد تؤثر على دخل العميل والأسرة والأصول الشخصية.</p>
+      <div class="form-grid">
+        <label>الاسم الكامل<input type="text" id="fullName" placeholder="مثال: أحمد محمد"></label>
+        <label>العمر<input type="number" id="age" min="18" max="85" required placeholder="35"></label>
+        <label>الجنس<select id="gender"><option value="male">ذكر</option><option value="female">أنثى</option></select></label>
+        <label>الحالة الاجتماعية<select id="maritalStatus"><option value="single">أعزب</option><option value="married">متزوج</option><option value="divorced">مطلق</option><option value="widowed">أرمل</option></select></label>
+        <label>عدد المعالين<input type="number" id="dependents" min="0" max="15" value="0"></label>
+        <label>طبيعة العمل<select id="workNature"><option value="office">مكتبي / إداري</option><option value="professional">مهني / فني</option><option value="field">ميداني</option><option value="hazardous">عمل مرتفع الخطورة</option><option value="mixed">متنوع</option></select></label>
+        <label>هل تعتمد الأسرة بشكل رئيسي على دخلك؟<select id="familyIncomeDependency"><option value="low">منخفض</option><option value="medium" selected>متوسط</option><option value="high">مرتفع</option></select></label>
+        <label>التزامات تمويلية / قروض (جنيه)<input type="number" id="financingObligations" min="0" step="1000" value="0"></label>
+      </div>
+      <div class="smart-subsection">
+        <h4>الأصول ونمط الحياة</h4>
+        <div class="form-grid">
+          <label>هل تملك سيارة؟<select id="hasCar"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>هل تملك عقارًا / منزلًا؟<select id="hasHome"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>هل تسافر بشكل متكرر؟<select id="frequentTravel"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>هوايات عالية الخطورة؟<select id="highRiskHobbies"><option value="no">لا</option><option value="yes">نعم</option></select></label>
         </div>
+      </div>
+    </div>
+
+    <!-- 3: المالي والتغطية -->
+    <div class="smart-step" data-step="3">
+      <h3>3. الوضع المالي والتغطية الحالية</h3>
+      <p class="step-help">لا نعتبر الدخل وحده مؤشرًا كافيًا؛ نربطه بالالتزامات، حماية الأسرة، ومدى اتساع التغطية الحالية.</p>
+      <div class="form-grid">
+        <label>الدخل الشهري (جنيه)<input type="number" id="monthlyIncome" min="0" step="500" placeholder="15000"></label>
+        <label>المدخرات / صندوق الطوارئ (جنيه)<input type="number" id="emergencySavings" min="0" step="1000" value="0"></label>
+        <label>قيمة السيارة التقريبية (جنيه)<input type="number" id="carValue" min="0" step="5000" value="0"></label>
+        <label>قيمة العقار / الممتلكات الشخصية (جنيه)<input type="number" id="homeValue" min="0" step="10000" value="0"></label>
+      </div>
+      <div class="smart-subsection">
+        <h4>وثائق التأمين الحالية</h4>
+        <label class="check-card"><input type="checkbox" id="hasExistingCheck"> لدي وثائق تأمين حالية</label>
+        <div id="existingPoliciesWrap" class="checkbox-grid" style="margin-top:8px;">
+          <label class="check-card"><input type="checkbox" value="LIFE"> حياة</label>
+          <label class="check-card"><input type="checkbox" value="HEALTH"> صحي</label>
+          <label class="check-card"><input type="checkbox" value="MOTOR"> سيارات</label>
+          <label class="check-card"><input type="checkbox" value="HOME"> ممتلكات شخصية / منزل</label>
+          <label class="check-card"><input type="checkbox" value="TRAVEL"> سفر</label>
+          <label class="check-card"><input type="checkbox" value="DISABILITY"> عجز</label>
+          <label class="check-card"><input type="checkbox" value="CRITICAL"> أمراض حرجة</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: الصحة -->
+    <div class="smart-step" data-step="4">
+      <h3>4. الصحة والتعرض الشخصي</h3>
+      <p class="step-help">هذه المؤشرات تساعد على ترتيب Health / Life / Critical Illness / Disability، وليس إصدار قرار اكتتاب نهائي.</p>
+      <div class="form-grid">
+        <label>الطول (سم)<input type="number" id="height" value="170"></label>
+        <label>الوزن (كجم)<input type="number" id="weight" value="70"></label>
+        <label>هل تدخن؟<select id="smoker"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>أمراض مزمنة؟<select id="chronicDisease"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>تاريخ عائلي لأمراض خطيرة؟<select id="familyHistory"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>مستوى النشاط<select id="activityLevel"><option value="low">منخفض</option><option value="medium" selected>متوسط</option><option value="high">عالي</option></select></label>
+        <label class="full">تفاصيل صحية إضافية / ملاحظات<textarea id="healthNotes" placeholder="اختياري — اكتب ما ترى أنه مهم للتحليل"></textarea></label>
+      </div>
+    </div>
+
+    <!-- 5: الشركات -->
+    <div class="smart-step" data-step="5">
+      <h3>5. التحليل المؤسسي للشركات والأنشطة</h3>
+      <p class="step-help">هذه الطبقة تظهر تلقائيًا للشركة/المؤسسة/صاحب النشاط، وتحوّل التحليل من بيانات شخصية إلى تحليل مخاطر للأعمال.</p>
+      <div class="form-grid">
+        <label>نوع النشاط<select id="businessType"><option value="company">شركة / مؤسسة</option><option value="professional">خدمات مهنية</option><option value="retail">تجزئة / متجر</option><option value="logistics">لوجستيات / نقل</option><option value="factory">مصنع / منشأة صناعية</option><option value="other">أخرى</option></select></label>
+        <label>عدد الموظفين<input type="number" id="businessEmployees" min="0" step="1" value="0"></label>
+        <label>الإيرادات السنوية (جنيه)<input type="number" id="annualRevenue" min="0" step="10000" value="0"></label>
+        <label>قيمة أصول النشاط (جنيه)<input type="number" id="businessAssetsValue" min="0" step="10000" value="0"></label>
+        <label>ملكية / إيجار المقر<select id="premisesOwnership"><option value="owned">ملك</option><option value="leased">إيجار</option><option value="mixed">مختلط</option><option value="none">لا يوجد</option></select></label>
+        <label>قيمة المخزون التقريبية (جنيه)<input type="number" id="inventoryValue" min="0" step="10000" value="0"></label>
+        <label>عدد المركبات التجارية<input type="number" id="commercialVehiclesCount" min="0" step="1" value="0"></label>
+        <label>هل يعتمد النشاط على التوقف؟<select id="businessInterruptionImpact"><option value="low">تأثير محدود</option><option value="medium">تأثير متوسط</option><option value="high">تأثير كبير</option><option value="critical">قد يوقف النشاط فعليًا</option></select></label>
+      </div>
+      <div class="smart-subsection">
+        <h4>مخاطر التشغيل والحوكمة</h4>
+        <div class="form-grid">
+          <label>الاعتماد على مورد رئيسي<select id="mainSupplierDependency"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>الاعتماد على عميل رئيسي<select id="mainCustomerDependency"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>التعرض للسرقة / السطو<select id="theftExposure"><option value="low">منخفض</option><option value="medium" selected>متوسط</option><option value="high">مرتفع</option></select></label>
+          <label>التعرض السيبراني<select id="cyberExposure"><option value="low">منخفض</option><option value="medium" selected>متوسط</option><option value="high">مرتفع</option></select></label>
+          <label>مسؤولية الإدارة / مجلس الإدارة<select id="managementLiability"><option value="low">منخفضة</option><option value="medium" selected>متوسطة</option><option value="high">مرتفعة</option></select></label>
+          <label>تاريخ المطالبات<select id="claimsHistory"><option value="none">لا توجد مطالبات</option><option value="low">محدودة</option><option value="multiple">متكررة</option><option value="severe">خسائر كبيرة</option></select></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: المصنع -->
+    <div class="smart-step" data-step="6">
+      <h3>6. التشخيص المتخصص للمصانع والمنشآت الصناعية</h3>
+      <p class="step-help">أسئلة متخصصة لتحديد احتياج المصنع إلى Machinery Breakdown وBusiness Interruption وFire/Property وغيرها.</p>
+      <div class="form-grid">
+        <label>الاعتماد على الآلات في الإنتاج<select id="machineryDependency"><option value="low">منخفض</option><option value="medium">متوسط</option><option value="high">مرتفع</option><option value="critical">حرج</option></select></label>
+        <label>تأثير توقف خط الإنتاج<select id="productionDowntimeImpact"><option value="low">محدود</option><option value="medium">متوسط</option><option value="high">مرتفع</option><option value="critical">حرج</option></select></label>
+        <label>عدد الورديات<input type="number" id="shiftsCount" min="1" max="4" value="1"></label>
+        <label>المواد القابلة للاشتعال / الخطرة<select id="hazardousMaterials"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>أنظمة الحريق والإنذار<select id="fireProtectionSystems"><option value="basic">أساسية</option><option value="good" selected>جيدة</option><option value="advanced">متقدمة</option><option value="none">غير كافية</option></select></label>
+        <label>برنامج صيانة الآلات<select id="machineryMaintenance"><option value="regular">منتظم</option><option value="partial">جزئي</option><option value="reactive">بعد العطل فقط</option><option value="none">لا يوجد</option></select></label>
+        <label>غلايات / أوعية ضغط<select id="boilersPressureVessels"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>تخزين بارد / غرف تبريد<select id="coldStorage"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>خطر تلف المخزون / الإنتاج<select id="stockSpoilageExposure"><option value="low">منخفض</option><option value="medium">متوسط</option><option value="high">مرتفع</option></select></label>
+        <label>الاعتماد على الكهرباء<select id="powerDependency"><option value="low">منخفض</option><option value="medium">متوسط</option><option value="high">مرتفع</option><option value="critical">حرج</option></select></label>
+        <label>نقل البضائع / الشحن<select id="cargoExposure"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+        <label>مسؤولية الإدارة / مجلس الإدارة<select id="factoryManagementLiability"><option value="low">منخفضة</option><option value="medium">متوسطة</option><option value="high">مرتفعة</option></select></label>
+      </div>
+      <div class="smart-subsection">
+        <h4>مرونة سلسلة الإمداد والبيانات</h4>
+        <div class="form-grid">
+          <label>مورد رئيسي واحد<select id="factoryMainSupplier"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>عميل رئيسي واحد<select id="factoryMainCustomer"><option value="no">لا</option><option value="yes">نعم</option></select></label>
+          <label>تعرض للسرقة والسطو<select id="factoryTheftExposure"><option value="low">منخفض</option><option value="medium">متوسط</option><option value="high">مرتفع</option></select></label>
+          <label>التعرض السيبراني<select id="factoryCyberExposure"><option value="low">منخفض</option><option value="medium">متوسط</option><option value="high">مرتفع</option></select></label>
+          <label>سجل مطالبات المصنع<select id="factoryClaimsHistory"><option value="none">لا توجد</option><option value="low">محدود</option><option value="multiple">متكرر</option><option value="severe">كبير</option></select></label>
+          <label>مدة احتياطي التشغيل (بالأشهر)<input type="number" id="businessCashBufferMonths" min="0" max="24" step="1" value="1"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7: المراجعة -->
+    <div class="smart-step" data-step="7">
+      <h3>7. مراجعة التحليل</h3>
+      <p class="step-help">راجع المدخلات قبل تشغيل محرك Insurance Needs Analysis. النتائج إرشادية ولا تغني عن الاكتتاب أو المعاينة.</p>
+      <div id="reviewSummary" class="review-summary"></div>
+    </div>
+
+    <div class="smart-nav">
+      <button id="smartPrev" class="btn-secondary" disabled>← السابق</button>
+      <button id="smartNext" class="btn-primary">التالي →</button>
+      <button id="smartSubmit" class="smart-submit-btn btn-secondary hidden">تحليل احتياجي الآن</button>
+    </div>
+
+    <div id="smartResult" class="smart-result hidden"></div>
+  </section>
+</div>
 
     </div>
 
@@ -12445,387 +12555,479 @@ auth.onAuthStateChanged(function(user) {
 const SmartEngine = (() => {
   'use strict';
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 1: أوزان الخوارزمية
-  // ═══════════════════════════════════════════════════════════════
-  const WEIGHTS = {
-    age:              0.15,
-    maritalStatus:    0.08,
-    dependents:       0.12,
-    city:             0.05,
-    income:           0.18,
-    existingCoverage: 0.10,
-    healthScore:      0.10,
-    smoking:          0.06,
-    chronicDisease:   0.08,
-    insuraPoints:     0.05,
-    activityLevel:    0.03,
-  };
+  const ENGINE_VERSION = '2.0.0-INA';
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 2: كتالوج المنتجات
-  // ═══════════════════════════════════════════════════════════════
   const PRODUCT_CATALOG = {
-    LIFE:       { minAge: 18, maxAge: 65, minIncome: 5000,  riskFactors: ['dependents', 'married'], arName: 'تأمين الحياة' },
-    HEALTH:     { minAge: 0,  maxAge: 70, minIncome: 3000,  riskFactors: ['chronicDisease', 'smoker'], arName: 'التأمين الصحي' },
-    MOTOR:      { minAge: 18, maxAge: 75, minIncome: 2000,  riskFactors: ['hasCar'], arName: 'تأمين السيارات' },
-    HOME:       { minAge: 21, maxAge: 70, minIncome: 4000,  riskFactors: ['hasHome'], arName: 'تأمين المنازل' },
-    TRAVEL:     { minAge: 18, maxAge: 80, minIncome: 1000,  riskFactors: ['frequentTravel'], arName: 'تأمين السفر' },
-    DISABILITY: { minAge: 18, maxAge: 60, minIncome: 6000,  riskFactors: ['physicalJob'], arName: 'تأمين العجز' },
-    CRITICAL:   { minAge: 25, maxAge: 60, minIncome: 8000,  riskFactors: ['familyHistory'], arName: 'تأمين الأمراض الحرجة' },
-    BUSINESS:   { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['businessOwner'], arName: 'تأمين الأعمال (مسؤولية عامة)' },
-    FACTORY:    { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['isFactoryOwner', 'hasBusinessPremises'], arName: 'تأمين المصانع والمنشآت الصناعية', requiresBusinessOwner: true },
-    COMMERCIAL_PROPERTY: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasBusinessPremises'], arName: 'تأمين المحال والممتلكات التجارية', requiresBusinessOwner: true },
-    GROUP_HEALTH: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasEmployees'], arName: 'التأمين الصحي الجماعي للموظفين', requiresBusinessOwner: true },
-    COMMERCIAL_FLEET: { minAge: 21, maxAge: 70, minIncome: 10000, riskFactors: ['hasBusinessVehicles'], arName: 'تأمين أسطول السيارات والمعدات التجارية', requiresBusinessOwner: true },
+    LIFE: { arName:'تأمين الحياة', group:'PERSONAL', trigger:'مسؤولية الأسرة / الدخل / الالتزامات' },
+    HEALTH: { arName:'التأمين الصحي', group:'PERSONAL', trigger:'الاحتياج الصحي والتعرض الطبي' },
+    MOTOR: { arName:'تأمين السيارات', group:'PERSONAL', trigger:'امتلاك سيارة' },
+    HOME: { arName:'تأمين الممتلكات الشخصية والمنزل', group:'PERSONAL', trigger:'امتلاك منزل / عقار' },
+    TRAVEL: { arName:'تأمين السفر', group:'PERSONAL', trigger:'السفر المتكرر' },
+    DISABILITY: { arName:'تأمين العجز وعدم القدرة على العمل', group:'PERSONAL', trigger:'اعتماد الدخل على القدرة على العمل' },
+    CRITICAL: { arName:'تأمين الأمراض الحرجة', group:'PERSONAL', trigger:'التاريخ العائلي / المخاطر الصحية' },
+    BUSINESS: { arName:'تأمين مسؤولية الأعمال', group:'BUSINESS', trigger:'مخاطر المسؤولية التشغيلية' },
+    COMMERCIAL_PROPERTY: { arName:'تأمين الممتلكات التجارية', group:'BUSINESS', trigger:'الأصول والمقر والمخزون' },
+    FACTORY: { arName:'تأمين المصانع والمنشآت الصناعية', group:'FACTORY', trigger:'طبيعة النشاط الصناعي' },
+    MACHINERY_BREAKDOWN: { arName:'تأمين أعطال الآلات والمعدات', group:'FACTORY', trigger:'اعتماد الإنتاج على الآلات' },
+    BUSINESS_INTERRUPTION: { arName:'تأمين توقف الأعمال وفقد الأرباح', group:'BUSINESS', trigger:'أثر توقف النشاط / الإنتاج' },
+    GROUP_HEALTH: { arName:'التأمين الصحي الجماعي للموظفين', group:'BUSINESS', trigger:'عدد الموظفين' },
+    COMMERCIAL_FLEET: { arName:'تأمين أسطول ومركبات النشاط', group:'BUSINESS', trigger:'المركبات التجارية' },
+    CARGO: { arName:'تأمين نقل البضائع والشحن', group:'BUSINESS', trigger:'نقل البضائع' },
+    CYBER: { arName:'التأمين السيبراني', group:'BUSINESS', trigger:'التعرض الرقمي والبيانات' },
+    D_AND_O: { arName:'تأمين مسؤولية أعضاء مجلس الإدارة والمديرين', group:'BUSINESS', trigger:'تعرض الإدارة للمسؤولية' },
   };
 
   const PRODUCT_NAMES_AR = Object.fromEntries(
-    Object.entries(PRODUCT_CATALOG).map(([k, v]) => [k, v.arName])
+    Object.entries(PRODUCT_CATALOG).map(([k,v]) => [k,v.arName])
   );
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 3: بناء الملف الشخصي
-  // ═══════════════════════════════════════════════════════════════
+  const JOURNEY_STAGES = [
+    'PROFILED','ASSESSED','MATCHED','QUOTED','CONTACTED','CONVERTED','RENEWED','LAPSED'
+  ];
+
+  const n = (v, d=0) => {
+    const x = parseFloat(v);
+    return Number.isFinite(x) ? x : d;
+  };
+  const i = (v, d=0) => {
+    const x = parseInt(v,10);
+    return Number.isFinite(x) ? x : d;
+  };
+  const yes = v => v === 'yes' || v === true;
+  const level = (v, map, fallback=0) => Object.prototype.hasOwnProperty.call(map,v) ? map[v] : fallback;
+  const clamp = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
+  const pct = v => Math.round(clamp(v));
+
   function buildProfile(inputs) {
+    const businessOwner = inputs.clientType === 'corporate' || inputs.businessOwner === 'yes';
+    const businessType = inputs.businessType || null;
+    const isFactoryOwner = businessOwner && businessType === 'factory';
     return {
-      age:              parseInt(inputs.age) || 30,
-      gender:           inputs.gender || 'male',
-      maritalStatus:    inputs.maritalStatus || 'single',
-      dependents:       parseInt(inputs.dependents) || 0,
-      city:             inputs.city || 'Cairo',
-      monthlyIncome:    parseFloat(inputs.monthlyIncome) || 0,
-      existingPolicies: inputs.existingPolicies || [],
-      height:           parseFloat(inputs.height) || 170,
-      weight:           parseFloat(inputs.weight) || 70,
-      smoker:           inputs.smoker === 'yes',
-      chronicDisease:   inputs.chronicDisease === 'yes',
-      hasCar:           inputs.hasCar === 'yes',
-      hasHome:          inputs.hasHome === 'yes',
-      businessOwner:    inputs.businessOwner === 'yes',
-      businessType:     inputs.businessType || null,
-      businessEmployees: parseInt(inputs.businessEmployees) || 0,
-      hasBusinessPremises: inputs.businessPremises === 'yes',
-      hasBusinessVehicles: inputs.businessVehicles === 'yes',
-      businessAssetsValue: parseFloat(inputs.businessAssetsValue) || 0,
-      isFactoryOwner:   inputs.businessOwner === 'yes' && inputs.businessType === 'factory',
-      hasEmployees:     (parseInt(inputs.businessEmployees) || 0) > 0,
-      frequentTravel:   inputs.frequentTravel === 'yes',
-      physicalJob:      inputs.physicalJob === 'yes',
-      familyHistory:    inputs.familyHistory === 'yes',
-      insuraPoints:     parseInt(inputs.insuraPoints) || 0,
-      activityLevel:    inputs.activityLevel || 'medium',
-      timestamp:        new Date().toISOString(),
-      userId:           inputs.userId || null,
-      fullName:         inputs.fullName || 'عميل جديد',
+      clientType: inputs.clientType || (businessOwner ? 'corporate' : 'individual'),
+      fullName: inputs.fullName || 'عميل جديد',
+      age:i(inputs.age,30),
+      gender:inputs.gender || 'male',
+      maritalStatus:inputs.maritalStatus || 'single',
+      dependents:i(inputs.dependents),
+      workNature:inputs.workNature || 'office',
+      familyIncomeDependency:inputs.familyIncomeDependency || 'medium',
+      financingObligations:n(inputs.financingObligations),
+      monthlyIncome:n(inputs.monthlyIncome),
+      emergencySavings:n(inputs.emergencySavings),
+      hasCar:yes(inputs.hasCar),
+      carValue:n(inputs.carValue),
+      hasHome:yes(inputs.hasHome),
+      homeValue:n(inputs.homeValue),
+      frequentTravel:yes(inputs.frequentTravel),
+      highRiskHobbies:yes(inputs.highRiskHobbies),
+      existingPolicies:inputs.existingPolicies || [],
+      height:n(inputs.height,170),
+      weight:n(inputs.weight,70),
+      smoker:yes(inputs.smoker),
+      chronicDisease:yes(inputs.chronicDisease),
+      familyHistory:yes(inputs.familyHistory),
+      activityLevel:inputs.activityLevel || 'medium',
+      healthNotes:inputs.healthNotes || '',
+      businessOwner,
+      businessType,
+      businessEmployees:i(inputs.businessEmployees),
+      annualRevenue:n(inputs.annualRevenue),
+      businessAssetsValue:n(inputs.businessAssetsValue),
+      premisesOwnership:inputs.premisesOwnership || 'none',
+      inventoryValue:n(inputs.inventoryValue),
+      commercialVehiclesCount:i(inputs.commercialVehiclesCount),
+      businessInterruptionImpact:inputs.businessInterruptionImpact || 'low',
+      mainSupplierDependency:yes(inputs.mainSupplierDependency),
+      mainCustomerDependency:yes(inputs.mainCustomerDependency),
+      theftExposure:inputs.theftExposure || 'medium',
+      cyberExposure:inputs.cyberExposure || 'medium',
+      managementLiability:inputs.managementLiability || 'medium',
+      claimsHistory:inputs.claimsHistory || 'none',
+      machineryDependency:inputs.machineryDependency || 'low',
+      productionDowntimeImpact:inputs.productionDowntimeImpact || 'low',
+      shiftsCount:i(inputs.shiftsCount,1),
+      hazardousMaterials:yes(inputs.hazardousMaterials),
+      fireProtectionSystems:inputs.fireProtectionSystems || 'good',
+      machineryMaintenance:inputs.machineryMaintenance || 'regular',
+      boilersPressureVessels:yes(inputs.boilersPressureVessels),
+      coldStorage:yes(inputs.coldStorage),
+      stockSpoilageExposure:inputs.stockSpoilageExposure || 'low',
+      powerDependency:inputs.powerDependency || 'medium',
+      cargoExposure:yes(inputs.cargoExposure),
+      factoryManagementLiability:inputs.factoryManagementLiability || 'medium',
+      factoryMainSupplier:yes(inputs.factoryMainSupplier),
+      factoryMainCustomer:yes(inputs.factoryMainCustomer),
+      factoryTheftExposure:inputs.factoryTheftExposure || 'medium',
+      factoryCyberExposure:inputs.factoryCyberExposure || 'medium',
+      factoryClaimsHistory:inputs.factoryClaimsHistory || 'none',
+      businessCashBufferMonths:n(inputs.businessCashBufferMonths,1),
+      insuraPoints:i(inputs.insuraPoints),
+      timestamp:new Date().toISOString(),
+      userId:inputs.userId || null,
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 4: حساب مؤشر المخاطر
-  // ═══════════════════════════════════════════════════════════════
-  function calculateRiskScore(profile) {
-    let risk = 0;
-
-    if (profile.age > 50)       risk += 25;
-    else if (profile.age > 40)  risk += 15;
-    else if (profile.age > 30)  risk += 8;
-
-    const bmi = profile.weight / Math.pow(profile.height / 100, 2);
-    if (bmi < 18.5)       risk += 10;
-    else if (bmi > 30)    risk += 20;
-    else if (bmi > 25)    risk += 10;
-
-    if (profile.smoker)         risk += 15;
-    if (profile.chronicDisease) risk += 20;
-    if (profile.familyHistory)  risk += 10;
-
-    if (profile.activityLevel === 'high') risk -= 10;
-    if (profile.insuraPoints > 500)       risk -= 5;
-
-    return Math.max(0, Math.min(100, risk));
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 5: مطابقة المنتجات
-  // ═══════════════════════════════════════════════════════════════
-  function matchProducts(profile, riskScore) {
-    const scores = {};
-
-    for (const [key, rules] of Object.entries(PRODUCT_CATALOG)) {
-      const reasons = [];
-
-      if (profile.age < rules.minAge || profile.age > rules.maxAge) {
-        scores[key] = { score: 0, eligible: false, reasons: ['العمر خارج النطاق'] };
-        continue;
-      }
-
-      if (profile.monthlyIncome < rules.minIncome) {
-        scores[key] = { score: 0, eligible: false, reasons: ['الدخل أقل من الحد الأدنى'] };
-        continue;
-      }
-
-      if (rules.requiresBusinessOwner && !profile.businessOwner) {
-        scores[key] = { score: 0, eligible: false, reasons: ['خاص بأصحاب الأعمال فقط'] };
-        continue;
-      }
-
-      let score = 30;
-
-      for (const factor of rules.riskFactors) {
-        const matched =
-          profile[factor] ||
-          (factor === 'married' && profile.maritalStatus === 'married');
-        if (matched) {
-          score += 15;
-          reasons.push(`✓ يتوافق مع: ${factor}`);
-        }
-      }
-
-      if (riskScore > 60) {
-        score += 20;
-        reasons.push('✓ ضرورة عالية بسبب المخاطر الصحية');
-      }
-
-      if (profile.insuraPoints > 300) {
-        score += 10;
-        reasons.push('✓ خصم متاح من InsuraPoints');
-      }
-
-      if (profile.dependents > 0 && key === 'LIFE') {
-        score += 15;
-        reasons.push(`✓ لديك ${profile.dependents} معالين`);
-      }
-
-      if ((key === 'FACTORY' || key === 'COMMERCIAL_PROPERTY') && profile.businessAssetsValue > 100000) {
-        score += 15;
-        reasons.push('✓ قيمة أصول عالية تستدعي تغطية أوسع');
-      }
-
-      if (key === 'GROUP_HEALTH' && profile.businessEmployees >= 5) {
-        score += 15;
-        reasons.push(`✓ فريق من ${profile.businessEmployees} موظفين يستحق باقة جماعية`);
-      }
-
-      scores[key] = {
-        score: Math.min(100, score),
-        eligible: true,
-        reasons,
-        priority: score > 70 ? 'HIGH' : score > 45 ? 'MEDIUM' : 'LOW',
-      };
+  function calculateRiskScore(p) {
+    let risk = 12;
+    if (p.age > 55) risk += 12; else if (p.age > 45) risk += 7; else if (p.age > 35) risk += 3;
+    if (p.smoker) risk += 10;
+    if (p.chronicDisease) risk += 16;
+    if (p.familyHistory) risk += 8;
+    if (p.highRiskHobbies) risk += 8;
+    if (p.workNature === 'hazardous') risk += 12;
+    if (p.physicalJob || p.workNature === 'field') risk += 6;
+    if (p.financingObligations > 0) risk += 6;
+    if (p.dependents >= 2) risk += 5;
+    if (p.clientType === 'corporate') risk += 4;
+    if (p.isFactoryOwner) {
+      if (p.hazardousMaterials) risk += 8;
+      if (p.productionDowntimeImpact === 'critical') risk += 8;
+      else if (p.productionDowntimeImpact === 'high') risk += 5;
+      if (p.machineryMaintenance === 'none' || p.machineryMaintenance === 'reactive') risk += 5;
     }
-
-    return Object.entries(scores)
-      .filter(([, v]) => v.eligible)
-      .sort((a, b) => b[1].score - a[1].score)
-      .map(([k, v]) => ({ product: k, productNameAr: PRODUCT_NAMES_AR[k], ...v }));
+    if (p.activityLevel === 'high') risk -= 3;
+    if (p.emergencySavings > p.monthlyIncome * 3 && p.monthlyIncome > 0) risk -= 3;
+    if (p.insuraPoints > 500) risk -= 2;
+    return pct(risk);
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 6: التوصيات
-  // ═══════════════════════════════════════════════════════════════
-  function detectCoverageGaps(profile) {
-    const gaps = [];
-    const covered = (profile.existingPolicies || []).map(p => p.type);
+  function addNeed(scores, key, value, reason) {
+    const s = clamp(value);
+    if (!scores[key]) scores[key] = { score:s, reasons:[] };
+    scores[key].score = Math.max(scores[key].score, s);
+    if (reason && scores[key].reasons.length < 5) scores[key].reasons.push(reason);
+  }
 
-    if (!covered.includes('HEALTH'))
-      gaps.push({ type: 'HEALTH', typeAr: 'التأمين الصحي', severity: 'HIGH', reason: 'لا يوجد تأمين صحي' });
+  function calculateNeedScores(p) {
+    const s = {};
 
-    if (!covered.includes('LIFE') && profile.dependents > 0)
-      gaps.push({ type: 'LIFE', typeAr: 'تأمين الحياة', severity: 'CRITICAL', reason: 'معالون بدون تأمين حياة' });
+    const incomeDependency = level(p.familyIncomeDependency,{low:12,medium:35,high:65});
+    const dependentsScore = clamp(p.dependents * 16);
+    const debtScore = p.financingObligations > 0 ? 30 + Math.min(35,(p.financingObligations / Math.max(1,p.monthlyIncome*12))*100) : 0;
+    const lifeScore = clamp(20 + incomeDependency*0.65 + dependentsScore + debtScore*0.45);
+    addNeed(s,'LIFE',lifeScore,`اعتماد الأسرة على الدخل: ${p.familyIncomeDependency}`);
+    if (p.dependents > 0) addNeed(s,'LIFE',70,`لديك ${p.dependents} من المعالين`);
+    if (p.financingObligations > 0) addNeed(s,'LIFE',65,'وجود التزامات تمويلية يستدعي حماية مصدر السداد');
 
-    if (!covered.includes('MOTOR') && profile.hasCar)
-      gaps.push({ type: 'MOTOR', typeAr: 'تأمين السيارات', severity: 'HIGH', reason: 'سيارة بدون تأمين' });
+    let health = 35;
+    if (p.chronicDisease) health += 28;
+    if (p.smoker) health += 14;
+    if (p.familyHistory) health += 10;
+    if (p.age > 45) health += 8;
+    addNeed(s,'HEALTH',health,'الاحتياج الصحي يتم تقييمه من عدة مؤشرات شخصية وصحية');
 
-    if (!covered.includes('HOME') && profile.hasHome)
-      gaps.push({ type: 'HOME', typeAr: 'تأمين المنازل', severity: 'MEDIUM', reason: 'منزل بدون تأمين' });
+    let motor = p.hasCar ? 78 : 0;
+    if (p.hasCar && p.carValue > 500000) motor += 10;
+    if (p.hasCar) addNeed(s,'MOTOR',motor,'وجود سيارة يخلق تعرضًا مباشرًا لمخاطر المركبة والمسؤولية');
 
-    return gaps;
+    if (p.hasHome || p.homeValue > 0)
+      addNeed(s,'HOME',60 + Math.min(25,p.homeValue/2000000*25),'وجود عقار/منزل وقيمة الممتلكات');
+
+    if (p.frequentTravel) addNeed(s,'TRAVEL',78,'السفر المتكرر يزيد تعرضك لمخاطر الرحلات الطبية واللوجستية');
+    if (p.workNature === 'hazardous' || p.workNature === 'field') addNeed(s,'DISABILITY',72,'طبيعة العمل ترفع تكلفة فقدان القدرة على الكسب');
+    else if (p.monthlyIncome > 0) addNeed(s,'DISABILITY',45,'الاعتماد على الدخل يجعل القدرة على العمل أصلًا يجب حمايته');
+
+    if (p.familyHistory || p.chronicDisease || p.age > 40)
+      addNeed(s,'CRITICAL',65 + (p.familyHistory?15:0) + (p.chronicDisease?10:0),'التاريخ الصحي والعوامل العمرية ترفع أولوية الأمراض الحرجة');
+
+    if (!p.businessOwner) return s;
+
+    const assets = p.businessAssetsValue || 0;
+    const revenue = p.annualRevenue || 0;
+    const employees = p.businessEmployees || 0;
+    const inventory = p.inventoryValue || 0;
+    const vehicleCount = p.commercialVehiclesCount || 0;
+
+    addNeed(s,'BUSINESS',35,'صاحب النشاط يحتاج حماية للمسؤوليات التشغيلية');
+    if (p.businessType) addNeed(s,'BUSINESS',55,`طبيعة النشاط: ${p.businessType}`);
+
+    let property = 35;
+    if (assets > 0) property += Math.min(35,assets/1000000*35);
+    if (p.premisesOwnership !== 'none') property += 12;
+    if (inventory > 0) property += Math.min(20,inventory/500000*20);
+    if (p.theftExposure === 'high') property += 8;
+    addNeed(s,'COMMERCIAL_PROPERTY',property,'الأصول والمقر والمخزون معرضة لخسائر مادية');
+
+    if (employees > 0) addNeed(s,'GROUP_HEALTH',Math.min(100,35 + Math.min(45,employees*2.5)),`لديك ${employees} موظفًا`);
+
+    if (vehicleCount > 0) addNeed(s,'COMMERCIAL_FLEET',Math.min(100,45 + Math.min(45,vehicleCount*5)),`لدى النشاط ${vehicleCount} مركبة تجارية`);
+
+    let bi = level(p.businessInterruptionImpact,{low:20,medium:50,high:78,critical:95});
+    if (revenue > 0) bi += Math.min(10,revenue/5000000*10);
+    if (p.mainSupplierDependency) bi += 6;
+    if (p.mainCustomerDependency) bi += 6;
+    addNeed(s,'BUSINESS_INTERRUPTION',bi,'توقف النشاط قد يؤدي إلى فقد الإيرادات وارتفاع المصروفات');
+
+    let cyber = level(p.cyberExposure,{low:22,medium:52,high:82});
+    if (employees >= 20) cyber += 8;
+    if (revenue >= 10000000) cyber += 7;
+    addNeed(s,'CYBER',cyber,'التعرض الرقمي وبيانات العملاء والعمليات الإلكترونية');
+
+    addNeed(s,'D_AND_O',level(p.managementLiability,{low:28,medium:58,high:85}),'تعرض الإدارة ومسؤوليها للمطالبات المرتبطة بقراراتها');
+
+    if (isFactoryOwner(p)) {
+      addNeed(s,'FACTORY',72,'النشاط الصناعي يتطلب برنامج تأمين متعدد الطبقات');
+      let machinery = level(p.machineryDependency,{low:30,medium:58,high:80,critical:95});
+      if (p.shiftsCount >= 3) machinery += 4;
+      if (p.machineryMaintenance === 'reactive') machinery += 8;
+      if (p.machineryMaintenance === 'none') machinery += 12;
+      if (p.boilersPressureVessels) machinery += 5;
+      addNeed(s,'MACHINERY_BREAKDOWN',machinery,'الاعتماد على الآلات وصيانتها ووجود أوعية ضغط');
+
+      let factoryBi = level(p.productionDowntimeImpact,{low:25,medium:55,high:80,critical:95});
+      if (p.powerDependency === 'critical') factoryBi += 5;
+      if (p.factoryMainSupplier) factoryBi += 5;
+      if (p.factoryMainCustomer) factoryBi += 5;
+      if (p.businessCashBufferMonths < 1) factoryBi += 8;
+      addNeed(s,'BUSINESS_INTERRUPTION',factoryBi,'توقف خط الإنتاج والكهرباء وسلسلة الإمداد قد يوقف النشاط');
+
+      let propertyF = 58;
+      if (p.hazardousMaterials) propertyF += 16;
+      if (p.fireProtectionSystems === 'none') propertyF += 15;
+      if (p.fireProtectionSystems === 'basic') propertyF += 7;
+      if (p.factoryTheftExposure === 'high') propertyF += 8;
+      addNeed(s,'COMMERCIAL_PROPERTY',propertyF,'الحريق والمواد الخطرة والممتلكات والمخزون');
+
+      if (p.cargoExposure) addNeed(s,'CARGO',78,'وجود نقل وشحن للبضائع');
+      if (p.coldStorage) addNeed(s,'COMMERCIAL_PROPERTY',82,'التخزين البارد يزيد خطر تلف المخزون عند التعطل');
+      if (p.stockSpoilageExposure === 'high') addNeed(s,'BUSINESS_INTERRUPTION',88,'خطر تلف المخزون/الإنتاج');
+
+      let cyberF = level(p.factoryCyberExposure,{low:25,medium:58,high:88});
+      if (p.factoryCyberExposure === 'high') cyberF += 5;
+      addNeed(s,'CYBER',cyberF,'الاعتماد على الأنظمة الرقمية والتشغيل الصناعي');
+      addNeed(s,'D_AND_O',level(p.factoryManagementLiability,{low:32,medium:62,high:88}),'مسؤولية الإدارة في المنشأة الصناعية');
+
+      if (p.factoryClaimsHistory === 'multiple') addNeed(s,'FACTORY',86,'سجل مطالبات متكرر');
+      if (p.factoryClaimsHistory === 'severe') addNeed(s,'FACTORY',95,'وجود خسائر كبيرة سابقة');
+    }
+    return s;
+  }
+
+  function isFactoryOwner(p) {
+    return p.businessOwner && p.businessType === 'factory';
+  }
+
+  function matchProducts(profile, riskScore) {
+    const needs = calculateNeedScores(profile);
+    const covered = new Set((profile.existingPolicies || []).map(x => x.type));
+    const matches = Object.keys(needs).map(key => {
+      const item = needs[key];
+      const reasons = [...item.reasons];
+      if (covered.has(key)) reasons.push('لديك تغطية حالية لهذا الاحتياج — يلزم مراجعة حدودها واستثناءاتها');
+      const gapAdjustment = covered.has(key) ? -12 : 0;
+      let score = clamp(item.score + gapAdjustment);
+      return {
+        product:key,
+        productNameAr:PRODUCT_NAMES_AR[key],
+        score:pct(score),
+        eligible:score > 0,
+        priority:score >= 80 ? 'CRITICAL' : score >= 65 ? 'HIGH' : score >= 45 ? 'MEDIUM' : 'LOW',
+        reasons:reasons.slice(0,6),
+        needScore:pct(item.score),
+        covered:covered.has(key)
+      };
+    });
+
+    if (riskScore >= 70) {
+      matches.forEach(m => {
+        if (['HEALTH','LIFE','DISABILITY','CRITICAL'].includes(m.product)) m.score = pct(m.score + 8);
+      });
+    }
+    return matches.sort((a,b) => b.score-a.score);
+  }
+
+  function detectCoverageGaps(profile, needs) {
+    const covered = new Set((profile.existingPolicies || []).map(p => p.type));
+    return Object.entries(needs)
+      .filter(([key,v]) => v.score >= 55 && !covered.has(key))
+      .sort((a,b) => b[1].score-a[1].score)
+      .slice(0,12)
+      .map(([type,v]) => ({
+        type,
+        typeAr:PRODUCT_NAMES_AR[type] || type,
+        severity:v.score >= 80 ? 'CRITICAL' : v.score >= 65 ? 'HIGH' : 'MEDIUM',
+        reason:v.reasons[0] || 'احتياج مرتفع وفق إجابات التحليل'
+      }));
   }
 
   function calculateEstimatedDiscount(profile) {
     if (profile.insuraPoints > 1000) return 15;
-    if (profile.insuraPoints > 500)  return 10;
-    if (profile.insuraPoints > 200)  return 5;
+    if (profile.insuraPoints > 500) return 10;
+    if (profile.insuraPoints > 200) return 5;
     return 0;
   }
 
   function buildActionItems(matches, gaps, profile) {
     const items = [];
-    if (gaps.some(g => g.severity === 'CRITICAL'))
-      items.push('⚠️ أولوية قصوى: سد فجوة تأمين الحياة');
-    if (matches[0]) items.push(`اطلب عرض سعر لـ ${matches[0].productNameAr}`);
-    if (profile.businessOwner) {
-      if (profile.isFactoryOwner) items.push('🏭 راجع تغطية أعطال الآلات والحريق لمنشأتك الصناعية');
-      if (profile.hasBusinessPremises && !profile.isFactoryOwner) items.push('🏢 قيّم تغطية ممتلكات مقر نشاطك التجاري');
-      if (profile.hasEmployees) items.push(`👥 لديك ${profile.businessEmployees} موظف/موظفين — قارن باقات التأمين الصحي الجماعي`);
-      if (profile.hasBusinessVehicles) items.push('🚚 قارن عروض تأمين أسطول السيارات والمعدات التجارية');
+    if (gaps[0]) items.push(`ابدأ بمراجعة ${gaps[0].typeAr} لأنها أعلى فجوة مكتشفة`);
+    if (profile.businessOwner && profile.businessInterruptionImpact !== 'low')
+      items.push('اطلب تحليل حدود تعويض فقد الأرباح ومدة التعويض عند توقف النشاط');
+    if (isFactoryOwner(profile)) {
+      if (profile.machineryDependency === 'high' || profile.machineryDependency === 'critical')
+        items.push('راجع تغطية أعطال الآلات والمعدات وتكاليف الإصلاح والبدائل');
+      if (profile.hazardousMaterials || profile.fireProtectionSystems === 'none')
+        items.push('نفّذ مراجعة مخاطر الحريق والمواد الخطرة وأنظمة الحماية قبل التسعير');
+      if (profile.powerDependency === 'high' || profile.powerDependency === 'critical')
+        items.push('قيّم أثر انقطاع الكهرباء على الإنتاج والتخزين وسلسلة الإمداد');
     }
-    if (profile.insuraPoints > 200) items.push('استبدل نقاطك للحصول على خصم');
-    items.push('جدّد وثائقك قبل انتهائها بـ 30 يومًا');
+    if (profile.businessOwner && profile.businessEmployees >= 5)
+      items.push(`قارن عروض التأمين الصحي الجماعي لـ ${profile.businessEmployees} موظفًا`);
+    if (profile.insuraPoints > 200) items.push('يمكنك استخدام InsuraPoints للحصول على خصم وفق البرنامج');
+    items.push('النتيجة إرشادية وتحتاج مراجعة وسيط/شركة التأمين وشروط الوثيقة والاكتتاب');
     return items;
   }
 
   function generateRecommendations(matches, profile, riskScore) {
+    const needs = calculateNeedScores(profile);
+    const gaps = detectCoverageGaps(profile, needs);
     const top = matches[0];
-    const gaps = detectCoverageGaps(profile);
+    const needPriority = Object.entries(needs)
+      .map(([product,v]) => ({
+        product,
+        productNameAr:PRODUCT_NAMES_AR[product] || product,
+        score:pct(v.score),
+        priority:v.score >= 80 ? 'CRITICAL' : v.score >= 65 ? 'HIGH' : v.score >= 45 ? 'MEDIUM' : 'LOW',
+        reason:v.reasons[0] || PRODUCT_CATALOG[product]?.trigger || 'احتياج مكتشف من التحليل'
+      }))
+      .sort((a,b)=>b.score-a.score)
+      .slice(0,12);
+
+    const overallNeedScore = needPriority.length
+      ? pct(needPriority.reduce((a,x)=>a+x.score,0)/Math.min(needPriority.length,8))
+      : 0;
 
     return {
       headline: top
-        ? `التوصية الأولى: ${top.productNameAr} (توافق ${top.score}%)`
-        : 'نحتاج لمزيد من المعلومات لتقديم توصية دقيقة',
-      primaryRecommendation: top ? top.product : null,
-      primaryRecommendationAr: top ? top.productNameAr : null,
-      alternativeRecommendations: matches.slice(1, 4).map(m => m.product),
-      coverageGaps: gaps,
-      riskLevel: riskScore > 60 ? 'مرتفع' : riskScore > 35 ? 'متوسط' : 'منخفض',
-      estimatedDiscount: calculateEstimatedDiscount(profile),
-      actionItems: buildActionItems(matches, gaps, profile),
+        ? `أعلى احتياج تأميني: ${top.productNameAr} — أولوية ${top.score}%`
+        : 'نحتاج لمزيد من المعلومات لتحديد الاحتياجات التأمينية',
+      primaryRecommendation:top ? top.product : null,
+      primaryRecommendationAr:top ? top.productNameAr : null,
+      alternativeRecommendations:matches.slice(1,5).map(m=>m.product),
+      coverageGaps:gaps,
+      riskLevel:riskScore >= 70 ? 'مرتفع' : riskScore >= 40 ? 'متوسط' : 'منخفض',
+      estimatedDiscount:calculateEstimatedDiscount(profile),
+      insuranceNeedScore:overallNeedScore,
+      insuranceNeeds:needPriority,
+      actionItems:buildActionItems(matches,gaps,profile),
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 7: تتبع الرحلة
-  // ═══════════════════════════════════════════════════════════════
-  const JOURNEY_STAGES = [
-    'PROFILED', 'ASSESSED', 'MATCHED', 'QUOTED',
-    'CONTACTED', 'CONVERTED', 'RENEWED', 'LAPSED',
-  ];
-
-  async function trackJourney(userId, stage, metadata = {}) {
+  async function trackJourney(userId, stage, metadata={}) {
     if (!window.firebase?.firestore || !userId) return;
     try {
       const db = firebase.firestore();
       await db.collection('journeyTracking').add({
-        userId,
-        stage,
-        metadata,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        userId, stage, metadata,
+        timestamp:firebase.firestore.FieldValue.serverTimestamp()
       });
-    } catch (e) {
+    } catch(e) {
       console.warn('[SmartEngine] trackJourney failed:', e.message);
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // القسم 8: المزامنة مع لوحة الأدمن
-  // ═══════════════════════════════════════════════════════════════
-    async function syncToAdmin(assessment) {
+  async function syncToAdmin(assessment) {
     if (!window.firebase?.firestore) return null;
     try {
       const db = firebase.firestore();
-
-      // ═══════════════════════════════════════════════════════════
-      // 1. اكتب التفاصيل الكاملة في protectionAssessments
-      // ═══════════════════════════════════════════════════════════
       const ref = await db.collection('protectionAssessments').add({
-        clientId: assessment.clientId,
-        clientName: assessment.clientName,
-        profile: assessment.profile,
-        riskScore: assessment.riskScore,
-        matches: assessment.matches,
-        recommendations: assessment.recommendations,
-        riskLevel: assessment.recommendations.riskLevel,
-        primaryRecommendation: assessment.recommendations.primaryRecommendation,
-        primaryRecommendationAr: assessment.recommendations.primaryRecommendationAr,
-        engineVersion: assessment.engineVersion,
-        source: 'smart-engine',
-        status: 'new',
-        reviewedBy: null,
-        adminNotes: '',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        clientId:assessment.clientId,
+        clientName:assessment.clientName,
+        profile:assessment.profile,
+        riskScore:assessment.riskScore,
+        matches:assessment.matches,
+        recommendations:assessment.recommendations,
+        riskLevel:assessment.recommendations.riskLevel,
+        primaryRecommendation:assessment.recommendations.primaryRecommendation,
+        primaryRecommendationAr:assessment.recommendations.primaryRecommendationAr,
+        engineVersion:assessment.engineVersion,
+        source:'smart-engine',
+        status:'new',
+        reviewedBy:null,
+        adminNotes:'',
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      // ═══════════════════════════════════════════════════════════
-      // 2. ⭐ اكتب أيضًا في insuranceAssessments (للظهور في لوحة الأدمن)
-      // ═══════════════════════════════════════════════════════════
       if (assessment.clientId) {
-        const statusAr =
-          assessment.recommendations.riskLevel === 'مرتفع' ? 'يحتاج تحسين عاجل' :
-          assessment.recommendations.riskLevel === 'متوسط' ? 'يحتاج تحسين' :
-          'ممتاز';
+        const statusAr = assessment.recommendations.riskLevel === 'مرتفع' ? 'يحتاج تحسين عاجل' :
+          assessment.recommendations.riskLevel === 'متوسط' ? 'يحتاج تحسين' : 'ممتاز';
 
         await db.collection('insuranceAssessments').doc(assessment.clientId).set({
-          score: 100 - assessment.riskScore,
-          status: statusAr,
-          activeCount: (assessment.profile.existingPolicies || []).length,
-          ownedCount: (assessment.profile.existingPolicies || []).length,
-          gaps: assessment.recommendations.coverageGaps.map(g => g.type),
-          recommendations: assessment.recommendations.actionItems,
-          factors: [
-            { name: 'profileCompleteness', value: 15, max: 15 },
-            { name: 'coverageBreadth', value: 30, max: 45 },
-            { name: 'activePolicies', value: (assessment.profile.existingPolicies || []).length * 5, max: 20 },
-            { name: 'verifiedDocuments', value: 5, max: 10 },
-            { name: 'smartEngine', value: assessment.matches[0]?.score || 0, max: 10 },
+          score:100 - assessment.riskScore,
+          status:statusAr,
+          activeCount:(assessment.profile.existingPolicies || []).length,
+          ownedCount:(assessment.profile.existingPolicies || []).length,
+          gaps:assessment.recommendations.coverageGaps.map(g=>g.type),
+          recommendations:assessment.recommendations.actionItems,
+          factors:[
+            {name:'profileCompleteness',value:15,max:15},
+            {name:'coverageBreadth',value:Math.min(45,assessment.recommendations.insuranceNeeds.length*5),max:45},
+            {name:'activePolicies',value:Math.min(20,(assessment.profile.existingPolicies || []).length*5),max:20},
+            {name:'verifiedDocuments',value:5,max:10},
+            {name:'smartEngine',value:assessment.recommendations.insuranceNeedScore,max:100}
           ],
-          source: 'smart-engine',
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-
-        console.log('✅ [SmartEngine] كتب في insuranceAssessments:', assessment.clientId);
+          source:'smart-engine',
+          engineVersion:assessment.engineVersion,
+          insuranceNeeds:assessment.recommendations.insuranceNeeds,
+          timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+        },{merge:true});
       }
 
-      // ═══════════════════════════════════════════════════════════
-      // 3. إشعار
-      // ═══════════════════════════════════════════════════════════
       await db.collection('adminNotifications').add({
-        type: 'NEW_ASSESSMENT',
-        priority: assessment.recommendations.riskLevel === 'مرتفع' ? 'HIGH' : 'NORMAL',
-        clientName: assessment.clientName,
-        assessmentId: ref.id,
-        productRecommendation: assessment.recommendations.primaryRecommendationAr,
-        riskLevel: assessment.recommendations.riskLevel,
-        read: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        type:'NEW_ASSESSMENT',
+        priority:assessment.recommendations.riskLevel === 'مرتفع' ? 'HIGH' : 'NORMAL',
+        clientName:assessment.clientName,
+        assessmentId:ref.id,
+        productRecommendation:assessment.recommendations.primaryRecommendationAr,
+        riskLevel:assessment.recommendations.riskLevel,
+        read:false,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
       });
 
       return ref.id;
-    } catch (e) {
-      console.error('[SmartEngine] syncToAdmin failed:', e.message);
+    } catch(e) {
+      console.error('[SmartEngine] syncToAdmin failed:',e.message);
       return null;
     }
-  }  
+  }
 
-  
-
-  // ═══════════════════════════════════════════════════════════════
-  // 9. الدالة الرئيسية (Main Entry Point)
-  // ═══════════════════════════════════════════════════════════════
   async function run(userInputs) {
     const profile = buildProfile(userInputs);
     const riskScore = calculateRiskScore(profile);
-    const matches = matchProducts(profile, riskScore);
-    const recommendations = generateRecommendations(matches, profile, riskScore);
+    const matches = matchProducts(profile,riskScore);
+    const recommendations = generateRecommendations(matches,profile,riskScore);
 
     const result = {
-      clientId: userInputs.userId || null,
-      clientName: profile.fullName,
+      clientId:userInputs.userId || null,
+      clientName:profile.fullName,
       profile,
       riskScore,
       matches,
       recommendations,
-      engineVersion: '1.0.0',
+      engineVersion:ENGINE_VERSION
     };
 
     const assessmentId = await syncToAdmin(result);
-    await trackJourney(userInputs.userId, 'ASSESSED', { riskScore, assessmentId });
+    await trackJourney(userInputs.userId,'ASSESSED',{
+      riskScore,
+      insuranceNeedScore:recommendations.insuranceNeedScore,
+      topNeeds:recommendations.insuranceNeeds.slice(0,5),
+      assessmentId
+    });
 
-    return { ...result, assessmentId };
+    return {...result,assessmentId};
   }
-// ═══════════════════════════════════════════════════════════════
-  // API عام
-  // ═══════════════════════════════════════════════════════════════
+
   return {
-    run: run,
-    buildProfile: buildProfile,
-    calculateRiskScore: calculateRiskScore,
-    matchProducts: matchProducts,
-    generateRecommendations: generateRecommendations,
-    PRODUCT_NAMES_AR: PRODUCT_NAMES_AR,
-    JOURNEY_STAGES: JOURNEY_STAGES,
-    trackJourney: trackJourney,
+    run,
+    buildProfile,
+    calculateRiskScore,
+    calculateNeedScores,
+    matchProducts,
+    generateRecommendations,
+    PRODUCT_NAMES_AR,
+    JOURNEY_STAGES,
+    trackJourney
   };
 })();
 
@@ -12844,199 +13046,277 @@ const SmartAssessmentUI = (() => {
   'use strict';
 
   let currentStep = 1;
-  const TOTAL_STEPS = 5;
+  const ALL_STEPS = [1,2,3,4,5,6,7];
 
-  function $(id) { return document.getElementById(id); }
+  function $(id){ return document.getElementById(id); }
+  function isCorporate(){ return document.querySelector('input[name="clientType"]:checked')?.value === 'corporate'; }
+  function selectedBusinessType(){ return $('businessType')?.value || ''; }
+  function isFactory(){ return isCorporate() && selectedBusinessType() === 'factory'; }
 
-  function updateProgress() {
-    const pct = (currentStep / TOTAL_STEPS) * 100;
-    if ($('smartProgress')) $('smartProgress').style.width = pct + '%';
-    if ($('currentStep')) $('currentStep').textContent = currentStep;
-
-    document.querySelectorAll('.smart-step').forEach(el => {
-      el.classList.toggle('active', parseInt(el.dataset.step) === currentStep);
-    });
-
-    if ($('smartPrev')) $('smartPrev').disabled = currentStep === 1;
-    if ($('smartNext')) $('smartNext').classList.toggle('hidden', currentStep === TOTAL_STEPS);
-    if ($('smartSubmit')) $('smartSubmit').classList.toggle('hidden', currentStep !== TOTAL_STEPS);
-
-    if (currentStep === TOTAL_STEPS) buildReview();
+  function activeSteps(){
+    return isCorporate() ? (isFactory() ? ALL_STEPS : [1,2,3,4,5,7]) : [1,2,3,4,7];
   }
 
-  function collectInputs() {
-    const existingPolicies = Array.from(
-      document.querySelectorAll('#existingPoliciesWrap input:checked')
-    ).map(cb => ({ type: cb.value }));
+  function updateProgress(){
+    const steps = activeSteps();
+    if(!steps.includes(currentStep)) currentStep = steps[Math.max(0,steps.indexOf(7)-1)] || 1;
+    const idx = Math.max(0,steps.indexOf(currentStep));
+    const total = steps.length;
+    const pct = ((idx+1)/total)*100;
+    if($('smartProgress')) $('smartProgress').style.width = pct + '%';
+    if($('currentStep')) $('currentStep').textContent = idx+1;
+    if($('smartTotalSteps')) $('smartTotalSteps').textContent = total;
 
+    document.querySelectorAll('.smart-step').forEach(el=>{
+      el.classList.toggle('active', Number(el.dataset.step) === currentStep);
+    });
+    if($('smartPrev')) $('smartPrev').disabled = idx === 0;
+    if($('smartNext')) $('smartNext').classList.toggle('hidden', idx === total-1);
+    if($('smartSubmit')) $('smartSubmit').classList.toggle('hidden', idx !== total-1);
+    if(currentStep === 7) buildReview();
+  }
+
+  function collectExistingPolicies(){
+    if($('hasExistingCheck') && !$('hasExistingCheck').checked) return [];
+    return Array.from(document.querySelectorAll('#existingPoliciesWrap input[type="checkbox"][value]:checked'))
+      .map(cb=>({type:cb.value}));
+  }
+
+  function val(id){ return $(id)?.value ?? ''; }
+  function collectInputs(){
     const user = window.firebase?.auth?.().currentUser;
-
     return {
-      userId: user?.uid || null,
-      fullName: $('fullName')?.value || user?.displayName || 'عميل جديد',
-      age: $('age')?.value,
-      gender: $('gender')?.value,
-      maritalStatus: $('maritalStatus')?.value,
-      dependents: $('dependents')?.value,
-      city: $('city')?.value,
-      monthlyIncome: $('monthlyIncome')?.value,
-      existingPolicies,
-      height: $('height')?.value,
-      weight: $('weight')?.value,
-      smoker: $('smoker')?.value,
-      chronicDisease: $('chronicDisease')?.value,
-      familyHistory: $('familyHistory')?.value,
-      activityLevel: $('activityLevel')?.value,
-      hasCar: $('hasCar')?.value,
-      hasHome: $('hasHome')?.value,
-      businessOwner: $('businessOwner')?.value,
-      businessType: $('businessType')?.value,
-      businessEmployees: $('businessEmployees')?.value,
-      businessPremises: $('businessPremises')?.value,
-      businessVehicles: $('businessVehicles')?.value,
-      businessAssetsValue: $('businessAssetsValue')?.value,
-      frequentTravel: $('frequentTravel')?.value,
-      physicalJob: $('physicalJob')?.value,
-      insuraPoints: window.currentUserPoints || 0,
+      userId:user?.uid || null,
+      fullName:val('fullName') || user?.displayName || 'عميل جديد',
+      clientType:document.querySelector('input[name="clientType"]:checked')?.value || 'individual',
+      age:val('age'), gender:val('gender'), maritalStatus:val('maritalStatus'),
+      dependents:val('dependents'), workNature:val('workNature'),
+      familyIncomeDependency:val('familyIncomeDependency'),
+      financingObligations:val('financingObligations'),
+      hasCar:val('hasCar'), carValue:val('carValue'),
+      hasHome:val('hasHome'), homeValue:val('homeValue'),
+      frequentTravel:val('frequentTravel'), highRiskHobbies:val('highRiskHobbies'),
+      monthlyIncome:val('monthlyIncome'), emergencySavings:val('emergencySavings'),
+      existingPolicies:collectExistingPolicies(),
+      height:val('height'), weight:val('weight'), smoker:val('smoker'),
+      chronicDisease:val('chronicDisease'), familyHistory:val('familyHistory'),
+      activityLevel:val('activityLevel'), healthNotes:val('healthNotes'),
+      businessOwner:isCorporate() ? 'yes' : 'no',
+      businessType:val('businessType'),
+      businessEmployees:val('businessEmployees'),
+      annualRevenue:val('annualRevenue'),
+      businessAssetsValue:val('businessAssetsValue'),
+      premisesOwnership:val('premisesOwnership'),
+      inventoryValue:val('inventoryValue'),
+      commercialVehiclesCount:val('commercialVehiclesCount'),
+      businessInterruptionImpact:val('businessInterruptionImpact'),
+      mainSupplierDependency:val('mainSupplierDependency'),
+      mainCustomerDependency:val('mainCustomerDependency'),
+      theftExposure:val('theftExposure'),
+      cyberExposure:val('cyberExposure'),
+      managementLiability:val('managementLiability'),
+      claimsHistory:val('claimsHistory'),
+      machineryDependency:val('machineryDependency'),
+      productionDowntimeImpact:val('productionDowntimeImpact'),
+      shiftsCount:val('shiftsCount'),
+      hazardousMaterials:val('hazardousMaterials'),
+      fireProtectionSystems:val('fireProtectionSystems'),
+      machineryMaintenance:val('machineryMaintenance'),
+      boilersPressureVessels:val('boilersPressureVessels'),
+      coldStorage:val('coldStorage'),
+      stockSpoilageExposure:val('stockSpoilageExposure'),
+      powerDependency:val('powerDependency'),
+      cargoExposure:val('cargoExposure'),
+      factoryManagementLiability:val('factoryManagementLiability'),
+      factoryMainSupplier:val('factoryMainSupplier'),
+      factoryMainCustomer:val('factoryMainCustomer'),
+      factoryTheftExposure:val('factoryTheftExposure'),
+      factoryCyberExposure:val('factoryCyberExposure'),
+      factoryClaimsHistory:val('factoryClaimsHistory'),
+      businessCashBufferMonths:val('businessCashBufferMonths'),
+      insuraPoints:window.currentUserPoints || 0
     };
   }
 
-  function buildReview() {
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function buildReview(){
+    if(!$('reviewSummary')) return;
     const i = collectInputs();
-    if (!$('reviewSummary')) return;
+    const typeAr = i.clientType === 'corporate' ? 'شركة / مؤسسة / صاحب نشاط' : 'فرد / أسرة';
+    const businessName = {
+      company:'شركة / مؤسسة', professional:'خدمات مهنية', retail:'تجزئة / متجر',
+      logistics:'لوجستيات / نقل', factory:'مصنع / منشأة صناعية', other:'أخرى'
+    }[i.businessType] || i.businessType || '';
     $('reviewSummary').innerHTML = `
-      <div class="review-item"><strong>الاسم:</strong> ${i.fullName}</div>
-      <div class="review-item"><strong>العمر:</strong> ${i.age} سنة</div>
-      <div class="review-item"><strong>الحالة:</strong> ${i.maritalStatus}</div>
-      <div class="review-item"><strong>المعالون:</strong> ${i.dependents}</div>
-      <div class="review-item"><strong>الدخل:</strong> ${i.monthlyIncome} جنيه</div>
-      <div class="review-item"><strong>مدخن:</strong> ${i.smoker === 'yes' ? 'نعم' : 'لا'}</div>
-      <div class="review-item"><strong>أمراض مزمنة:</strong> ${i.chronicDisease === 'yes' ? 'نعم' : 'لا'}</div>
-      <div class="review-item"><strong>سيارة:</strong> ${i.hasCar === 'yes' ? 'نعم' : 'لا'}</div>
-      <div class="review-item"><strong>منزل:</strong> ${i.hasHome === 'yes' ? 'نعم' : 'لا'}</div>
-      ${i.businessOwner === 'yes' ? `
-      <div class="review-item"><strong>صاحب عمل:</strong> نعم (${
-        { company: 'شركة/مكتب خدمي', factory: 'مصنع/منشأة صناعية', retail: 'متجر/محل تجاري', other: 'أخرى' }[i.businessType] || i.businessType
-      })</div>
-      <div class="review-item"><strong>عدد الموظفين:</strong> ${i.businessEmployees || 0}</div>
-      <div class="review-item"><strong>مقر/مصنع/محل:</strong> ${i.businessPremises === 'yes' ? 'نعم' : 'لا'}</div>
-      <div class="review-item"><strong>سيارات/معدات النشاط:</strong> ${i.businessVehicles === 'yes' ? 'نعم' : 'لا'}</div>
-      <div class="review-item"><strong>قيمة أصول النشاط:</strong> ${i.businessAssetsValue ? i.businessAssetsValue + ' جنيه' : 'غير محدد'}</div>
-      ` : ''}
+      <div class="review-group">
+        <h4>الهوية التحليلية</h4>
+        <div class="review-item"><span>نوع العميل</span><strong>${esc(typeAr)}</strong></div>
+        <div class="review-item"><span>الاسم</span><strong>${esc(i.fullName)}</strong></div>
+        <div class="review-item"><span>العمر</span><strong>${esc(i.age || '—')}</strong></div>
+        <div class="review-item"><span>الحالة الاجتماعية</span><strong>${esc(i.maritalStatus || '—')}</strong></div>
+        <div class="review-item"><span>المعالون</span><strong>${esc(i.dependents || 0)}</strong></div>
+      </div>
+      <div class="review-group">
+        <h4>القدرة المالية والأصول</h4>
+        <div class="review-item"><span>الدخل الشهري</span><strong>${esc(i.monthlyIncome || 0)} جنيه</strong></div>
+        <div class="review-item"><span>الالتزامات التمويلية</span><strong>${esc(i.financingObligations || 0)} جنيه</strong></div>
+        <div class="review-item"><span>السيارة</span><strong>${i.hasCar === 'yes' ? 'نعم' : 'لا'}</strong></div>
+        <div class="review-item"><span>العقار / المنزل</span><strong>${i.hasHome === 'yes' ? 'نعم' : 'لا'}</strong></div>
+      </div>
+      ${i.clientType === 'corporate' ? `
+      <div class="review-group">
+        <h4>النشاط</h4>
+        <div class="review-item"><span>نوع النشاط</span><strong>${esc(businessName)}</strong></div>
+        <div class="review-item"><span>الموظفون</span><strong>${esc(i.businessEmployees || 0)}</strong></div>
+        <div class="review-item"><span>الإيرادات السنوية</span><strong>${esc(i.annualRevenue || 0)} جنيه</strong></div>
+        <div class="review-item"><span>الأصول</span><strong>${esc(i.businessAssetsValue || 0)} جنيه</strong></div>
+        <div class="review-item"><span>المخزون</span><strong>${esc(i.inventoryValue || 0)} جنيه</strong></div>
+      </div>` : ''}
+      ${i.clientType === 'corporate' && i.businessType === 'factory' ? `
+      <div class="review-group">
+        <h4>تشخيص المصنع</h4>
+        <div class="review-item"><span>اعتماد الآلات</span><strong>${esc(i.machineryDependency)}</strong></div>
+        <div class="review-item"><span>أثر توقف الإنتاج</span><strong>${esc(i.productionDowntimeImpact)}</strong></div>
+        <div class="review-item"><span>مواد خطرة</span><strong>${i.hazardousMaterials === 'yes' ? 'نعم' : 'لا'}</strong></div>
+        <div class="review-item"><span>غلايات / أوعية ضغط</span><strong>${i.boilersPressureVessels === 'yes' ? 'نعم' : 'لا'}</strong></div>
+        <div class="review-item"><span>نقل بضائع</span><strong>${i.cargoExposure === 'yes' ? 'نعم' : 'لا'}</strong></div>
+      </div>` : ''}
     `;
   }
 
-  async function submit() {
-    const btn = $('smartSubmit');
-    if (!btn) return;
-    btn.disabled = true;
-    const original = btn.textContent;
-    btn.textContent = '⏳ جاري التحليل...';
-
-    try {
-      const inputs = collectInputs();
-
-      if (!inputs.age || !inputs.monthlyIncome) {
-        throw new Error('يرجى إكمال البيانات الأساسية (العمر والدخل)');
+  async function submit(){
+    const btn=$('smartSubmit');
+    if(!btn) return;
+    btn.disabled=true;
+    const original=btn.textContent;
+    btn.textContent='جاري تحليل الاحتياج...';
+    try{
+      const inputs=collectInputs();
+      if(!inputs.age || !inputs.monthlyIncome){
+        throw new Error('يرجى إكمال العمر والدخل الشهري لاستكمال التحليل');
       }
-
-      const result = await SmartEngine.run(inputs);
+      if(inputs.clientType==='corporate' && (!inputs.businessType || !inputs.businessEmployees && !inputs.businessAssetsValue && !inputs.annualRevenue)){
+        throw new Error('يرجى إدخال بيانات أساسية عن النشاط (نوع النشاط + عدد الموظفين أو الإيرادات أو الأصول)');
+      }
+      const result=await SmartEngine.run(inputs);
       renderResult(result);
-
-      if (typeof SmartEngine.trackJourney === 'function') {
-        await SmartEngine.trackJourney(inputs.userId, 'MATCHED', {
-          assessmentId: result.assessmentId,
+      if(typeof SmartEngine.trackJourney==='function'){
+        await SmartEngine.trackJourney(inputs.userId,'MATCHED',{
+          assessmentId:result.assessmentId,
+          topNeeds:result.recommendations.insuranceNeeds.slice(0,5)
         });
       }
-    } catch (err) {
+    }catch(err){
       console.error(err);
-      alert('حدث خطأ: ' + err.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = original;
+      alert('حدث خطأ: '+err.message);
+    }finally{
+      btn.disabled=false;
+      btn.textContent=original;
     }
   }
 
-  function renderResult(result) {
-    const el = $('smartResult');
-    if (!el) return;
+  function renderResult(result){
+    const el=$('smartResult');
+    if(!el) return;
     el.classList.remove('hidden');
-    const r = result.recommendations;
-    const riskClass = r.riskLevel === 'مرتفع' ? 'high' : r.riskLevel === 'متوسط' ? 'medium' : 'low';
-
-    el.innerHTML = `
-      <h3 class="result-headline">${r.headline}</h3>
+    const r=result.recommendations;
+    const riskClass=r.riskLevel==='مرتفع'?'high':r.riskLevel==='متوسط'?'medium':'low';
+    const needs=(r.insuranceNeeds||[]).slice(0,8);
+    el.innerHTML=`
+      <h3 class="result-headline">${esc(r.headline)}</h3>
       <div class="result-badges">
-        <span class="result-badge badge-${riskClass}">مستوى المخاطر: ${r.riskLevel}</span>
-        ${r.estimatedDiscount > 0
-          ? `<span class="result-badge badge-low">خصم ${r.estimatedDiscount}% متاح</span>`
-          : ''}
+        <span class="result-badge badge-${riskClass}">مستوى المخاطر: ${esc(r.riskLevel)}</span>
+        <span class="result-badge badge-low">مؤشر الاحتياج التأميني: ${esc(r.insuranceNeedScore)}%</span>
+        ${r.estimatedDiscount>0 ? `<span class="result-badge badge-low">خصم ${esc(r.estimatedDiscount)}% متاح</span>`:''}
       </div>
 
-      <h4>🎯 التوصيات البديلة:</h4>
-      <ul>
-        ${r.alternativeRecommendations.length
-          ? r.alternativeRecommendations.map(p => `<li>${SmartEngine.PRODUCT_NAMES_AR[p] || p}</li>`).join('')
-          : '<li>لا توجد توصيات بديلة</li>'}
+      <h4>الأولويات التأمينية</h4>
+      <div class="need-list">
+        ${needs.length ? needs.map((n,idx)=>`
+          <div class="need-card">
+            <div class="need-top">
+              <span class="need-name">${idx+1}. ${esc(n.productNameAr)}</span>
+              <span class="need-score">${esc(n.score)}% — ${esc(n.priority)}</span>
+            </div>
+            <div class="need-meter"><i style="width:${Math.max(0,Math.min(100,n.score))}%"></i></div>
+            <div class="need-reason">${esc(n.reason)}</div>
+          </div>`).join('') : '<div class="need-card">لم يتم اكتشاف احتياج كافٍ لتحديد أولويات واضحة.</div>'}
+      </div>
+
+      <h4>الفجوات التأمينية المكتشفة</h4>
+      <ul class="gap-list">
+        ${r.coverageGaps?.length ? r.coverageGaps.slice(0,8).map(g=>`<li><strong>${esc(g.typeAr)}</strong> — ${esc(g.reason)} (${esc(g.severity)})</li>`).join('') : '<li>لا توجد فجوات واضحة وفق البيانات الحالية، مع ضرورة مراجعة حدود الوثائق والاستثناءات.</li>'}
       </ul>
 
-      <h4>⚠️ الفجوات التأمينية:</h4>
-      <ul>
-        ${r.coverageGaps.length
-          ? r.coverageGaps.map(g =>
-              `<li><strong>${g.typeAr}</strong>: ${g.reason} <em>(${g.severity})</em></li>`
-            ).join('')
-          : '<li>لا توجد فجوات حالية — تغطيتك شاملة 👌</li>'}
+      <h4>لماذا ظهرت هذه التغطيات؟</h4>
+      <ul class="action-list">
+        ${(r.actionItems||[]).map(a=>`<li>${esc(a)}</li>`).join('')}
       </ul>
-
-      <h4>📋 خطواتك القادمة:</h4>
-      <ol>${r.actionItems.map(a => `<li>${a}</li>`).join('')}</ol>
 
       <div class="result-actions">
-        <button class="btn-primary"
-          onclick="SmartAssessmentUI.requestQuote('${r.primaryRecommendation || ''}')">
-          📩 اطلب عرض سعر
-        </button>
-        <button class="btn-secondary" onclick="window.print()">🖨️ طباعة التقرير</button>
+        <button class="btn-primary" onclick="SmartAssessmentUI.requestQuote('${esc(r.primaryRecommendation || '')}')">طلب عرض سعر</button>
+        <button class="btn-secondary" onclick="window.print()">طباعة التقرير</button>
       </div>
     `;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function requestQuote(product) {
-    if (typeof window.requestQuote === 'function') {
-      window.requestQuote(product);
-    } else {
-      alert('سيتم التواصل معك قريبًا لعرض سعر ' + (SmartEngine.PRODUCT_NAMES_AR[product] || product));
-    }
+  function requestQuote(product){
+    if(typeof window.requestQuote==='function') window.requestQuote(product);
+    else alert('سيتم التواصل معك قريبًا لعرض سعر '+(SmartEngine.PRODUCT_NAMES_AR[product]||product));
   }
 
-  function init() {
-    if (!$('smartAssessment')) return;
+  function init(){
+    if(!$('smartAssessment')) return;
 
-    $('smartNext')?.addEventListener('click', () => {
-      if (currentStep < TOTAL_STEPS) { currentStep++; updateProgress(); }
+    document.querySelectorAll('input[name="clientType"]').forEach(r=>{
+      r.addEventListener('change',()=>{
+        const steps=activeSteps();
+        if(!steps.includes(currentStep)) currentStep=steps[steps.length-1]===7 ? 7 : 1;
+        updateProgress();
+      });
     });
-    $('smartPrev')?.addEventListener('click', () => {
-      if (currentStep > 1) { currentStep--; updateProgress(); }
+    $('businessType')?.addEventListener('change',()=>{
+      if(currentStep===6 && !isFactory()) currentStep=7;
+      updateProgress();
     });
-    $('smartSubmit')?.addEventListener('click', submit);
+    $('hasExistingCheck')?.addEventListener('change',e=>{
+      document.querySelectorAll('#existingPoliciesWrap input[type="checkbox"]').forEach(cb=>{
+        cb.disabled=!e.target.checked;
+        if(!e.target.checked) cb.checked=false;
+      });
+    });
 
-    $('hasExisting')?.addEventListener('change', e => {
-      $('existingPoliciesWrap')?.classList.toggle('hidden', e.target.value === 'no');
+    $('smartNext')?.addEventListener('click',()=>{
+      const steps=activeSteps();
+      const idx=steps.indexOf(currentStep);
+      if(idx<steps.length-1){
+        currentStep=steps[idx+1];
+        updateProgress();
+      }
     });
+    $('smartPrev')?.addEventListener('click',()=>{
+      const steps=activeSteps();
+      const idx=steps.indexOf(currentStep);
+      if(idx>0){
+        currentStep=steps[idx-1];
+        updateProgress();
+      }
+    });
+    $('smartSubmit')?.addEventListener('click',submit);
 
-    $('businessOwner')?.addEventListener('change', e => {
-      $('businessDetailsWrap')?.classList.toggle('hidden', e.target.value === 'no');
-    });
+    document.querySelectorAll('#existingPoliciesWrap input[type="checkbox"]').forEach(cb=>cb.disabled=true);
 
     updateProgress();
   }
 
-  return { init, submit, requestQuote, collectInputs };
+  return {init,submit,requestQuote,collectInputs};
 })();
 
-document.addEventListener('DOMContentLoaded', () => SmartAssessmentUI.init());
+document.addEventListener('DOMContentLoaded',()=>SmartAssessmentUI.init());
 </script>
 </body>
 </html>
