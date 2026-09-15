@@ -12356,29 +12356,41 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             updateComplaintCharCount();
             initDraggableWhatsappFab();
             initDraggableRobotFab();
-            AUTH_READY = auth.setPersistence(firebase.auth.Auth.Persistence.NONE)
-                .then(function() { return auth.signOut().catch(function() {}); })
-                .catch(function(e) {
-                    console.warn('Authentication initialization warning:', e);
-                    return auth.signOut().catch(function() {});
-                });
-            AUTH_READY.then(function() {
-                resetState();
-                updateAllTexts();
-                showScreen('login');
-                var email = document.getElementById('loginEmail'),
-                    pass = document.getElementById('loginPass');
-                if (email) { email.value = '';
-                    email.focus(); }
-                if (pass) pass.value = '';
-                captureOfferReferral();
-                showOfferReferralBanner('login');
-            }).catch(function(e) {
-                console.error('Authentication initialization failed:', e);
-                resetState();
-                showScreen('login');
-            });
-            if ('IntersectionObserver' in window) {
+// ═══════════════════════════════════════════════════════════════
+// 🔐 [تعديل] الدخول التلقائي - LOCAL persistence
+// ═══════════════════════════════════════════════════════════════
+AUTH_READY = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .catch(function(e) {
+        console.warn('Auth persistence warning:', e);
+    });
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 [جديد] مراقبة حالة المستخدم - دخول تلقائي
+// ═══════════════════════════════════════════════════════════════
+auth.onAuthStateChanged(function(user) {
+    if (user) {
+        // ✅ المستخدم مسجل دخول - عرض التطبيق مباشرة
+        console.log('✅ دخول تلقائي ناجح:', user.email);
+        resetState();
+        updateAllTexts();
+        showScreen('home');
+        if (typeof loadUserData === 'function') {
+            try { loadUserData(user.uid); } catch (e) { console.warn(e); }
+        }
+    } else {
+        // ❌ لا يوجد مستخدم - عرض شاشة الدخول
+        console.log('ℹ️ عرض شاشة الدخول');
+        resetState();
+        updateAllTexts();
+        showScreen('login');
+        var email = document.getElementById('loginEmail'),
+            pass = document.getElementById('loginPass');
+        if (email) { email.value = ''; email.focus(); }
+        if (pass) pass.value = '';
+    }
+    captureOfferReferral();
+    showOfferReferralBanner(user ? 'home' : 'login');
+});            if ('IntersectionObserver' in window) {
                 var imgObserver = new IntersectionObserver(function(entries) {
                     entries.forEach(function(entry) {
                         if (entry.isIntersecting) {
