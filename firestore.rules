@@ -43,7 +43,8 @@ service cloud.firestore {
     // the client app ever changes.
     // Values: assessment 30, docUpload 10, diversify 50, renewal 40,
     // profileComplete 20, referralShare 15, walking 5/15,
-    // running 8/23, healthyEating 5/15, driving 6/21, gpsDriving 8/23.
+    // running 8/23, healthyEating 5/15, hydration 5/15, sleep 5/15,
+    // readTip 5/15, driving 6/21, gpsDriving 8/23.
     // ============================================================
     function VALID_POINT_DELTAS() {
       return [5, 6, 8, 10, 15, 20, 21, 23, 30, 40, 50];

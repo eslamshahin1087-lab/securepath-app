@@ -8041,6 +8041,9 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
                 walk: '<circle cx="13" cy="4" r="2"/><path d="M10 9 7 21M10 9l4 2 3-2M14 11l3 3 3-1M10 9 8 14l3 2-1 5"/>',
                 run: '<circle cx="15" cy="4" r="2"/><path d="M11 8 7 10l1 5 4 1-1 6M11 8l3 3 4-1M14 11l-1 3 4 3-2 4"/>',
                 apple: '<path d="M12 8c-3 0-5.5 2.5-5.5 6S9 20 12 20s5.5-2.5 5.5-6S15 8 12 8Z"/><path d="M12 8c0-2 1-3.5 2.5-4M10 6c1 0 1.5-1 1.5-2"/>',
+                drop: '<path d="M12 2c4 5 7 8.5 7 12.5A7 7 0 0 1 5 14.5C5 10.5 8 7 12 2Z"/>',
+                moon: '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/>',
+                book: '<path d="M4 5c2-1 5-1 8 0v14c-3-1-6-1-8 0Z"/><path d="M20 5c-2-1-5-1-8 0v14c3-1 6-1 8 0Z"/>',
                 heart: '<path d="M12 21s-7-4.5-9.5-9C.8 8.5 2.3 5 6 5c2 0 3.3 1 4 2.2C10.7 6 12 5 14 5c3.7 0 5.2 3.5 3.5 7-2.5 4.5-9.5 9-9.5 9Z"/>'
             };
             return '<span class="app-icon ' + (cls || '') + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (paths[name] || paths.info) + '</svg></span>';
@@ -8098,7 +8101,8 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             if (id === 'companyAds') renderCompanyAdsList();
             if (id === 'compareOffers') renderCompareOffers();
             if (id === 'insuranceTips') { switchTipsTab(STATE.tipsTab || 'articles');
-                renderInsuranceTips(); }
+                renderInsuranceTips();
+                if (typeof checkInHabit === 'function') checkInHabit('readTip'); }
             if (id === 'referral') renderReferralScreen();
             if (id === 'pointsHub') renderPointsHub();
             if (id === 'login') {
@@ -9564,7 +9568,10 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
             habits: {
                 walking: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'walk', ar: 'المشي', en: 'Walking' },
                 running: { points: 8, streakBonus: 15, streakEvery: 7, icon: 'run', ar: 'الجري', en: 'Running' },
-                healthyEating: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'apple', ar: 'الأكل الصحي', en: 'Healthy eating' }
+                healthyEating: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'apple', ar: 'الأكل الصحي', en: 'Healthy eating' },
+                hydration: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'drop', ar: 'شرب المياه', en: 'Hydration' },
+                sleep: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'moon', ar: 'نوم كافٍ', en: 'Good sleep' },
+                readTip: { points: 5, streakBonus: 10, streakEvery: 7, icon: 'book', ar: 'قراءة نصيحة تأمينية', en: 'Read an insurance tip' }
             },
             driving: { points: 6, streakBonus: 15, streakEvery: 7 },
             gpsDriving: {

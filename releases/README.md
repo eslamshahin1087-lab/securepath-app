@@ -16,3 +16,16 @@ This directory tracks every published APK release of SecurePath (Wathiqati).
 ## Verify an APK manually
 
 **Linux / macOS:**
+```bash
+sha256sum SecurePath.apk
+# compare the output to the "sha256" value for that version
+# in checksums.txt or releases.json
+```
+
+**Windows (PowerShell):**
+```powershell
+Get-FileHash .\SecurePath.apk -Algorithm SHA256
+```
+
+If the checksum doesn't match, don't install the APK — re-download it
+from the official [GitHub Releases page](https://github.com/eslamshahin1087-lab/securepath-app/releases).

@@ -54,8 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Issues
 - Cloudinary uses unsigned upload presets (scheduled for hardening).
 - No custom domain bound yet (uses GitHub Pages default URL).
-- APK releases are not tracked inside the repository.
-- No CI/CD pipeline configured.
+- APK releases are not tracked inside the repository (distributed via GitHub Releases instead).
+- CI/CD: GitHub Pages deploy, release checksum generation, and HTML validation are automated via `.github/workflows/` (deploy.yml, release.yml, validate.yml).
 
 ---
 
