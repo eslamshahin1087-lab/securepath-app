@@ -5687,9 +5687,7 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
   gap:10px;
 }
 .smart-assessment-screen .form-grid .full{grid-column:1/-1}
-.smart-assessment-screen .form-grid label,
-.smart-assessment-screen .radio-grid label,
-.smart-assessment-screen .check-card{
+.smart-assessment-screen .form-grid label{
   display:flex;
   flex-direction:column;
   gap:6px;
@@ -5728,40 +5726,73 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 .smart-assessment-screen .radio-card{
   position:relative;
   cursor:pointer;
+  display:block;
 }
 .smart-assessment-screen .radio-card input{
   position:absolute;
   opacity:0;
   pointer-events:none;
 }
-.smart-assessment-screen .radio-card span{
+.smart-assessment-screen .radio-card>span{
+  position:relative;
   display:flex;
   align-items:center;
-  gap:8px;
-  min-height:62px;
-  padding:10px;
-  border:1px solid var(--line,#E2E9F2);
+  gap:10px;
+  min-height:64px;
+  padding:10px 34px 10px 12px;
+  border:1.5px solid var(--line,#E2E9F2);
   border-radius:var(--radius-md,16px);
   background:var(--card,#fff);
   color:var(--slate,#25324A);
-  font-size:11px;
+  font-size:11.5px;
   font-weight:900;
+  line-height:1.4;
   transition:.2s ease;
 }
-.smart-assessment-screen .radio-card span::before{
-  content:"";
-  width:10px;height:10px;flex:0 0 10px;
-  border:2px solid var(--gold,#F2BD63);
+.smart-assessment-screen .radio-card .card-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;height:36px;flex:0 0 36px;
+  border-radius:11px;
+  background:var(--paper,#F5F8FC);
+  transition:.2s ease;
+}
+.smart-assessment-screen .radio-card .card-icon .app-icon{width:18px;height:18px}
+.smart-assessment-screen .radio-card .card-text{flex:1 1 auto}
+.smart-assessment-screen .radio-card .card-check{
+  position:absolute;
+  top:8px;
+  inset-inline-end:8px;
+  width:18px;height:18px;flex:0 0 18px;
   border-radius:50%;
+  border:2px solid var(--line,#E2E9F2);
+  background:var(--card,#fff);
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s ease;
+}
+.smart-assessment-screen .radio-card .card-check svg{
+  width:10px;height:10px;
+  stroke:#fff;stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  opacity:0;
+  transform:scale(.6);
+  transition:.2s ease;
 }
 .smart-assessment-screen .radio-card input:checked+span{
   border-color:var(--gold,#F2BD63);
   background:var(--gold-soft,#FFF2D7);
   box-shadow:0 8px 20px rgba(14,42,92,.07);
 }
-.smart-assessment-screen .radio-card input:checked+span::before{
+.smart-assessment-screen .radio-card input:checked+span .card-icon{background:var(--card,#fff)}
+.smart-assessment-screen .radio-card input:checked+span .card-check{
+  border-color:var(--gold,#F2BD63);
   background:var(--gold,#F2BD63);
-  box-shadow:inset 0 0 0 2px var(--gold-soft,#FFF2D7);
+}
+.smart-assessment-screen .radio-card input:checked+span .card-check svg{opacity:1;transform:scale(1)}
+.smart-assessment-screen .radio-card input:focus-visible+span{
+  outline:2px solid var(--gold,#F2BD63);
+  outline-offset:2px;
 }
 .smart-assessment-screen .checkbox-grid{
   display:grid;
@@ -5769,19 +5800,38 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
   gap:8px;
 }
 .smart-assessment-screen .check-card{
+  display:flex;
   flex-direction:row;
   align-items:center;
-  padding:9px 10px;
+  gap:8px;
+  padding:8px 10px;
   border:1px solid var(--line,#E2E9F2);
   border-radius:var(--radius-sm,10px);
   background:var(--card,#fff);
+  color:var(--slate,#25324A);
+  font-size:11px;
+  font-weight:800;
   cursor:pointer;
+  transition:.2s ease;
+}
+.smart-assessment-screen .check-card:has(input:checked){
+  border-color:var(--gold,#F2BD63);
+  background:var(--gold-soft,#FFF2D7);
 }
 .smart-assessment-screen .check-card input{
   width:17px;height:17px;
   accent-color:var(--gold,#F2BD63);
   flex:0 0 17px;
 }
+.smart-assessment-screen .check-card input:disabled{opacity:.35}
+.smart-assessment-screen .check-card .card-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:28px;height:28px;flex:0 0 28px;
+  border-radius:9px;
+  background:var(--paper,#F5F8FC);
+}
+.smart-assessment-screen .check-card .card-icon .app-icon{width:15px;height:15px}
+.smart-assessment-screen .check-card .card-text{flex:1 1 auto}
 .smart-assessment-screen .smart-callout{
   margin-top:10px;
   padding:10px 12px;
@@ -5860,6 +5910,46 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
 .smart-assessment-screen .badge-high{background:var(--red-light,#FFF0ED);color:var(--red,#C9543E)}
 .smart-assessment-screen .badge-medium{background:var(--gold-soft,#FFF2D7);color:#8A6D1B}
 .smart-assessment-screen .badge-low{background:var(--green-light,#E6F7ED);color:var(--green,#16805B)}
+.smart-assessment-screen .result-gauges{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:4px 0 14px;
+}
+.smart-assessment-screen .result-gauge{
+  padding:10px 12px;
+  border:1px solid var(--line,#E2E9F2);
+  border-radius:var(--radius-md,16px);
+  background:var(--card,#fff);
+}
+.smart-assessment-screen .result-gauge-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:6px;
+}
+.smart-assessment-screen .result-gauge-label{
+  color:var(--muted,#718096);
+  font-size:9.5px;
+  font-weight:800;
+}
+.smart-assessment-screen .result-gauge-value{
+  color:var(--navy,#0E2A5C);
+  font-size:15px;
+  font-weight:900;
+}
+.smart-assessment-screen .need-group{margin-top:16px}
+.smart-assessment-screen .need-group-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--navy,#0E2A5C);
+  font-size:11.5px;
+  font-weight:900;
+  margin:0 0 8px;
+  padding-inline-start:10px;
+  border-inline-start:3px solid var(--gold,#F2BD63);
+}
 .smart-assessment-screen .need-list{
   display:grid;
   gap:8px;
@@ -5898,7 +5988,11 @@ html.dark-mode #home .home-partners{border-top-color:rgba(255,255,255,.06);}
   display:block;height:100%;
   background:var(--gradient-gold,linear-gradient(135deg,#F2BD63,#FFD98F));
   border-radius:999px;
+  transition:width .4s ease;
 }
+.smart-assessment-screen .need-meter i.low{background:linear-gradient(135deg,var(--green,#16805B),#3FBE86)}
+.smart-assessment-screen .need-meter i.medium{background:linear-gradient(135deg,#8A6D1B,var(--gold,#F2BD63))}
+.smart-assessment-screen .need-meter i.high{background:linear-gradient(135deg,var(--red,#C9543E),#F0806A)}
 .smart-assessment-screen .need-reason{
   color:var(--muted,#718096);
   font-size:9.5px;
@@ -7140,8 +7234,22 @@ html.dark-mode .smart-assessment-screen .form-grid textarea{background:#0F172A}
       <h3>1. تحديد نوع العميل</h3>
       <p class="step-help">نحدد أولًا الإطار التحليلي لأن احتياجات الفرد والأسرة تختلف جذريًا عن احتياجات الشركة أو المنشأة الصناعية.</p>
       <div class="radio-grid">
-        <label class="radio-card"><input type="radio" name="clientType" id="clientTypeIndividual" value="individual" checked><span>👤 فرد / أسرة</span></label>
-        <label class="radio-card"><input type="radio" name="clientType" id="clientTypeCorporate" value="corporate"><span>🏢 شركة / مؤسسة / صاحب نشاط</span></label>
+        <label class="radio-card">
+          <input type="radio" name="clientType" id="smartClientTypeIndividual" value="individual" checked>
+          <span>
+            <span class="card-icon icon-navy"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c1-4 3-6 7-6s6 2 7 6"/></svg></span></span>
+            <span class="card-text" id="smartClientTypeIndividualLabel">فرد / أسرة</span>
+            <span class="card-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+          </span>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="clientType" id="smartClientTypeCorporate" value="corporate">
+          <span>
+            <span class="card-icon icon-gold"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18"/></svg></span></span>
+            <span class="card-text" id="smartClientTypeCorporateLabel">شركة / مؤسسة / صاحب نشاط</span>
+            <span class="card-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+          </span>
+        </label>
       </div>
       <div class="smart-callout">ستتغير الأسئلة تلقائيًا حسب اختيارك، وسيتم بناء أولويات التغطيات وفقًا لإجاباتك الفعلية.</div>
     </div>
@@ -7185,13 +7293,13 @@ html.dark-mode .smart-assessment-screen .form-grid textarea{background:#0F172A}
         <h4>وثائق التأمين الحالية</h4>
         <label class="check-card"><input type="checkbox" id="hasExistingCheck"> لدي وثائق تأمين حالية</label>
         <div id="existingPoliciesWrap" class="checkbox-grid" style="margin-top:8px;">
-          <label class="check-card"><input type="checkbox" value="LIFE"> حياة</label>
-          <label class="check-card"><input type="checkbox" value="HEALTH"> صحي</label>
-          <label class="check-card"><input type="checkbox" value="MOTOR"> سيارات</label>
-          <label class="check-card"><input type="checkbox" value="HOME"> ممتلكات شخصية / منزل</label>
-          <label class="check-card"><input type="checkbox" value="TRAVEL"> سفر</label>
-          <label class="check-card"><input type="checkbox" value="DISABILITY"> عجز</label>
-          <label class="check-card"><input type="checkbox" value="CRITICAL"> أمراض حرجة</label>
+          <label class="check-card"><input type="checkbox" value="LIFE"><span class="card-icon icon-navy"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.8 8.5 2.3 5 6 5c2 0 3.3 1 4 2.2C10.7 6 12 5 14 5c3.7 0 5.2 3.5 3.5 7-2.5 4.5-9.5 9-9.5 9Z"/></svg></span></span><span class="card-text">حياة</span></label>
+          <label class="check-card"><input type="checkbox" value="HEALTH"><span class="card-icon icon-gold"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M9 6V4h6v2M8 13h8M12 9v8"/></svg></span></span><span class="card-text">صحي</span></label>
+          <label class="check-card"><input type="checkbox" value="MOTOR"><span class="card-icon icon-navy"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 16 1.5-6h11L19 16"/><path d="M3 16h18v4H3z"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></span></span><span class="card-text">سيارات</span></label>
+          <label class="check-card"><input type="checkbox" value="HOME"><span class="card-icon icon-gold"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></span></span><span class="card-text">ممتلكات شخصية / منزل</span></label>
+          <label class="check-card"><input type="checkbox" value="TRAVEL"><span class="card-icon icon-navy"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 12 18-7-6 7 6 7-18-7Z"/><path d="M9 12 6 5M9 12l-3 7"/></svg></span></span><span class="card-text">سفر</span></label>
+          <label class="check-card"><input type="checkbox" value="DISABILITY"><span class="card-icon icon-gold"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M10 9 7 21M10 9l4 2 3-2M14 11l3 3 3-1M10 9 8 14l3 2-1 5"/></svg></span></span><span class="card-text">عجز</span></label>
+          <label class="check-card"><input type="checkbox" value="CRITICAL"><span class="card-icon icon-navy"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg></span></span><span class="card-text">أمراض حرجة</span></label>
         </div>
       </div>
     </div>
@@ -7465,6 +7573,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 regClientTypeLabel: 'نوع العميل',
                 clientTypeIndividual: 'فردي',
                 clientTypeCorporate: 'جماعي (شركة / مؤسسة)',
+                smartClientTypeIndividualLabel: 'فرد / أسرة',
+                smartClientTypeCorporateLabel: 'شركة / مؤسسة / صاحب نشاط',
                 regBusinessNameLabel: 'اسم المنشأة / الشركة',
                 regBusinessActivityLabel: 'نشاط المنشأة',
                 regEmployeesLabel: 'عدد الموظفين',
@@ -7815,6 +7925,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 regClientTypeLabel: 'Client Type',
                 clientTypeIndividual: 'Individual',
                 clientTypeCorporate: 'Corporate',
+                smartClientTypeIndividualLabel: 'Individual / Family',
+                smartClientTypeCorporateLabel: 'Company / Business owner',
                 regBusinessNameLabel: 'Company Name',
                 regBusinessActivityLabel: 'Business Activity',
                 regEmployeesLabel: 'Employees',
@@ -8666,12 +8778,10 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             return VERIFICATION_EXEMPT_DOMAINS.indexOf(e.slice(at + 1)) !== -1;
         }
 
-        function finishClientLogin(credential, identifier) {
-            var user = credential && credential.user;
-            if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
-            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
-                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
-            }
+        // SECURITY: shared by both the manual-login flow (finishClientLogin)
+        // and the auto-login/session-resume flow (resumeClientSession) so the
+        // profile-provisioning logic never drifts between the two paths.
+        function resolveClientProfileForUser(user) {
             return getClientProfile(user.uid, user.email).then(function(profile) {
                 if (!profile) {
                     // SECURITY: Auto-provision a minimal profile for accounts
@@ -8693,24 +8803,56 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 }
 
                 return profile;
-            }).then(function(profile) {
+            });
+        }
+
+        // SECURITY: shared post-profile-load rendering, used by both
+        // finishClientLogin and resumeClientSession so a resumed session
+        // ends up in exactly the same state as a fresh manual login.
+        function enterClientHome() {
+            updateAllTexts();
+            renderAll();
+            showScreen('home');
+            requestAnimationFrame(function() { renderCompaniesSlider(); });
+            setTimeout(function() { renderCompaniesSlider(); }, 120);
+            if (!STATE.userData.onboardingSeen) {
+                setTimeout(function() { showOnboarding(); }, 300);
+            }
+            requestNotificationPermission().catch(function() {});
+        }
+
+        // SECURITY: resumes an already-authenticated Firebase session (LOCAL
+        // persistence keeps the user signed in across app restarts). This
+        // path MUST re-check emailVerified exactly like finishClientLogin -
+        // a persisted session is not itself proof the account was ever
+        // allowed through the manual-login verification gate.
+        function resumeClientSession(user) {
+            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
+                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
+            }
+            return resolveClientProfileForUser(user).then(function(profile) {
+                STATE.userData = Object.assign({}, profile.data || {});
+                STATE.currentUser = { uid: user.uid, name: displayClientName(STATE.userData, (user.email || '').split('@')[0]), email: user.email || STATE.userData.email || STATE.userData.loginEmail || '' };
+                if (STATE.userData.language === 'ar' || STATE.userData.language === 'en') STATE.language = STATE.userData.language;
+                updateUserUI(STATE.userData);
+                return loadUserData(user.uid, profile);
+            }).then(enterClientHome);
+        }
+
+        function finishClientLogin(credential, identifier) {
+            var user = credential && credential.user;
+            if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
+            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
+                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
+            }
+            return resolveClientProfileForUser(user).then(function(profile) {
                 var name = verifyClientIdentity(profile, user, identifier);
                 STATE.userData = Object.assign({}, profile.data || {});
                 STATE.currentUser = { uid: user.uid, name: name, email: user.email || STATE.userData.email || STATE.userData.loginEmail || '' };
                 if (STATE.userData.language === 'ar' || STATE.userData.language === 'en') STATE.language = STATE.userData.language;
                 updateUserUI(STATE.userData);
                 return loadUserData(user.uid, profile);
-            }).then(function() {
-                updateAllTexts();
-                renderAll();
-                showScreen('home');
-                requestAnimationFrame(function() { renderCompaniesSlider(); });
-                setTimeout(function() { renderCompaniesSlider(); }, 120);
-                if (!STATE.userData.onboardingSeen) {
-                    setTimeout(function() { showOnboarding(); }, 300);
-                }
-                requestNotificationPermission().catch(function() {});
-            });
+            }).then(enterClientHome);
         }
 
         // ============================================================ //
@@ -11871,6 +12013,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             regClientTypeLabel: 'regClientTypeLabel',
             clientTypeIndividual: 'clientTypeIndividual',
             clientTypeCorporate: 'clientTypeCorporate',
+            smartClientTypeIndividualLabel: 'smartClientTypeIndividualLabel',
+            smartClientTypeCorporateLabel: 'smartClientTypeCorporateLabel',
             regBusinessNameLabel: 'regBusinessNameLabel',
             regBusinessActivityLabel: 'regBusinessActivityLabel',
             regEmployeesLabel: 'regEmployeesLabel',
@@ -12475,31 +12619,49 @@ AUTH_READY = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     });
 
 // ═══════════════════════════════════════════════════════════════
-// 🔐 [جديد] مراقبة حالة المستخدم - دخول تلقائي
+// 🔐 مراقبة حالة المستخدم - استئناف الجلسة تلقائيًا (مع التحقق من
+// توثيق البريد الإلكتروني - جلسة محفوظة لا تعني تخطي هذا الشرط)
 // ═══════════════════════════════════════════════════════════════
-auth.onAuthStateChanged(function(user) {
-    if (user) {
-        // ✅ المستخدم مسجل دخول - عرض التطبيق مباشرة
-        console.log('✅ دخول تلقائي ناجح:', user.email);
-        resetState();
-        updateAllTexts();
-        showScreen('home');
-        if (typeof loadUserData === 'function') {
-            try { loadUserData(user.uid); } catch (e) { console.warn(e); }
-        }
-    } else {
-        // ❌ لا يوجد مستخدم - عرض شاشة الدخول
-        console.log('ℹ️ عرض شاشة الدخول');
-        resetState();
-        updateAllTexts();
-        showScreen('login');
-        var email = document.getElementById('loginEmail'),
-            pass = document.getElementById('loginPass');
-        if (email) { email.value = ''; email.focus(); }
-        if (pass) pass.value = '';
+function showLoginAfterAuthChange(message) {
+    resetState();
+    updateAllTexts();
+    showScreen('login');
+    var email = document.getElementById('loginEmail'),
+        pass = document.getElementById('loginPass'),
+        err = document.getElementById('loginError');
+    if (email) { email.value = ''; email.focus(); }
+    if (pass) pass.value = '';
+    if (err) {
+        if (message) { err.textContent = message; err.style.display = 'block'; }
+        else err.style.display = 'none';
     }
     captureOfferReferral();
-    showOfferReferralBanner(user ? 'home' : 'login');
+    showOfferReferralBanner('login');
+}
+
+auth.onAuthStateChanged(function(user) {
+    if (!user) {
+        console.log('ℹ️ عرض شاشة الدخول');
+        showLoginAfterAuthChange();
+        return;
+    }
+    resetState();
+    resumeClientSession(user).then(function() {
+        console.log('✅ تم استئناف الجلسة تلقائيًا:', user.email);
+        captureOfferReferral();
+        showOfferReferralBanner('home');
+    }).catch(function(e) {
+        console.warn('Session resume failed:', e);
+        auth.signOut().catch(function() {});
+        var code = e && e.code || '';
+        var message;
+        if (code === 'auth/email-not-verified') {
+            message = STATE.language === 'ar' ? 'يجب توثيق بريدك الإلكتروني قبل تسجيل الدخول. يرجى مراجعة صندوق الوارد لديك (وملف الرسائل غير المرغوبة) وتفعيل رابط التوثيق ثم إعادة المحاولة.' : 'Please verify your email address before logging in. Check your inbox (and spam folder) for the verification link, then try again.';
+        } else {
+            message = STATE.language === 'ar' ? 'تعذّر استعادة جلستك تلقائيًا. يرجى تسجيل الدخول مرة أخرى.' : 'We could not restore your session automatically. Please log in again.';
+        }
+        showLoginAfterAuthChange(message);
+    });
 });            if ('IntersectionObserver' in window) {
                 var imgObserver = new IntersectionObserver(function(entries) {
                     entries.forEach(function(entry) {
@@ -13026,6 +13188,7 @@ const SmartEngine = (() => {
     matchProducts,
     generateRecommendations,
     PRODUCT_NAMES_AR,
+    PRODUCT_CATALOG,
     JOURNEY_STAGES,
     trackJourney
   };
@@ -13218,24 +13381,26 @@ const SmartAssessmentUI = (() => {
     }
   }
 
-  function renderResult(result){
-    const el=$('smartResult');
-    if(!el) return;
-    el.classList.remove('hidden');
-    const r=result.recommendations;
-    const riskClass=r.riskLevel==='مرتفع'?'high':r.riskLevel==='متوسط'?'medium':'low';
-    const needs=(r.insuranceNeeds||[]).slice(0,8);
-    el.innerHTML=`
-      <h3 class="result-headline">${esc(r.headline)}</h3>
-      <div class="result-badges">
-        <span class="result-badge badge-${riskClass}">مستوى المخاطر: ${esc(r.riskLevel)}</span>
-        <span class="result-badge badge-low">مؤشر الاحتياج التأميني: ${esc(r.insuranceNeedScore)}%</span>
-        ${r.estimatedDiscount>0 ? `<span class="result-badge badge-low">خصم ${esc(r.estimatedDiscount)}% متاح</span>`:''}
-      </div>
+  const NEED_GROUP_LABELS={
+    PERSONAL:'الحماية الشخصية والأسرية',
+    BUSINESS:'حماية الأعمال والمنشأة',
+    FACTORY:'التأمين الصناعي المتخصص'
+  };
+  const NEED_GROUP_ORDER=['PERSONAL','BUSINESS','FACTORY'];
 
-      <h4>الأولويات التأمينية</h4>
-      <div class="need-list">
-        ${needs.length ? needs.map((n,idx)=>`
+  function groupNeeds(needs){
+    const catalog=(window.SmartEngine&&window.SmartEngine.PRODUCT_CATALOG)||{};
+    const groups={};
+    needs.forEach(n=>{
+      const g=(catalog[n.product]&&catalog[n.product].group)||'PERSONAL';
+      if(!groups[g]) groups[g]=[];
+      groups[g].push(n);
+    });
+    return NEED_GROUP_ORDER.filter(g=>groups[g]&&groups[g].length).map(g=>({group:g,label:NEED_GROUP_LABELS[g],items:groups[g]}));
+  }
+
+  function needCardHtml(n,idx){
+    return `
           <div class="need-card">
             <div class="need-top">
               <span class="need-name">${idx+1}. ${esc(n.productNameAr)}</span>
@@ -13243,8 +13408,45 @@ const SmartAssessmentUI = (() => {
             </div>
             <div class="need-meter"><i style="width:${Math.max(0,Math.min(100,n.score))}%"></i></div>
             <div class="need-reason">${esc(n.reason)}</div>
-          </div>`).join('') : '<div class="need-card">لم يتم اكتشاف احتياج كافٍ لتحديد أولويات واضحة.</div>'}
+          </div>`;
+  }
+
+  function renderResult(result){
+    const el=$('smartResult');
+    if(!el) return;
+    el.classList.remove('hidden');
+    const r=result.recommendations;
+    const riskClass=r.riskLevel==='مرتفع'?'high':r.riskLevel==='متوسط'?'medium':'low';
+    const needScoreClass=r.insuranceNeedScore>=65?'high':r.insuranceNeedScore>=40?'medium':'low';
+    const needs=(r.insuranceNeeds||[]).slice(0,10);
+    const grouped=groupNeeds(needs);
+    const isBusiness=result.profile&&result.profile.businessOwner;
+
+    el.innerHTML=`
+      <h3 class="result-headline">${esc(r.headline)}</h3>
+      <div class="result-badges">
+        <span class="result-badge badge-${riskClass}">مستوى المخاطر: ${esc(r.riskLevel)}</span>
+        <span class="result-badge badge-${isBusiness?'medium':'low'}">${isBusiness?'تحليل أعمال / منشأة':'تحليل فردي / أسري'}</span>
+        ${r.estimatedDiscount>0 ? `<span class="result-badge badge-low">خصم ${esc(r.estimatedDiscount)}% متاح</span>`:''}
       </div>
+
+      <div class="result-gauges">
+        <div class="result-gauge">
+          <div class="result-gauge-top"><span class="result-gauge-label">مؤشر الاحتياج التأميني</span><span class="result-gauge-value">${esc(r.insuranceNeedScore)}%</span></div>
+          <div class="need-meter"><i class="${needScoreClass}" style="width:${Math.max(0,Math.min(100,r.insuranceNeedScore))}%"></i></div>
+        </div>
+        <div class="result-gauge">
+          <div class="result-gauge-top"><span class="result-gauge-label">مستوى المخاطر العام</span><span class="result-gauge-value">${esc(result.riskScore)}%</span></div>
+          <div class="need-meter"><i class="${riskClass}" style="width:${Math.max(0,Math.min(100,result.riskScore))}%"></i></div>
+        </div>
+      </div>
+
+      <h4>الأولويات التأمينية${isBusiness?' — حسب الفئة':''}</h4>
+      ${grouped.length ? grouped.map(g=>`
+        <div class="need-group">
+          ${grouped.length>1?`<h5 class="need-group-title">${esc(g.label)}</h5>`:''}
+          <div class="need-list">${g.items.map((n,idx)=>needCardHtml(n,idx)).join('')}</div>
+        </div>`).join('') : '<div class="need-card">لم يتم اكتشاف احتياج كافٍ لتحديد أولويات واضحة.</div>'}
 
       <h4>الفجوات التأمينية المكتشفة</h4>
       <ul class="gap-list">
