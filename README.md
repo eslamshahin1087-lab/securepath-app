@@ -1,4 +1,4 @@
-# SecurePath (Wathiqati) — واثقتي
+# SecurePath (Wathiqati) — وثيقتي
 
 ![SecurePath logo](https://github.com/eslamshahin1087-lab/securepath-app/raw/main/icon-512.png)
 
@@ -15,7 +15,7 @@
 
 ## نظرة عامة
 
-**SecurePath (واثقتي)** هي منصة غير مباشرة لبيع/توليد عملاء التأمين (Indirect-Sale / Lead-Generation)، مُقدَّمة من وسيط تأمين حر مرخّص، **وليست شركة تأمين**. التطبيق يساعد العميل على:
+**SecurePath (وثيقتي)** هي منصة غير مباشرة لبيع/توليد عملاء التأمين (Indirect-Sale / Lead-Generation)، مُقدَّمة من وسيط تأمين حر مرخّص، **وليست شركة تأمين**. التطبيق يساعد العميل على:
 
 - متابعة كل وثائقه التأمينية (سارية، قريبة من التجديد) في مكان واحد
 - رفع وتوثيق مستنداته التأمينية
