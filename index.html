@@ -789,7 +789,6 @@
             <h2 id="downloadTitle">تطبيق <span class="highlight">SecurePath</span></h2>
             <p id="downloadDesc">تجربة أندرويد كاملة مع إشعارات فورية وتتبع مباشر لوثائقك</p>
             <div class="download-buttons">
-                <!-- تم تصحيح الرابط ليشير مباشرة إلى الملف الصحيح SecurePath.apk -->
                 <a href="https://github.com/eslamshahin1087-lab/securepath-app/releases/download/v1.0.0/SecurePath.apk" class="btn-primary" id="downloadApkBtn">
                     📥 تحميل APK (أندرويد)
                 </a>
@@ -797,6 +796,7 @@
                     🌐 تجربة الويب
                 </a>
             </div>
+            <p id="downloadChecksumInfo" style="margin-top:14px;font-size:13px;opacity:.75;"></p>
         </div>
     </section>
 
@@ -957,11 +957,34 @@
             LANDING_LANG = LANDING_LANG === 'ar' ? 'en' : 'ar';
             try { localStorage.setItem('SecurePath_landing_lang', LANDING_LANG); } catch (e) {}
             applyLandingLang();
+            loadReleaseInfo();
+        }
+
+        function loadReleaseInfo() {
+            fetch('releases/releases.json', { cache: 'no-store' })
+                .then(function(r) { return r.ok ? r.json() : []; })
+                .then(function(list) {
+                    if (!Array.isArray(list) || !list.length) return;
+                    var latest = list[0];
+                    var btn = document.getElementById('downloadApkBtn');
+                    var info = document.getElementById('downloadChecksumInfo');
+                    if (btn && latest.releaseUrl) {
+                        btn.href = 'https://github.com/eslamshahin1087-lab/securepath-app/releases/download/v' + latest.version + '/' + latest.file;
+                    }
+                    if (info) {
+                        var shortSha = latest.sha256 ? (latest.sha256.slice(0, 12) + '…') : '';
+                        info.textContent = LANDING_LANG === 'ar'
+                            ? ('الإصدار v' + latest.version + ' — SHA-256: ' + shortSha + ' (تحقّق من الملف قبل التثبيت)')
+                            : ('Version v' + latest.version + ' — SHA-256: ' + shortSha + ' (verify before installing)');
+                    }
+                })
+                .catch(function() { /* offline or file unavailable - static link/button stays as-is */ });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             LANDING_LANG = detectInitialLanguage();
             applyLandingLang();
+            loadReleaseInfo();
 
             // Navbar scroll effect
             var navbar = document.getElementById('navbar');
