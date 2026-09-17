@@ -1,0 +1,3 @@
+# SecurePath (Wathiqati) — APK checksums
+# version | sha256 | file | date (UTC) | release url
+1.0.0 | ebd04fcf4b8c20e9ee61a2c13a3ffe8adbaa56f3f0ce3593516c5409af495862 | SecurePath.apk | 2026-09-17T15:20:47Z | https://github.com/eslamshahin1087-lab/securepath-app/releases/tag/v1.0.0
