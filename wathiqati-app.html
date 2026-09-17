@@ -6986,7 +6986,7 @@ html.dark-mode .smart-assessment-screen .form-grid textarea{background:#0F172A}
                         <b id="redeemDiscountValue" style="color:var(--green);">0%</b>
                     </div>
                     <div class="redeem-disclaimer" id="redeemDisclaimerText">
-                        نظام نقاط الأمان هو برنامج ولاء مقدم من وسيط التأمين عبر منصة Wathiqati، وليس خصماً من قسط التأمين الرسمي الصادر عن الشركة. سيتم تفعيل الخصم كجزء من خدمة الوساطة عند تواصل فريقنا معك لإتمام الطلب.
+                        نظام نقاط الأمان هو برنامج ولاء مقدم من وسيط التأمين عبر منصة SecurePath، وليس خصماً من قسط التأمين الرسمي الصادر عن الشركة. سيتم تفعيل الخصم كجزء من خدمة الوساطة عند تواصل فريقنا معك لإتمام الطلب.
                     </div>
                 </div>
                 <div class="actions"><button class="btn-gold" id="redeemConfirmBtn" onclick="confirmRedeemPoints()"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span> تأكيد ومتابعة طلب العرض</button></div>
@@ -10205,7 +10205,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             setText('redeemPtsLabel', lang === 'ar' ? 'النقاط المستخدمة' : 'Points used');
             setText('redeemDiscountLabel', lang === 'ar' ? 'قيمة الخصم' : 'Discount value');
             setText('redeemConfirmBtn', ''); document.getElementById('redeemConfirmBtn').innerHTML = '<span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span> ' + (lang === 'ar' ? 'تأكيد ومتابعة طلب العرض' : 'Confirm & continue to quote');
-            setText('redeemDisclaimerText', lang === 'ar' ? 'نظام نقاط الأمان هو برنامج ولاء مقدم من وسيط التأمين عبر منصة Wathiqati، وليس خصماً من قسط التأمين الرسمي الصادر عن الشركة. سيتم تفعيل الخصم كجزء من خدمة الوساطة عند تواصل فريقنا معك لإتمام الطلب.' : 'InsuraPoints is a loyalty program offered by your broker via the Wathiqati platform, not a discount on the insurer\'s official premium. It is applied as part of the brokerage service once our team follows up on your request.');
+            setText('redeemDisclaimerText', lang === 'ar' ? 'نظام نقاط الأمان هو برنامج ولاء مقدم من وسيط التأمين عبر منصة SecurePath، وليس خصماً من قسط التأمين الرسمي الصادر عن الشركة. سيتم تفعيل الخصم كجزء من خدمة الوساطة عند تواصل فريقنا معك لإتمام الطلب.' : 'InsuraPoints is a loyalty program offered by your broker via the SecurePath platform, not a discount on the insurer\'s official premium. It is applied as part of the brokerage service once our team follows up on your request.');
             updateRedeemPreview();
             openModal('redeemPointsModal');
         }
@@ -10664,8 +10664,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             var code = myReferralCode();
             if (!code) return;
             var link = window.location.origin + window.location.pathname + '?ref=' + code;
-            var msg = lang === 'ar' ? 'بستخدم تطبيق واثيقتي لإدارة تأميناتي بسهولة، جرّبه من الرابط ده: ' + link :
-                'I use the Wathiqati app to manage my insurance easily, try it here: ' + link;
+            var msg = lang === 'ar' ? 'بستخدم تطبيق SecurePath لإدارة تأميناتي بسهولة، جرّبه من الرابط ده: ' + link :
+                'I use the SecurePath app to manage my insurance easily, try it here: ' + link;
             if (navigator.share) {
                 navigator.share({ text: msg }).catch(function() {});
             } else {
