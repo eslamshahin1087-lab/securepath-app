@@ -13030,7 +13030,7 @@ function hrT(key, vars) {
         }
 
         async function ensureCorporateHRCompany() {
-            if (!isCorporateHRUser() || !STATE.currentUser) return null;
+            if (!STATE.currentUser) return null;
             if (STATE.hrCompany && STATE.hrCompany.companyId) return STATE.hrCompany;
             var uid = STATE.currentUser.uid, u = STATE.userData || {};
             var companyId = getHRCompanyIdCandidate();
@@ -13120,7 +13120,7 @@ function hrT(key, vars) {
         }
 
         async function loadCorporateHRData() {
-            if (!isCorporateHRUser() || !STATE.currentUser) return;
+            if (!STATE.currentUser) return;
             try {
                 var company = await ensureCorporateHRCompany();
                 if (!company) return;
@@ -13394,7 +13394,7 @@ function hrT(key, vars) {
             var name=String((document.getElementById('hrEmpName')||{}).value||'').trim();
             if(!name){alert('اكتب اسم الموظف.');return;}
             try{
-                var company=await ensureCorporateHRCompany(), modal=document.getElementById('hrEmployeeModal'), id=modal&&modal.dataset.editId;
+                var company=await ensureCorporateHRCompany(); if(!company || !company.companyId) throw new Error('تعذر تحديد الشركة المرتبطة بحسابك.'); var modal=document.getElementById('hrEmployeeModal'), id=modal&&modal.dataset.editId;
                 var payload={
                     companyId:company.companyId,name:name,nationalId:String((document.getElementById('hrEmpNationalId')||{}).value||'').trim(),
                     department:String((document.getElementById('hrEmpDepartment')||{}).value||'').trim(),
@@ -13458,7 +13458,9 @@ function hrT(key, vars) {
                     dependentsCount:findHeader(headers,['عدد المعالين','المعالين','dependents','dependents count'])
                 };
                 if(idx.name<0)throw new Error('لم يتم العثور على عمود اسم الموظف.');
-                var company=await ensureCorporateHRCompany(), batchOps=[], count=0;
+                var company=await ensureCorporateHRCompany();
+                if(!company || !company.companyId) throw new Error('تعذر تحديد الشركة المرتبطة بحسابك. افتح صفحة حسابي ثم أعد المحاولة.');
+                var batchOps=[], count=0;
                 for(var rr=headerRow+1;rr<matrix.length;rr++){
                     var row=matrix[rr]; if(!row || !String(row[idx.name]||'').trim())continue;
                     var payload={
@@ -13529,7 +13531,7 @@ function hrT(key, vars) {
             if(!name||!file){alert('أدخل اسم الوثيقة واختر ملفًا.');return;}
             if(!isSupportedHRDocument(file)){alert('نوع الملف غير مدعوم أو حجمه يتجاوز 15MB.');return;}
             try{
-                var company=await ensureCorporateHRCompany(), progress=document.getElementById('hrDocUploadProgress');
+                var company=await ensureCorporateHRCompany(); if(!company || !company.companyId) throw new Error('تعذر تحديد الشركة المرتبطة بحسابك.'); var progress=document.getElementById('hrDocUploadProgress');
                 if(progress)progress.textContent='جاري الرفع... 0%';
                 var result=await uploadToCloudinary(file,function(p){if(progress)progress.textContent='جاري الرفع... '+p+'%';});
                 var payload={
@@ -13607,7 +13609,7 @@ function hrT(key, vars) {
             var employeeId=(document.getElementById('hrReqEmployee')||{}).value||null;
             if(type==='reimbursement'&&!employeeId){alert('اختر الموظف المرتبط بطلب التعويض.');return;}
             try{
-                var company=await ensureCorporateHRCompany(), emp=employeeId?(STATE.hrEmployees||[]).find(function(e){return e.id===employeeId;}):null;
+                var company=await ensureCorporateHRCompany(); if(!company || !company.companyId) throw new Error('تعذر تحديد الشركة المرتبطة بحسابك.'); var emp=employeeId?(STATE.hrEmployees||[]).find(function(e){return e.id===employeeId;}):null;
                 var customNumber=String((document.getElementById('hrReqNumber')||{}).value||'').trim();
                 var requestNumber=customNumber||('SP-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-7));
                 var payload={
@@ -13953,6 +13955,7 @@ function hrT(key, vars) {
             if(!report){alert('شغّل التحليل أولًا.');return;}
             try{
                 var company=await ensureCorporateHRCompany();
+                if(!company || !company.companyId) throw new Error('تعذر تحديد الشركة المرتبطة بحسابك.');
                 var safeReport=JSON.parse(JSON.stringify(report));
                 delete safeReport.rows;
                 safeReport.companyId=company.companyId;
