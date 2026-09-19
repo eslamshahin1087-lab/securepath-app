@@ -6493,7 +6493,7 @@ html.dark-mode .hr-control-value{color:var(--gold)}
 </style>
 
 <style id="hr-account-entry-polish">
-#corporateHRAccountCard{display:flex!important;margin:0 14px 14px;padding:13px;border-radius:18px;background:linear-gradient(145deg,#0d2b5f,#173f7a);border:1px solid rgba(242,189,99,.34);box-shadow:0 10px 24px rgba(14,42,92,.14);cursor:pointer}
+#corporateHRAccountCard{display:none!important;margin:0 14px 14px;padding:13px;border-radius:18px;background:linear-gradient(145deg,#0d2b5f,#173f7a);border:1px solid rgba(242,189,99,.34);box-shadow:0 10px 24px rgba(14,42,92,.14);cursor:pointer}
 #corporateHRAccountCard .hr-entry-row{width:100%;gap:10px}
 #corporateHRAccountCard .hr-entry-icon{width:42px;height:42px;border-radius:12px;background:rgba(242,189,99,.12);border-color:rgba(242,189,99,.42)}
 #corporateHRAccountCard .hr-entry-icon svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -6786,18 +6786,7 @@ html.dark-mode .hr-control-value{color:var(--gold)}
             </div>
 
             
-            <div class="corporate-hr-entry" id="corporateHRQuickCard" onclick="openCorporateHRHub()">
-                <div class="hr-entry-row">
-                    <div class="hr-entry-icon">
-                        <span class="app-icon app-icon-lg"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><path d="M16.5 16.5h.01"/></svg></span>
-                    </div>
-                    <div>
-                        <div class="hr-entry-title">لوحة الموارد البشرية</div>
-                        <div class="hr-entry-sub">Corporate HR Hub لإدارة الموظفين، وثائق الشركة، الطلبات وتحليل الاستهلاكات الطبية الجماعية.</div>
-                    </div>
-                    <div class="hr-entry-arrow">‹</div>
-                </div>
-            </div>
+            <div class="corporate-hr-entry" id="corporateHRQuickCard" aria-hidden="true" style="display:none!important;"></div>
 
 <div class="quick-section home-quick">
                 <div class="section-head">
@@ -6830,6 +6819,12 @@ html.dark-mode .hr-control-value{color:var(--gold)}
                             <span class="app-icon animated bounce"><svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8 14a6 6 0 1 1 8 0c-1 1-1.5 2-1.5 4h-5C9.5 16 9 15 8 14Z"/></svg></span>
                         </div>
                         <span class="quick-label" id="quickAdvice">طلب نصيحة</span>
+                    </div>
+                    <div class="quick-card hr-home-quick" id="homeHRHubCard" onclick="openCorporateHRHub()">
+                        <div class="qicon hr-home-icon">
+                            <span class="app-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><circle cx="17" cy="16" r="1.2"/></svg></span>
+                        </div>
+                        <span class="quick-label"><b>HR-Hub</b><small>HR Dashboard</small></span>
                     </div>
                     <div class="quick-card" onclick="showScreen('smartAssessment')">
                         <div class="qicon purple icon-purple">
@@ -7481,6 +7476,72 @@ html.dark-mode .hr-control-value{color:var(--gold)}
             <span class="hr-file-status" id="hrPolicyStatusBadge">لم يتم التحقق بعد</span>
         </div>
         <div class="hr-policy-grid" id="hrPolicySnapshot"></div>
+    </section>
+
+    <section class="hr-section-card hr-intelligence-card" aria-labelledby="hrInsuranceIntelligenceTitle">
+        <div class="hr-section-head">
+            <div>
+                <div class="hr-kicker">INSURANCE INTELLIGENCE</div>
+                <h3 class="hr-section-title" id="hrInsuranceIntelligenceTitle">HR Insurance Intelligence</h3>
+                <p class="hr-section-sub">تحليل آلي لسلامة ملف التأمين، اكتمال الوثائق، مخاطر التجديد، وكفاءة التغطية.</p>
+            </div>
+            <span class="hr-ai-badge">ANALYTICAL ENGINE</span>
+        </div>
+        <div class="hr-intelligence-grid" id="hrInsuranceIntelligence"></div>
+        <div class="hr-intelligence-alerts" id="hrInsuranceIntelligenceAlerts"></div>
+    </section>
+
+    <section class="hr-section-card hr-portfolio-section" aria-labelledby="hrPortfolioCockpitTitle">
+        <div class="hr-section-head">
+            <div>
+                <div class="hr-kicker">INSURANCE PORTFOLIO CONTROL</div>
+                <h3 class="hr-section-title" id="hrPortfolioCockpitTitle">Insurance Portfolio Cockpit</h3>
+                <p class="hr-section-sub">لوحة تنفيذية تقرأ بيانات الوثائق المرتبطة بالحساب وتحولها إلى مؤشرات تجديد، مالية، تشغيلية، وجودة بيانات.</p>
+            </div>
+            <div class="hr-cockpit-actions">
+                <button class="hr-head-action" onclick="renderHRInsuranceAnalytics(true)">تحديث التحليل</button>
+                <button class="hr-head-action hr-head-action-gold" onclick="exportHRInsuranceAudit()">تقرير Excel</button>
+            </div>
+        </div>
+        <div class="hr-portfolio-kpis" id="hrPortfolioKpis"></div>
+        <div class="hr-portfolio-two-col">
+            <div class="hr-subcard">
+                <div class="hr-subcard-head"><b>Renewal Pipeline</b><span>90 يومًا</span></div>
+                <div class="hr-renewal-pipeline" id="hrRenewalPipeline"></div>
+            </div>
+            <div class="hr-subcard">
+                <div class="hr-subcard-head"><b>Policy Mix</b><span id="hrPolicyMixMeta">—</span></div>
+                <div class="hr-policy-mix" id="hrPolicyMix"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hr-section-card hr-audit-section" aria-labelledby="hrPolicyAuditTitle">
+        <div class="hr-section-head">
+            <div>
+                <div class="hr-kicker">DOCUMENT AUDIT</div>
+                <h3 class="hr-section-title" id="hrPolicyAuditTitle">Insurance Document Audit</h3>
+                <p class="hr-section-sub">مراجعة سريعة لكل وثيقة: حالة السريان، اكتمال البيانات، موعد الانتهاء، القسط، وشدة الحاجة للمتابعة.</p>
+            </div>
+            <span class="hr-audit-legend"><i class="ok"></i> سليم <i class="warn"></i> متابعة <i class="danger"></i> خطر</span>
+        </div>
+        <div class="hr-audit-table-wrap">
+            <table class="hr-audit-table">
+                <thead><tr><th>الوثيقة / الشركة</th><th>رقم الوثيقة</th><th>الانتهاء</th><th>القسط</th><th>جودة الملف</th><th>أولوية المتابعة</th></tr></thead>
+                <tbody id="hrPolicyAuditBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="hr-section-card hr-recommendation-section" aria-labelledby="hrRiskRecommendationsTitle">
+        <div class="hr-section-head">
+            <div>
+                <div class="hr-kicker">DECISION SUPPORT</div>
+                <h3 class="hr-section-title" id="hrRiskRecommendationsTitle">Recommendations Engine</h3>
+                <p class="hr-section-sub">توصيات مولدة من قواعد تحليل واضحة على المدخلات الفعلية، وليست قرارًا آليًا ملزمًا.</p>
+            </div>
+        </div>
+        <div class="hr-recommendation-grid" id="hrRiskRecommendations"></div>
     </section>
 
     <section class="hr-section-card" aria-labelledby="hrManagementIndicatorsTitle">
@@ -13008,7 +13069,9 @@ function hrT(key, vars) {
 
         function isCorporateHRUser() {
             var u = STATE.userData || {};
-            return String(u.clientType || '').toLowerCase() === 'corporate';
+            var type = String(u.clientType || u.accountType || u.customerType || '').toLowerCase();
+            var role = String(u.role || u.userRole || u.accessRole || '').toLowerCase();
+            return type === 'corporate' || !!u.companyId || /(^|[^a-z])(hr|human.?resources|corporate.?admin)([^a-z]|$)/i.test(role);
         }
 
         function simpleHash(value) {
@@ -13085,20 +13148,23 @@ function hrT(key, vars) {
                 showScreen('login');
                 return;
             }
+            if (!isCorporateHRUser()) {
+                alert(STATE.language === 'en' ? 'Corporate HR access is available for company accounts.' : 'لوحة HR-Hub متاحة لحسابات الشركات فقط.');
+                return;
+            }
             showScreen('corporateHRHub');
             switchHRTab('dashboard');
+            if (typeof loadCorporateHRData === 'function') loadCorporateHRData();
         }
 
         function updateCorporateHRAccessVisibility() {
             var corporate = isCorporateHRUser();
-
-            // Main/home shortcut remains targeted to corporate users.
-            var quick = document.getElementById('corporateHRQuickCard');
-            if (quick) quick.style.display = corporate ? 'block' : 'none';
-
-            // Account entry is intentionally visible to ALL authenticated users.
+            var legacy = document.getElementById('corporateHRQuickCard');
+            if (legacy) legacy.style.display = 'none';
+            var homeCard = document.getElementById('homeHRHubCard');
+            if (homeCard) homeCard.style.display = corporate ? 'flex' : 'none';
             var accountCard = document.getElementById('corporateHRAccountCard');
-            if (accountCard) accountCard.style.display = 'block';
+            if (accountCard) accountCard.style.display = 'none';
         }
 
         function switchHRTab(tab) {
@@ -13556,7 +13622,11 @@ function hrT(key, vars) {
         }
 
         async function ensureHRDocumentAlerts(){
-            if(!isCorporateHRUser()||!STATE.hrCompany)return;
+            if(!isCorporateHRUser())return;
+            if(!STATE.hrCompany){
+                try{ await ensureCorporateHRCompany(); }catch(e){}
+            }
+            if(!STATE.hrCompany)return;
             var cid=STATE.hrCompany.companyId, docs=STATE.hrDocuments||[];
             for(var i=0;i<docs.length;i++){
                 var d=docs[i], left=daysUntil(d.expiryDate);
@@ -16854,7 +16924,316 @@ html[dir="rtl"] .hr-screen .hr-back-btn svg{transform:rotate(180deg)}
     .hr-screen .hr-hero-meta{padding:0 14px 12px;gap:5px}
     .hr-screen .hr-hero-pill{font-size:7px;min-height:21px;padding:2px 7px}
 }
+
+/* ============================================================
+   HR HUB v3 — Executive Insurance Cockpit & visual cleanup
+   ============================================================ */
+#home .corporate-hr-entry{display:none!important}
+#home .hr-home-quick{position:relative;overflow:hidden;justify-content:center;min-height:82px;border-radius:15px!important;background:linear-gradient(145deg,#092752 0%,#123f7f 72%,#0d315f 100%)!important;border:1px solid rgba(242,189,99,.55)!important;box-shadow:0 9px 22px rgba(9,39,82,.18)!important}
+#home .hr-home-quick::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(242,189,99,.12),transparent 42%);pointer-events:none}
+#home .hr-home-quick .qicon.hr-home-icon{position:relative;z-index:1;width:39px;height:39px;border-radius:12px;background:rgba(242,189,99,.14);border:1px solid rgba(242,189,99,.5);color:#f2bd63}
+#home .hr-home-quick .qicon.hr-home-icon::after{content:"";position:absolute;inset:-4px;border:1px solid rgba(242,189,99,.18);border-radius:15px}
+#home .hr-home-quick .quick-label{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#fff;line-height:1}
+#home .hr-home-quick .quick-label b{font-size:9.5px;font-weight:950;letter-spacing:.2px}
+#home .hr-home-quick .quick-label small{font-size:7.2px;font-weight:800;letter-spacing:.2px;color:rgba(255,255,255,.74)}
+#home .hr-home-quick:active{transform:scale(.975)}
+.hr-cockpit-actions{display:flex;gap:5px;align-items:center}
+.hr-head-action-gold{background:var(--gold-soft);color:#805a0c;border-color:rgba(242,189,99,.42)}
+html.dark-mode .hr-head-action-gold{background:#2a2518;color:var(--gold)}
+.hr-portfolio-section{background:linear-gradient(145deg,var(--card),#f6f8fb)}
+html.dark-mode .hr-portfolio-section{background:linear-gradient(145deg,#141b2a,#101722)}
+.hr-portfolio-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.hr-portfolio-kpi{padding:10px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,var(--paper),var(--card));min-height:76px;position:relative;overflow:hidden}
+.hr-portfolio-kpi::after{content:"";position:absolute;width:54px;height:54px;border-radius:50%;right:-18px;bottom:-20px;background:rgba(14,42,92,.035)}
+.hr-portfolio-kpi-label{font-size:7.5px;color:var(--muted);font-weight:900}
+.hr-portfolio-kpi-value{font-size:17px;font-weight:950;color:var(--navy);margin-top:5px;line-height:1.1}
+html.dark-mode .hr-portfolio-kpi-value{color:#f1f5f9}
+.hr-portfolio-kpi-sub{font-size:6.9px;color:var(--muted);line-height:1.35;margin-top:3px}
+.hr-portfolio-kpi i{position:absolute;left:9px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hr-portfolio-kpi.warn i{background:#c88718}.hr-portfolio-kpi.danger i{background:var(--red)}
+.hr-portfolio-two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:8px;margin-top:8px}
+.hr-subcard{padding:10px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.42)}
+html.dark-mode .hr-subcard{background:rgba(255,255,255,.025)}
+.hr-subcard-head{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}
+.hr-subcard-head b{font-size:8.5px;color:var(--slate);font-weight:950}.hr-subcard-head span{font-size:7px;color:var(--muted);font-weight:800}
+.hr-renewal-row{margin-bottom:8px}.hr-renewal-row:last-child{margin-bottom:0}
+.hr-renewal-row-top{display:flex;justify-content:space-between;gap:6px;font-size:7.3px;color:var(--slate);font-weight:900;margin-bottom:4px}
+.hr-renewal-bar{height:7px;border-radius:999px;background:var(--line);overflow:hidden}.hr-renewal-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#0d2b5f,#4c79b9)}.hr-renewal-row.warn .hr-renewal-bar i{background:linear-gradient(90deg,#c88718,#f2bd63)}.hr-renewal-row.danger .hr-renewal-bar i{background:linear-gradient(90deg,#a94435,#df7e69)}
+.hr-policy-mix{display:grid;gap:6px}.hr-policy-mix-row{display:grid;grid-template-columns:1fr 38px;align-items:center;gap:6px}.hr-policy-mix-label{font-size:7px;color:var(--slate);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hr-policy-mix-bar{height:6px;background:var(--line);border-radius:999px;overflow:hidden;grid-column:1/-1}.hr-policy-mix-bar i{display:block;height:100%;background:linear-gradient(90deg,#173f7a,#f2bd63);border-radius:999px}.hr-policy-mix-value{grid-column:2;grid-row:1;font-size:7px;color:var(--muted);text-align:left}
+.hr-audit-section{overflow:hidden}.hr-audit-legend{display:flex;align-items:center;gap:5px;font-size:6.7px;color:var(--muted);font-weight:800;white-space:nowrap}.hr-audit-legend i{display:inline-block;width:6px;height:6px;border-radius:50%}.hr-audit-legend i.ok{background:var(--green)}.hr-audit-legend i.warn{background:#c88718}.hr-audit-legend i.danger{background:var(--red)}
+.hr-audit-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.hr-audit-table{width:100%;border-collapse:collapse;min-width:520px;background:var(--paper)}.hr-audit-table th,.hr-audit-table td{padding:8px 7px;border-bottom:1px solid var(--line);font-size:7.2px;color:var(--slate);text-align:right;vertical-align:middle}.hr-audit-table th{font-size:6.8px;color:var(--muted);font-weight:950;background:rgba(14,42,92,.025);white-space:nowrap}.hr-audit-table tr:last-child td{border-bottom:0}.hr-audit-doc{display:flex;align-items:center;gap:6px;min-width:125px}.hr-audit-doc-icon{width:23px;height:23px;border-radius:8px;display:grid;place-items:center;background:#edf3fb;color:var(--navy-2);flex:0 0 23px}.hr-audit-doc b{display:block;font-size:7.4px;color:var(--slate);font-weight:950;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hr-audit-doc small{display:block;font-size:6.5px;color:var(--muted);max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}.hr-audit-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 6px;border-radius:999px;font-size:6.5px;font-weight:950;white-space:nowrap}.hr-audit-tag.ok{background:var(--green-light);color:var(--green)}.hr-audit-tag.warn{background:var(--gold-soft);color:#8a5d13}.hr-audit-tag.danger{background:var(--red-light);color:var(--red)}
+.hr-recommendation-grid{display:grid;gap:7px}.hr-rec-card{display:flex;align-items:flex-start;gap:8px;padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}.hr-rec-icon{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;font-size:12px;flex:0 0 29px;background:var(--gold-soft);color:#8a5d13}.hr-rec-card.danger .hr-rec-icon{background:var(--red-light);color:var(--red)}.hr-rec-card.ok .hr-rec-icon{background:var(--green-light);color:var(--green)}.hr-rec-card b{display:block;font-size:8px;color:var(--slate);font-weight:950}.hr-rec-card p{margin:2px 0 0;font-size:7.2px;color:var(--muted);line-height:1.55}
+@media(max-width:420px){.hr-portfolio-two-col{grid-template-columns:1fr}.hr-cockpit-actions{flex-wrap:wrap;justify-content:flex-end}.hr-cockpit-actions .hr-head-action{font-size:7px;padding:5px 6px}.hr-portfolio-kpi-value{font-size:16px}}
+@media(max-width:360px){#home .hr-home-quick{min-height:76px}.hr-portfolio-kpis{grid-template-columns:1fr}.hr-audit-legend{display:none}}
+
+/* ============================================================
+   HR HUB v2 — Insurance Intelligence visual layer
+   ============================================================ */
+#home .hr-home-quick{background:linear-gradient(145deg,#0d2b5f,#173f7a)!important;border-color:rgba(242,189,99,.38)!important;color:#fff;box-shadow:0 7px 18px rgba(14,42,92,.13)!important}
+#home .hr-home-quick .qicon.hr-home-icon{background:rgba(242,189,99,.13);border:1px solid rgba(242,189,99,.4);color:var(--gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.12)}
+#home .hr-home-quick .quick-label{display:flex;flex-direction:column;gap:2px;color:#fff;font-weight:900}
+#home .hr-home-quick .quick-label b{font-size:9.5px;line-height:1}
+#home .hr-home-quick .quick-label small{font-size:7.2px;opacity:.72;font-weight:700;line-height:1}
+#home .hr-home-quick:hover{border-color:rgba(242,189,99,.7)!important;box-shadow:0 10px 24px rgba(14,42,92,.2)!important}
+.hr-intelligence-card{background:linear-gradient(145deg,var(--card),rgba(245,248,252,.72));}
+.hr-ai-badge{font-size:7px;font-weight:900;letter-spacing:.8px;padding:5px 7px;border-radius:999px;color:var(--navy);background:var(--gold-soft);border:1px solid rgba(242,189,99,.4);white-space:nowrap}
+.hr-intelligence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hr-intel-card{padding:11px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--card),var(--paper));min-height:82px}
+.hr-intel-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.hr-intel-label{font-size:8.5px;color:var(--muted);font-weight:900}
+.hr-intel-score{font-size:19px;font-weight:900;color:var(--navy);margin-top:4px}
+html.dark-mode .hr-intel-score{color:var(--gold)}
+.hr-intel-sub{font-size:7.8px;line-height:1.45;color:var(--muted);margin-top:2px}
+.hr-intel-meter{height:5px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:7px}
+.hr-intel-meter i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--navy),var(--gold));width:0;transition:width .45s ease}
+.hr-intel-status{font-size:7px;font-weight:900;padding:3px 6px;border-radius:999px;background:var(--green-light);color:var(--green);white-space:nowrap}
+.hr-intel-status.warn{background:var(--gold-soft);color:#8a5d13}.hr-intel-status.danger{background:var(--red-light);color:var(--red)}
+.hr-intelligence-alerts{display:grid;gap:7px;margin-top:9px}
+.hr-intel-alert{padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font-size:8.5px;line-height:1.55;color:var(--slate)}
+.hr-intel-alert strong{font-weight:900}.hr-intel-alert.warn{background:var(--gold-soft);border-color:rgba(242,189,99,.4)}.hr-intel-alert.danger{background:var(--red-light);border-color:rgba(201,84,62,.3)}.hr-intel-alert.ok{background:var(--green-light);border-color:rgba(22,128,91,.25)}
+@media(max-width:360px){.hr-intelligence-grid{grid-template-columns:1fr}}
 </style>
 
+
+<style id="hr-v3-final-overrides">
+/* ============================================================
+   HR HUB v3 — Executive Insurance Cockpit & visual cleanup
+   ============================================================ */
+#home .corporate-hr-entry{display:none!important}
+#home .hr-home-quick{position:relative;overflow:hidden;justify-content:center;min-height:82px;border-radius:15px!important;background:linear-gradient(145deg,#092752 0%,#123f7f 72%,#0d315f 100%)!important;border:1px solid rgba(242,189,99,.55)!important;box-shadow:0 9px 22px rgba(9,39,82,.18)!important}
+#home .hr-home-quick::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(242,189,99,.12),transparent 42%);pointer-events:none}
+#home .hr-home-quick .qicon.hr-home-icon{position:relative;z-index:1;width:39px;height:39px;border-radius:12px;background:rgba(242,189,99,.14);border:1px solid rgba(242,189,99,.5);color:#f2bd63}
+#home .hr-home-quick .qicon.hr-home-icon::after{content:"";position:absolute;inset:-4px;border:1px solid rgba(242,189,99,.18);border-radius:15px}
+#home .hr-home-quick .quick-label{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#fff;line-height:1}
+#home .hr-home-quick .quick-label b{font-size:9.5px;font-weight:950;letter-spacing:.2px}
+#home .hr-home-quick .quick-label small{font-size:7.2px;font-weight:800;letter-spacing:.2px;color:rgba(255,255,255,.74)}
+#home .hr-home-quick:active{transform:scale(.975)}
+.hr-cockpit-actions{display:flex;gap:5px;align-items:center}
+.hr-head-action-gold{background:var(--gold-soft);color:#805a0c;border-color:rgba(242,189,99,.42)}
+html.dark-mode .hr-head-action-gold{background:#2a2518;color:var(--gold)}
+.hr-portfolio-section{background:linear-gradient(145deg,var(--card),#f6f8fb)}
+html.dark-mode .hr-portfolio-section{background:linear-gradient(145deg,#141b2a,#101722)}
+.hr-portfolio-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.hr-portfolio-kpi{padding:10px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,var(--paper),var(--card));min-height:76px;position:relative;overflow:hidden}
+.hr-portfolio-kpi::after{content:"";position:absolute;width:54px;height:54px;border-radius:50%;right:-18px;bottom:-20px;background:rgba(14,42,92,.035)}
+.hr-portfolio-kpi-label{font-size:7.5px;color:var(--muted);font-weight:900}
+.hr-portfolio-kpi-value{font-size:17px;font-weight:950;color:var(--navy);margin-top:5px;line-height:1.1}
+html.dark-mode .hr-portfolio-kpi-value{color:#f1f5f9}
+.hr-portfolio-kpi-sub{font-size:6.9px;color:var(--muted);line-height:1.35;margin-top:3px}
+.hr-portfolio-kpi i{position:absolute;left:9px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hr-portfolio-kpi.warn i{background:#c88718}.hr-portfolio-kpi.danger i{background:var(--red)}
+.hr-portfolio-two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:8px;margin-top:8px}
+.hr-subcard{padding:10px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.42)}
+html.dark-mode .hr-subcard{background:rgba(255,255,255,.025)}
+.hr-subcard-head{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}
+.hr-subcard-head b{font-size:8.5px;color:var(--slate);font-weight:950}.hr-subcard-head span{font-size:7px;color:var(--muted);font-weight:800}
+.hr-renewal-row{margin-bottom:8px}.hr-renewal-row:last-child{margin-bottom:0}
+.hr-renewal-row-top{display:flex;justify-content:space-between;gap:6px;font-size:7.3px;color:var(--slate);font-weight:900;margin-bottom:4px}
+.hr-renewal-bar{height:7px;border-radius:999px;background:var(--line);overflow:hidden}.hr-renewal-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#0d2b5f,#4c79b9)}.hr-renewal-row.warn .hr-renewal-bar i{background:linear-gradient(90deg,#c88718,#f2bd63)}.hr-renewal-row.danger .hr-renewal-bar i{background:linear-gradient(90deg,#a94435,#df7e69)}
+.hr-policy-mix{display:grid;gap:6px}.hr-policy-mix-row{display:grid;grid-template-columns:1fr 38px;align-items:center;gap:6px}.hr-policy-mix-label{font-size:7px;color:var(--slate);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hr-policy-mix-bar{height:6px;background:var(--line);border-radius:999px;overflow:hidden;grid-column:1/-1}.hr-policy-mix-bar i{display:block;height:100%;background:linear-gradient(90deg,#173f7a,#f2bd63);border-radius:999px}.hr-policy-mix-value{grid-column:2;grid-row:1;font-size:7px;color:var(--muted);text-align:left}
+.hr-audit-section{overflow:hidden}.hr-audit-legend{display:flex;align-items:center;gap:5px;font-size:6.7px;color:var(--muted);font-weight:800;white-space:nowrap}.hr-audit-legend i{display:inline-block;width:6px;height:6px;border-radius:50%}.hr-audit-legend i.ok{background:var(--green)}.hr-audit-legend i.warn{background:#c88718}.hr-audit-legend i.danger{background:var(--red)}
+.hr-audit-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.hr-audit-table{width:100%;border-collapse:collapse;min-width:520px;background:var(--paper)}.hr-audit-table th,.hr-audit-table td{padding:8px 7px;border-bottom:1px solid var(--line);font-size:7.2px;color:var(--slate);text-align:right;vertical-align:middle}.hr-audit-table th{font-size:6.8px;color:var(--muted);font-weight:950;background:rgba(14,42,92,.025);white-space:nowrap}.hr-audit-table tr:last-child td{border-bottom:0}.hr-audit-doc{display:flex;align-items:center;gap:6px;min-width:125px}.hr-audit-doc-icon{width:23px;height:23px;border-radius:8px;display:grid;place-items:center;background:#edf3fb;color:var(--navy-2);flex:0 0 23px}.hr-audit-doc b{display:block;font-size:7.4px;color:var(--slate);font-weight:950;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hr-audit-doc small{display:block;font-size:6.5px;color:var(--muted);max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}.hr-audit-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 6px;border-radius:999px;font-size:6.5px;font-weight:950;white-space:nowrap}.hr-audit-tag.ok{background:var(--green-light);color:var(--green)}.hr-audit-tag.warn{background:var(--gold-soft);color:#8a5d13}.hr-audit-tag.danger{background:var(--red-light);color:var(--red)}
+.hr-recommendation-grid{display:grid;gap:7px}.hr-rec-card{display:flex;align-items:flex-start;gap:8px;padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}.hr-rec-icon{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;font-size:12px;flex:0 0 29px;background:var(--gold-soft);color:#8a5d13}.hr-rec-card.danger .hr-rec-icon{background:var(--red-light);color:var(--red)}.hr-rec-card.ok .hr-rec-icon{background:var(--green-light);color:var(--green)}.hr-rec-card b{display:block;font-size:8px;color:var(--slate);font-weight:950}.hr-rec-card p{margin:2px 0 0;font-size:7.2px;color:var(--muted);line-height:1.55}
+@media(max-width:420px){.hr-portfolio-two-col{grid-template-columns:1fr}.hr-cockpit-actions{flex-wrap:wrap;justify-content:flex-end}.hr-cockpit-actions .hr-head-action{font-size:7px;padding:5px 6px}.hr-portfolio-kpi-value{font-size:16px}}
+@media(max-width:360px){#home .hr-home-quick{min-height:76px}.hr-portfolio-kpis{grid-template-columns:1fr}.hr-audit-legend{display:none}}
+</style>
+
+<script>
+/* ============================================================
+   HR HUB v3 — transparent insurance analytics engine
+   Deterministic / explainable rules over existing SecurePath data.
+   ============================================================ */
+(function(){
+    function num(v){var x=Number(v);return isFinite(x)?x:null;}
+    function txt(v){return String(v==null?'':v).trim();}
+    function safeEsc(v){return typeof esc==='function'?esc(v):txt(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function dateMs(v){
+        if(v==null||v==='')return null;
+        try{if(typeof v.toDate==='function')v=v.toDate(); var d=new Date(v); return isNaN(d.getTime())?null:d.getTime();}catch(e){return null;}
+    }
+    function daysLeft(v){var m=dateMs(v);return m===null?null:Math.ceil((m-Date.now())/86400000);}
+    function clamp(v){return Math.max(0,Math.min(100,Math.round(Number(v)||0)));}
+    function fmtMoney(v){
+        var n=num(v); if(n===null)return '—';
+        return n.toLocaleString(STATE.language==='en'?'en-US':'ar-EG',{maximumFractionDigits:0})+(STATE.language==='en'?' EGP':' ج.م');
+    }
+    function dateOnly(v){
+        var m=dateMs(v); if(m===null)return '—';
+        var d=new Date(m); return d.toLocaleDateString(STATE.language==='en'?'en-GB':'ar-EG',{day:'2-digit',month:'2-digit',year:'numeric'});
+    }
+    function policyList(){
+        var uid=STATE.currentUser&&STATE.currentUser.uid, cid=STATE.hrCompany&&STATE.hrCompany.companyId;
+        return (STATE.policies||[]).filter(function(p){return (p.clientId===uid)||(cid&&p.companyId===cid)||(p.clientId==null&&!p.companyId);});
+    }
+    function getEnd(p){return p && (p.endDate||p.expiryDate||p.toDate||p.expirationDate);}
+    function getStart(p){return p && (p.startDate||p.effectiveDate||p.fromDate||p.inceptionDate);}
+    function getInsurer(p){return txt(p&& (p.companyName||p.company||p.insurerName||p.insurer));}
+    function getPolicyNo(p){return txt(p&&(p.policyNumber||p.policyNo||p.number));}
+    function getPolicyType(p){return txt(p&&(p.typeName||p.type||p.category||p.planName||p.className))||'—';}
+    function getPremium(p){return num(p&&(p.premium??p.annualPremium??p.totalPremium??p.policyPremium));}
+    function docCorpus(){return (STATE.hrDocuments||[]).map(function(d){return txt(d.name)+' '+txt(d.documentType)+' '+txt(d.type)+' '+txt(d.fileName);}).join(' ').toLowerCase();}
+    function policyDataQuality(p){
+        var fields=[getPolicyNo(p),getInsurer(p),getPolicyType(p),getStart(p),getEnd(p)];
+        return clamp(fields.filter(function(x){return txt(x)!=='';}).length/fields.length*100);
+    }
+    function policyRisk(p){
+        var risk=0, d=daysLeft(getEnd(p));
+        if(d===null)risk+=18;
+        else if(d<0)risk+=55;
+        else if(d<=30)risk+=42;
+        else if(d<=60)risk+=28;
+        else if(d<=90)risk+=15;
+        if(!getPolicyNo(p))risk+=10;
+        if(!getInsurer(p))risk+=8;
+        if(!getStart(p))risk+=5;
+        if(getStart(p)&&getEnd(p)&&dateMs(getStart(p))>dateMs(getEnd(p)))risk+=20;
+        return clamp(risk);
+    }
+    function metrics(){
+        var policies=policyList(), docs=STATE.hrDocuments||[], emps=STATE.hrEmployees||[];
+        var report=STATE.hrConsumption&&STATE.hrConsumption.report || null;
+        var active=0, expired=0, r30=0, r60=0, r90=0, noEnd=0, noNo=0, invalidPeriod=0;
+        policies.forEach(function(p){
+            var d=daysLeft(getEnd(p));
+            if(d===null)noEnd++;
+            else if(d<0)expired++;
+            else {active++; if(d<=30)r30++; else if(d<=60)r60++; else if(d<=90)r90++;}
+            if(!getPolicyNo(p))noNo++;
+            if(getStart(p)&&getEnd(p)&&dateMs(getStart(p))>dateMs(getEnd(p)))invalidPeriod++;
+        });
+        var insured=emps.filter(function(e){return String(e.insuranceStatus||'insured')==='insured';}).length;
+        var premium=policies.reduce(function(a,p){var x=getPremium(p);return a+(x===null?0:x);},0);
+        var spend=report&&num(report.totalSpend)!=null?num(report.totalSpend):null;
+        var lr=report&&num(report.premium)>0&&spend!==null?(spend/num(report.premium))*100:(premium>0&&spend!==null?(spend/premium)*100:null);
+        var docsWithExpiry=docs.filter(function(d){return dateMs(d.expiryDate)!==null;});
+        var docsExpired=docs.filter(function(d){var d1=daysLeft(d.expiryDate);return d1!==null&&d1<0;}).length;
+        var docsSoon=docs.filter(function(d){var d1=daysLeft(d.expiryDate);return d1!==null&&d1>=0&&d1<=90;}).length;
+        var corpus=docCorpus();
+        var core=[/commercial_register|سجل تجاري/.test(corpus),/tax_card|بطاقة ضريبية|tax card/.test(corpus),/medical_policy|health|medical|طب|تأمين/.test(corpus),docs.length>0];
+        var docCompleteness=clamp(core.filter(Boolean).length/core.length*100);
+        var avgQuality=policies.length?policies.reduce(function(a,p){return a+policyDataQuality(p);},0)/policies.length:0;
+        var quality=clamp(avgQuality*0.65+docCompleteness*0.35);
+        var riskAvg=policies.length?policies.reduce(function(a,p){return a+policyRisk(p);},0)/policies.length:70;
+        var lrRisk=lr===null?0:(lr>=100?35:lr>=90?28:lr>=75?20:lr>=60?10:0);
+        var renewalRisk=expired*30+r30*22+r60*13+r90*6+noEnd*8+noNo*5+invalidPeriod*12;
+        var renewalIndex=clamp(100-Math.min(85,renewalRisk));
+        var protection=clamp(100-(riskAvg*.32+(100-quality)*.24+(100-renewalIndex)*.29+lrRisk*.15));
+        var openReq=(STATE.hrRequests||[]).filter(function(r){return ['submitted','review'].indexOf(String(r.status||'submitted'))>=0;}).length;
+        return {policies:policies,docs:docs,emps:emps,insured:insured,active:active,expired:expired,r30:r30,r60:r60,r90:r90,noEnd:noEnd,noNo:noNo,invalidPeriod:invalidPeriod,docsSoon:docsSoon,docsExpired:docsExpired,docsWithExpiry:docsWithExpiry,docCompleteness:docCompleteness,quality:quality,protection:protection,renewalIndex:renewalIndex,premium:premium,spend:spend,lossRatio:lr,report:report,openReq:openReq};
+    }
+    function card(label,value,sub,klass){return '<div class="hr-portfolio-kpi '+(klass||'')+'"><i></i><div class="hr-portfolio-kpi-label">'+safeEsc(label)+'</div><div class="hr-portfolio-kpi-value">'+safeEsc(value)+'</div><div class="hr-portfolio-kpi-sub">'+safeEsc(sub)+'</div></div>';}
+    function renderPortfolioKpis(m){
+        var el=document.getElementById('hrPortfolioKpis');if(!el)return;
+        var perInsured=m.insured?m.premium/m.insured:null;
+        var lr=m.lossRatio===null?'—':m.lossRatio.toFixed(1)+'%';
+        el.innerHTML=
+            card('إجمالي وثائق التأمين',String(m.policies.length),'وثيقة مرتبطة بالحساب',m.policies.length?'':'warn')+
+            card('وثائق سارية',String(m.active),'الحالة الحالية وفق تاريخ الانتهاء',m.active?'':'warn')+
+            card('تجديد خلال 30 يومًا',String(m.r30),'نافذة تنفيذ عاجلة',m.r30?'danger':'')+
+            card('تجديد 31–60 يومًا',String(m.r60),'نافذة تجهيز مبكر',m.r60?'warn':'')+
+            card('تجديد 61–90 يومًا',String(m.r90),'نافذة تخطيط',m.r90?'warn':'')+
+            card('وثائق منتهية',String(m.expired),'تحتاج معالجة فورية',m.expired?'danger':'')+
+            card('إجمالي الأقساط',fmtMoney(m.premium),m.premium?'من بيانات الوثائق':'غير مسجل',m.premium?'':'warn')+
+            card('متوسط القسط / مؤمن عليه',fmtMoney(perInsured),m.insured?m.insured+' مؤمن عليه':'لا يوجد سجل مؤمن عليهم',perInsured===null?'warn':'')+
+            card('جودة ملف التأمين',m.quality+'%','اكتمال بيانات الوثيقة + المستندات',m.quality<70?'danger':m.quality<85?'warn':'')+
+            card('Loss Ratio',lr,m.report?'اعتمادًا على آخر تحليل محفوظ':'لا يوجد تحليل استهلاك محفوظ',m.lossRatio!==null&&m.lossRatio>=75?'warn':'');
+    }
+    function renderPipeline(m){
+        var el=document.getElementById('hrRenewalPipeline');if(!el)return;
+        var total=Math.max(1,m.policies.length), rows=[
+            ['خلال 30 يومًا',m.r30,m.r30?'danger':''],['31–60 يومًا',m.r60,m.r60?'warn':''],['61–90 يومًا',m.r90,m.r90?'warn':''],['منتهية',m.expired,m.expired?'danger':'']
+        ];
+        el.innerHTML=rows.map(function(r){var w=Math.round((r[1]/total)*100);return '<div class="hr-renewal-row '+r[2]+'"><div class="hr-renewal-row-top"><span>'+r[0]+'</span><b>'+r[1]+'</b></div><div class="hr-renewal-bar"><i style="width:'+Math.max(r[1]?8:0,w)+'%"></i></div></div>';}).join('');
+    }
+    function renderPolicyMix(m){
+        var el=document.getElementById('hrPolicyMix'), meta=document.getElementById('hrPolicyMixMeta');if(!el)return;
+        var map={};m.policies.forEach(function(p){var k=getPolicyType(p);map[k]=(map[k]||0)+1;});
+        var rows=Object.keys(map).sort(function(a,b){return map[b]-map[a];}).slice(0,6), max=rows.length?map[rows[0]]:1;
+        if(meta)meta.textContent=rows.length+' تصنيف';
+        el.innerHTML=rows.length?rows.map(function(k){return '<div class="hr-policy-mix-row"><div class="hr-policy-mix-label">'+safeEsc(k)+'</div><div class="hr-policy-mix-value">'+map[k]+'</div><div class="hr-policy-mix-bar"><i style="width:'+Math.round(map[k]/max*100)+'%"></i></div></div>';}).join(''):'<div class="hr-empty"><strong>لا توجد وثائق</strong>أضف وثائق التأمين لعرض توزيع الملف.</div>';
+    }
+    function auditTag(q){return q>=85?['ok','سليم']:q>=65?['warn','متابعة']:['danger','مخاطر'];}
+    function renderAudit(m){
+        var body=document.getElementById('hrPolicyAuditBody');if(!body)return;
+        if(!m.policies.length){body.innerHTML='<tr><td colspan="6"><div class="hr-empty"><strong>لا توجد وثائق تأمينية مرتبطة.</strong>اربط وثائق التأمين بالحساب ثم أعد التحليل.</div></td></tr>';return;}
+        var rows=m.policies.slice().sort(function(a,b){return policyRisk(b)-policyRisk(a);}).slice(0,12);
+        body.innerHTML=rows.map(function(p){
+            var d=daysLeft(getEnd(p)), q=policyDataQuality(p), tag=auditTag(q), risk=policyRisk(p), endText=d===null?'غير مسجل':(d<0?'منتهية منذ '+Math.abs(d)+' يوم':d+' يوم');
+            var priority=risk>=55?['danger','عالية']:risk>=30?['warn','متوسطة']:['ok','منخفضة'];
+            var insurer=getInsurer(p)||'شركة غير محددة';
+            return '<tr><td><div class="hr-audit-doc"><span class="hr-audit-doc-icon">▣</span><span><b>'+safeEsc(getPolicyType(p))+'</b><small>'+safeEsc(insurer)+'</small></span></div></td><td>'+safeEsc(getPolicyNo(p)||'غير مسجل')+'</td><td><span class="hr-audit-tag '+(d!==null&&d<0?'danger':d!==null&&d<=90?'warn':'ok')+'">'+safeEsc(endText)+'</span></td><td>'+safeEsc(fmtMoney(getPremium(p)))+'</td><td><span class="hr-audit-tag '+tag[0]+'">'+tag[1]+' '+q+'%</span></td><td><span class="hr-audit-tag '+priority[0]+'">'+priority[1]+'</span></td></tr>';
+        }).join('');
+    }
+    function renderRecommendations(m){
+        var el=document.getElementById('hrRiskRecommendations');if(!el)return;
+        var rec=[];
+        if(m.expired)rec.push(['danger','!','التنفيذ الفوري','هناك '+m.expired+' وثيقة منتهية. ابدأ مراجعة التجديد/التصحيح قبل الاعتماد على الملف التشغيلي.']);
+        if(m.r30)rec.push(['danger','↗','تجديد عاجل','هناك '+m.r30+' وثيقة تدخل نافذة 30 يومًا. جهّز عروض التجديد والبيانات المطلوبة الآن.']);
+        if(m.noNo)rec.push(['warn','#','جودة الأرقام','هناك '+m.noNo+' وثيقة بدون رقم وثيقة. اكتمال هذا الحقل مهم للربط والتتبع.']);
+        if(m.noEnd)rec.push(['warn','◷','تواريخ الانتهاء','هناك '+m.noEnd+' وثيقة بدون تاريخ انتهاء صالح، ما يمنع حساب خطر التجديد بدقة.']);
+        if(m.invalidPeriod)rec.push(['danger','×','تعارض زمني','تم اكتشاف '+m.invalidPeriod+' وثيقة لديها تاريخ بداية بعد تاريخ الانتهاء. راجع المصدر قبل الاعتماد.']);
+        if(m.lossRatio!==null&&m.lossRatio>=100)rec.push(['danger','%','ضغط استهلاكي مرتفع','Loss Ratio عند '+m.lossRatio.toFixed(1)+'%. راجع اتجاه الاستهلاك وتصنيف الخدمات وبيانات القسط قبل التجديد.']);
+        else if(m.lossRatio!==null&&m.lossRatio>=75)rec.push(['warn','%','إنذار مبكر للاستهلاك','Loss Ratio عند '+m.lossRatio.toFixed(1)+'%. قارن الاتجاهات وراجِع أسباب الارتفاع مع وسيط/شركة التأمين.']);
+        if(m.quality<70)rec.push(['warn','!','اكتمال الملف','جودة الملف '+m.quality+'%. استكمل أرقام الوثائق، التواريخ، شركة التأمين والمستندات الأساسية.']);
+        if(!m.policies.length)rec.push(['warn','+','ابدأ ربط الوثائق','لا توجد وثائق تأمين مرتبطة بالبيانات الحالية. أضف أو اربط الوثائق أولًا.']);
+        if(!rec.length)rec.push(['ok','✓','لا توجد إشارات حرجة','المحرك لم يجد إنذارات عالية الأولوية وفق البيانات الحالية. استمر في المراجعة الدورية.']);
+        el.innerHTML=rec.slice(0,8).map(function(x){return '<div class="hr-rec-card '+x[0]+'"><div class="hr-rec-icon">'+x[1]+'</div><div><b>'+safeEsc(x[2])+'</b><p>'+safeEsc(x[3])+'</p></div></div>';}).join('');
+    }
+    function renderHRInsuranceAnalytics(force){
+        var m=metrics();
+        renderPortfolioKpis(m);renderPipeline(m);renderPolicyMix(m);renderAudit(m);renderRecommendations(m);
+        var now=document.getElementById('hrAnalyticsLastUpdate');
+        if(now)now.textContent=new Date().toLocaleTimeString(STATE.language==='en'?'en-US':'ar-EG',{hour:'2-digit',minute:'2-digit'});
+        renderLegacyIntelligence(m);
+        return m;
+    }
+    function renderLegacyIntelligence(m){
+        var box=document.getElementById('hrInsuranceIntelligence');if(!box)return;
+        function st(score){return score>=80?['ok','جيد']:score>=60?['warn','يحتاج متابعة']:['danger','مرتفع'];}
+        function ic(label,value,sub,score){var a=st(score);return '<div class="hr-intel-card"><div class="hr-intel-top"><span class="hr-intel-label">'+safeEsc(label)+'</span><span class="hr-intel-status '+(a[0]==='warn'?'warn':a[0]==='danger'?'danger':'')+'">'+a[1]+'</span></div><div class="hr-intel-score">'+safeEsc(value)+'</div><div class="hr-intel-sub">'+safeEsc(sub)+'</div><div class="hr-intel-meter"><i style="width:'+clamp(score)+'%"></i></div></div>';}
+        box.innerHTML=ic('حماية ملف التأمين',m.protection+'%','مؤشر مركب من خطر الوثائق، التجديد، جودة البيانات والاستهلاك.',m.protection)+
+            ic('جاهزية التجديد',m.renewalIndex+'%','تأثير الوثائق المنتهية والقريبة والحقول الناقصة على الجاهزية.',m.renewalIndex)+
+            ic('اكتمال المستندات',m.docCompleteness+'%','وجود المستندات الأساسية المسجلة داخل Corporate Documents.',m.docCompleteness)+
+            ic('جودة البيانات',m.quality+'%','اكتمال رقم الوثيقة، الشركة، نوع التغطية والتواريخ.',m.quality)+
+            ic('Loss Ratio',m.lossRatio===null?'—':m.lossRatio.toFixed(1)+'%','مقارنة الاستهلاك بالقسط المتاح في آخر تحليل.',m.lossRatio===null?60:clamp(100-m.lossRatio))+ 
+            ic('مخاطر التجديد',String(m.expired+m.r30+m.r60+m.r90),'عدد الإشارات داخل نافذة 90 يومًا أو بعد الانتهاء.',clamp(100-((m.expired*30)+(m.r30*22)+(m.r60*13)+(m.r90*6))));
+        var alerts=[];
+        if(m.expired)alerts.push('<div class="hr-intel-alert danger"><strong>خطر مباشر:</strong> '+m.expired+' وثيقة منتهية.</div>');
+        if(m.r30)alerts.push('<div class="hr-intel-alert danger"><strong>تجديد عاجل:</strong> '+m.r30+' وثيقة خلال 30 يومًا.</div>');
+        if(m.noNo||m.noEnd)alerts.push('<div class="hr-intel-alert warn"><strong>جودة البيانات:</strong> '+m.noNo+' بلا رقم وثيقة و'+m.noEnd+' بلا تاريخ انتهاء صالح.</div>');
+        if(m.lossRatio!==null&&m.lossRatio>=75)alerts.push('<div class="hr-intel-alert warn"><strong>الاستهلاك:</strong> Loss Ratio '+m.lossRatio.toFixed(1)+'% تجاوز مستوى الإنذار 75%.</div>');
+        if(!alerts.length)alerts.push('<div class="hr-intel-alert ok"><strong>حالة مستقرة:</strong> لا توجد إشارات عالية الأولوية وفق البيانات الحالية.</div>');
+        var alertBox=document.getElementById('hrInsuranceIntelligenceAlerts');if(alertBox)alertBox.innerHTML=alerts.join('');
+    }
+    function exportHRInsuranceAudit(){
+        var m=metrics();
+        var rows=[['Insurance Portfolio Audit'],['Metric','Value'],['Total Policies',m.policies.length],['Active Policies',m.active],['Expired Policies',m.expired],['Renewal <=30d',m.r30],['Renewal 31-60d',m.r60],['Renewal 61-90d',m.r90],['Premium',m.premium],['Loss Ratio',m.lossRatio===null?'':m.lossRatio],['Data Quality %',m.quality],['Document Completeness %',m.docCompleteness],['Protection Score %',m.protection],[],['Policy Type','Insurer','Policy Number','Start','End','Days Left','Premium','Data Quality %','Risk Score']];
+        m.policies.forEach(function(p){rows.push([getPolicyType(p),getInsurer(p),getPolicyNo(p),dateOnly(getStart(p)),dateOnly(getEnd(p)),daysLeft(getEnd(p))===null?'':daysLeft(getEnd(p)),getPremium(p)===null?'':getPremium(p),policyDataQuality(p),policyRisk(p)]);});
+        if(typeof XLSX!=='undefined'){
+            var ws=XLSX.utils.aoa_to_sheet(rows), wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Insurance Audit');XLSX.writeFile(wb,'SecurePath-HR-Insurance-Audit.xlsx');
+        }else{
+            var csv=rows.map(function(r){return r.map(function(v){var x=String(v==null?'':v).replace(/"/g,'""');return '"'+x+'"';}).join(',');}).join('\n');
+            var blob=new Blob([csv],{type:'text/csv;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');a.href=url;a.download='SecurePath-HR-Insurance-Audit.csv';a.click();setTimeout(function(){URL.revokeObjectURL(url);},500);
+        }
+    }
+    window.renderHRInsuranceAnalytics=renderHRInsuranceAnalytics;
+    window.exportHRInsuranceAudit=exportHRInsuranceAudit;
+    var originalDashboard=window.renderCorporateHRDashboard;
+    if(typeof originalDashboard==='function'){
+        window.renderCorporateHRDashboard=function(){var r=originalDashboard.apply(this,arguments);try{renderHRInsuranceAnalytics(false);}catch(e){console.warn('HR analytics',e);}return r;};
+    }
+    var originalSwitch=window.switchHRTab;
+    if(typeof originalSwitch==='function'){
+        window.switchHRTab=function(tab){var r=originalSwitch.apply(this,arguments);if(tab==='dashboard')setTimeout(function(){renderHRInsuranceAnalytics(false);},70);return r;};
+    }
+    var originalAccess=window.updateCorporateHRAccessVisibility;
+    if(typeof originalAccess==='function'){
+        window.updateCorporateHRAccessVisibility=function(){var r=originalAccess.apply(this,arguments);var q=document.getElementById('homeHRHubCard');if(q)q.style.display=isCorporateHRUser()?'flex':'none';var old=document.getElementById('corporateHRQuickCard');if(old)old.style.display='none';var a=document.getElementById('corporateHRAccountCard');if(a)a.style.display='none';return r;};
+    }
+    var threshold=document.getElementById('hrLossThreshold');
+    if(threshold)threshold.addEventListener('input',function(){setTimeout(function(){renderHRInsuranceAnalytics(true);},0);});
+    document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(typeof updateCorporateHRAccessVisibility==='function')updateCorporateHRAccessVisibility();renderHRInsuranceAnalytics(false);},250);});
+})();
+</script>
 </body>
 </html>
