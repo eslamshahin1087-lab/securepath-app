@@ -5489,6 +5489,255 @@ html.dark-mode .hr-loss-value{color:var(--gold)}
 .hr-small-note{font-size:8px;color:var(--muted);line-height:1.6}
 @media(max-width:360px){.hr-form-grid,.hr-search-row,.hr-mapping-grid,.hr-metric-main{grid-template-columns:1fr}.hr-report-grid{grid-template-columns:1fr}}
 
+
+/* ===== Corporate HR Hub — Enhanced visual system ===== */
+.hr-screen{
+  background:
+    radial-gradient(circle at 100% 0%, rgba(242,189,99,.10), transparent 26%),
+    linear-gradient(180deg,#f4f7fb 0%,var(--paper) 100%);
+}
+html.dark-mode .hr-screen{
+  background:
+    radial-gradient(circle at 100% 0%, rgba(242,189,99,.07), transparent 25%),
+    linear-gradient(180deg,#0d1422 0%,var(--paper) 100%);
+}
+.hr-hero{
+  position:relative;overflow:hidden;
+  margin:12px;border-radius:24px;padding:17px;
+  background:
+    radial-gradient(circle at 88% 15%,rgba(242,189,99,.25),transparent 31%),
+    radial-gradient(circle at 10% 100%,rgba(54,111,180,.20),transparent 36%),
+    linear-gradient(145deg,#071d40,#0e2a5c 68%,#16427c);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 38px rgba(14,42,92,.20);
+}
+.hr-hero::after{
+  content:"";position:absolute;inset:auto -45px -70px auto;width:190px;height:190px;
+  border:1px solid rgba(242,189,99,.18);border-radius:50%;
+  box-shadow:0 0 0 24px rgba(242,189,99,.035),0 0 0 48px rgba(242,189,99,.02);
+}
+.hr-hero-icon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px rgba(0,0,0,.18);
+}
+.hr-hero h1{letter-spacing:-.45px}
+.hr-kpis{gap:8px}
+.hr-kpi{
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,var(--card),var(--paper));
+  box-shadow:0 8px 22px rgba(14,42,92,.08);
+}
+.hr-kpi::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+}
+.hr-section-card{
+  box-shadow:0 8px 24px rgba(14,42,92,.06);
+}
+.hr-section-head{align-items:flex-start}
+.hr-head-action{transition:all .2s ease}
+.hr-head-action:hover{border-color:var(--gold);transform:translateY(-1px)}
+.hr-analysis-intro{
+  display:flex;align-items:flex-start;gap:9px;
+  margin:-2px 0 11px;padding:10px 11px;
+  border:1px solid rgba(242,189,99,.28);border-radius:13px;
+  background:linear-gradient(135deg,var(--gold-soft),var(--paper));
+}
+.hr-analysis-intro-icon{
+  width:30px;height:30px;flex:0 0 30px;border-radius:10px;
+  display:grid;place-items:center;background:var(--gradient-gold);color:var(--navy);
+  font-weight:900;box-shadow:0 5px 14px rgba(242,189,99,.20);
+}
+.hr-analysis-intro strong{display:block;font-size:10px;color:var(--slate);font-weight:900}
+.hr-analysis-intro p{margin:2px 0 0;font-size:8.2px;line-height:1.55;color:var(--muted)}
+.hr-analysis-fields .field label{font-size:8.8px}
+.hr-analysis-fields input,.hr-analysis-fields select,.hr-analysis-fields textarea,
+#hrConsumptionPremium{
+  min-height:40px!important;padding:10px 11px!important;border-radius:11px!important;
+  border:1px solid var(--line)!important;background:var(--paper)!important;
+  color:var(--slate)!important;font:700 10px var(--font-ar)!important;
+}
+.hr-analysis-fields textarea{min-height:78px!important}
+.hr-analysis-fields input:focus,.hr-analysis-fields select:focus,.hr-analysis-fields textarea:focus,
+#hrConsumptionPremium:focus{
+  border-color:var(--gold)!important;box-shadow:0 0 0 3px rgba(242,189,99,.14)!important;
+}
+.hr-input-quality{
+  display:flex;align-items:center;gap:7px;margin-top:8px;padding:8px 9px;
+  border-radius:10px;background:var(--paper);border:1px dashed var(--line);
+  color:var(--muted);font-size:7.8px;line-height:1.5;
+}
+.hr-quality-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(242,189,99,.12);flex:0 0 7px}
+.hr-report-card{
+  background:linear-gradient(145deg,var(--card),var(--paper));
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.hr-report-card:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(14,42,92,.08)}
+.hr-offer-cta{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:10px;padding:11px;border-radius:15px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(242,189,99,.20),transparent 34%),
+    linear-gradient(145deg,#0a2349,#123d78);
+  border:1px solid rgba(242,189,99,.35);
+  box-shadow:0 10px 24px rgba(14,42,92,.15);
+}
+.hr-offer-cta-copy{display:flex;align-items:flex-start;gap:8px;min-width:0}
+.hr-offer-cta-icon{
+  width:30px;height:30px;flex:0 0 30px;border-radius:10px;
+  display:grid;place-items:center;background:rgba(242,189,99,.15);color:var(--gold);
+  border:1px solid rgba(242,189,99,.35);
+}
+.hr-offer-cta strong{display:block;color:#fff;font-size:9.5px;font-weight:900;line-height:1.35}
+.hr-offer-cta p{margin:2px 0 0;color:rgba(255,255,255,.68);font-size:7.5px;line-height:1.45}
+.hr-more-tips-btn{
+  flex:0 0 auto;border:0;border-radius:10px;padding:9px 10px;
+  background:var(--gradient-gold);color:var(--navy);font:900 8.5px var(--font-ar);
+  cursor:pointer;box-shadow:0 6px 14px rgba(242,189,99,.22);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.hr-more-tips-btn:hover{transform:translateY(-1px);box-shadow:0 9px 18px rgba(242,189,99,.30)}
+@media(max-width:480px){
+  .hr-hero{margin:10px 10px 12px}
+  .hr-analysis-fields{grid-template-columns:1fr 1fr}
+  .hr-offer-cta{align-items:stretch;flex-direction:column}
+  .hr-more-tips-btn{width:100%}
+}
+
+
+/* ===== Corporate HR Hub Header — refined SecurePath identity ===== */
+.hr-screen .hr-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  margin:12px 12px 14px;
+  padding:0;
+  min-height:132px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    linear-gradient(135deg,#061b3b 0%,#0b2b58 58%,#123f78 100%);
+  box-shadow:0 14px 32px rgba(6,27,59,.18);
+}
+.hr-screen .hr-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:
+    radial-gradient(circle at 86% 18%,rgba(242,189,99,.18),transparent 25%),
+    radial-gradient(circle at 12% 110%,rgba(64,130,204,.18),transparent 30%);
+}
+.hr-screen .hr-hero::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:230px;
+  height:230px;
+  right:-105px;
+  top:-105px;
+  border-radius:50%;
+  border:1px solid rgba(242,189,99,.16);
+  box-shadow:
+    0 0 0 22px rgba(242,189,99,.025),
+    0 0 0 44px rgba(242,189,99,.018);
+}
+.hr-screen .hr-hero-content{
+  position:relative;
+  min-height:132px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:17px 18px;
+}
+.hr-screen .hr-hero-icon{
+  width:54px;
+  height:54px;
+  min-width:54px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#f7cf83,#dba54c);
+  color:#071d40;
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow:
+    0 9px 20px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.48);
+}
+.hr-screen .hr-hero-copy{
+  min-width:0;
+  flex:1;
+  padding-top:1px;
+}
+.hr-screen .hr-hero-copy h1{
+  margin:0;
+  color:#fff;
+  font-size:18px;
+  line-height:1.25;
+  font-weight:950;
+  letter-spacing:-.35px;
+}
+.hr-screen .hr-hero-copy p{
+  margin:5px 0 0;
+  color:rgba(255,255,255,.72);
+  font-size:9px;
+  line-height:1.65;
+  max-width:560px;
+}
+.hr-screen .hr-hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-top:8px;
+  padding:5px 8px;
+  border-radius:999px;
+  color:#f6d58f;
+  background:rgba(242,189,99,.09);
+  border:1px solid rgba(242,189,99,.20);
+  font-size:7.5px;
+  font-weight:900;
+}
+.hr-screen .hr-hero-badge::before{
+  content:"";
+  width:5px;height:5px;border-radius:50%;
+  background:#f2bd63;
+  box-shadow:0 0 0 3px rgba(242,189,99,.10);
+}
+.hr-screen .hr-hero-action{
+  position:relative;
+  z-index:2;
+  flex:0 0 auto;
+  align-self:center;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 11px;
+  border-radius:11px;
+  color:#071d40;
+  background:linear-gradient(145deg,#f7cf83,#dba54c);
+  border:1px solid rgba(255,255,255,.25);
+  font:900 8px var(--font-ar);
+  box-shadow:0 8px 17px rgba(0,0,0,.16);
+}
+.hr-screen .hr-hero-action:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 20px rgba(0,0,0,.20);
+}
+.hr-screen[dir="rtl"] .hr-hero-content{
+  flex-direction:row;
+}
+html.dark-mode .hr-screen .hr-hero{
+  border-color:rgba(255,255,255,.10);
+  box-shadow:0 14px 34px rgba(0,0,0,.30);
+}
+@media(max-width:600px){
+  .hr-screen .hr-hero{margin:9px 9px 12px;min-height:126px;border-radius:19px}
+  .hr-screen .hr-hero-content{min-height:126px;padding:14px;gap:10px}
+  .hr-screen .hr-hero-icon{width:46px;height:46px;min-width:46px;border-radius:14px}
+  .hr-screen .hr-hero-copy h1{font-size:15px}
+  .hr-screen .hr-hero-copy p{font-size:8px;line-height:1.55}
+  .hr-screen .hr-hero-action{padding:8px;font-size:7px}
+}
+
 </style>
 
 <style>
@@ -7184,21 +7433,29 @@ html.dark-mode .hr-control-value{color:var(--gold)}
         <!-- ============================================================ -->
         <div class="screen hr-screen" id="corporateHRHub">
             <div class="hr-hero">
-                <div class="hr-hero-top">
-                    <button class="hr-back-btn" onclick="switchTab('account')" title="العودة إلى حسابي">
-                        <svg viewBox="0 0 24 24"><path d="M15 6 9 12l6 6"/><path d="M9 12h10"/></svg><span>حسابي</span>
-                    </button>
-                    <div class="hr-hero-icon"><span class="app-icon app-icon-lg"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><circle cx="17" cy="16" r="1.5"/></svg></span></div>
-                    <div>
-                        <div class="hr-hero-label">INSURANCE · HR CONTROL CENTER</div>
-                        <h1>لوحة الموارد البشرية</h1>
-                        <p id="hrCompanyName">إدارة ملف التأمين الجماعي للشركة من مكان واحد</p>
+                <div class="hr-hero-main">
+                    <div class="hr-hero-brand">
+                        <div class="hr-hero-icon" aria-hidden="true">
+                            <span class="app-icon app-icon-lg"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><circle cx="17" cy="16" r="1.5"/></svg></span>
+                        </div>
+                        <div class="hr-hero-copy">
+                            <div class="hr-hero-label" data-hr-t="hrHeroLabel">INSURANCE · HR CONTROL CENTER</div>
+                            <h1 data-hr-t="hrHeroTitle">Corporate HR Hub</h1>
+                            <p id="hrCompanyName">Manage your company group insurance file in one place</p>
+                        </div>
+                    </div>
+                    <div class="hr-hero-actions">
+                        <button type="button" class="hr-hero-lang" id="hrLanguageToggle" onclick="toggleHRLanguage()" aria-label="Change language">EN</button>
+                        <button type="button" class="hr-back-btn" onclick="switchTab('account')" title="Back to my account">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6 9 12l6 6"/><path d="M9 12h10"/></svg>
+                            <span data-hr-t="hrBackToAccount">My Account</span>
+                        </button>
                     </div>
                 </div>
-                <div class="hr-hero-meta">
-                    <span class="hr-hero-pill">ملف التأمين</span>
-                    <span class="hr-hero-pill">HR CRM</span>
-                    <span class="hr-hero-pill">حوكمة البيانات</span>
+                <div class="hr-hero-meta" aria-label="HR status">
+                    <span class="hr-hero-pill" data-hr-t="hrMetaInsurance">Insurance File</span>
+                    <span class="hr-hero-pill" data-hr-t="hrMetaCrm">HR CRM</span>
+                    <span class="hr-hero-pill" data-hr-t="hrMetaGovernance">Data Governance</span>
                 </div>
             </div>
 
@@ -7355,21 +7612,60 @@ html.dark-mode .hr-control-value{color:var(--gold)}
                     <div class="hr-section-head">
                         <div><h3 class="hr-section-title">تحليل استهلاكات التأمين الطبي الجماعي</h3><p class="hr-section-sub">Excel موصى به للدقة. PDF متاح باستخراج نصي/جداول بأفضل جهد.</p></div>
                     </div>
+                    <div class="hr-analysis-intro">
+                        <div class="hr-analysis-intro-icon">◈</div>
+                        <div>
+                            <strong data-hr-t="hrConsGuidedTitle">أدخل بيانات الفترة ثم ارفع ملف الاستهلاك</strong>
+                            <p data-hr-t="hrConsGuidedSub">كلما اكتملت بيانات الفترة وعدد المؤمن عليهم، أصبحت مؤشرات التكلفة والاستخدام أكثر دقة.</p>
+                        </div>
+                    </div>
                     <div class="hr-metric-main">
                         <div class="hr-loss-box">
-                            <div class="hr-loss-label">Loss Ratio — الاستهلاك مقابل القسط</div>
+                            <div class="hr-loss-label" data-hr-t="hrConsLossRatioLabel">Loss Ratio — الاستهلاك مقابل القسط</div>
                             <div class="hr-loss-value" id="hrLossRatioValue">—</div>
                             <div class="hr-loss-sub" id="hrLossRatioSub">ارفع البيانات وأدخل القسط السنوي/الفترة.</div>
                         </div>
                         <div class="hr-premium-box">
-                            <div class="hr-premium-label">القسط المستخدم للتحليل</div>
-                            <input id="hrConsumptionPremium" type="number" min="0" step="0.01" placeholder="مثال: 2500000" style="width:100%;margin-top:7px;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--slate)" onchange="updateHRMedicalHeadline()">
+                            <div class="hr-premium-label" data-hr-t="hrConsPremiumLabel">القسط المستخدم للتحليل</div>
+                            <input id="hrConsumptionPremium" type="number" min="0" step="0.01" inputmode="decimal" data-hr-placeholder="hrConsPremiumPlaceholder" placeholder="مثال: 2500000" onchange="updateHRMedicalHeadline()">
                         </div>
                     </div>
-                    <div class="hr-form-grid">
-                        <div class="field"><label>سنة التحليل</label><input id="hrConsumptionYear" type="number" min="2000" max="2200"></div>
-                        <div class="field"><label>نسبة الإنذار المبكر</label><input id="hrLossThreshold" type="number" min="1" max="300" value="75" onchange="updateHRMedicalHeadline()"></div>
-                        <div class="field full"><label>ملاحظة/مصدر البيانات</label><textarea id="hrConsumptionNotes" placeholder="اسم شركة التأمين، فترة البيانات، ملاحظات المطابقة..."></textarea></div>
+                    <div class="hr-form-grid hr-analysis-fields">
+                        <div class="field">
+                            <label data-hr-t="hrConsYearLabel">سنة التحليل</label>
+                            <input id="hrConsumptionYear" type="number" min="2000" max="2200" inputmode="numeric">
+                        </div>
+                        <div class="field">
+                            <label data-hr-t="hrConsLivesLabel">عدد المؤمن عليهم خلال الفترة</label>
+                            <input id="hrConsumptionLives" type="number" min="0" step="1" inputmode="numeric" data-hr-placeholder="hrConsLivesPlaceholder" placeholder="مثال: 320">
+                        </div>
+                        <div class="field">
+                            <label data-hr-t="hrConsStartLabel">بداية فترة التحليل</label>
+                            <input id="hrConsumptionStart" type="date">
+                        </div>
+                        <div class="field">
+                            <label data-hr-t="hrConsEndLabel">نهاية فترة التحليل</label>
+                            <input id="hrConsumptionEnd" type="date">
+                        </div>
+                        <div class="field">
+                            <label data-hr-t="hrConsThresholdLabel">نسبة الإنذار المبكر</label>
+                            <input id="hrLossThreshold" type="number" min="1" max="300" value="75" step="0.5" inputmode="decimal" onchange="updateHRMedicalHeadline()">
+                        </div>
+                        <div class="field">
+                            <label data-hr-t="hrConsDataTypeLabel">طبيعة القسط</label>
+                            <select id="hrConsumptionPremiumType">
+                                <option value="period" data-hr-t="hrConsPremiumTypePeriod">قسط الفترة محل التحليل</option>
+                                <option value="annual" data-hr-t="hrConsPremiumTypeAnnual">القسط السنوي الكامل</option>
+                            </select>
+                        </div>
+                        <div class="field full">
+                            <label data-hr-t="hrConsNotesLabel">ملاحظة/مصدر البيانات</label>
+                            <textarea id="hrConsumptionNotes" data-hr-placeholder="hrConsNotesPlaceholder" placeholder="اسم شركة التأمين، فترة البيانات، ملاحظات المطابقة..."></textarea>
+                        </div>
+                    </div>
+                    <div class="hr-input-quality" id="hrConsumptionQuality">
+                        <span class="hr-quality-dot"></span>
+                        <span data-hr-t="hrConsQualityHint">أكمل القسط + عدد المؤمن عليهم + فترة التحليل للحصول على مؤشرات أوسع.</span>
                     </div>
                     <div class="hr-action-row" style="margin-top:10px">
                         <button class="btn-gold-small" onclick="document.getElementById('hrConsumptionFile').click()">📊 رفع Excel / PDF</button>
@@ -7384,7 +7680,7 @@ html.dark-mode .hr-control-value{color:var(--gold)}
 
                 <div class="hr-section-card hr-mapping" id="hrMappingCard">
                     <div class="hr-section-head">
-                        <div><h3 class="hr-section-title">مطابقة الأعمدة</h3><p class="hr-section-sub">اختَر الحقول مرة واحدة وسيتم حفظ القالب لهذا التنسيق.</p></div>
+                        <div><h3 class="hr-section-title" data-hr-t="hrConsMappingTitle">مطابقة الأعمدة</h3><p class="hr-section-sub" data-hr-t="hrConsMappingSub">اختَر الحقول مرة واحدة وسيتم حفظ القالب لهذا التنسيق.</p></div>
                     </div>
                     <div class="hr-map-note" id="hrMappingNote"></div>
                     <div class="hr-mapping-grid" id="hrMappingGrid"></div>
@@ -7393,7 +7689,7 @@ html.dark-mode .hr-control-value{color:var(--gold)}
 
                 <div class="hr-section-card" id="hrMedicalReportCard" style="display:none">
                     <div class="hr-section-head">
-                        <div><h3 class="hr-section-title">تقرير الاستهلاكات</h3><p class="hr-section-sub" id="hrReportMeta"></p></div>
+                        <div><h3 class="hr-section-title" data-hr-t="hrConsReportTitle">تقرير الاستهلاكات</h3><p class="hr-section-sub" id="hrReportMeta"></p></div>
                     </div>
                     <div class="hr-report-grid" id="hrReportMetrics"></div>
                     <div class="hr-report-grid" style="margin-top:9px">
@@ -7408,11 +7704,21 @@ html.dark-mode .hr-control-value{color:var(--gold)}
                         <div class="hr-section-head"><h3 class="hr-section-title">مقارنة سنة بسنة</h3></div>
                         <div id="hrYoY"></div>
                     </div>
-                    <div class="hr-privacy" style="margin-top:9px">العرض هنا تجميعي لتقليل كشف التفاصيل الطبية الحساسة. اسم الموظف يظهر عند الحاجة لسياق HR، لكن تفاصيل الخدمة الطبية الدقيقة لا تُحفظ ضمن سجل التحليل التجميعي.</div>
+                    <div class="hr-privacy" style="margin-top:9px" data-hr-t="hrConsReportPrivacy">العرض هنا تجميعي لتقليل كشف التفاصيل الطبية الحساسة. اسم الموظف يظهر عند الحاجة لسياق HR، لكن تفاصيل الخدمة الطبية الدقيقة لا تُحفظ ضمن سجل التحليل التجميعي.</div>
+                    <div class="hr-offer-cta">
+                        <div class="hr-offer-cta-copy">
+                            <span class="hr-offer-cta-icon">✦</span>
+                            <div>
+                                <strong data-hr-t="hrConsOffersTitle">هل تريد استكشاف حلول أو عروض مناسبة؟</strong>
+                                <p data-hr-t="hrConsOffersSub">اعرض المنتجات والعروض المتاحة من شركائنا، ثم أرسل طلبك من داخل SecurePath.</p>
+                            </div>
+                        </div>
+                        <button class="hr-more-tips-btn" onclick="openHROffersFromAnalysis()" data-hr-t="hrConsMoreTipsBtn">المزيد من النصائح</button>
+                    </div>
                 </div>
 
                 <div class="hr-section-card">
-                    <div class="hr-section-head"><h3 class="hr-section-title">سجل التقارير المحفوظة</h3></div>
+                    <div class="hr-section-head"><h3 class="hr-section-title" data-hr-t="hrConsHistoryTitle">سجل التقارير المحفوظة</h3></div>
                     <div class="hr-history" id="hrMedicalHistory"></div>
                 </div>
             </div>
@@ -8714,6 +9020,803 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             }
         };
 
+        // ══════════════════════════════════════════════════════════════
+// CORPORATE HR HUB TRANSLATIONS
+// ══════════════════════════════════════════════════════════════
+var HR_TRANSLATIONS = {
+    ar: {
+        // Hero
+        hrHeroLabel: 'INSURANCE · HR CONTROL CENTER',
+        hrHeroTitle: 'لوحة الموارد البشرية',
+        hrHeroSub: 'إدارة ملف التأمين الجماعي للشركة من مكان واحد',
+        hrMetaInsurance: 'ملف التأمين',
+        hrMetaCrm: 'HR CRM',
+        hrMetaGovernance: 'حوكمة البيانات',
+        hrBackToAccount: 'حسابي',
+        hrBackTooltip: 'العودة إلى حسابي',
+
+        // Tabs
+        hrTabDashboard: 'نظرة عامة',
+        hrTabEmployees: 'الموظفون',
+        hrTabDocuments: 'وثائق الشركة',
+        hrTabRequests: 'الطلبات',
+        hrTabConsumption: 'الاستهلاكات',
+
+        // Dashboard sections
+        hrKickerInsuranceFile: 'ملف التأمين الجماعي',
+        hrTitleInsuranceFile: 'الصورة الكاملة لملف الشركة',
+        hrSubInsuranceFile: 'ملخص تشغيلي يجمع بيانات الوثيقة، التغطية، الموظفين، الطلبات، الوثائق، والتجديد في شاشة واحدة.',
+        hrBadgeNotVerified: 'لم يتم التحقق بعد',
+        hrBadgeNoPolicy: 'لا توجد وثيقة مرتبطة بعد',
+        hrKickerManagement: 'مؤشرات الإدارة',
+        hrTitleManagement: 'مؤشرات تحتاج قرارًا أو متابعة',
+        hrBtnOpenAnalysis: 'فتح لوحة التحليل',
+        hrKickerRenewal: 'التجديد',
+        hrTitleRenewal: 'جاهزية ملف التجديد',
+        hrSubRenewal: 'قائمة متابعة عملية تساعد HR على تجهيز الملف قبل موعد التجديد.',
+        hrKickerQuickActions: 'تشغيل سريع',
+        hrTitleQuickActions: 'إجراءات الموارد البشرية',
+        hrSubQuickActions: 'أكثر الإجراءات استخدامًا لإدارة ملف التأمين اليومي.',
+        hrKickerDaily: 'المتابعة اليومية',
+        hrTitleDaily: 'آخر الطلبات والتحديثات',
+        hrSubDaily: 'أحدث الإجراءات التي تحتاج مراجعة أو تم تحديث حالتها.',
+        hrBtnViewAll: 'عرض الكل',
+        hrKickerControl: 'مركز التحكم',
+        hrTitleControl: 'ما الذي يحتاج متابعة؟',
+        hrSubControl: 'ملخص آخر المستندات، الموظفين، الطلبات وتحليل الاستهلاكات.',
+        hrKickerGovernance: 'حوكمة البيانات',
+        hrTitleGovernance: 'حماية وخصوصية البيانات',
+        hrPrivacyText: '<b>مبدأ أقل قدر من البيانات:</b> يتم استخدام بيانات الموظفين لتشغيل ملف التأمين، بينما يظل تحليل الاستهلاكات الطبيّة في شكل تجميعي للإدارة. يجب فرض عزل كل شركة عن الأخرى داخل Firebase Security Rules باستخدام <b>companyId</b>، مع الاحتفاظ بسجل تدقيق للتعديلات.',
+
+        // Quick actions
+        hrActionAddEmployee: 'إضافة موظف',
+        hrActionAddEmployeeSub: 'إضافة موظف أو معال جديد',
+        hrActionImport: 'استيراد الموظفين',
+        hrActionImportSub: 'Excel دفعة واحدة',
+        hrActionUploadDoc: 'رفع وثيقة',
+        hrActionUploadDocSub: 'مستندات الشركة والتأمين',
+        hrActionNewRequest: 'طلب جديد',
+        hrActionNewRequestSub: 'إصدار / تجديد / تعويض',
+        hrActionAnalysis: 'تحليل الاستهلاكات',
+        hrActionAnalysisSub: 'Loss Ratio واتجاهات الاستخدام',
+        hrActionAlerts: 'فحص التنبيهات',
+        hrActionAlertsSub: 'وثائق واستحقاقات قريبة',
+
+        // Employees
+        hrEmpTitle: 'سجل الموظفين',
+        hrEmpSub: 'السجل الأساسي لربط الموظفين بالطلبات وتحليل الاستهلاكات.',
+        hrEmpCountBadge: '{count} موظف',
+        hrEmpSearchPlaceholder: 'بحث بالاسم أو الرقم القومي أو القسم',
+        hrEmpFilterAll: 'كل الحالات',
+        hrEmpFilterInsured: 'مؤمن عليه',
+        hrEmpFilterUninsured: 'غير مؤمن',
+        hrEmpBtnAdd: '＋ إضافة موظف',
+        hrEmpBtnImport: '⇩ استيراد Excel',
+        hrEmpBtnExport: '↥ تصدير Excel',
+        hrEmpThEmployee: 'الموظف',
+        hrEmpThNationalId: 'الرقم القومي',
+        hrEmpThDepartment: 'القسم',
+        hrEmpThHireDate: 'التعيين',
+        hrEmpThInsurance: 'التأمين',
+        hrEmpThDependents: 'المعالون',
+        hrEmpThActions: 'إجراءات',
+        hrEmpEmptyTitle: 'لا توجد نتائج',
+        hrEmpEmptyText: 'أضف موظفًا أو استورد قائمة Excel.',
+        hrEmpBadgeInsured: 'مؤمن عليه',
+        hrEmpBadgeUninsured: 'غير مؤمن',
+        hrEmpGenderUnspecified: 'غير محدد',
+        hrEmpBtnEdit: 'تعديل',
+        hrEmpBtnDelete: 'حذف',
+
+        // Documents
+        hrDocsTitle: 'Company Documents Vault',
+        hrDocsSub: 'مستندات الشركة الرسمية ووثيقة التأمين الطبي والعقود.',
+        hrDocsBtnUpload: '＋ رفع وثيقة شركة',
+        hrDocsBtnAlerts: '🔔 فحص التنبيهات',
+        hrDocsEmptyTitle: 'Vault فارغ',
+        hrDocsEmptyText: 'ارفع السجل التجاري أو البطاقة الضريبية أو وثيقة التأمين أو أي مستند رسمي.',
+        hrDocsBtnOpen: 'فتح المستند',
+        hrDocsNoExpiry: 'بدون تاريخ انتهاء',
+        hrDocsExpiryLabel: 'تاريخ الانتهاء',
+        hrDocsExpiredSince: 'منتهية منذ {days} يوم',
+        hrDocsExpiresToday: 'تنتهي اليوم',
+        hrDocsExpiresTomorrow: 'تنتهي غدًا',
+        hrDocsDaysLeft: 'متبقي {days} يوم',
+
+        // Requests
+        hrReqTitle: 'Unified Request Timeline',
+        hrReqSub: 'إصدار / تجديد / تعويض مع خط زمني واضح للحالة.',
+        hrReqBtnNew: '＋ طلب جديد',
+        hrReqSearchPlaceholder: 'بحث برقم الطلب أو الموظف أو النوع',
+        hrReqFilterAll: 'كل الحالات',
+        hrReqEmptyTitle: 'لا توجد طلبات',
+        hrReqEmptyText: 'سيظهر هنا سجل الإصدار والتجديد والتعويض مع الـTimeline.',
+        hrReqTypeIssuance: 'إصدار',
+        hrReqTypeRenewal: 'تجديد',
+        hrReqTypeReimbursement: 'تعويض',
+        hrReqTypeLabel: 'نوع الطلب',
+        hrReqStatusSubmitted: 'مُقدَّم',
+        hrReqStatusReview: 'قيد المراجعة',
+        hrReqStatusApproved: 'مُعتمد',
+        hrReqStatusRejected: 'مرفوض',
+        hrReqStatusPaid: 'مدفوع',
+        hrReqTimelineSubmitted: 'مُقدَّم',
+        hrReqTimelineReview: 'قيد المراجعة',
+        hrReqTimelineApproved: 'مُعتمد/مرفوض',
+        hrReqTimelinePaid: 'مدفوع',
+        hrReqEmployeePrefix: 'الموظف',
+        hrReqAmountPrefix: 'المبلغ',
+        hrReqPriorityHigh: 'أولوية مرتفعة',
+        hrReqPriorityNormal: 'أولوية عادية',
+
+        // Enhanced Consumption
+        hrConsGuidedTitle: 'أدخل بيانات الفترة ثم ارفع ملف الاستهلاك',
+        hrConsGuidedSub: 'كلما اكتملت بيانات الفترة وعدد المؤمن عليهم، أصبحت مؤشرات التكلفة والاستخدام أكثر دقة.',
+        hrConsLivesLabel: 'عدد المؤمن عليهم خلال الفترة',
+        hrConsLivesPlaceholder: 'مثال: 320',
+        hrConsStartLabel: 'بداية فترة التحليل',
+        hrConsEndLabel: 'نهاية فترة التحليل',
+        hrConsDataTypeLabel: 'طبيعة القسط',
+        hrConsPremiumTypePeriod: 'قسط الفترة محل التحليل',
+        hrConsPremiumTypeAnnual: 'القسط السنوي الكامل',
+        hrConsQualityHint: 'أكمل القسط + عدد المؤمن عليهم + فترة التحليل للحصول على مؤشرات أوسع.',
+        hrConsQualityComplete: 'البيانات الأساسية مكتملة — يمكنك رفع الملف وبدء التحليل.',
+        hrConsOffersTitle: 'هل تريد استكشاف حلول أو عروض مناسبة؟',
+        hrConsOffersSub: 'اعرض المنتجات والعروض المتاحة من شركائنا، ثم أرسل طلبك من داخل SecurePath.',
+        hrConsMoreTipsBtn: 'المزيد من النصائح',
+        hrConsMetricCoveredLives: 'عدد المؤمن عليهم',
+        hrConsMetricAvgClaim: 'متوسط قيمة السجل',
+        hrConsMetricSpendPerLife: 'الاستهلاك لكل مؤمّن عليه',
+        hrConsMetricUtilization: 'معدل الاستخدام',
+        hrConsNotEntered: 'غير مدخل',
+        hrConsFileFallback: 'ملف الاستهلاك',
+        hrConsRecordsUnit: 'سجل',
+        hrKpiEmployees: 'الموظفون',
+        hrKpiEmployeesSub: 'في سجل الشركة',
+        hrKpiInsured: 'مؤمّن عليهم',
+        hrKpiOfRegistry: 'من السجل',
+        hrKpiAddEmployees: 'أضف الموظفين أولًا',
+        hrKpiOpenRequests: 'طلبات مفتوحة',
+        hrKpiNeedsFollowup: 'تحتاج متابعة',
+        hrKpiExpiringDocs: 'وثائق قريبة الانتهاء',
+        hrKpiWithin45: 'خلال 45 يومًا',
+        hrKpiLastAnalysis: 'آخر تحليل محفوظ',
+        hrKpiCorporateHR: 'Corporate HR',
+        hrSnapUntil: 'حتى',
+
+        // Enhanced Consumption
+        hrConsGuidedTitle: 'Enter the analysis period, then upload the consumption file',
+        hrConsGuidedSub: 'Complete period and covered-life data to unlock more useful cost and utilization indicators.',
+        hrConsLivesLabel: 'Covered lives during the period',
+        hrConsLivesPlaceholder: 'e.g. 320',
+        hrConsStartLabel: 'Analysis period start',
+        hrConsEndLabel: 'Analysis period end',
+        hrConsDataTypeLabel: 'Premium basis',
+        hrConsPremiumTypePeriod: 'Premium for analyzed period',
+        hrConsPremiumTypeAnnual: 'Full annual premium',
+        hrConsQualityHint: 'Complete premium + covered lives + analysis period for broader indicators.',
+        hrConsQualityComplete: 'Core inputs are complete — upload the file and start the analysis.',
+        hrConsOffersTitle: 'Want to explore relevant solutions or offers?',
+        hrConsOffersSub: 'Browse available products and partner offers, then submit your request from SecurePath.',
+        hrConsMoreTipsBtn: 'More Tips',
+        hrConsMetricCoveredLives: 'Covered Lives',
+        hrConsMetricAvgClaim: 'Average Record Value',
+        hrConsMetricSpendPerLife: 'Spend per Covered Life',
+        hrConsMetricUtilization: 'Utilization Rate',
+        hrConsNotEntered: 'Not entered',
+        hrConsFileFallback: 'Consumption file',
+        hrConsRecordsUnit: 'records',
+        hrKpiEmployees: 'Employees',
+        hrKpiEmployeesSub: 'In company registry',
+        hrKpiInsured: 'Insured',
+        hrKpiOfRegistry: 'of registry',
+        hrKpiAddEmployees: 'Add employees first',
+        hrKpiOpenRequests: 'Open Requests',
+        hrKpiNeedsFollowup: 'Need follow-up',
+        hrKpiExpiringDocs: 'Expiring Documents',
+        hrKpiWithin45: 'Within 45 days',
+        hrKpiLastAnalysis: 'Latest saved analysis',
+        hrKpiCorporateHR: 'Corporate HR',
+        hrSnapUntil: 'Until',
+
+        // Consumption
+        hrConsTitle: 'تحليل استهلاكات التأمين الطبي الجماعي',
+        hrConsSub: 'Excel موصى به للدقة. PDF متاح باستخراج نصي/جداول بأفضل جهد.',
+        hrConsLossRatioLabel: 'Loss Ratio — الاستهلاك مقابل القسط',
+        hrConsLossRatioDefault: 'ارفع البيانات وأدخل القسط السنوي/الفترة.',
+        hrConsPremiumLabel: 'القسط المستخدم للتحليل',
+        hrConsPremiumPlaceholder: 'مثال: 2500000',
+        hrConsYearLabel: 'سنة التحليل',
+        hrConsThresholdLabel: 'نسبة الإنذار المبكر',
+        hrConsNotesLabel: 'ملاحظة/مصدر البيانات',
+        hrConsNotesPlaceholder: 'اسم شركة التأمين، فترة البيانات، ملاحظات المطابقة...',
+        hrConsBtnUpload: '📊 رفع Excel / PDF',
+        hrConsBtnReset: 'مسح التحليل',
+        hrConsBtnSave: 'حفظ التقرير',
+        hrConsBtnExportExcel: 'تصدير Excel',
+        hrConsBtnExportPdf: 'تقرير PDF',
+        hrConsFileNote: 'الملف الخام تتم معالجته داخل المتصفح. تحليل PDF يعتمد على النص المستخرج؛ جودة الجدول تختلف من شركة تأمين لأخرى، لذلك Excel يظل المصدر المفضل.',
+        hrConsMappingTitle: 'مطابقة الأعمدة',
+        hrConsMappingSub: 'اختَر الحقول مرة واحدة وسيتم حفظ القالب لهذا التنسيق.',
+        hrConsBtnAnalyze: 'تحليل البيانات',
+        hrConsReportTitle: 'تقرير الاستهلاكات',
+        hrConsReportByDept: 'حسب القسم',
+        hrConsReportByAge: 'حسب الفئة العمرية',
+        hrConsReportByGender: 'حسب النوع',
+        hrConsReportByService: 'التصنيفات الطبية',
+        hrConsReportByMonth: 'الاتجاه الشهري',
+        hrConsReportTopConsumers: 'أعلى المستهلكين',
+        hrConsReportYoY: 'مقارنة سنة بسنة',
+        hrConsReportPrivacy: 'العرض هنا تجميعي لتقليل كشف التفاصيل الطبية الحساسة. اسم الموظف يظهر عند الحاجة لسياق HR، لكن تفاصيل الخدمة الطبية الدقيقة لا تُحفظ ضمن سجل التحليل التجميعي.',
+        hrConsHistoryTitle: 'سجل التقارير المحفوظة',
+        hrConsHistoryEmptyTitle: 'لا توجد تقارير محفوظة',
+        hrConsHistoryEmptyText: 'بعد حفظ أول تحليل سيظهر هنا السجل التاريخي للمقارنة سنة بسنة.',
+        hrConsMetricTotalSpend: 'إجمالي الاستهلاك',
+        hrConsMetricRecords: 'عدد السجلات',
+        hrConsMetricUniqueEmployees: 'المؤمّن عليهم المستفيدون',
+        hrConsMetricPremium: 'القسط',
+        hrConsMetricLossRatio: 'Loss Ratio',
+        hrConsMetricValidRecords: 'السجلات ذات المبلغ',
+        hrConsNoData: 'لا توجد بيانات كافية.',
+        hrConsNoPrevYear: 'لا يوجد تقرير محفوظ لسنة {year} للمقارنة.',
+        hrConsYoYCompare: '<b>{year}</b>: {curr} · <b>{prev}</b>: {prevAmt} · التغير: <b>{change}%</b>',
+
+        // Modals
+        hrModalAddEmployee: 'إضافة موظف',
+        hrModalEditEmployee: 'تعديل موظف',
+        hrModalAddEmployeeSub: 'سجّل بيانات الموظف والمعالين اللازمة لإدارة التأمين.',
+        hrModalEmpName: 'الاسم الكامل',
+        hrModalEmpNationalId: 'الرقم القومي',
+        hrModalEmpDepartment: 'القسم',
+        hrModalEmpHireDate: 'تاريخ التعيين',
+        hrModalEmpInsurance: 'حالة التأمين',
+        hrModalEmpInsuranceInsured: 'مؤمن عليه',
+        hrModalEmpInsuranceUninsured: 'غير مؤمن',
+        hrModalEmpGender: 'النوع',
+        hrModalEmpGenderUnspecified: 'غير محدد',
+        hrModalEmpGenderMale: 'ذكر',
+        hrModalEmpGenderFemale: 'أنثى',
+        hrModalEmpBirthDate: 'تاريخ الميلاد',
+        hrModalEmpDependents: 'عدد المعالين',
+        hrModalEmpNotes: 'ملاحظات',
+        hrModalEmpSave: 'حفظ الموظف',
+        hrModalDocTitle: 'رفع وثيقة الشركة',
+        hrModalDocSub: 'ارفع المستند وحدد تاريخ الانتهاء لإدارة التنبيهات.',
+        hrModalDocName: 'اسم الوثيقة',
+        hrModalDocType: 'نوع الوثيقة',
+        hrModalDocTypeCommercial: 'السجل التجاري',
+        hrModalDocTypeTax: 'البطاقة الضريبية',
+        hrModalDocTypeMedical: 'وثيقة التأمين الطبي الجماعي',
+        hrModalDocTypeContract: 'عقد',
+        hrModalDocTypeOfficial: 'مستند رسمي',
+        hrModalDocTypeOther: 'أخرى',
+        hrModalDocExpiry: 'تاريخ الانتهاء',
+        hrModalDocFile: 'الملف',
+        hrModalDocUploadProgress: 'جاري الرفع... {pct}%',
+        hrModalDocSave: 'رفع وحفظ',
+        hrModalReqTitle: 'إنشاء طلب جديد',
+        hrModalReqSub: 'يبدأ الطلب بحالة «مُقدَّم» ثم يتابع عبر الخط الزمني.',
+        hrModalReqType: 'نوع الطلب',
+        hrModalReqNumber: 'رقم الطلب',
+        hrModalReqNumberPlaceholder: 'اتركه فارغًا للتوليد',
+        hrModalReqEmployee: 'الموظف',
+        hrModalReqEmployeeSelect: 'اختر الموظف',
+        hrModalReqAmount: 'المبلغ',
+        hrModalReqPriority: 'الأولوية',
+        hrModalReqPriorityHigh: 'مرتفعة',
+        hrModalReqPriorityNormal: 'عادية',
+        hrModalReqNotes: 'الوصف / الملاحظات',
+        hrModalReqSubmit: 'تقديم الطلب',
+
+        // Alerts / messages
+        hrAlertWarnTitle: 'إنذار مبكر في الاستهلاك',
+        hrAlertWarnBody: 'آخر Loss Ratio مسجل هو <b>{loss}%</b> مقابل حد التنبيه <b>{threshold}%</b>. راجع الاتجاه الشهري والتصنيفات قبل التجديد.',
+        hrAlertOkTitle: 'متابعة الاستهلاك',
+        hrAlertOkBody: 'آخر Loss Ratio مسجل هو <b>{loss}%</b>. استخدم التحليل التفصيلي لمراجعة الأقسام والتصنيفات والاتجاه الشهري.',
+        hrAlertInfoTitle: 'ابدأ ببناء ملف التجديد',
+        hrAlertInfoBody: 'اربط وثيقة الشركة، أضف سجل الموظفين وارفع ملف الاستهلاكات للحصول على لوحة متابعة متكاملة.',
+        hrAlertLoadError: 'حدث خطأ أثناء التحميل',
+        hrAlertLoadErrorBody: 'تعذر تحميل بيانات لوحة الموارد البشرية. تأكد من صلاحيات Firestore.',
+        hrAlertPleaseName: 'اكتب اسم الموظف.',
+        hrAlertPleaseDocName: 'أدخل اسم الوثيقة واختر ملفًا.',
+        hrAlertBadFile: 'نوع الملف غير مدعوم أو حجمه يتجاوز 15MB.',
+        hrAlertChooseEmployee: 'اختر الموظف المرتبط بطلب التعويض.',
+        hrAlertSaveEmployeeFail: 'تعذر حفظ الموظف: {msg}',
+        hrAlertDeleteEmployeeFail: 'تعذر حذف الموظف: {msg}',
+        hrAlertImportFail: 'تعذر استيراد Excel: {msg}',
+        hrAlertNoNameCol: 'لم يتم العثور على عمود اسم الموظف.',
+        hrAlertEmptyFile: 'الملف فارغ',
+        hrAlertXlsxUnavailable: 'مكتبة Excel غير متاحة.',
+        hrAlertImportSuccess: 'تم استيراد {count} موظف.',
+        hrAlertUploadFail: 'تعذر رفع الوثيقة: {msg}',
+        hrAlertRequestFail: 'تعذر إنشاء الطلب: {msg}',
+        hrAlertSaveAnalysisFail: 'تعذر حفظ التقرير: {msg}',
+        hrAlertNeedAnalysis: 'شغّل التحليل أولًا.',
+        hrAlertConfirmDeleteEmp: 'حذف سجل الموظف «{name}»؟',
+        hrAlertPdfExtractFail: 'لم يتم استخراج نص من PDF.',
+        hrAlertExcelEmpty: 'ملف Excel فارغ.',
+        hrAlertExcelLoaded: 'تم تحميل ملف Excel. راجع مطابقة الأعمدة ثم ابدأ التحليل.',
+        hrAlertPdfLoaded: 'تم استخراج النص من PDF. راجع مطابقة الأعمدة بعناية قبل التحليل.',
+        hrAlertMappingRequired: 'الحقل «{field}» مطلوب',
+        hrAlertAnalysisSaved: 'تم حفظ التقرير التجميعي بنجاح. لم يتم حفظ ملف الاستهلاك الخام.',
+        hrAlertAllowPopups: 'اسمح بالنوافذ المنبثقة لتصدير التقرير.',
+        hrAlertReadFileFail: 'تعذر قراءة ملف الاستهلاك: {msg}',
+        hrAlertNewRequest: 'طلب جديد',
+        hrAlertRequestSubmitted: '{num} تم تقديمه بحالة «مُقدَّم».',
+
+        // Policy snapshot labels
+        hrSnapInsurer: 'شركة التأمين',
+        hrSnapInsurerSub: 'من بيانات الوثيقة',
+        hrSnapPolicyNumber: 'رقم الوثيقة',
+        hrSnapPolicyNumberSub: 'الوثيقة الحالية',
+        hrSnapPlan: 'نوع التغطية / الشبكة',
+        hrSnapPlanSub: 'تفاصيل الخطة الحالية',
+        hrSnapPeriod: 'فترة التغطية',
+        hrSnapPeriodSub: 'تاريخ السريان والانتهاء',
+        hrSnapPremium: 'القسط',
+        hrSnapPremiumSub: 'لأغراض المتابعة والتجديد',
+        hrSnapStatus: 'حالة الوثيقة',
+        hrSnapStatusSub: 'تلقائيًا من تواريخ الوثيقة',
+        hrSnapEmployees: 'الموظفون في السجل',
+        hrSnapEmployeesSub: 'السجل الأساسي',
+        hrSnapDependents: 'المعالون',
+        hrSnapDependentsSub: 'حسب بيانات الموظفين',
+        hrSnapClaims: 'المطالبات/السجلات محل التحليل',
+        hrSnapClaimsSub: 'آخر ملف استهلاكات',
+        hrSnapLastAnalysis: 'آخر تحليل',
+        hrSnapLastAnalysisSub: 'تحليل الاستهلاكات الطبية',
+        hrSnapNotLinked: 'غير مرتبط بعد',
+        hrSnapNotRecorded: 'غير مسجل',
+        hrSnapNotAvailable: 'غير متاح',
+        hrSnapNotStarted: 'لم يبدأ بعد',
+        hrSnapEnterLink: 'أدخل/اربط الوثيقة',
+        hrSnapStatusExpired: 'منتهية',
+        hrSnapStatusExpiring: 'تقترب من الانتهاء',
+        hrSnapStatusActive: 'سارية',
+        hrSnapDocNotLinked: 'لم يتم الربط بعد',
+        hrSnapLastFileAnalysis: 'آخر ملف تم تحليله',
+
+        // Readiness
+        hrReadyCurrentPolicy: 'الوثيقة الحالية',
+        hrReadyPolicyNoEnd: 'موعد الانتهاء مسجل',
+        hrReadyPolicyExpired: 'الوثيقة منتهية',
+        hrReadyPolicySoon: 'موعد التجديد قريب',
+        hrReadyPolicyOk: 'الفترة الحالية سارية',
+        hrReadyPolicyNotLinked: 'لم يتم ربط وثيقة',
+        hrReadyPolicyDaysLeft: '{days} يوم متبقي',
+        hrReadyPolicyAdd: 'أضف/اربط الوثيقة',
+        hrReadyDocs: 'مستندات الشركة الأساسية',
+        hrReadyDocsText: '{have}/3 مستندات رئيسية موجودة',
+        hrReadyDocsSub: 'السجل التجاري · البطاقة الضريبية · وثيقة الطبي',
+        hrReadyEmployees: 'سجل الموظفين',
+        hrReadyEmployeesText: '{count} موظف مسجل',
+        hrReadyEmployeesSubOk: 'السجل متاح للتحليل والطلبات',
+        hrReadyEmployeesSubNo: 'ابدأ بإضافة أو استيراد الموظفين',
+        hrReadyAnalysis: 'تحليل الاستهلاكات',
+        hrReadyAnalysisOk: 'آخر تحليل محفوظ لعام {year}',
+        hrReadyAnalysisNo: 'لم يتم إنشاء تقرير بعد',
+        hrReadyAnalysisRatio: 'Loss Ratio {ratio}%',
+        hrReadyAnalysisSub: 'ارفع Excel أو PDF وأدخل القسط',
+        hrReadyStateReady: 'جاهز',
+        hrReadyStateNeedsFollowup: 'يحتاج متابعة',
+
+        // Control center
+        hrCtlEmployees: 'الموظفون',
+        hrCtlEmployeesSub: 'آخر رصيد مسجل في السجل',
+        hrCtlOpenRequests: 'طلبات قيد المتابعة',
+        hrCtlOpenRequestsSub: 'طلبات تحتاج متابعة الآن',
+        hrCtlNoOpenRequests: 'لا توجد طلبات مفتوحة',
+        hrCtlExpiringDocs: 'وثائق مهددة بالانتهاء',
+        hrCtlExpiringDocsSub: '{exp} منتهية · {soon} خلال 45 يوم',
+        hrCtlLastMedical: 'آخر تحليل طبي',
+        hrCtlLastMedicalNo: 'غير متاح',
+        hrCtlLastMedicalSub: 'تم حفظ التقرير التجميعي',
+        hrCtlLastMedicalSubNo: 'ارفع ملف الاستهلاك للبدء',
+
+        // Management indicators
+        hrMgmtEmployees: 'موظف',
+        hrMgmtEmployeesSub: 'من سجل الموظفين',
+        hrMgmtInsuredRate: 'نسبة التغطية',
+        hrMgmtInsuredRateSub: 'مؤمن عليهم من إجمالي السجل',
+        hrMgmtOpenReqs: 'طلبات مفتوحة',
+        hrMgmtOpenReqsSub: 'إصدار / تجديد / تعويض',
+        hrMgmtDocsFollowup: 'وثائق تحتاج متابعة',
+        hrMgmtDocsFollowupSub: '{exp} منتهية · {soon} قريبة',
+        hrMgmtLossRatio: 'Loss Ratio',
+        hrMgmtLossRatioSub: 'من آخر تحليل محفوظ',
+        hrMgmtRecords: 'سجلات الاستهلاك',
+        hrMgmtRecordsSub: 'آخر ملف تم تحليله',
+
+        // Map fields
+        hrMapFieldDate: 'التاريخ',
+        hrMapFieldAmount: 'المبلغ',
+        hrMapFieldEmployee: 'اسم الموظف',
+        hrMapFieldService: 'نوع الخدمة',
+        hrMapFieldDepartment: 'القسم',
+        hrMapFieldGender: 'النوع',
+        hrMapFieldAge: 'العمر',
+        hrMapFieldBirthDate: 'تاريخ الميلاد',
+        hrMapFieldNationalId: 'الرقم القومي',
+        hrMapUnused: 'غير مستخدم',
+        hrMapColumn: 'عمود {n}',
+        hrMapNote: 'تم العثور على <b>{cols}</b> أعمدة و<b>{rows}</b> صفوف تقريبًا. راجع المطابقة قبل التحليل. سيتم حفظ القالب محليًا لهذا الحساب.',
+
+        // Empty / report misc
+        hrEmptyNoData: 'لا توجد بيانات كافية.',
+        hrEmptyNoRequests: 'لا توجد طلبات بعد',
+        hrEmptyNoRequestsSub: 'سيظهر هنا أحدث إصدار/تجديد/تعويض.',
+        hrEmptyGenericNoResults: 'لا توجد نتائج',
+        hrEmptyGenericNoResultsSub: 'أضف موظفًا أو استورد قائمة Excel.',
+    },
+    en: {
+        // Hero
+        hrHeroLabel: 'INSURANCE · HR CONTROL CENTER',
+        hrHeroTitle: 'Corporate HR Hub',
+        hrHeroSub: 'Manage your company group insurance file in one place',
+        hrMetaInsurance: 'Insurance File',
+        hrMetaCrm: 'HR CRM',
+        hrMetaGovernance: 'Data Governance',
+        hrBackToAccount: 'My Account',
+        hrBackTooltip: 'Back to my account',
+
+        // Tabs
+        hrTabDashboard: 'Overview',
+        hrTabEmployees: 'Employees',
+        hrTabDocuments: 'Company Docs',
+        hrTabRequests: 'Requests',
+        hrTabConsumption: 'Consumption',
+
+        // Dashboard sections
+        hrKickerInsuranceFile: 'Group Insurance File',
+        hrTitleInsuranceFile: 'Complete Company File Overview',
+        hrSubInsuranceFile: 'Operational summary combining policy data, coverage, employees, requests, documents, and renewal in one screen.',
+        hrBadgeNotVerified: 'Not verified yet',
+        hrBadgeNoPolicy: 'No policy linked yet',
+        hrKickerManagement: 'Management Indicators',
+        hrTitleManagement: 'Indicators Needing Decision or Follow-up',
+        hrBtnOpenAnalysis: 'Open Analysis Panel',
+        hrKickerRenewal: 'Renewal',
+        hrTitleRenewal: 'Renewal File Readiness',
+        hrSubRenewal: 'Practical checklist to help HR prepare the file before renewal.',
+        hrKickerQuickActions: 'Quick Actions',
+        hrTitleQuickActions: 'HR Actions',
+        hrSubQuickActions: 'Most used actions for daily insurance file management.',
+        hrKickerDaily: 'Daily Follow-up',
+        hrTitleDaily: 'Latest Requests & Updates',
+        hrSubDaily: 'Most recent actions needing review or status updates.',
+        hrBtnViewAll: 'View All',
+        hrKickerControl: 'Control Center',
+        hrTitleControl: 'What Needs Follow-up?',
+        hrSubControl: 'Summary of latest documents, employees, requests, and consumption analysis.',
+        hrKickerGovernance: 'Data Governance',
+        hrTitleGovernance: 'Data Protection & Privacy',
+        hrPrivacyText: '<b>Data minimization principle:</b> Employee data is used to operate the insurance file, while medical consumption analysis remains aggregated for management. Each company must be isolated from others in Firebase Security Rules using <b>companyId</b>, with an audit log of changes.',
+
+        // Quick actions
+        hrActionAddEmployee: 'Add Employee',
+        hrActionAddEmployeeSub: 'Add a new employee or dependent',
+        hrActionImport: 'Import Employees',
+        hrActionImportSub: 'Bulk Excel import',
+        hrActionUploadDoc: 'Upload Document',
+        hrActionUploadDocSub: 'Company & insurance documents',
+        hrActionNewRequest: 'New Request',
+        hrActionNewRequestSub: 'Issuance / Renewal / Reimbursement',
+        hrActionAnalysis: 'Consumption Analysis',
+        hrActionAnalysisSub: 'Loss Ratio & usage trends',
+        hrActionAlerts: 'Check Alerts',
+        hrActionAlertsSub: 'Upcoming documents & entitlements',
+
+        // Employees
+        hrEmpTitle: 'Employee Registry',
+        hrEmpSub: 'Primary registry linking employees to requests and consumption analysis.',
+        hrEmpCountBadge: '{count} employees',
+        hrEmpSearchPlaceholder: 'Search by name, national ID, or department',
+        hrEmpFilterAll: 'All statuses',
+        hrEmpFilterInsured: 'Insured',
+        hrEmpFilterUninsured: 'Uninsured',
+        hrEmpBtnAdd: '＋ Add Employee',
+        hrEmpBtnImport: '⇩ Import Excel',
+        hrEmpBtnExport: '↥ Export Excel',
+        hrEmpThEmployee: 'Employee',
+        hrEmpThNationalId: 'National ID',
+        hrEmpThDepartment: 'Department',
+        hrEmpThHireDate: 'Hire Date',
+        hrEmpThInsurance: 'Insurance',
+        hrEmpThDependents: 'Dependents',
+        hrEmpThActions: 'Actions',
+        hrEmpEmptyTitle: 'No results',
+        hrEmpEmptyText: 'Add an employee or import an Excel list.',
+        hrEmpBadgeInsured: 'Insured',
+        hrEmpBadgeUninsured: 'Uninsured',
+        hrEmpGenderUnspecified: 'Unspecified',
+        hrEmpBtnEdit: 'Edit',
+        hrEmpBtnDelete: 'Delete',
+
+        // Documents
+        hrDocsTitle: 'Company Documents Vault',
+        hrDocsSub: 'Official company documents, group medical policy, and contracts.',
+        hrDocsBtnUpload: '＋ Upload Company Document',
+        hrDocsBtnAlerts: '🔔 Check Alerts',
+        hrDocsEmptyTitle: 'Vault is empty',
+        hrDocsEmptyText: 'Upload the commercial register, tax card, insurance policy, or any official document.',
+        hrDocsBtnOpen: 'Open Document',
+        hrDocsNoExpiry: 'No expiry date',
+        hrDocsExpiryLabel: 'Expiry Date',
+        hrDocsExpiredSince: 'Expired {days} days ago',
+        hrDocsExpiresToday: 'Expires today',
+        hrDocsExpiresTomorrow: 'Expires tomorrow',
+        hrDocsDaysLeft: '{days} days left',
+
+        // Requests
+        hrReqTitle: 'Unified Request Timeline',
+        hrReqSub: 'Issuance / Renewal / Reimbursement with a clear status timeline.',
+        hrReqBtnNew: '＋ New Request',
+        hrReqSearchPlaceholder: 'Search by request number, employee, or type',
+        hrReqFilterAll: 'All statuses',
+        hrReqEmptyTitle: 'No requests yet',
+        hrReqEmptyText: 'The issuance, renewal, and reimbursement log with Timeline will appear here.',
+        hrReqTypeIssuance: 'Issuance',
+        hrReqTypeRenewal: 'Renewal',
+        hrReqTypeReimbursement: 'Reimbursement',
+        hrReqTypeLabel: 'Request Type',
+        hrReqStatusSubmitted: 'Submitted',
+        hrReqStatusReview: 'Under Review',
+        hrReqStatusApproved: 'Approved',
+        hrReqStatusRejected: 'Rejected',
+        hrReqStatusPaid: 'Paid',
+        hrReqTimelineSubmitted: 'Submitted',
+        hrReqTimelineReview: 'Under Review',
+        hrReqTimelineApproved: 'Approved/Rejected',
+        hrReqTimelinePaid: 'Paid',
+        hrReqEmployeePrefix: 'Employee',
+        hrReqAmountPrefix: 'Amount',
+        hrReqPriorityHigh: 'High priority',
+        hrReqPriorityNormal: 'Normal priority',
+
+        // Consumption
+        hrConsTitle: 'Group Medical Insurance Consumption Analysis',
+        hrConsSub: 'Excel recommended for accuracy. PDF supported via best-effort text/table extraction.',
+        hrConsLossRatioLabel: 'Loss Ratio — Spend vs Premium',
+        hrConsLossRatioDefault: 'Upload data and enter the annual/period premium.',
+        hrConsPremiumLabel: 'Premium Used for Analysis',
+        hrConsPremiumPlaceholder: 'e.g. 2500000',
+        hrConsYearLabel: 'Analysis Year',
+        hrConsThresholdLabel: 'Early Warning Threshold',
+        hrConsNotesLabel: 'Note / Data Source',
+        hrConsNotesPlaceholder: 'Insurer name, data period, reconciliation notes...',
+        hrConsBtnUpload: '📊 Upload Excel / PDF',
+        hrConsBtnReset: 'Reset Analysis',
+        hrConsBtnSave: 'Save Report',
+        hrConsBtnExportExcel: 'Export Excel',
+        hrConsBtnExportPdf: 'PDF Report',
+        hrConsFileNote: 'Raw file is processed in-browser. PDF analysis relies on extracted text; table quality varies by insurer, so Excel remains the preferred source.',
+        hrConsMappingTitle: 'Column Mapping',
+        hrConsMappingSub: 'Map fields once and the template will be saved for this format.',
+        hrConsBtnAnalyze: 'Analyze Data',
+        hrConsReportTitle: 'Consumption Report',
+        hrConsReportByDept: 'By Department',
+        hrConsReportByAge: 'By Age Group',
+        hrConsReportByGender: 'By Gender',
+        hrConsReportByService: 'Medical Categories',
+        hrConsReportByMonth: 'Monthly Trend',
+        hrConsReportTopConsumers: 'Top Consumers',
+        hrConsReportYoY: 'Year-over-Year Comparison',
+        hrConsReportPrivacy: 'The view here is aggregated to reduce exposure of sensitive medical details. Employee name appears when HR context requires it, but granular medical details are not stored in the aggregated analysis log.',
+        hrConsHistoryTitle: 'Saved Reports Log',
+        hrConsHistoryEmptyTitle: 'No saved reports',
+        hrConsHistoryEmptyText: 'After saving the first analysis, the historical log for year-over-year comparison will appear here.',
+        hrConsMetricTotalSpend: 'Total Spend',
+        hrConsMetricRecords: 'Records Count',
+        hrConsMetricUniqueEmployees: 'Beneficiary Employees',
+        hrConsMetricPremium: 'Premium',
+        hrConsMetricLossRatio: 'Loss Ratio',
+        hrConsMetricValidRecords: 'Records with Amount',
+        hrConsNoData: 'Insufficient data.',
+        hrConsNoPrevYear: 'No saved report for {year} to compare.',
+        hrConsYoYCompare: '<b>{year}</b>: {curr} · <b>{prev}</b>: {prevAmt} · Change: <b>{change}%</b>',
+
+        // Modals
+        hrModalAddEmployee: 'Add Employee',
+        hrModalEditEmployee: 'Edit Employee',
+        hrModalAddEmployeeSub: 'Record employee and dependent data needed for insurance management.',
+        hrModalEmpName: 'Full Name',
+        hrModalEmpNationalId: 'National ID',
+        hrModalEmpDepartment: 'Department',
+        hrModalEmpHireDate: 'Hire Date',
+        hrModalEmpInsurance: 'Insurance Status',
+        hrModalEmpInsuranceInsured: 'Insured',
+        hrModalEmpInsuranceUninsured: 'Uninsured',
+        hrModalEmpGender: 'Gender',
+        hrModalEmpGenderUnspecified: 'Unspecified',
+        hrModalEmpGenderMale: 'Male',
+        hrModalEmpGenderFemale: 'Female',
+        hrModalEmpBirthDate: 'Date of Birth',
+        hrModalEmpDependents: 'Dependents Count',
+        hrModalEmpNotes: 'Notes',
+        hrModalEmpSave: 'Save Employee',
+        hrModalDocTitle: 'Upload Company Document',
+        hrModalDocSub: 'Upload the document and set the expiry date for alert management.',
+        hrModalDocName: 'Document Name',
+        hrModalDocType: 'Document Type',
+        hrModalDocTypeCommercial: 'Commercial Register',
+        hrModalDocTypeTax: 'Tax Card',
+        hrModalDocTypeMedical: 'Group Medical Insurance Policy',
+        hrModalDocTypeContract: 'Contract',
+        hrModalDocTypeOfficial: 'Official Document',
+        hrModalDocTypeOther: 'Other',
+        hrModalDocExpiry: 'Expiry Date',
+        hrModalDocFile: 'File',
+        hrModalDocUploadProgress: 'Uploading... {pct}%',
+        hrModalDocSave: 'Upload & Save',
+        hrModalReqTitle: 'Create New Request',
+        hrModalReqSub: 'Request starts as "Submitted" then progresses through the timeline.',
+        hrModalReqType: 'Request Type',
+        hrModalReqNumber: 'Request Number',
+        hrModalReqNumberPlaceholder: 'Leave empty for auto-generation',
+        hrModalReqEmployee: 'Employee',
+        hrModalReqEmployeeSelect: 'Select employee',
+        hrModalReqAmount: 'Amount',
+        hrModalReqPriority: 'Priority',
+        hrModalReqPriorityHigh: 'High',
+        hrModalReqPriorityNormal: 'Normal',
+        hrModalReqNotes: 'Description / Notes',
+        hrModalReqSubmit: 'Submit Request',
+
+        // Alerts / messages
+        hrAlertWarnTitle: 'Early Consumption Warning',
+        hrAlertWarnBody: 'Last recorded Loss Ratio is <b>{loss}%</b> vs alert threshold <b>{threshold}%</b>. Review monthly trend and categories before renewal.',
+        hrAlertOkTitle: 'Consumption Monitoring',
+        hrAlertOkBody: 'Last recorded Loss Ratio is <b>{loss}%</b>. Use detailed analysis to review departments, categories, and monthly trend.',
+        hrAlertInfoTitle: 'Start Building the Renewal File',
+        hrAlertInfoBody: 'Link the company policy, add the employee registry, and upload consumption data to get a complete monitoring dashboard.',
+        hrAlertLoadError: 'Error loading data',
+        hrAlertLoadErrorBody: 'Could not load Corporate HR data. Check Firestore permissions.',
+        hrAlertPleaseName: 'Please enter the employee name.',
+        hrAlertPleaseDocName: 'Enter document name and select a file.',
+        hrAlertBadFile: 'Unsupported file type or size exceeds 15MB.',
+        hrAlertChooseEmployee: 'Select the employee for the reimbursement request.',
+        hrAlertSaveEmployeeFail: 'Could not save employee: {msg}',
+        hrAlertDeleteEmployeeFail: 'Could not delete employee: {msg}',
+        hrAlertImportFail: 'Could not import Excel: {msg}',
+        hrAlertNoNameCol: 'Employee name column not found.',
+        hrAlertEmptyFile: 'File is empty',
+        hrAlertXlsxUnavailable: 'Excel library is not available.',
+        hrAlertImportSuccess: 'Imported {count} employees.',
+        hrAlertUploadFail: 'Could not upload document: {msg}',
+        hrAlertRequestFail: 'Could not create request: {msg}',
+        hrAlertSaveAnalysisFail: 'Could not save report: {msg}',
+        hrAlertNeedAnalysis: 'Run the analysis first.',
+        hrAlertConfirmDeleteEmp: 'Delete employee record "{name}"?',
+        hrAlertPdfExtractFail: 'No text could be extracted from PDF.',
+        hrAlertExcelEmpty: 'Excel file is empty.',
+        hrAlertExcelLoaded: 'Excel file loaded. Review column mapping, then start analysis.',
+        hrAlertPdfLoaded: 'PDF text extracted. Review column mapping carefully before analysis.',
+        hrAlertMappingRequired: 'Field "{field}" is required',
+        hrAlertAnalysisSaved: 'Aggregated report saved successfully. Raw consumption file was not saved.',
+        hrAlertAllowPopups: 'Allow pop-ups to export the report.',
+        hrAlertReadFileFail: 'Could not read consumption file: {msg}',
+        hrAlertNewRequest: 'New Request',
+        hrAlertRequestSubmitted: '{num} was submitted as "Submitted".',
+
+        // Policy snapshot labels
+        hrSnapInsurer: 'Insurance Company',
+        hrSnapInsurerSub: 'From policy data',
+        hrSnapPolicyNumber: 'Policy Number',
+        hrSnapPolicyNumberSub: 'Current policy',
+        hrSnapPlan: 'Coverage / Network Type',
+        hrSnapPlanSub: 'Current plan details',
+        hrSnapPeriod: 'Coverage Period',
+        hrSnapPeriodSub: 'Effective & expiry dates',
+        hrSnapPremium: 'Premium',
+        hrSnapPremiumSub: 'For monitoring & renewal',
+        hrSnapStatus: 'Policy Status',
+        hrSnapStatusSub: 'Auto from policy dates',
+        hrSnapEmployees: 'Employees in Registry',
+        hrSnapEmployeesSub: 'Primary registry',
+        hrSnapDependents: 'Dependents',
+        hrSnapDependentsSub: 'From employee data',
+        hrSnapClaims: 'Claims/Records Under Analysis',
+        hrSnapClaimsSub: 'Latest consumption file',
+        hrSnapLastAnalysis: 'Last Analysis',
+        hrSnapLastAnalysisSub: 'Medical consumption analysis',
+        hrSnapNotLinked: 'Not linked yet',
+        hrSnapNotRecorded: 'Not recorded',
+        hrSnapNotAvailable: 'Not available',
+        hrSnapNotStarted: 'Not started yet',
+        hrSnapEnterLink: 'Enter/link policy',
+        hrSnapStatusExpired: 'Expired',
+        hrSnapStatusExpiring: 'Expiring Soon',
+        hrSnapStatusActive: 'Active',
+        hrSnapDocNotLinked: 'Not linked yet',
+        hrSnapLastFileAnalysis: 'Last analyzed file',
+
+        // Readiness
+        hrReadyCurrentPolicy: 'Current Policy',
+        hrReadyPolicyNoEnd: 'Expiry date recorded',
+        hrReadyPolicyExpired: 'Policy expired',
+        hrReadyPolicySoon: 'Renewal date approaching',
+        hrReadyPolicyOk: 'Current period is active',
+        hrReadyPolicyNotLinked: 'No policy linked',
+        hrReadyPolicyDaysLeft: '{days} days remaining',
+        hrReadyPolicyAdd: 'Add/link policy',
+        hrReadyDocs: 'Essential Company Documents',
+        hrReadyDocsText: '{have}/3 essential documents present',
+        hrReadyDocsSub: 'Commercial register · Tax card · Medical policy',
+        hrReadyEmployees: 'Employee Registry',
+        hrReadyEmployeesText: '{count} employees registered',
+        hrReadyEmployeesSubOk: 'Registry ready for analysis and requests',
+        hrReadyEmployeesSubNo: 'Start by adding or importing employees',
+        hrReadyAnalysis: 'Consumption Analysis',
+        hrReadyAnalysisOk: 'Latest saved analysis for {year}',
+        hrReadyAnalysisNo: 'No report created yet',
+        hrReadyAnalysisRatio: 'Loss Ratio {ratio}%',
+        hrReadyAnalysisSub: 'Upload Excel or PDF and enter the premium',
+        hrReadyStateReady: 'Ready',
+        hrReadyStateNeedsFollowup: 'Needs Follow-up',
+
+        // Control center
+        hrCtlEmployees: 'Employees',
+        hrCtlEmployeesSub: 'Latest recorded count',
+        hrCtlOpenRequests: 'Requests Under Follow-up',
+        hrCtlOpenRequestsSub: 'Requests needing action now',
+        hrCtlNoOpenRequests: 'No open requests',
+        hrCtlExpiringDocs: 'Documents Expiring Soon',
+        hrCtlExpiringDocsSub: '{exp} expired · {soon} within 45 days',
+        hrCtlLastMedical: 'Last Medical Analysis',
+        hrCtlLastMedicalNo: 'Not available',
+        hrCtlLastMedicalSub: 'Aggregated report saved',
+        hrCtlLastMedicalSubNo: 'Upload consumption file to start',
+
+        // Management indicators
+        hrMgmtEmployees: 'Employee',
+        hrMgmtEmployeesSub: 'From employee registry',
+        hrMgmtInsuredRate: 'Coverage Rate',
+        hrMgmtInsuredRateSub: 'Insured out of total registry',
+        hrMgmtOpenReqs: 'Open Requests',
+        hrMgmtOpenReqsSub: 'Issuance / Renewal / Reimbursement',
+        hrMgmtDocsFollowup: 'Documents Needing Follow-up',
+        hrMgmtDocsFollowupSub: '{exp} expired · {soon} soon',
+        hrMgmtLossRatio: 'Loss Ratio',
+        hrMgmtLossRatioSub: 'From latest saved analysis',
+        hrMgmtRecords: 'Consumption Records',
+        hrMgmtRecordsSub: 'Last analyzed file',
+
+        // Map fields
+        hrMapFieldDate: 'Date',
+        hrMapFieldAmount: 'Amount',
+        hrMapFieldEmployee: 'Employee Name',
+        hrMapFieldService: 'Service Type',
+        hrMapFieldDepartment: 'Department',
+        hrMapFieldGender: 'Gender',
+        hrMapFieldAge: 'Age',
+        hrMapFieldBirthDate: 'Date of Birth',
+        hrMapFieldNationalId: 'National ID',
+        hrMapUnused: 'Unused',
+        hrMapColumn: 'Column {n}',
+        hrMapNote: 'Found <b>{cols}</b> columns and approximately <b>{rows}</b> rows. Review the mapping before analysis. Template will be saved locally for this account.',
+
+        // Empty / report misc
+        hrEmptyNoData: 'Insufficient data.',
+        hrEmptyNoRequests: 'No requests yet',
+        hrEmptyNoRequestsSub: 'Latest issuance/renewal/reimbursement will appear here.',
+        hrEmptyGenericNoResults: 'No results',
+        hrEmptyGenericNoResultsSub: 'Add an employee or import an Excel list.',
+    }
+};
+
+// Helper: Get HR translation with optional interpolation
+function hrT(key, vars) {
+    var lang = STATE.language || 'ar';
+    var dict = HR_TRANSLATIONS[lang] || HR_TRANSLATIONS.ar;
+    var str = (dict && dict[key] !== undefined) ? dict[key] : ((HR_TRANSLATIONS.ar && HR_TRANSLATIONS.ar[key]) || key);
+    if (vars && typeof str === 'string') {
+        Object.keys(vars).forEach(function(k) {
+            str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+        });
+    }
+    return str;
+}
+        
         function getText(key) {
             var lang = STATE.language || 'ar';
             return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key] !== undefined) ? TRANSLATIONS[lang][key] :
@@ -8862,7 +9965,10 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 if (typeof checkInHabit === 'function') checkInHabit('readTip'); }
             if (id === 'referral') renderReferralScreen();
             if (id === 'pointsHub') renderPointsHub();
-            if (id === 'corporateHRHub') loadCorporateHRData();
+            if (id === 'corporateHRHub') {
+                loadCorporateHRData();
+                setTimeout(function(){ try { updateHRTexts(); } catch(e) {} }, 0);
+            }
             if (id === 'login') {
                 var err = document.getElementById('loginError');
                 if (err) { err.style.display = 'none';
@@ -9177,6 +10283,9 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             if (loginLangBtn) {
                 loginLangBtn.textContent = STATE.language === 'ar' ? 'EN' : 'عربي';
             }
+            // Corporate HR Hub: refresh the complete HR page in the selected language.
+            try { updateHRTexts(); } catch (e) { console.warn('HR i18n update:', e); }
+
             var signupLang = document.getElementById('signupLanguage');
             if (signupLang) signupLang.value = STATE.language;
             var langBtn = document.getElementById('languageToggle');
@@ -12054,8 +13163,10 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
 
         function hrMoney(v){
-            var n=Number(v); if(!isFinite(n)) return 'غير مسجل';
-            return n.toLocaleString('ar-EG',{maximumFractionDigits:0})+' ج.م';
+            var n=Number(v); if(!isFinite(n)) return hrT('hrSnapNotRecorded');
+            var locale=STATE.language==='en'?'en-US':'ar-EG';
+            var suffix=STATE.language==='en'?' EGP':' ج.م';
+            return n.toLocaleString(locale,{maximumFractionDigits:0})+suffix;
         }
         function hrFirstValue(obj, keys){
             for(var i=0;i<keys.length;i++){
@@ -12091,16 +13202,16 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             var totalDependents=(STATE.hrEmployees||[]).reduce(function(n,e){return n+(parseInt(e.dependentsCount,10)||0)},0);
             var employeeText=k.employees+' موظف';
             el.innerHTML=''+
-              hrPolicyField('شركة التأمين',insurer||'غير مرتبط بعد','من بيانات الوثيقة')+
-              hrPolicyField('رقم الوثيقة',p&&p.policyNumber||'',p?'الوثيقة الحالية':'أدخل/اربط الوثيقة')+
-              hrPolicyField('نوع التغطية / الشبكة',plan||'غير مسجل',p?'تفاصيل الخطة الحالية':'من بيانات الوثيقة')+
-              hrPolicyField('فترة التغطية',start&&end?(hrDateOnly(start)+' → '+hrDateOnly(end)):(end?('حتى '+hrDateOnly(end)):'غير مسجلة'),'تاريخ السريان والانتهاء')+
-              hrPolicyField('القسط',premium?hrMoney(premium):(report&&report.premium?hrMoney(report.premium):''),'لأغراض المتابعة والتجديد')+
-              hrPolicyField('حالة الوثيقة',status||'',p?'تلقائيًا من تواريخ الوثيقة':'لم يتم الربط بعد')+
-              hrPolicyField('الموظفون في السجل',employeeText,'السجل الأساسي')+
-              hrPolicyField('المعالون',String(totalDependents), 'حسب بيانات الموظفين')+
-              hrPolicyField('المطالبات/السجلات محل التحليل',report&&report.records?String(report.records):'غير متاح','آخر ملف استهلاكات')+
-              hrPolicyField('آخر تحليل',report&&report.year?String(report.year):'لم يبدأ بعد','تحليل الاستهلاكات الطبية');
+              hrPolicyField(hrT('hrSnapInsurer'),insurer||hrT('hrSnapNotLinked'),hrT('hrSnapInsurerSub'))+
+              hrPolicyField(hrT('hrSnapPolicyNumber'),p&&p.policyNumber||'',p?hrT('hrSnapPolicyNumberSub'):hrT('hrSnapEnterLink'))+
+              hrPolicyField(hrT('hrSnapPlan'),plan||hrT('hrSnapNotRecorded'),p?hrT('hrSnapPlanSub'):hrT('hrSnapInsurerSub'))+
+              hrPolicyField(hrT('hrSnapPeriod'),start&&end?(hrDateOnly(start)+' → '+hrDateOnly(end)):(end?hrT('hrSnapUntil')+' '+hrDateOnly(end):hrT('hrSnapNotRecorded')),hrT('hrSnapPeriodSub'))+
+              hrPolicyField(hrT('hrSnapPremium'),premium?hrMoney(premium):(report&&report.premium?hrMoney(report.premium):''),hrT('hrSnapPremiumSub'))+
+              hrPolicyField(hrT('hrSnapStatus'),status||'',p?hrT('hrSnapStatusSub'):hrT('hrSnapDocNotLinked'))+
+              hrPolicyField(hrT('hrSnapEmployees'),employeeText,hrT('hrSnapEmployeesSub'))+
+              hrPolicyField(hrT('hrSnapDependents'),String(totalDependents),hrT('hrSnapDependentsSub'))+
+              hrPolicyField(hrT('hrSnapClaims'),report&&report.records?String(report.records):hrT('hrSnapNotAvailable'),hrT('hrSnapClaimsSub'))+
+              hrPolicyField(hrT('hrSnapLastAnalysis'),report&&report.year?String(report.year):hrT('hrSnapNotStarted'),hrT('hrSnapLastAnalysisSub'));
         }
         function renderHRManagementIndicators(){
             var el=document.getElementById('hrManagementIndicators');if(!el)return;
@@ -12160,12 +13271,12 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             if (!c) return;
             var k = getHRKpi();
             var items = [
-                ['الموظفون', k.employees, 'في سجل الشركة'],
-                ['مؤمّن عليهم', k.insured, k.employees ? Math.round((k.insured/k.employees)*100)+'% من السجل' : 'أضف الموظفين أولًا'],
-                ['طلبات مفتوحة', k.openRequests, 'تحتاج متابعة'],
-                ['وثائق قريبة الانتهاء', k.docsSoon, 'خلال 45 يومًا'],
-                ['Loss Ratio', k.loss === null ? '—' : k.loss.toFixed(1)+'%', 'آخر تحليل محفوظ'],
-                ['ملف الشركة', esc((STATE.hrCompany && STATE.hrCompany.name) || (STATE.userData && STATE.userData.businessName) || 'غير مرتبط'), 'Corporate HR']
+                [hrT('hrKpiEmployees'), k.employees, hrT('hrKpiEmployeesSub')],
+                [hrT('hrKpiInsured'), k.insured, k.employees ? Math.round((k.insured/k.employees)*100)+'% '+hrT('hrKpiOfRegistry') : hrT('hrKpiAddEmployees')],
+                [hrT('hrKpiOpenRequests'), k.openRequests, hrT('hrKpiNeedsFollowup')],
+                [hrT('hrKpiExpiringDocs'), k.docsSoon, hrT('hrKpiWithin45')],
+                ['Loss Ratio', k.loss === null ? '—' : k.loss.toFixed(1)+'%', hrT('hrKpiLastAnalysis')],
+                ['ملف الشركة', esc((STATE.hrCompany && STATE.hrCompany.name) || (STATE.userData && STATE.userData.businessName) || 'غير مرتبط'), hrT('hrKpiCorporateHR')]
             ];
             c.innerHTML = items.map(function(x){
                 return '<div class="hr-kpi"><div class="hr-kpi-label">'+x[0]+'</div><div class="hr-kpi-value">'+x[1]+'</div><div class="hr-kpi-sub">'+x[2]+'</div></div>';
@@ -12176,13 +13287,13 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 var threshold = parseFloat((document.getElementById('hrLossThreshold')||{}).value) || HR_LOSS_RATIO_ALERT_DEFAULT;
                 if (k.loss !== null && k.loss >= threshold) {
                     alertEl.className = 'hr-alert warn';
-                    alertEl.innerHTML = '<div class="hr-alert-icon">⚠</div><div><h4>إنذار مبكر في الاستهلاك</h4><p>آخر Loss Ratio مسجل هو <b>'+k.loss.toFixed(1)+'%</b> مقابل حد التنبيه <b>'+threshold+'%</b>. راجع الاتجاه الشهري والتصنيفات قبل التجديد.</p></div>';
+                    alertEl.innerHTML = '<div class="hr-alert-icon">⚠</div><div><h4>'+hrT('hrAlertWarnTitle')+'</h4><p>'+hrT('hrAlertWarnBody',{loss:k.loss.toFixed(1),threshold:threshold})+'</p></div>';
                 } else if (k.loss !== null) {
                     alertEl.className = 'hr-alert ok';
-                    alertEl.innerHTML = '<div class="hr-alert-icon">✓</div><div><h4>متابعة الاستهلاك</h4><p>آخر Loss Ratio مسجل هو <b>'+k.loss.toFixed(1)+'%</b>. استخدم التحليل التفصيلي لمراجعة الأقسام والتصنيفات والاتجاه الشهري.</p></div>';
+                    alertEl.innerHTML = '<div class="hr-alert-icon">✓</div><div><h4>'+hrT('hrAlertOkTitle')+'</h4><p>'+hrT('hrAlertOkBody',{loss:k.loss.toFixed(1)})+'</p></div>';
                 } else {
                     alertEl.className = 'hr-alert';
-                    alertEl.innerHTML = '<div class="hr-alert-icon">i</div><div><h4>ابدأ ببناء ملف التجديد</h4><p>اربط وثيقة الشركة، أضف سجل الموظفين وارفع ملف الاستهلاكات للحصول على لوحة متابعة متكاملة.</p></div>';
+                    alertEl.innerHTML = '<div class="hr-alert-icon">i</div><div><h4>'+hrT('hrAlertInfoTitle')+'</h4><p>'+hrT('hrAlertInfoBody')+'</p></div>';
                 }
             }
             renderCorporateHRDeepDashboard();
@@ -12192,10 +13303,10 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         function requestStatusInfo(status) {
             var map = {
                 submitted:{label:'مُقدَّم',cls:'submitted',idx:0},
-                review:{label:'قيد المراجعة',cls:'review',idx:1},
-                approved:{label:'مُعتمد',cls:'approved',idx:2},
-                rejected:{label:'مرفوض',cls:'rejected',idx:2},
-                paid:{label:'مدفوع',cls:'paid',idx:3}
+                review:{label:hrT('hrReqStatusReview'),cls:'review',idx:1},
+                approved:{label:hrT('hrReqStatusApproved'),cls:'approved',idx:2},
+                rejected:{label:hrT('hrReqStatusRejected'),cls:'rejected',idx:2},
+                paid:{label:hrT('hrReqStatusPaid'),cls:'paid',idx:3}
             };
             return map[status] || map.submitted;
         }
@@ -12247,10 +13358,12 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         }
 
         function hrDateOnly(v) {
-            if (!v) return '—';
-            var d = v && typeof v.toDate === 'function' ? v.toDate() : new Date(v);
-            return isNaN(d.getTime()) ? String(v) : d.toLocaleDateString('ar-EG');
-        }
+    if (!v) return '—';
+    var d = v && typeof v.toDate === 'function' ? v.toDate() : new Date(v);
+    if (isNaN(d.getTime())) return String(v);
+    var locale = STATE.language === 'en' ? 'en-GB' : 'ar-EG';
+    return d.toLocaleDateString(locale);
+}
 
         function openHREmployeeModal(id) {
             var e = id ? (STATE.hrEmployees||[]).find(function(x){return x.id===id;}) : null;
@@ -12516,7 +13629,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         function renderHRRequestCard(r){
             var info=requestStatusInfo(r.status);
             return '<div class="hr-request-card"><div class="hr-request-top"><div style="flex:1"><div class="hr-request-title">'+esc(requestTypeLabel(r.type))+' · '+esc(r.requestNumber||r.id)+'</div>'+
-                '<div class="hr-request-meta">'+(r.employeeName?'الموظف: '+esc(r.employeeName)+' · ':'')+'المبلغ: '+formatHRMoney(r.amount||0)+' · '+(r.priority==='high'?'أولوية مرتفعة':'أولوية عادية')+'</div></div>'+
+                '<div class="hr-request-meta">'+(r.employeeName?hrT('hrReqEmployeePrefix')+': '+esc(r.employeeName)+' · ':'')+hrT('hrReqAmountPrefix')+': '+formatHRMoney(r.amount||0)+' · '+(r.priority==='high'?hrT('hrReqPriorityHigh'):hrT('hrReqPriorityNormal'))+'</div></div>'+
                 '<span class="hr-status '+info.cls+'">'+info.label+'</span></div>'+requestTimelineHtml(r.status)+'</div>';
         }
 
@@ -12563,11 +13676,10 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         }
 
         function hrDateKey(v){var d=parseHRDate(v);return d?d.toISOString().slice(0,10):'';}
-        function formatHRMoney(n){return (Number(n)||0).toLocaleString('ar-EG',{maximumFractionDigits:2})+' ج.م';}
-
-        function calculateHRAge(birthDate,serviceDate){
-            var b=parseHRDate(birthDate), d=parseHRDate(serviceDate)||new Date();
-            if(!b)return null;var age=d.getFullYear()-b.getFullYear();var md=d.getMonth()-b.getMonth();if(md<0||(md===0&&d.getDate()<b.getDate()))age--;return age>=0?age:null;
+        function formatHRMoney(n) {
+    var locale = STATE.language === 'en' ? 'en-US' : 'ar-EG';
+    var currency = STATE.language === 'en' ? ' EGP' : ' ج.م';
+    return (Number(n) || 0).toLocaleString(locale, { maximumFractionDigits: 2 }) + currency;
         }
         function inferHRAgeGroup(age){if(age==null)return'غير محدد';if(age<18)return'أقل من 18';if(age<26)return'18–25';if(age<36)return'26–35';if(age<46)return'36–45';if(age<56)return'46–55';return'56+';}
         function inferHRService(v){
@@ -12604,9 +13716,9 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         function renderHRMappingUI(){
             var grid=document.getElementById('hrMappingGrid'), note=document.getElementById('hrMappingNote');
             if(!grid)return;
-            var h=STATE.hrConsumption&&STATE.hrConsumption.headers||[], detected=STATE.hrConsumption&&STATE.hrConsumption.detected||{}, labels={date:'التاريخ',amount:'المبلغ',employee:'اسم الموظف',service:'نوع الخدمة',department:'القسم',gender:'النوع',age:'العمر',birthDate:'تاريخ الميلاد',nationalId:'الرقم القومي'};
+            var h=STATE.hrConsumption&&STATE.hrConsumption.headers||[], detected=STATE.hrConsumption&&STATE.hrConsumption.detected||{}, labels={date:hrT('hrMapFieldDate'),amount:hrT('hrMapFieldAmount'),employee:hrT('hrMapFieldEmployee'),service:hrT('hrMapFieldService'),department:hrT('hrMapFieldDepartment'),gender:hrT('hrMapFieldGender'),age:hrT('hrMapFieldAge'),birthDate:hrT('hrMapFieldBirthDate'),nationalId:hrT('hrMapFieldNationalId')};
             grid.innerHTML=Object.keys(labels).map(function(k){
-                var opts='<option value="-1">غير مستخدم</option>'+h.map(function(x,i){return '<option value="'+i+'" '+(String(detected[k])===String(i)?'selected':'')+'>'+esc(String(x||('عمود '+(i+1))))+'</option>';}).join('');
+                var opts='<option value="-1">'+hrT('hrMapUnused')+'</option>'+h.map(function(x,i){return '<option value="'+i+'" '+(String(detected[k])===String(i)?'selected':'')+'>'+esc(String(x||(hrT('hrMapColumn',{n:i+1}))))+'</option>';}).join('');
                 return '<div class="field"><label>'+labels[k]+(k==='date'||k==='amount'||k==='employee'?' *':'')+'</label><select data-hr-map="'+k+'">'+opts+'</select></div>';
             }).join('');
             var saved=loadSavedHRMapping();
@@ -12639,7 +13751,31 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 var out={employee:employeeRaw||((emp&&emp.name)||'غير محدد'),employeeId:emp&&emp.id||null,nationalId:String(r.nationalId||'').trim(),amount:amount,date:date,service:service,department:dep,gender:gender,age:age,ageGroup:inferHRAgeGroup(age)};
                 if(amount>0)valid++;total+=amount;if(out.employee&&out.employee!=='غير محدد')unique[out.employee]=1;if(date){var mk=date.toISOString().slice(0,7);months[mk]=(months[mk]||0)+amount;}return out;
             });
-            return {rows:rows,totalSpend:total,records:rows.length,validRecords:valid,uniqueEmployees:Object.keys(unique).length,byDepartment:groupHRSpend(rows,function(x){return x.department;}),byAge:groupHRSpend(rows,function(x){return x.ageGroup;}),byGender:groupHRSpend(rows,function(x){return x.gender;}),byService:groupHRSpend(rows,function(x){return x.service;}),byMonth:Object.keys(months).sort().map(function(k){return {key:k,value:months[k]};}),topConsumers:groupHRSpend(rows,function(x){return x.employee;}).slice(0,10)};
+            var uniqueEmployees=Object.keys(unique).length;
+            var coveredLives=parseHRNumber((document.getElementById('hrConsumptionLives')||{}).value);
+            var effectiveLives=coveredLives||uniqueEmployees;
+            var byService=groupHRSpend(rows,function(x){return x.service;});
+            var topService=byService[0]||null;
+            return {
+                rows:rows,
+                totalSpend:total,
+                records:rows.length,
+                validRecords:valid,
+                uniqueEmployees:uniqueEmployees,
+                coveredLives:coveredLives,
+                effectiveLives:effectiveLives,
+                averageClaim:valid?total/valid:0,
+                spendPerLife:effectiveLives?total/effectiveLives:0,
+                utilizationRate:coveredLives&&uniqueEmployees?(uniqueEmployees/coveredLives)*100:null,
+                topService:topService?topService.key:'',
+                topServiceShare:topService&&total?(topService.value/total)*100:null,
+                byDepartment:groupHRSpend(rows,function(x){return x.department;}),
+                byAge:groupHRSpend(rows,function(x){return x.ageGroup;}),
+                byGender:groupHRSpend(rows,function(x){return x.gender;}),
+                byService:byService,
+                byMonth:Object.keys(months).sort().map(function(k){return {key:k,value:months[k]};}),
+                topConsumers:groupHRSpend(rows,function(x){return x.employee;}).filter(function(x){return x.key&&x.key!=='غير محدد';}).slice(0,10)
+            };
         }
 
         function renderHRBarList(containerId,list,limit){
@@ -12660,11 +13796,37 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             renderCorporateHRDashboard();
         }
 
+        function updateHRConsumptionQuality(){
+            var premium=parseHRNumber((document.getElementById('hrConsumptionPremium')||{}).value);
+            var lives=parseHRNumber((document.getElementById('hrConsumptionLives')||{}).value);
+            var start=String((document.getElementById('hrConsumptionStart')||{}).value||'');
+            var end=String((document.getElementById('hrConsumptionEnd')||{}).value||'');
+            var el=document.getElementById('hrConsumptionQuality');
+            if(!el)return;
+            var dot=el.querySelector('.hr-quality-dot');
+            var complete=!!(premium&&lives&&start&&end);
+            if(dot){dot.style.background=complete?'var(--green)':'var(--gold)';dot.style.boxShadow=complete?'0 0 0 4px rgba(22,128,91,.12)':'0 0 0 4px rgba(242,189,99,.12)';}
+            var msg=el.querySelector('span:last-child');
+            if(msg)msg.textContent=complete?hrT('hrConsQualityComplete'):hrT('hrConsQualityHint');
+        }
+
         function buildHRMedicalReport(rows){
             var agg=aggregateHRRows(rows), premium=parseHRNumber((document.getElementById('hrConsumptionPremium')||{}).value);
             var year=parseInt((document.getElementById('hrConsumptionYear')||{}).value||new Date().getFullYear(),10)||new Date().getFullYear();
             var threshold=parseHRNumber((document.getElementById('hrLossThreshold')||{}).value)||HR_LOSS_RATIO_ALERT_DEFAULT;
-            var report=Object.assign({year:year,premium:premium,threshold:threshold,sourceType:STATE.hrConsumption&&STATE.hrConsumption.sourceType||'unknown',sourceName:STATE.hrConsumption&&STATE.hrConsumption.sourceName||'',notes:String((document.getElementById('hrConsumptionNotes')||{}).value||'').trim(),createdAt:new Date().toISOString()},agg);
+            var report=Object.assign({
+                year:year,
+                premium:premium,
+                premiumType:String((document.getElementById('hrConsumptionPremiumType')||{}).value||'period'),
+                coveredLives:parseHRNumber((document.getElementById('hrConsumptionLives')||{}).value),
+                periodStart:String((document.getElementById('hrConsumptionStart')||{}).value||''),
+                periodEnd:String((document.getElementById('hrConsumptionEnd')||{}).value||''),
+                threshold:threshold,
+                sourceType:STATE.hrConsumption&&STATE.hrConsumption.sourceType||'unknown',
+                sourceName:STATE.hrConsumption&&STATE.hrConsumption.sourceName||'',
+                notes:String((document.getElementById('hrConsumptionNotes')||{}).value||'').trim(),
+                createdAt:new Date().toISOString()
+            },agg);
             report.lossRatio=premium>0?(agg.totalSpend/premium)*100:null;
             return report;
         }
@@ -12672,11 +13834,19 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         function renderHRMedicalReport(report){
             if(!report)return;
             var card=document.getElementById('hrMedicalReportCard');if(card)card.style.display='block';
-            var meta=document.getElementById('hrReportMeta');if(meta)meta.textContent=(report.sourceName||'ملف الاستهلاك')+' · '+report.year+' · '+report.records+' سجل';
+            var meta=document.getElementById('hrReportMeta');if(meta)meta.textContent=(report.sourceName||hrT('hrConsFileFallback'))+' · '+report.year+' · '+report.records+' '+hrT('hrConsRecordsUnit')+(report.periodStart&&report.periodEnd?' · '+report.periodStart+' → '+report.periodEnd:'');
             var metrics=document.getElementById('hrReportMetrics');
             if(metrics)metrics.innerHTML=[
-                ['إجمالي الاستهلاك',formatHRMoney(report.totalSpend)],['عدد السجلات',String(report.records||0)],['المؤمّن عليهم المستفيدون',String(report.uniqueEmployees||0)],['القسط',report.premium>0?formatHRMoney(report.premium):'غير مدخل'],
-                ['Loss Ratio',report.lossRatio===null?'—':report.lossRatio.toFixed(1)+'%'],['السجلات ذات المبلغ',String(report.validRecords||0)]
+                [hrT('hrConsMetricTotalSpend'),formatHRMoney(report.totalSpend)],
+                [hrT('hrConsMetricRecords'),String(report.records||0)],
+                [hrT('hrConsMetricUniqueEmployees'),String(report.uniqueEmployees||0)],
+                [hrT('hrConsMetricCoveredLives'),String(report.coveredLives||0)],
+                [hrT('hrConsMetricPremium'),report.premium>0?formatHRMoney(report.premium):hrT('hrConsNotEntered')],
+                [hrT('hrConsMetricLossRatio'),report.lossRatio===null?'—':report.lossRatio.toFixed(1)+'%'],
+                [hrT('hrConsMetricAvgClaim'),report.averageClaim?formatHRMoney(report.averageClaim):'—'],
+                [hrT('hrConsMetricSpendPerLife'),report.spendPerLife?formatHRMoney(report.spendPerLife):'—'],
+                [hrT('hrConsMetricUtilization'),report.utilizationRate===null?'—':Number(report.utilizationRate).toFixed(1)+'%'],
+                [hrT('hrConsMetricValidRecords'),String(report.validRecords||0)]
             ].map(function(x){return '<div class="hr-report-card"><h4>'+x[0]+'</h4><div style="font-size:15px;font-weight:900;color:var(--navy)">'+x[1]+'</div></div>';}).join('');
             renderHRBarList('hrByDepartment',report.byDepartment,5);
             renderHRBarList('hrByAge',report.byAge,5);
@@ -12686,7 +13856,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             renderHRBarList('hrTopConsumers',report.topConsumers,10);
             var yoy=document.getElementById('hrYoY');
             var prev=(STATE.hrMedicalReports||[]).find(function(x){return Number(x.year)===Number(report.year)-1;});
-            if(yoy)yoy.innerHTML=prev?'<div class="hr-privacy"><b>'+report.year+'</b>: '+formatHRMoney(report.totalSpend)+' · <b>'+prev.year+'</b>: '+formatHRMoney(prev.totalSpend)+' · التغير: <b>'+((prev.totalSpend?((report.totalSpend-prev.totalSpend)/prev.totalSpend*100):0).toFixed(1))+'%</b></div>':'<div class="hr-small-note">لا يوجد تقرير محفوظ لسنة '+(Number(report.year)-1)+' للمقارنة.</div>';
+            if(yoy)yoy.innerHTML=prev?'<div class="hr-privacy">'+hrT('hrConsYoYCompare',{year:report.year,curr:formatHRMoney(report.totalSpend),prev:prev.year,prevAmt:formatHRMoney(prev.totalSpend),change:(prev.totalSpend?((report.totalSpend-prev.totalSpend)/prev.totalSpend*100):0).toFixed(1)})+'</div>':'<div class="hr-small-note">'+hrT('hrConsNoPrevYear',{year:Number(report.year)-1})+'</div>';
             updateHRMedicalHeadline();
         }
 
@@ -12694,7 +13864,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             var c=STATE.hrConsumption;if(!c)return;
             var selects=document.querySelectorAll('[data-hr-map]'), mapping={};
             selects.forEach(function(s){mapping[s.getAttribute('data-hr-map')]=parseInt(s.value,10);});
-            ['date','amount','employee'].forEach(function(k){if(mapping[k]===undefined||mapping[k]<0)throw new Error('الحقل '+k+' مطلوب');});
+            ['date','amount'].forEach(function(k){if(mapping[k]===undefined||mapping[k]<0)throw new Error(hrT('hrAlertMappingRequired',{field:hrT('hrMapField'+k.charAt(0).toUpperCase()+k.slice(1))}));});
             saveHRMappingLocal(mapping);
             if(STATE.hrCompany){
                 db.collection('corporateCompanies').doc(STATE.hrCompany.companyId).set({consumptionMapping:mapping,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(e){console.warn('mapping template save failed',e);});
@@ -12768,8 +13938,13 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             var file=document.getElementById('hrConsumptionFile');if(file)file.value='';
             var card=document.getElementById('hrMappingCard');if(card)card.classList.remove('show');
             var report=document.getElementById('hrMedicalReportCard');if(report)report.style.display='none';
+            ['hrConsumptionPremium','hrConsumptionLives','hrConsumptionStart','hrConsumptionEnd','hrConsumptionNotes'].forEach(function(id){setVal(id,'');});
+            setVal('hrConsumptionPremiumType','period');
+            var y=document.getElementById('hrConsumptionYear');if(y)y.value=new Date().getFullYear();
+            var th=document.getElementById('hrLossThreshold');if(th)th.value=75;
             var v=document.getElementById('hrLossRatioValue');if(v)v.textContent='—';
-            setText('hrLossRatioSub','ارفع البيانات وأدخل القسط السنوي/الفترة.');
+            setText('hrLossRatioSub',hrT('hrConsLossRatioDefault'));
+            updateHRConsumptionQuality();
             renderHRMedicalHistory();
         }
 
@@ -12796,7 +13971,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             if(!report||typeof XLSX==='undefined'){alert('أنشئ التقرير أولًا.');return;}
             var wb=XLSX.utils.book_new();
             function add(name, rows){XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),name);}
-            add('Summary',[['البند','القيمة'],['السنة',report.year],['إجمالي الاستهلاك',report.totalSpend],['القسط',report.premium],['Loss Ratio',report.lossRatio===null?'':report.lossRatio/100],['عدد السجلات',report.records],['عدد الموظفين المستفيدين',report.uniqueEmployees]]);
+            add('Summary',[['البند','القيمة'],['السنة',report.year],['إجمالي الاستهلاك',report.totalSpend],['القسط',report.premium],['Loss Ratio',report.lossRatio===null?'':report.lossRatio/100],['عدد السجلات',report.records],['عدد الموظفين المستفيدين',report.uniqueEmployees],['عدد المؤمن عليهم',report.coveredLives||''],['متوسط قيمة السجل',report.averageClaim||''],['الاستهلاك لكل مؤمّن عليه',report.spendPerLife||''],['معدل الاستخدام',report.utilizationRate==null?'':report.utilizationRate/100]]);
             [['Department','حسب القسم',report.byDepartment],['Age','حسب العمر',report.byAge],['Gender','حسب النوع',report.byGender],['Service','الخدمة',report.byService],['Month','الشهر',report.byMonth],['Top Consumers','أعلى المستهلكين',report.topConsumers]].forEach(function(s){add(s[0],[['التصنيف','الاستهلاك']].concat((s[2]||[]).map(function(x){return [x.key,x.value];})));});
             XLSX.writeFile(wb,'SecurePath-Corporate-Medical-Analysis-'+report.year+'.xlsx');
         }
@@ -12818,10 +13993,23 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         }
         function miniTable(list){return '<table><tr><th>التصنيف</th><th>الاستهلاك</th></tr>'+((list||[]).map(function(x){return '<tr><td>'+esc(x.key)+'</td><td>'+formatHRMoney(x.value)+'</td></tr>';}).join('')||'<tr><td colspan="2">لا توجد بيانات</td></tr>')+'</table>';}
 
+        function openHROffersFromAnalysis(){
+            try {
+                STATE.hrOfferContext = {
+                    source: 'corporate_hr_consumption',
+                    year: (document.getElementById('hrConsumptionYear')||{}).value || new Date().getFullYear(),
+                    lossRatio: STATE.hrConsumption && STATE.hrConsumption.report ? STATE.hrConsumption.report.lossRatio : null,
+                    totalSpend: STATE.hrConsumption && STATE.hrConsumption.report ? STATE.hrConsumption.report.totalSpend : null
+                };
+            } catch(e) {}
+            showScreen('offers');
+            try { renderOffersList(); } catch(e) { console.warn('Offers render:', e); }
+        }
+
         function renderHRMedicalHistory(){
             var c=document.getElementById('hrMedicalHistory');if(!c)return;
             var list=STATE.hrMedicalReports||[];
-            if(!list.length){c.innerHTML='<div class="hr-empty"><strong>لا توجد تقارير محفوظة</strong>بعد حفظ أول تحليل سيظهر هنا السجل التاريخي للمقارنة سنة بسنة.</div>';return;}
+            if(!list.length){c.innerHTML='<div class="hr-empty"><strong>'+hrT('hrConsHistoryEmptyTitle')+'</strong>'+hrT('hrConsHistoryEmptyText')+'</div>';return;}
             c.innerHTML=list.slice(0,8).map(function(r){return '<div class="hr-history-item"><strong>'+esc(r.year)+'</strong> · '+formatHRMoney(r.totalSpend||0)+' · Loss Ratio: '+(r.lossRatio==null?'—':Number(r.lossRatio).toFixed(1)+'%')+' · '+esc(r.sourceName||'تحليل')+'</div>';}).join('');
         }
 
@@ -13797,8 +14985,497 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 el.appendChild(document.createTextNode(' ' + text));
             }
         }
+    // ═══════════════════════════════════════════════════════════
+    // CORPORATE HR HUB — i18n Helper
+    // ═══════════════════════════════════════════════════════════
+    
+    // ============================================================
+    // Corporate HR Hub — dedicated language controls
+    // ============================================================
+    function toggleHRLanguage() {
+        setHRLanguage((STATE.language || 'ar') === 'ar' ? 'en' : 'ar');
+    }
 
-        function updateAllTexts() {
+    function setHRLanguage(lang) {
+        STATE.language = normalizeLanguage(lang);
+        saveLanguagePreference();
+
+        document.documentElement.lang = STATE.language;
+        document.documentElement.dir = STATE.language === 'ar' ? 'rtl' : 'ltr';
+        document.body.dir = document.documentElement.dir;
+
+        // Update the global app labels too, so the HR page never becomes
+        // partially translated when opened from another screen.
+        try { updateAllTexts(); } catch (e) {}
+        try { updateHRTexts(); } catch (e) { console.warn('HR language update:', e); }
+
+        var btn = document.getElementById('hrLanguageToggle');
+        if (btn) {
+            btn.textContent = STATE.language === 'ar' ? 'EN' : 'عربي';
+            btn.setAttribute('aria-label', STATE.language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+        }
+
+        var globalBtn = document.getElementById('languageToggle');
+        if (globalBtn) globalBtn.textContent = STATE.language === 'ar' ? 'EN' : 'عربي';
+
+        var loginBtn = document.getElementById('loginLangToggle');
+        if (loginBtn) loginBtn.textContent = STATE.language === 'ar' ? 'EN' : 'عربي';
+
+        var signupLang = document.getElementById('signupLanguage');
+        if (signupLang) signupLang.value = STATE.language;
+    }
+
+    function translateHRStaticText() {
+        var root = document.getElementById('corporateHRHub');
+        if (!root) return;
+
+        // Existing explicit translation markers.
+        root.querySelectorAll('[data-hr-t]').forEach(function(el) {
+            var key = el.getAttribute('data-hr-t');
+            if (key) el.textContent = hrT(key);
+        });
+        root.querySelectorAll('[data-hr-html]').forEach(function(el) {
+            var key = el.getAttribute('data-hr-html');
+            if (key) el.innerHTML = hrT(key);
+        });
+        root.querySelectorAll('[data-hr-placeholder]').forEach(function(el) {
+            var key = el.getAttribute('data-hr-placeholder');
+            if (key) el.setAttribute('placeholder', hrT(key));
+        });
+
+        // Translate remaining static labels without requiring a rewrite of
+        // the existing HTML: exact Arabic dictionary values are replaced
+        // with their English equivalents (and vice versa via the dictionary).
+        var dict = HR_TRANSLATIONS[STATE.language] || {};
+        var arDict = HR_TRANSLATIONS.ar || {};
+        var reverse = {};
+        Object.keys(arDict).forEach(function(key) {
+            var ar = arDict[key];
+            var en = dict[key];
+            if (typeof ar === 'string' && typeof en === 'string' && ar !== en) {
+                reverse[ar.trim()] = en;
+            }
+        });
+
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        var nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+
+        nodes.forEach(function(node) {
+            var raw = node.nodeValue || '';
+            var trimmed = raw.trim();
+            if (!trimmed || !/[\u0600-\u06FF]/.test(trimmed)) return;
+            var translated = reverse[trimmed];
+            if (translated !== undefined) {
+                node.nodeValue = raw.replace(trimmed, translated);
+            }
+        });
+
+        // Native controls.
+        root.querySelectorAll('input, textarea').forEach(function(el) {
+            var key = el.getAttribute('data-hr-placeholder');
+            if (key) el.setAttribute('placeholder', hrT(key));
+        });
+    }
+
+function updateHRTexts() {
+        translateHRStaticText();
+        var hrLangBtn = document.getElementById('hrLanguageToggle');
+        if (hrLangBtn) {
+            hrLangBtn.textContent = STATE.language === 'ar' ? 'EN' : 'عربي';
+            hrLangBtn.setAttribute('aria-label', STATE.language === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+        }
+        document.querySelectorAll('[data-hr-t]').forEach(function(el) {
+            var key = el.getAttribute('data-hr-t');
+            var text = hrT(key);
+            if (el.hasAttribute('data-hr-html')) {
+                el.innerHTML = text;
+            } else {
+                el.textContent = text;
+            }
+        });
+
+        document.querySelectorAll('[data-hr-placeholder]').forEach(function(el) {
+            var key = el.getAttribute('data-hr-placeholder');
+            el.setAttribute('placeholder', hrT(key));
+        });
+
+        var heroTitle = document.querySelector('.hr-hero h1');
+        if (heroTitle && !heroTitle.hasAttribute('data-hr-t')) heroTitle.textContent = hrT('hrHeroTitle');
+
+        var heroLabel = document.querySelector('.hr-hero-label');
+        if (heroLabel && !heroLabel.hasAttribute('data-hr-t')) heroLabel.textContent = hrT('hrHeroLabel');
+
+        var heroSub = document.getElementById('hrCompanyName');
+        if (heroSub) {
+            var currentCompany = (STATE.hrCompany && STATE.hrCompany.name) ||
+                                (STATE.userData && STATE.userData.businessName);
+            heroSub.textContent = currentCompany || hrT('hrHeroSub');
+        }
+
+        var backBtnLabel = document.querySelector('.hr-back-btn span');
+        if (backBtnLabel && !backBtnLabel.hasAttribute('data-hr-t')) backBtnLabel.textContent = hrT('hrBackToAccount');
+
+        var backBtnEl = document.querySelector('.hr-back-btn');
+        if (backBtnEl) backBtnEl.title = hrT('hrBackTooltip');
+
+        var pills = document.querySelectorAll('.hr-hero-pill');
+        if (pills[0]) pills[0].textContent = hrT('hrMetaInsurance');
+        if (pills[1]) pills[1].textContent = hrT('hrMetaCrm');
+        if (pills[2]) pills[2].textContent = hrT('hrMetaGovernance');
+
+        var tabMap = {
+            'hrTab-dashboard': 'hrTabDashboard',
+            'hrTab-employees': 'hrTabEmployees',
+            'hrTab-documents': 'hrTabDocuments',
+            'hrTab-requests': 'hrTabRequests',
+            'hrTab-consumption': 'hrTabConsumption'
+        };
+        Object.keys(tabMap).forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            var labelSpan = el.querySelector('span:last-child');
+            if (labelSpan) labelSpan.textContent = hrT(tabMap[id]);
+        });
+
+        if (STATE.currentUser && typeof isCorporateHRUser === 'function' && isCorporateHRUser()) {
+            try { renderCorporateHRDashboard(); } catch (e) { console.warn('HR dashboard re-render:', e); }
+            try { renderHREmployees(); } catch (e) { console.warn('HR employees re-render:', e); }
+            try { renderHRCompanyDocuments(); } catch (e) { console.warn('HR documents re-render:', e); }
+            try { renderHRRequests(); } catch (e) { console.warn('HR requests re-render:', e); }
+            try { renderHRMedicalHistory(); } catch (e) { console.warn('HR history re-render:', e); }
+            try {
+                if (STATE.hrConsumption && STATE.hrConsumption.report) {
+                    renderHRMedicalReport(STATE.hrConsumption.report);
+                }
+            } catch (e) { console.warn('HR report re-render:', e); }
+            try { updateHRMedicalHeadline(); } catch (e) { console.warn('HR headline update:', e); }
+        }
+        // ═══════════════════════════════════════════════════
+        // Extended coverage — Section titles, kickers, buttons
+        // ═══════════════════════════════════════════════════
+
+        // Section 1: Insurance File Overview
+        var kickers = document.querySelectorAll('.hr-kicker');
+        var titles = document.querySelectorAll('.hr-section-title');
+        var subs = document.querySelectorAll('.hr-section-sub');
+
+        if (kickers[0]) kickers[0].textContent = hrT('hrKickerInsuranceFile');
+        if (titles[0]) titles[0].textContent = hrT('hrTitleInsuranceFile');
+        if (subs[0]) subs[0].textContent = hrT('hrSubInsuranceFile');
+
+        // Section 2: Management Indicators
+        if (kickers[1]) kickers[1].textContent = hrT('hrKickerManagement');
+        if (titles[1]) titles[1].textContent = hrT('hrTitleManagement');
+
+        // Section 3: Renewal Readiness
+        if (kickers[2]) kickers[2].textContent = hrT('hrKickerRenewal');
+        if (titles[2]) titles[2].textContent = hrT('hrTitleRenewal');
+        if (subs[1]) subs[1].textContent = hrT('hrSubRenewal');
+
+        // Section 4: Quick Actions
+        if (kickers[3]) kickers[3].textContent = hrT('hrKickerQuickActions');
+        if (titles[3]) titles[3].textContent = hrT('hrTitleQuickActions');
+        if (subs[2]) subs[2].textContent = hrT('hrSubQuickActions');
+
+        // Section 5: Daily Follow-up
+        if (kickers[4]) kickers[4].textContent = hrT('hrKickerDaily');
+        if (titles[4]) titles[4].textContent = hrT('hrTitleDaily');
+        if (subs[3]) subs[3].textContent = hrT('hrSubDaily');
+
+        // Section 6: Control Center
+        if (kickers[5]) kickers[5].textContent = hrT('hrKickerControl');
+        if (titles[5]) titles[5].textContent = hrT('hrTitleControl');
+        if (subs[4]) subs[4].textContent = hrT('hrSubControl');
+
+        // Section 7: Governance
+        if (kickers[6]) kickers[6].textContent = hrT('hrKickerGovernance');
+        if (titles[6]) titles[6].textContent = hrT('hrTitleGovernance');
+
+        // Governance privacy text
+        var privacyEl = document.querySelector('.hr-privacy-pro');
+        if (privacyEl) privacyEl.innerHTML = hrT('hrPrivacyText');
+
+        // Buttons with hr-head-action
+        var headActions = document.querySelectorAll('.hr-head-action');
+        if (headActions[0]) headActions[0].textContent = hrT('hrBtnOpenAnalysis');
+        if (headActions[1]) headActions[1].textContent = hrT('hrBtnViewAll');
+
+        // Quick Action buttons
+        var quickActions = document.querySelectorAll('.hr-quick-action');
+        var quickKeys = [
+            ['hrActionAddEmployee', 'hrActionAddEmployeeSub'],
+            ['hrActionImport', 'hrActionImportSub'],
+            ['hrActionUploadDoc', 'hrActionUploadDocSub'],
+            ['hrActionNewRequest', 'hrActionNewRequestSub'],
+            ['hrActionAnalysis', 'hrActionAnalysisSub'],
+            ['hrActionAlerts', 'hrActionAlertsSub']
+        ];
+        quickActions.forEach(function(btn, i) {
+            if (!quickKeys[i]) return;
+            var b = btn.querySelector('b');
+            var small = btn.querySelector('small');
+            if (b) b.textContent = hrT(quickKeys[i][0]);
+            if (small) small.textContent = hrT(quickKeys[i][1]);
+        });
+
+        // Employees Pane — header
+        var empPane = document.getElementById('hrPane-employees');
+        if (empPane) {
+            var empTitle = empPane.querySelector('.hr-section-title');
+            if (empTitle) empTitle.textContent = hrT('hrEmpTitle');
+            var empSub = empPane.querySelector('.hr-section-sub');
+            if (empSub) empSub.textContent = hrT('hrEmpSub');
+
+            var empBadge = document.getElementById('hrEmployeeCountBadge');
+            if (empBadge) {
+                var count = (STATE.hrEmployees || []).length;
+                empBadge.textContent = hrT('hrEmpCountBadge', { count: count });
+            }
+
+            var empSearch = document.getElementById('hrEmployeeSearch');
+            if (empSearch) empSearch.setAttribute('placeholder', hrT('hrEmpSearchPlaceholder'));
+
+            var empFilter = document.getElementById('hrEmployeeInsuranceFilter');
+            if (empFilter && empFilter.options.length >= 3) {
+                empFilter.options[0].textContent = hrT('hrEmpFilterAll');
+                empFilter.options[1].textContent = hrT('hrEmpFilterInsured');
+                empFilter.options[2].textContent = hrT('hrEmpFilterUninsured');
+            }
+
+            var empActionRow = empPane.querySelectorAll('.hr-action-row .btn-gold-small, .hr-action-row .btn-outline');
+            if (empActionRow[0]) empActionRow[0].textContent = hrT('hrEmpBtnAdd');
+            if (empActionRow[1]) empActionRow[1].textContent = hrT('hrEmpBtnImport');
+            if (empActionRow[2]) empActionRow[2].textContent = hrT('hrEmpBtnExport');
+
+            // Table headers
+            var empTableHeaders = empPane.querySelectorAll('.hr-table thead th');
+            var thKeys = ['hrEmpThEmployee', 'hrEmpThNationalId', 'hrEmpThDepartment', 'hrEmpThHireDate', 'hrEmpThInsurance', 'hrEmpThDependents', 'hrEmpThActions'];
+            empTableHeaders.forEach(function(th, i) {
+                if (thKeys[i]) th.textContent = hrT(thKeys[i]);
+            });
+        }
+
+        // Documents Pane
+        var docsPane = document.getElementById('hrPane-documents');
+        if (docsPane) {
+            var docTitle = docsPane.querySelector('.hr-section-title');
+            if (docTitle) docTitle.textContent = hrT('hrDocsTitle');
+            var docSub = docsPane.querySelector('.hr-section-sub');
+            if (docSub) docSub.textContent = hrT('hrDocsSub');
+
+            var docBtns = docsPane.querySelectorAll('.hr-action-row button');
+            if (docBtns[0]) docBtns[0].textContent = hrT('hrDocsBtnUpload');
+            if (docBtns[1]) docBtns[1].textContent = hrT('hrDocsBtnAlerts');
+        }
+
+        // Requests Pane
+        var reqPane = document.getElementById('hrPane-requests');
+        if (reqPane) {
+            var reqTitle = reqPane.querySelector('.hr-section-title');
+            if (reqTitle) reqTitle.textContent = hrT('hrReqTitle');
+            var reqSub = reqPane.querySelector('.hr-section-sub');
+            if (reqSub) reqSub.textContent = hrT('hrReqSub');
+
+            var reqNewBtn = reqPane.querySelector('.btn-gold-small');
+            if (reqNewBtn) reqNewBtn.textContent = hrT('hrReqBtnNew');
+
+            var reqSearch = document.getElementById('hrRequestSearch');
+            if (reqSearch) reqSearch.setAttribute('placeholder', hrT('hrReqSearchPlaceholder'));
+
+            var reqFilter = document.getElementById('hrRequestStatusFilter');
+            if (reqFilter && reqFilter.options.length >= 6) {
+                reqFilter.options[0].textContent = hrT('hrReqFilterAll');
+                reqFilter.options[1].textContent = hrT('hrReqStatusSubmitted');
+                reqFilter.options[2].textContent = hrT('hrReqStatusReview');
+                reqFilter.options[3].textContent = hrT('hrReqStatusApproved');
+                reqFilter.options[4].textContent = hrT('hrReqStatusRejected');
+                reqFilter.options[5].textContent = hrT('hrReqStatusPaid');
+            }
+        }
+
+        // Consumption Pane
+        var consPane = document.getElementById('hrPane-consumption');
+        if (consPane) {
+            var consTitles = consPane.querySelectorAll('.hr-section-title');
+            if (consTitles[0]) consTitles[0].textContent = hrT('hrConsTitle');
+            var consSubs = consPane.querySelectorAll('.hr-section-sub');
+            if (consSubs[0]) consSubs[0].textContent = hrT('hrConsSub');
+
+            var lossLabel = consPane.querySelector('.hr-loss-label');
+            if (lossLabel) lossLabel.textContent = hrT('hrConsLossRatioLabel');
+
+            var premiumLabel = consPane.querySelector('.hr-premium-label');
+            if (premiumLabel) premiumLabel.textContent = hrT('hrConsPremiumLabel');
+
+            var premiumInput = document.getElementById('hrConsumptionPremium');
+            if (premiumInput) premiumInput.setAttribute('placeholder', hrT('hrConsPremiumPlaceholder'));
+
+            // Consumption form labels
+            var consFields = consPane.querySelectorAll('.hr-form-grid .field label');
+            if (consFields[0]) consFields[0].textContent = hrT('hrConsYearLabel');
+            if (consFields[1]) consFields[1].textContent = hrT('hrConsThresholdLabel');
+            if (consFields[2]) consFields[2].textContent = hrT('hrConsNotesLabel');
+
+            var consNotesInput = document.getElementById('hrConsumptionNotes');
+            if (consNotesInput) consNotesInput.setAttribute('placeholder', hrT('hrConsNotesPlaceholder'));
+
+            // Consumption buttons
+            var consBtns = consPane.querySelectorAll('.hr-action-row button');
+            if (consBtns[0]) consBtns[0].textContent = hrT('hrConsBtnUpload');
+            if (consBtns[1]) consBtns[1].textContent = hrT('hrConsBtnReset');
+            if (consBtns[2]) consBtns[2].textContent = hrT('hrConsBtnSave');
+            if (consBtns[3]) consBtns[3].textContent = hrT('hrConsBtnExportExcel');
+            if (consBtns[4]) consBtns[4].textContent = hrT('hrConsBtnExportPdf');
+
+            var consNote = consPane.querySelector('.hr-small-note');
+            if (consNote) consNote.textContent = hrT('hrConsFileNote');
+
+            // Mapping section
+            var mapTitle = document.querySelector('#hrMappingCard .hr-section-title');
+            if (mapTitle) mapTitle.textContent = hrT('hrConsMappingTitle');
+            var mapSub = document.querySelector('#hrMappingCard .hr-section-sub');
+            if (mapSub) mapSub.textContent = hrT('hrConsMappingSub');
+            var mapBtn = document.querySelector('#hrMappingCard .btn-gold-small');
+            if (mapBtn) mapBtn.textContent = hrT('hrConsBtnAnalyze');
+
+            // Report section
+            var reportTitles = document.querySelectorAll('#hrMedicalReportCard .hr-section-title');
+            if (reportTitles[0]) reportTitles[0].textContent = hrT('hrConsReportTitle');
+
+            var reportCards = document.querySelectorAll('#hrMedicalReportCard .hr-report-card h4');
+            var reportKeys = ['hrConsReportByDept', 'hrConsReportByAge', 'hrConsReportByGender', 'hrConsReportByService', 'hrConsReportByMonth', 'hrConsReportTopConsumers'];
+            reportCards.forEach(function(h4, i) {
+                if (reportKeys[i]) h4.textContent = hrT(reportKeys[i]);
+            });
+
+            var yoyTitle = document.querySelector('#hrMedicalReportCard .hr-section-card .hr-section-title');
+            if (yoyTitle) yoyTitle.textContent = hrT('hrConsReportYoY');
+
+            var reportPrivacy = document.querySelector('#hrMedicalReportCard .hr-privacy');
+            if (reportPrivacy) reportPrivacy.textContent = hrT('hrConsReportPrivacy');
+
+            // History section
+            var historyTitle = consPane.querySelector('.hr-section-card:last-of-type .hr-section-title');
+            if (historyTitle) historyTitle.textContent = hrT('hrConsHistoryTitle');
+        }
+
+        updateHRModalTexts();
+    }
+    function updateHRModalTexts() {
+        var empModal = document.getElementById('hrEmployeeModal');
+        if (empModal) {
+            var empTitle = empModal.querySelector('h2');
+            var editId = empModal.dataset.editId;
+            if (empTitle) empTitle.textContent = editId ? hrT('hrModalEditEmployee') : hrT('hrModalAddEmployee');
+
+            var empSub = empModal.querySelector('.sub');
+            if (empSub) empSub.textContent = hrT('hrModalAddEmployeeSub');
+
+            var empFieldKeys = [
+                'hrModalEmpName', 'hrModalEmpNationalId', 'hrModalEmpDepartment',
+                'hrModalEmpHireDate', 'hrModalEmpInsurance', 'hrModalEmpGender',
+                'hrModalEmpBirthDate', 'hrModalEmpDependents', 'hrModalEmpNotes'
+            ];
+            var empFields = empModal.querySelectorAll('.field');
+            empFields.forEach(function(field, i) {
+                if (!empFieldKeys[i]) return;
+                var label = field.querySelector('label');
+                if (label) {
+                    var isRequired = (i === 0);
+                    label.innerHTML = hrT(empFieldKeys[i]) + (isRequired ? ' <span class="required">*</span>' : '');
+                }
+            });
+
+            var empSaveBtn = empModal.querySelector('.btn-primary');
+            if (empSaveBtn) empSaveBtn.textContent = hrT('hrModalEmpSave');
+
+            var insSel = document.getElementById('hrEmpInsurance');
+            if (insSel && insSel.options.length >= 2) {
+                insSel.options[0].textContent = hrT('hrModalEmpInsuranceInsured');
+                insSel.options[1].textContent = hrT('hrModalEmpInsuranceUninsured');
+            }
+
+            var genderSel = document.getElementById('hrEmpGender');
+            if (genderSel && genderSel.options.length >= 3) {
+                genderSel.options[0].textContent = hrT('hrModalEmpGenderUnspecified');
+                genderSel.options[1].textContent = hrT('hrModalEmpGenderMale');
+                genderSel.options[2].textContent = hrT('hrModalEmpGenderFemale');
+            }
+        }
+
+        var docModal = document.getElementById('hrDocumentModal');
+        if (docModal) {
+            var docTitle = docModal.querySelector('h2');
+            if (docTitle) docTitle.textContent = hrT('hrModalDocTitle');
+
+            var docSub = docModal.querySelector('.sub');
+            if (docSub) docSub.textContent = hrT('hrModalDocSub');
+
+            var docFieldKeys = ['hrModalDocName', 'hrModalDocType', 'hrModalDocExpiry', 'hrModalDocFile'];
+            var docFields = docModal.querySelectorAll('.field');
+            docFields.forEach(function(field, i) {
+                if (!docFieldKeys[i]) return;
+                var label = field.querySelector('label');
+                if (label) {
+                    var isRequired = (i === 0);
+                    label.innerHTML = hrT(docFieldKeys[i]) + (isRequired ? ' <span class="required">*</span>' : '');
+                }
+            });
+
+            var docTypeSel = document.getElementById('hrDocType');
+            if (docTypeSel && docTypeSel.options.length >= 6) {
+                docTypeSel.options[0].textContent = hrT('hrModalDocTypeCommercial');
+                docTypeSel.options[1].textContent = hrT('hrModalDocTypeTax');
+                docTypeSel.options[2].textContent = hrT('hrModalDocTypeMedical');
+                docTypeSel.options[3].textContent = hrT('hrModalDocTypeContract');
+                docTypeSel.options[4].textContent = hrT('hrModalDocTypeOfficial');
+                docTypeSel.options[5].textContent = hrT('hrModalDocTypeOther');
+            }
+
+            var docSaveBtn = docModal.querySelector('.btn-primary');
+            if (docSaveBtn) docSaveBtn.textContent = hrT('hrModalDocSave');
+        }
+
+        var reqModal = document.getElementById('hrRequestModal');
+        if (reqModal) {
+            var reqTitle = reqModal.querySelector('h2');
+            if (reqTitle) reqTitle.textContent = hrT('hrModalReqTitle');
+
+            var reqSub = reqModal.querySelector('.sub');
+            if (reqSub) reqSub.textContent = hrT('hrModalReqSub');
+
+            var reqFieldKeys = ['hrModalReqType', 'hrModalReqNumber', 'hrModalReqEmployee', 'hrModalReqAmount', 'hrModalReqPriority', 'hrModalReqNotes'];
+            var reqFields = reqModal.querySelectorAll('.field');
+            reqFields.forEach(function(field, i) {
+                if (!reqFieldKeys[i]) return;
+                var label = field.querySelector('label');
+                if (label) {
+                    var isRequired = (i === 0);
+                    label.innerHTML = hrT(reqFieldKeys[i]) + (isRequired ? ' <span class="required">*</span>' : '');
+                }
+            });
+
+            var reqTypeSel = document.getElementById('hrReqType');
+            if (reqTypeSel && reqTypeSel.options.length >= 3) {
+                reqTypeSel.options[0].textContent = hrT('hrReqTypeIssuance');
+                reqTypeSel.options[1].textContent = hrT('hrReqTypeRenewal');
+                reqTypeSel.options[2].textContent = hrT('hrReqTypeReimbursement');
+            }
+
+            var reqPrioritySel = document.getElementById('hrReqPriority');
+            if (reqPrioritySel && reqPrioritySel.options.length >= 2) {
+                reqPrioritySel.options[0].textContent = hrT('hrModalReqPriorityNormal');
+                reqPrioritySel.options[1].textContent = hrT('hrModalReqPriorityHigh');
+            }
+
+            var reqSubmitBtn = reqModal.querySelector('.btn-primary');
+            if (reqSubmitBtn) reqSubmitBtn.textContent = hrT('hrModalReqSubmit');
+        }
+    }
+
+
+            function updateAllTexts() {
             var t = function(key) { return getText(key); };
             Object.keys(I18N_IDS).forEach(function(key) {
                 var id = I18N_IDS[key];
@@ -13867,6 +15544,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 renderDocumentsList(STATE.documents);
                 renderNotificationsList();
             }
+14
             normalizeIcons(document.querySelector('.phone') || document.body);
             updateOnboardingStep(onboardingStep);
         }
@@ -14086,6 +15764,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             try { STATE.language = normalizeLanguage((localStorage.getItem('SecurePath_language') || 'ar')); } catch (e) { STATE.language = 'ar'; }
             initFormBindings();
             initCorporateHRDefaults();
+            ['hrConsumptionPremium','hrConsumptionLives','hrConsumptionStart','hrConsumptionEnd','hrConsumptionPremiumType'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',updateHRConsumptionQuality);if(el)el.addEventListener('change',updateHRConsumptionQuality);});
+            updateHRConsumptionQuality();
             ensureLanguageToggle();
             updateAllTexts();
             applyBrokerDisclosure();
@@ -15004,5 +16684,174 @@ const SmartAssessmentUI = (() => {
 
 document.addEventListener('DOMContentLoaded',()=>SmartAssessmentUI.init());
 </script>
+
+<style id="securepath-hr-final-header-i18n">
+/* SecurePath — Corporate HR Hub final header */
+.hr-screen .hr-hero{
+    position:relative;
+    overflow:hidden;
+    margin:0 0 16px;
+    padding:0;
+    border:1px solid rgba(20,38,63,.10);
+    border-radius:20px;
+    background:
+      radial-gradient(circle at 88% 18%, rgba(215,174,75,.18), transparent 30%),
+      linear-gradient(135deg,#071a31 0%,#0c2947 58%,#12385a 100%);
+    box-shadow:0 14px 34px rgba(7,26,49,.16);
+    color:#fff;
+}
+.hr-screen .hr-hero::after{
+    content:"";
+    position:absolute;
+    inset:auto -8% -65% auto;
+    width:280px;height:280px;
+    border-radius:50%;
+    background:rgba(215,174,75,.08);
+    pointer-events:none;
+}
+.hr-screen .hr-hero-main{
+    position:relative;
+    z-index:1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:18px 20px 14px;
+}
+.hr-screen .hr-hero-brand{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+.hr-screen .hr-hero-icon{
+    flex:0 0 52px;
+    width:52px;height:52px;
+    display:grid;place-items:center;
+    border-radius:15px;
+    background:linear-gradient(145deg,#f0cf78,#c99c32);
+    box-shadow:0 8px 20px rgba(0,0,0,.20);
+}
+.hr-screen .hr-hero-icon .app-icon{
+    color:#071a31!important;
+}
+.hr-screen .hr-hero-copy{
+    min-width:0;
+    text-align:start;
+}
+.hr-screen .hr-hero-label{
+    margin-bottom:4px;
+    color:rgba(255,255,255,.62);
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.09em;
+    line-height:1.2;
+}
+.hr-screen .hr-hero-copy h1{
+    margin:0;
+    color:#fff;
+    font-size:19px;
+    line-height:1.25;
+    font-weight:900;
+    letter-spacing:-.02em;
+}
+.hr-screen .hr-hero-copy p{
+    margin:5px 0 0;
+    color:rgba(255,255,255,.78);
+    font-size:10px;
+    line-height:1.55;
+    max-width:620px;
+}
+.hr-screen .hr-hero-actions{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.hr-screen .hr-hero-lang,
+.hr-screen .hr-back-btn{
+    height:34px;
+    border-radius:10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    font-size:10px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.18s ease;
+}
+.hr-screen .hr-hero-lang{
+    min-width:46px;
+    padding:0 10px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
+.hr-screen .hr-hero-lang:hover{
+    background:rgba(255,255,255,.15);
+    transform:translateY(-1px);
+}
+.hr-screen .hr-back-btn{
+    padding:0 11px;
+    border:1px solid rgba(255,255,255,.16);
+    background:#fff;
+    color:#0b2744;
+}
+.hr-screen .hr-back-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 16px rgba(0,0,0,.14);
+}
+.hr-screen .hr-back-btn svg{
+    width:14px;height:14px;
+    fill:none;stroke:currentColor;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round;
+}
+.hr-screen .hr-hero-meta{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    padding:0 20px 15px;
+}
+.hr-screen .hr-hero-pill{
+    display:inline-flex;
+    align-items:center;
+    min-height:23px;
+    padding:3px 9px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:999px;
+    background:rgba(255,255,255,.065);
+    color:rgba(255,255,255,.86);
+    font-size:8px;
+    font-weight:800;
+    white-space:nowrap;
+}
+html[dir="rtl"] .hr-screen .hr-hero-main{flex-direction:row-reverse}
+html[dir="ltr"] .hr-screen .hr-hero-main{flex-direction:row}
+html[dir="rtl"] .hr-screen .hr-hero-brand{flex-direction:row}
+html[dir="ltr"] .hr-screen .hr-hero-brand{flex-direction:row}
+html[dir="rtl"] .hr-screen .hr-back-btn svg{transform:rotate(180deg)}
+@media(max-width:700px){
+    .hr-screen .hr-hero-main{
+        align-items:flex-start;
+        padding:14px 14px 11px;
+        gap:11px;
+    }
+    .hr-screen .hr-hero-brand{gap:10px}
+    .hr-screen .hr-hero-icon{flex-basis:44px;width:44px;height:44px;border-radius:12px}
+    .hr-screen .hr-hero-copy h1{font-size:15px}
+    .hr-screen .hr-hero-label{font-size:7px}
+    .hr-screen .hr-hero-copy p{font-size:8px;margin-top:3px}
+    .hr-screen .hr-hero-actions{gap:5px}
+    .hr-screen .hr-hero-lang{min-width:40px;padding:0 7px;font-size:8px}
+    .hr-screen .hr-back-btn{width:34px;padding:0;font-size:0}
+    .hr-screen .hr-back-btn svg{width:15px;height:15px}
+    .hr-screen .hr-hero-meta{padding:0 14px 12px;gap:5px}
+    .hr-screen .hr-hero-pill{font-size:7px;min-height:21px;padding:2px 7px}
+}
+</style>
+
 </body>
 </html>
