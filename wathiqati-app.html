@@ -14086,12 +14086,6 @@ function hrT(key, vars) {
             c.innerHTML=list.slice(0,8).map(function(r){return '<div class="hr-history-item"><strong>'+esc(r.year)+'</strong> · '+formatHRMoney(r.totalSpend||0)+' · Loss Ratio: '+(r.lossRatio==null?'—':Number(r.lossRatio).toFixed(1)+'%')+' · '+esc(r.sourceName||'تحليل')+'</div>';}).join('');
         }
 
-        function initCorporateHRDefaults(){
-            var y=document.getElementById('hrConsumptionYear');if(y&&!y.value)y.value=new Date().getFullYear();
-            updateCorporateHRAccessVisibility();
-        }
-
-
         function openUploadDocModal() {
             setText('uploadError', '');
             var e = document.getElementById('uploadError');

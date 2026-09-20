@@ -23,6 +23,19 @@ service cloud.firestore {
       return isSignedIn() && request.resource.data.clientId == request.auth.uid;
     }
 
+    // ---------- Corporate HR Hub ----------
+    // A "company" is owned by exactly one client (the business-owner account
+    // that created it via ensureCorporateHRCompany() in wathiqati-app.html).
+    // Every sub-collection (employees/documents/requests/medical analyses/
+    // audit log) carries a companyId field but no ownerClientId of its own,
+    // so ownership is resolved by looking up the parent corporateCompanies
+    // doc's ownerClientId. isAdmin() always overrides.
+    function ownsCompany(companyId) {
+      return isSignedIn() && companyId != null
+        && exists(/databases/$(database)/documents/corporateCompanies/$(companyId))
+        && get(/databases/$(database)/documents/corporateCompanies/$(companyId)).data.ownerClientId == request.auth.uid;
+    }
+
     function touchesProtectedFields() {
       let protectedKeys = [
         'insuraPoints', 'insuraPointsLifetime', 'insuraPointsRedeemed',
@@ -235,17 +248,22 @@ service cloud.firestore {
     match /notifications/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
 
-      // SECURITY: Only admins can create notifications (broadcast or targeted).
-      // The client app only reads notifications; it never creates them.
-      allow create: if isAdmin()
-        && request.resource.data.clientId is string
-        && request.resource.data.clientId.size() > 0
-        && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
-        && request.resource.data.title.size() <= 100
-        && request.resource.data.body is string
-        && request.resource.data.body.size() > 0
-        && request.resource.data.body.size() <= 500;
+      // SECURITY: Notifications are created by admins (broadcast/targeted),
+      // OR by a client's own Corporate HR Hub action (notifyHR() in
+      // wathiqati-app.html self-notifies the requesting owner, e.g. "your
+      // request was submitted") — never on behalf of another client.
+      allow create: if (isAdmin()
+          && request.resource.data.clientId is string
+          && request.resource.data.clientId.size() > 0
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.title.size() <= 100
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0
+          && request.resource.data.body.size() <= 500)
+        || (ownsAsClient()
+          && request.resource.data.type == 'corporate_request_created'
+          && ownsCompany(request.resource.data.companyId));
 
       // Client can mark as read/unread only. Admin can do anything.
       allow update: if (isSignedIn() && resource.data.clientId == request.auth.uid
@@ -287,6 +305,56 @@ service cloud.firestore {
     match /awarenessVideos/{id} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // ---------- Corporate HR Hub ----------
+    // Company profile: created by the first owning client (ensureCorporateHRCompany),
+    // then read/updated only by that same owner or admin.
+    match /corporateCompanies/{companyId} {
+      // resource == null the first time a client checks "does my company doc
+      // exist yet" (ensureCorporateHRCompany's initial .get()); allowing that
+      // leaks nothing (no data on a doc that isn't there) and must be allowed
+      // or the very first company creation would be denied before it starts.
+      allow read: if resource == null || isAdmin() || (isSignedIn() && resource.data.ownerClientId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.ownerClientId == request.auth.uid;
+      allow update: if isAdmin() || (isSignedIn() && resource.data.ownerClientId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /corporateEmployees/{id} {
+      allow read: if isAdmin() || ownsCompany(resource.data.companyId);
+      allow create: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      allow update: if isAdmin() || ownsCompany(resource.data.companyId);
+      allow delete: if isAdmin() || ownsCompany(resource.data.companyId);
+    }
+
+    match /corporateDocuments/{id} {
+      allow read: if isAdmin() || ownsCompany(resource.data.companyId);
+      // Client app only ever creates documents (no client-side edit/delete yet).
+      allow create: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      allow update, delete: if isAdmin();
+    }
+
+    match /corporateRequests/{id} {
+      allow read: if isAdmin() || ownsCompany(resource.data.companyId);
+      allow create: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      // Status changes (approve/reject/etc) are triaged by the broker only.
+      allow update, delete: if isAdmin();
+    }
+
+    match /corporateMedicalAnalyses/{id} {
+      allow read: if isAdmin() || ownsCompany(resource.data.companyId);
+      allow create, update: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      allow delete: if isAdmin();
+    }
+
+    // Append-only audit trail: owning client may add entries for their own
+    // company, but never read, edit or delete them back (audit integrity).
+    match /corporateAuditLogs/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        || (ownsCompany(request.resource.data.companyId) && request.resource.data.actorId == request.auth.uid);
+      allow update, delete: if isAdmin();
     }
   }
 }

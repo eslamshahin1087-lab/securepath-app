@@ -731,6 +731,7 @@
           <button data-view="companyAds" onclick="showView('companyAds',this)"><span class="icon"><i class="fas fa-bullhorn"></i></span><span class="label">إعلانات</span></button>
           <button data-view="videos" onclick="showView('videos',this)"><span class="icon"><i class="fas fa-film"></i></span><span class="label">فيديوهات توعية</span></button>
           <button data-view="leads" onclick="showView('leads',this)"><span class="icon"><i class="fas fa-user-tag"></i></span><span class="label">العملاء المحتملون</span><b id="leadsBadge" class="badge hidden">0</b></button>
+          <button data-view="corporateHR" onclick="showView('corporateHR',this)"><span class="icon"><i class="fas fa-building-user"></i></span><span class="label">الشركات (HR)</span><b id="corporateHRBadge" class="badge hidden">0</b></button>
           <div class="nav-section">الإعدادات</div>
           <button data-view="brokerSettings" onclick="showView('brokerSettings',this)"><span class="icon"><i class="fas fa-id-card"></i></span><span class="label">بيانات الوسيط</span></button>
           <button data-view="companies" onclick="showView('companies',this)"><span class="icon"><i class="fas fa-building"></i></span><span class="label">شركات التأمين</span></button>
@@ -887,6 +888,16 @@
             <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr>
               <th>العميل</th><th>النوع</th><th>الموضوع</th><th>رقم الوثيقة</th><th>التفاصيل</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th>
             </tr></thead><tbody id="complaintsAdminBody"></tbody></table></div></div></div>
+          </div>
+
+          <!-- Corporate HR Hub (الشركات) -->
+          <div id="v-corporateHR" class="view">
+            <div class="toolbar">
+              <div class="search"><input id="corporateHRSearch" oninput="renderCorporateHRCompanies()" placeholder="ابحث باسم الشركة أو النشاط"></div>
+            </div>
+            <div class="card"><div class="card-body p-0"><div class="table-wrap"><table><thead><tr>
+              <th>الشركة</th><th>النشاط</th><th>المالك</th><th>عدد الموظفين</th><th>طلبات مفتوحة / إجمالي</th><th>تاريخ الإنشاء</th><th>إجراء</th>
+            </tr></thead><tbody id="corporateHRCompaniesBody"></tbody></table></div></div></div>
           </div>
 
           <!-- Offers -->
@@ -1335,6 +1346,37 @@
 
   <!-- Profile Modals -->
   <div id="clientProfileModal" class="overlay"><div class="modal" style="width:min(900px,96vw)"><div class="modal-header"><div><h2 id="profileName" style="margin:0;font-size:20px">ملف العميل</h2><div id="profileMeta" style="font-size:13px;color:var(--muted)"></div></div><button class="modal-close" onclick="closeModal('clientProfileModal')"><i class="fas fa-times"></i></button></div><div id="profileBody"></div></div></div>
+
+  <!-- Corporate HR Hub detail modal -->
+  <div id="corporateHRDetailModal" class="overlay">
+    <div class="modal" style="width:min(1000px,96vw)">
+      <div class="modal-header">
+        <div><h2 style="margin:0;font-size:20px"><i class="fas fa-building-user"></i> ملف الشركة</h2><div id="hrDetailHead" style="font-size:13px;color:var(--muted)"></div></div>
+        <button class="modal-close" onclick="closeModal('corporateHRDetailModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div style="max-height:70vh;overflow-y:auto;padding:4px 2px;">
+        <h3 style="margin:12px 0 6px;">طلبات الشركة</h3>
+        <div class="table-wrap"><table><thead><tr>
+          <th>رقم الطلب</th><th>النوع</th><th>الموظف</th><th>المبلغ</th><th>الأولوية</th><th>الحالة</th><th>تاريخ التقديم</th>
+        </tr></thead><tbody id="hrDetailRequestsBody"></tbody></table></div>
+
+        <h3 style="margin:20px 0 6px;">الموظفون</h3>
+        <div class="table-wrap"><table><thead><tr>
+          <th>الاسم</th><th>القسم</th><th>حالة التأمين</th><th>عدد المُعالين</th><th>تاريخ التعيين</th>
+        </tr></thead><tbody id="hrDetailEmployeesBody"></tbody></table></div>
+
+        <h3 style="margin:20px 0 6px;">مستندات الشركة</h3>
+        <div class="table-wrap"><table><thead><tr>
+          <th>الاسم</th><th>النوع</th><th>تاريخ الانتهاء</th><th>الملف</th>
+        </tr></thead><tbody id="hrDetailDocumentsBody"></tbody></table></div>
+
+        <h3 style="margin:20px 0 6px;">تحليلات الاستهلاك الطبي</h3>
+        <div class="table-wrap"><table><thead><tr>
+          <th>السنة</th><th>إجمالي الاستهلاك</th><th>Loss Ratio</th><th>عدد السجلات</th><th>تاريخ الحفظ</th>
+        </tr></thead><tbody id="hrDetailMedicalBody"></tbody></table></div>
+      </div>
+    </div>
+  </div>
   <div id="companyProfileModal" class="overlay"><div class="modal" style="width:min(900px,96vw)"><div class="modal-header"><div><h2 id="companyProfileName" style="margin:0;font-size:20px">شركة التأمين</h2><div id="companyProfileMeta" style="font-size:13px;color:var(--muted)"></div></div><button class="modal-close" onclick="closeModal('companyProfileModal')"><i class="fas fa-times"></i></button></div><div id="companyProfileBody"></div></div></div>
 
   <!-- Toast -->
@@ -1377,13 +1419,16 @@
       messages: [], notifications: [], activity: [], products: [], companies: [],
       assessments: [], types: [], offers: [], companyAds: [], awarenessVideos: [], leads: [], pointsLog: [],
       appointments: [], complaints: [],
+      corporateCompanies: [], corporateEmployees: [], corporateDocuments: [],
+      corporateRequests: [], corporateMedicalAnalyses: [], corporateAuditLogs: [],
+      hrSelectedCompanyId: null,
        loaded: false, currentUser: null, currentChat: null,
        syncing: false, lastSyncAt: null, syncErrors: []
     };
     let selectedFile = null;
     const SELECTED_CLIENT_IDS = new Set();
     const SELECTED_LEAD_IDS = new Set();
-    let listeners = { messages: null, activity: null, notifications: null, documents: null };
+    let listeners = { messages: null, activity: null, notifications: null, documents: null, corporateRequests: null };
 
     // ================================================================
     // 3. UTILITY FUNCTIONS
@@ -1726,7 +1771,7 @@
        setConnectionState('online', 'جاري المزامنة…');
        var existingBanner = document.getElementById('dataLoadErrorBanner');
        if (existingBanner) existingBanner.style.display = 'none';
-      const names = ['clients', 'policies', 'payments', 'claims', 'documents', 'messages', 'notifications', 'activity', 'products', 'companies', 'insuranceAssessments', 'insuranceTypes', 'offers', 'companyAds', 'awarenessVideos', 'pointsLog'];
+      const names = ['clients', 'policies', 'payments', 'claims', 'documents', 'messages', 'notifications', 'activity', 'products', 'companies', 'insuranceAssessments', 'insuranceTypes', 'offers', 'companyAds', 'awarenessVideos', 'pointsLog', 'corporateCompanies', 'corporateEmployees', 'corporateDocuments', 'corporateMedicalAnalyses', 'corporateAuditLogs'];
       const results = await Promise.all(names.map(n => loadCollection(n)));
       names.forEach((n, i) => {
         if (n === 'insuranceAssessments') APP_STATE.assessments = results[i];
@@ -1749,6 +1794,7 @@
       startLeadsListener();
       startAppointmentsListener();
       startComplaintsListener();
+      startCorporateRequestsListener();
       loadBrokerSettings();
        toast(APP_STATE.syncErrors.length ? '⚠️ تم التحميل مع وجود بيانات لم تكتمل' : '✅ تم تحميل البيانات بنجاح', APP_STATE.syncErrors.length > 0);
     }
@@ -2101,6 +2147,129 @@
       if (!confirm('هل أنت متأكد من حذف هذه الشكوى؟')) return;
       await db.collection('complaints').doc(id).delete();
       toast('✅ تم الحذف');
+    }
+
+    // ================================================================
+    // CORPORATE HR HUB (الشركات) — companies + employees + documents +
+    // requests + medical-consumption analyses submitted from the client
+    // app's "التحليل الذكي / لوحة الموارد البشرية" (Corporate HR Hub).
+    // Company/employee/document/medical-analysis lists are bulk-loaded
+    // with the rest of the app's data (loadAllData); requests get their
+    // own live listener since new requests need timely broker attention,
+    // mirroring the appointments/complaints pattern above.
+    // ================================================================
+    const HR_REQUEST_STATUS_LABELS = { submitted: 'مُقدَّم', review: 'قيد المراجعة', approved: 'تمت الموافقة', rejected: 'مرفوض', completed: 'مكتمل' };
+    const HR_REQUEST_TYPE_LABELS = { issuance: 'إصدار', renewal: 'تجديد', reimbursement: 'تعويض' };
+
+    function startCorporateRequestsListener() {
+      if (listeners.corporateRequests) listeners.corporateRequests();
+      listeners.corporateRequests = db.collection('corporateRequests').onSnapshot(snap => {
+        APP_STATE.corporateRequests = snap.docs.map(d => ({ ...d.data(), id: d.id }))
+          .sort((a, b) => ms(b.updatedAt || b.createdAt) - ms(a.updatedAt || a.createdAt));
+        const openCount = APP_STATE.corporateRequests.filter(r => ['submitted', 'review'].includes(r.status || 'submitted')).length;
+        const badge = document.getElementById('corporateHRBadge');
+        if (badge) { badge.textContent = openCount; badge.classList.toggle('hidden', openCount === 0); }
+        if (document.getElementById('v-corporateHR')?.classList.contains('active')) renderCorporateHRCompanies();
+        if (APP_STATE.hrSelectedCompanyId) renderCorporateHRDetail();
+      }, e => console.warn('Corporate HR requests listener failed', e));
+    }
+
+    function hrCompanyStats(companyId) {
+      const employees = (APP_STATE.corporateEmployees || []).filter(e => e.companyId === companyId);
+      const requests = (APP_STATE.corporateRequests || []).filter(r => r.companyId === companyId);
+      const openRequests = requests.filter(r => ['submitted', 'review'].includes(r.status || 'submitted'));
+      return { employees: employees.length, openRequests: openRequests.length, totalRequests: requests.length };
+    }
+
+    function renderCorporateHRCompanies() {
+      const body = document.getElementById('corporateHRCompaniesBody');
+      if (!body) return;
+      const q = (document.getElementById('corporateHRSearch')?.value || '').toLowerCase();
+      let list = APP_STATE.corporateCompanies || [];
+      if (q) list = list.filter(c => [c.name, c.activity].join(' ').toLowerCase().includes(q));
+      list = list.slice().sort((a, b) => ms(b.updatedAt || b.createdAt) - ms(a.updatedAt || a.createdAt));
+      body.innerHTML = list.length ? list.map(c => {
+        const stats = hrCompanyStats(c.id);
+        return `
+        <tr>
+          <td><strong>${esc(c.name || '—')}</strong></td>
+          <td>${esc(c.activity || '—')}</td>
+          <td>${clientLink(c.ownerClientId)}</td>
+          <td>${stats.employees}</td>
+          <td>${stats.openRequests ? `<span class="badge" style="display:inline-block;">${stats.openRequests}</span>` : '0'} / ${stats.totalRequests}</td>
+          <td>${date(c.createdAt)}</td>
+          <td><button class="btn btn-outline btn-sm" onclick="openCorporateHRDetail('${esc(c.id)}')"><i class="fas fa-eye"></i> التفاصيل</button></td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted,#999);">لا توجد حسابات شركات بعد</td></tr>`;
+    }
+
+    function openCorporateHRDetail(companyId) {
+      APP_STATE.hrSelectedCompanyId = companyId;
+      renderCorporateHRDetail();
+      openModal('corporateHRDetailModal');
+    }
+
+    function renderCorporateHRDetail() {
+      const companyId = APP_STATE.hrSelectedCompanyId;
+      const company = (APP_STATE.corporateCompanies || []).find(c => c.id === companyId);
+      const head = document.getElementById('hrDetailHead');
+      if (head) head.innerHTML = company
+        ? `<strong>${esc(company.name || '—')}</strong> · ${esc(company.activity || '—')} · المالك: ${clientLink(company.ownerClientId)}`
+        : 'الشركة غير موجودة';
+
+      const employees = (APP_STATE.corporateEmployees || []).filter(e => e.companyId === companyId);
+      const empBody = document.getElementById('hrDetailEmployeesBody');
+      if (empBody) empBody.innerHTML = employees.length ? employees.map(e => `
+        <tr>
+          <td>${esc(e.name || '—')}</td>
+          <td>${esc(e.department || '—')}</td>
+          <td>${esc(e.insuranceStatus === 'insured' ? 'مؤمَّن' : (e.insuranceStatus || '—'))}</td>
+          <td>${e.dependentsCount ?? 0}</td>
+          <td>${esc(e.hireDate || '—')}</td>
+        </tr>`).join('') : `<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--muted,#999);">لا يوجد موظفون بعد</td></tr>`;
+
+      const docs = (APP_STATE.corporateDocuments || []).filter(d => d.companyId === companyId);
+      const docBody = document.getElementById('hrDetailDocumentsBody');
+      if (docBody) docBody.innerHTML = docs.length ? docs.map(d => `
+        <tr>
+          <td>${esc(d.name || '—')}</td>
+          <td>${esc(d.documentType || '—')}</td>
+          <td>${esc(d.expiryDate || '—')}</td>
+          <td>${d.cloudinaryUrl ? `<a href="${esc(d.cloudinaryUrl)}" target="_blank" rel="noopener">فتح الملف</a>` : '—'}</td>
+        </tr>`).join('') : `<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--muted,#999);">لا توجد مستندات بعد</td></tr>`;
+
+      const reqs = (APP_STATE.corporateRequests || []).filter(r => r.companyId === companyId)
+        .sort((a, b) => ms(b.updatedAt || b.createdAt) - ms(a.updatedAt || a.createdAt));
+      const reqBody = document.getElementById('hrDetailRequestsBody');
+      if (reqBody) reqBody.innerHTML = reqs.length ? reqs.map(r => `
+        <tr>
+          <td>${esc(r.requestNumber || '—')}</td>
+          <td>${esc(HR_REQUEST_TYPE_LABELS[r.type] || r.type || '—')}</td>
+          <td>${esc(r.employeeName || '—')}</td>
+          <td>${r.amount ? Number(r.amount).toLocaleString('ar-EG') : '—'}</td>
+          <td>${esc(r.priority || '—')}</td>
+          <td><select onchange="updateHRRequestStatus('${esc(r.id)}', this.value)" style="padding:4px 8px;border-radius:6px;">
+            ${Object.keys(HR_REQUEST_STATUS_LABELS).map(s => `<option value="${s}" ${((r.status || 'submitted') === s) ? 'selected' : ''}>${HR_REQUEST_STATUS_LABELS[s]}</option>`).join('')}
+          </select></td>
+          <td>${date(r.submittedAt || r.createdAt)}</td>
+        </tr>`).join('') : `<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--muted,#999);">لا توجد طلبات بعد</td></tr>`;
+
+      const reports = (APP_STATE.corporateMedicalAnalyses || []).filter(m => m.companyId === companyId)
+        .sort((a, b) => (b.year || 0) - (a.year || 0));
+      const medBody = document.getElementById('hrDetailMedicalBody');
+      if (medBody) medBody.innerHTML = reports.length ? reports.map(m => `
+        <tr>
+          <td>${esc(m.year || '—')}</td>
+          <td>${m.totalSpend ? Number(m.totalSpend).toLocaleString('ar-EG') : '—'}</td>
+          <td>${m.lossRatio != null ? Number(m.lossRatio).toFixed(1) + '%' : '—'}</td>
+          <td>${m.records ?? '—'}</td>
+          <td>${date(m.createdAt)}</td>
+        </tr>`).join('') : `<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--muted,#999);">لا توجد تحليلات استهلاك طبي بعد</td></tr>`;
+    }
+
+    async function updateHRRequestStatus(id, status) {
+      await db.collection('corporateRequests').doc(id).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      toast('✅ تم تحديث حالة الطلب');
     }
 
     // ================================================================
@@ -3824,10 +3993,10 @@
       document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
       const target = el || document.querySelector(`[data-view="${view}"]`);
       if (target) target.classList.add('active');
-      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', videos: 'فيديوهات توعية', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط' };
-       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', videos: 'fa-film', leads: 'fa-user-tag', brokerSettings: 'fa-id-card' };
-       const iconColors = { clients: 'c-blue', policies: 'c-green', claims: 'c-red', documents: 'c-purple', appointments: 'c-blue', complaints: 'c-red', renewals: 'c-green', products: 'c-purple', reports: 'c-purple', assessments: 'c-green', compliance: 'c-green', messages: 'c-blue', notifications: 'c-red', activity: 'c-purple', companyAds: 'c-purple', videos: 'c-purple', leads: 'c-blue' };
-      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', videos: 'إدارة فيديوهات التوعية', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء' };
+      const titles = { dashboard: 'لوحة التحكم', homeContent: 'محتوى التطبيق', clients: 'العملاء', policies: 'الوثائق', payments: 'المدفوعات', claims: 'المطالبات', documents: 'المستندات', appointments: 'المواعيد', complaints: 'الشكاوى', renewals: 'التجديدات', companies: 'شركات التأمين', types: 'أنواع التأمين', products: 'المنتجات', reports: 'التقارير', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاط', offers: 'العروض', companyAds: 'إعلانات', videos: 'فيديوهات توعية', leads: 'العملاء المحتملون', brokerSettings: 'بيانات الوسيط', corporateHR: 'الشركات (HR)' };
+       const icons = { dashboard: 'fa-chart-pie', homeContent: 'fa-mobile-screen-button', clients: 'fa-users', policies: 'fa-file-contract', payments: 'fa-coins', claims: 'fa-triangle-exclamation', documents: 'fa-paperclip', appointments: 'fa-calendar-check', complaints: 'fa-comment-dots', renewals: 'fa-arrows-rotate', companies: 'fa-building', types: 'fa-list-check', products: 'fa-box-open', reports: 'fa-chart-column', assessments: 'fa-shield-halved', points: 'fa-star', compliance: 'fa-circle-check', messages: 'fa-comments', notifications: 'fa-bell', activity: 'fa-clock-rotate-left', offers: 'fa-tags', companyAds: 'fa-bullhorn', videos: 'fa-film', leads: 'fa-user-tag', brokerSettings: 'fa-id-card', corporateHR: 'fa-building-user' };
+       const iconColors = { clients: 'c-blue', policies: 'c-green', claims: 'c-red', documents: 'c-purple', appointments: 'c-blue', complaints: 'c-red', renewals: 'c-green', products: 'c-purple', reports: 'c-purple', assessments: 'c-green', compliance: 'c-green', messages: 'c-blue', notifications: 'c-red', activity: 'c-purple', companyAds: 'c-purple', videos: 'c-purple', leads: 'c-blue', corporateHR: 'c-blue' };
+      const subs = { dashboard: 'نظرة عامة', homeContent: 'محتوى الصفحة الرئيسية', clients: 'إدارة العملاء', policies: 'إدارة الوثائق', payments: 'إدارة المدفوعات', claims: 'إدارة المطالبات', documents: 'إدارة المستندات', appointments: 'مواعيد العملاء مع الوسيط', complaints: 'متابعة شكاوى العملاء', renewals: 'متابعة التجديدات', companies: 'إدارة الشركات', types: 'إدارة الأنواع', products: 'إدارة المنتجات', reports: 'تحليلات', assessments: 'تقييمات الحماية', points: 'نظام النقاط', compliance: 'مركز الامتثال', messages: 'المحادثات', notifications: 'الإشعارات', activity: 'سجل النشاطات', offers: 'العروض', companyAds: 'إدارة الإعلانات', videos: 'إدارة فيديوهات التوعية', leads: 'متابعة فرص البيع', brokerSettings: 'إفصاح الترخيص للعملاء', corporateHR: 'حسابات الشركات وموظفيها وطلباتها' };
       document.getElementById('title').textContent = titles[view] || view;
        document.getElementById('pageIcon').innerHTML = `<i class="fas ${icons[view] || 'fa-chart-pie'}" aria-hidden="true"></i>`;
        document.getElementById('pageIcon').className = 'page-icon' + (iconColors[view] ? ' ' + iconColors[view] : '');
@@ -3837,6 +4006,7 @@
       if (view === 'dashboard') renderDashboard();
       if (view === 'leads') renderLeads();
       if (view === 'brokerSettings') loadBrokerSettings();
+      if (view === 'corporateHR') renderCorporateHRCompanies();
     }
 
     // ================================================================
