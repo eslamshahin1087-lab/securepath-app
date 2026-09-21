@@ -127,7 +127,7 @@ async function creditPoints(uid, category, points, descAr, descEn, mutate) {
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    return { ok: true, points };
+    return { ok: true, points: awardedPoints };
   });
 }
 
