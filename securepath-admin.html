@@ -1736,7 +1736,7 @@
     // ================================================================
     async function loadCollection(name) {
       try {
-        const snap = await db.collection(name).get();
+        const snap = await db.collection(name).limit(500).get();
         return snap.docs.map(d => {
           const data = d.data();
           data.id = d.id;
@@ -1822,7 +1822,7 @@
     // ================================================================
     function startMessagesListener() {
       if (listeners.messages) listeners.messages();
-      listeners.messages = db.collection('messages').onSnapshot(snap => {
+      listeners.messages = db.collection('messages').limit(500).onSnapshot(snap => {
         APP_STATE.messages = snap.docs.map(d => { const data = d.data(); data.id = d.id; if (!data.uid && data.clientId) data.uid = data.clientId; return data; });
         updateBadge();
         renderConversations();
@@ -1853,7 +1853,7 @@
     // Live listener for documents - catches uploads from client app instantly
     function startDocumentsListener() {
       if (listeners.documents) listeners.documents();
-      listeners.documents = db.collection('documents').onSnapshot(snap => {
+      listeners.documents = db.collection('documents').limit(500).onSnapshot(snap => {
         APP_STATE.documents = snap.docs.map(d => {
           const data = d.data();
           data.id = d.id;
@@ -1879,7 +1879,7 @@
     // ================================================================
     function startLeadsListener() {
       if (listeners.leads) listeners.leads();
-      listeners.leads = db.collection('leads').onSnapshot(snap => {
+      listeners.leads = db.collection('leads').limit(500).onSnapshot(snap => {
         APP_STATE.leads = snap.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
         const existing = new Set(APP_STATE.leads.map(l => l.id));
         Array.from(SELECTED_LEAD_IDS).forEach(id => { if (!existing.has(id)) SELECTED_LEAD_IDS.delete(id); });
