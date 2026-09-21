@@ -54,7 +54,7 @@ let cachedFirebaseKeysAt = 0;
 function b64url(bytes) {
   let binary = '';
   for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replace(/+/g, '-').replace(/\\//g, '_').replace(/=+$/g, '');
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
 function b64urlText(text) {
@@ -73,7 +73,7 @@ function decodeJwtPart(value) {
 }
 
 function pemToArrayBuffer(pem) {
-  const clean = pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\\s/g, '');
+  const clean = pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\s/g, '');
   const binary = atob(clean);
   return Uint8Array.from(binary, c => c.charCodeAt(0)).buffer;
 }
@@ -227,7 +227,7 @@ function clientPhone(data) {
 }
 
 function canonicalTypeKey(value) {
-  return String(value || '').trim().toLowerCase().replace(/\\s+/g, ' ').slice(0, 120);
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 120);
 }
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
@@ -665,7 +665,7 @@ async function route(request, env) {
   const uid = String(claims.user_id || claims.sub || '');
   const data = await request.json().catch(() => ({}));
 
-  const path = new URL(request.url).pathname.replace(/\\/+$/, '') || '/';
+  const path = new URL(request.url).pathname.replace(/\/+$/, '') || '/';
   if (path === '/v1/points') return json(await handlePoints(env, uid, data));
   if (path === '/v1/redeem') return json(await handleRedeem(env, uid, data));
   if (path === '/v1/cloudinary/sign') return json(await handleCloudinarySign(env));
