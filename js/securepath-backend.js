@@ -15,7 +15,7 @@
 
     var user = firebase.auth().currentUser;
     var token = await user.getIdToken();
-    var response = await fetch(SECUREPATH_API_URL.replace(/\\/$/, '') + path, {
+    var response = await fetch(SECUREPATH_API_URL.replace(/\/$/, '') + path, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + token,
