@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security hardening
+- Server-owned InsuraPoints issuance and redemption.
+- Server validation for GPS reward trips and replay protection.
+- Server-triggered document and assessment rewards.
+- Signed Cloudinary upload flow.
+- Stricter Firestore rules for point balances, logs, redemption leads, and admin alerts.
+- Bounded Admin collection loads and realtime listeners.
+- CI validation no longer ignores syntax/lint failures.
+
+
 ### Planned
 - Signed Cloudinary upload presets (replace unsigned presets).
 - Custom domain binding.
