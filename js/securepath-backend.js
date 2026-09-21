@@ -1,10 +1,10 @@
 /* SecurePath backend client adapter.
- * The deployed Worker URL is intentionally kept in one place.
+ * The deployed Worker URL is kept in one place.
  */
 (function () {
   'use strict';
 
-  var SECUREPATH_API_URL = 'https://REPLACE-WITH-YOUR-SECUREPATH-API.workers.dev';
+  var SECUREPATH_API_URL = 'https://securepath-api.securepath.workers.dev';
   window.SECUREPATH_API_URL = SECUREPATH_API_URL;
 
   window.securePathApiCall = async function (path, payload) {
