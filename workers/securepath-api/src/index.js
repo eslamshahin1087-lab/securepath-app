@@ -660,12 +660,18 @@ async function handleCloudinarySign(env) {
 }
 
 async function route(request, env) {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+
+  if (request.method === 'GET' && path === '/health') {
+    return json({ ok: true, service: 'SecurePath API', projectId: PROJECT_ID, time: new Date().toISOString() });
+  }
+
   if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed' }, 405);
   const claims = await authenticate(request);
   const uid = String(claims.user_id || claims.sub || '');
   const data = await request.json().catch(() => ({}));
 
-  const path = new URL(request.url).pathname.replace(/\/+$/, '') || '/';
   if (path === '/v1/points') return json(await handlePoints(env, uid, data));
   if (path === '/v1/redeem') return json(await handleRedeem(env, uid, data));
   if (path === '/v1/cloudinary/sign') return json(await handleCloudinarySign(env));
