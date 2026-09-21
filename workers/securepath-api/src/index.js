@@ -158,16 +158,18 @@ async function verifyFirebaseIdToken(token) {
   if (typeof payload.exp !== 'number' || payload.exp <= now) throw new Error('Token expired');
   if (typeof payload.iat !== 'number' || payload.iat > now + 300) throw new Error('Invalid token issue time');
 
-  const keys = await getFirebaseKeys();
-  const jwk = keys[header.kid];
+  let keys = await getFirebaseKeys();
+  let jwk = keys[header.kid];
   if (!jwk) {
     cachedFirebaseKeys = null;
-    const fresh = await getFirebaseKeys();
-    if (!fresh[header.kid]) throw new Error('Unknown token key');
+    cachedFirebaseKeysAt = 0;
+    keys = await getFirebaseKeys();
+    jwk = keys[header.kid];
+    if (!jwk) throw new Error('Unknown token key');
   }
   const key = await crypto.subtle.importKey(
     'jwk',
-    (cachedFirebaseKeys || keys)[header.kid],
+    jwk,
     { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
     false,
     ['verify']
