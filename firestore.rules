@@ -44,75 +44,6 @@ service cloud.firestore {
       return request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedKeys);
     }
 
-    // ============================================================
-    // POINTS SYSTEM (Spark plan - no Cloud Functions).
-    // The app never sends a Cloud Function a category and trusts a
-    // server-computed value; instead every point value the client can
-    // ever write is a FIXED number that must appear in this whitelist,
-    // taken directly from POINTS_CONFIG in wathiqati-app.html. A client
-    // can never write an amount that isn't on this list, so tampering is
-    // bounded to "replay one of these legitimate amounts", not "grant
-    // yourself unlimited points". Update this list if POINTS_CONFIG in
-    // the client app ever changes.
-    // Values: assessment 30, docUpload 10, diversify 50, renewal 40,
-    // profileComplete 20, referralShare 15, walking 5/15,
-    // running 8/23, healthyEating 5/15, hydration 5/15, sleep 5/15,
-    // readTip 5/15, driving 6/21, gpsDriving 8/23.
-    // ============================================================
-    function VALID_POINT_DELTAS() {
-      return [5, 6, 8, 10, 15, 20, 21, 23, 30, 40, 50];
-    }
-    // 100 points = 1% discount, capped at 15% -> max single redemption 1500.
-    function REDEEM_PER_PERCENT() { return 100; }
-    function REDEEM_MAX_POINTS() { return 1500; }
-
-    // Earning points: only insuraPoints/insuraPointsLifetime and the
-    // bookkeeping maps may change, and the amount gained must be exactly
-    // one whitelisted value (a single check-in, upload, etc; the app never
-    // batches two awards into one write).
-    function isValidPointsEarnUpdate(clientId) {
-      let delta = request.resource.data.insuraPoints - resource.data.insuraPoints;
-      return isOwner(clientId)
-        && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['insuraPoints', 'insuraPointsLifetime', 'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData'])
-        && delta in VALID_POINT_DELTAS()
-        && request.resource.data.insuraPointsLifetime == resource.data.insuraPointsLifetime + delta
-        && request.resource.data.insuraPointsRedeemed == resource.data.get('insuraPointsRedeemed', 0);
-    }
-
-    // Redeeming points: a multiple of 100, never more than the client
-    // actually has, never more than the 15% cap in one redemption.
-    function isValidPointsRedeemUpdate(clientId) {
-      let pts = resource.data.insuraPoints - request.resource.data.insuraPoints;
-      return isOwner(clientId)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['insuraPoints', 'insuraPointsRedeemed'])
-        && pts > 0
-        && pts % REDEEM_PER_PERCENT() == 0
-        && pts <= REDEEM_MAX_POINTS()
-        && pts <= resource.data.insuraPoints
-        && request.resource.data.insuraPointsRedeemed == resource.data.insuraPointsRedeemed + pts;
-    }
-
-    function isValidPointsLogCreate() {
-      return ownsAsClient() && (
-        (request.resource.data.points in VALID_POINT_DELTAS()
-          && request.resource.data.category in ['insurance_habit', 'health_habit', 'safe_driving', 'safe_driving_gps'])
-        || (request.resource.data.category == 'redemption'
-          && request.resource.data.points < 0
-          && (-request.resource.data.points) % REDEEM_PER_PERCENT() == 0
-          && (-request.resource.data.points) <= REDEEM_MAX_POINTS())
-      );
-    }
-
-    function isValidRedemptionLead() {
-      return ownsAsClient()
-        && request.resource.data.pointsUsed > 0
-        && request.resource.data.pointsUsed % REDEEM_PER_PERCENT() == 0
-        && request.resource.data.pointsUsed <= REDEEM_MAX_POINTS()
-        && request.resource.data.discountPercent == request.resource.data.pointsUsed / REDEEM_PER_PERCENT()
-        && request.resource.data.status == 'new';
-    }
-
     // ---------- identity / access ----------
     match /clients/{clientId} {
       allow read: if isOwner(clientId) || isAdmin();
@@ -124,9 +55,7 @@ service cloud.firestore {
         && request.resource.data.get('insuraPointsRedeemed', 0) == 0;
 
       allow update: if isAdmin()
-        || (isOwner(clientId) && !touchesProtectedFields())
-        || isValidPointsEarnUpdate(clientId)
-        || isValidPointsRedeemUpdate(clientId);
+        || (isOwner(clientId) && !touchesProtectedFields());
 
       allow delete: if isAdmin();
     }
