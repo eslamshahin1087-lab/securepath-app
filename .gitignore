@@ -40,3 +40,8 @@ add-admin-claim.js
 add-admin-claim.js
 published-rules.txt
 .firebaserc
+
+# ===== Cloudflare Worker local secrets =====
+workers/securepath-api/.dev.vars*
+workers/securepath-api/.env*
+*service-account*.json
