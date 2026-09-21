@@ -106,9 +106,15 @@ async function creditPoints(uid, category, points, descAr, descEn, mutate) {
     const result = mutate ? await mutate({ tx, data, clientRef }) : null;
     if (result && result.alreadyDone) return { ok: true, points: 0, reason: result.reason || 'already_done' };
 
+    const extraPoints = Number(result?.extraPoints || 0);
+    if (!Number.isInteger(extraPoints) || extraPoints < 0 || extraPoints > 100) {
+      throw new HttpsError('internal', 'Invalid bonus points');
+    }
+    const awardedPoints = points + extraPoints;
+
     const update = {
-      insuraPoints: admin.firestore.FieldValue.increment(points),
-      insuraPointsLifetime: admin.firestore.FieldValue.increment(points)
+      insuraPoints: admin.firestore.FieldValue.increment(awardedPoints),
+      insuraPointsLifetime: admin.firestore.FieldValue.increment(awardedPoints)
     };
 
     if (result?.pointsFlags) update.pointsFlags = result.pointsFlags;
@@ -121,7 +127,7 @@ async function creditPoints(uid, category, points, descAr, descEn, mutate) {
       clientId: uid,
       clientName: clientDisplayName(data),
       category,
-      points,
+      points: awardedPoints,
       descriptionAr,
       descriptionEn,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
