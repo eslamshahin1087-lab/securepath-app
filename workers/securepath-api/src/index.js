@@ -139,7 +139,11 @@ async function getFirebaseKeys() {
   }
   const res = await fetch(FIREBASE_JWKS);
   if (!res.ok) throw new Error('Failed to load Firebase public keys');
-  cachedFirebaseKeys = await res.json();
+  const body = await res.json();
+  const keys = Array.isArray(body.keys) ? body.keys : [];
+  cachedFirebaseKeys = Object.fromEntries(
+    keys.filter(k => k && k.kid && k.kty === 'RSA').map(k => [k.kid, k])
+  );
   cachedFirebaseKeysAt = Date.now();
   return cachedFirebaseKeys;
 }
@@ -157,6 +161,7 @@ async function verifyFirebaseIdToken(token) {
   if (!payload.sub || payload.sub.length > 128) throw new Error('Invalid token subject');
   if (typeof payload.exp !== 'number' || payload.exp <= now) throw new Error('Token expired');
   if (typeof payload.iat !== 'number' || payload.iat > now + 300) throw new Error('Invalid token issue time');
+  if (typeof payload.auth_time !== 'number' || payload.auth_time > now + 300) throw new Error('Invalid authentication time');
 
   let keys = await getFirebaseKeys();
   let jwk = keys[header.kid];
