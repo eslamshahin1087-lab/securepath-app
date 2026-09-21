@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
-const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/v2/firestore');
 const { defineSecret } = require('firebase-functions/params');
 const admin = require('firebase-admin');
 
@@ -249,29 +249,42 @@ exports.checkInHabit = onCall(async (request) => {
 exports.logDrivingManual = onCall(async (request) => {
   const uid = assertAuthenticated(request);
   const today = todayKey();
-  const base = POINTS.drivingManual;
   const clientRef = db.collection('clients').doc(uid);
 
-  const snap = await clientRef.get();
-  if (!snap.exists) throw new HttpsError('not-found', 'Client profile not found');
-  const data = snap.data() || {};
-  const current = data.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
-  if (current.lastDate === today) return { ok: true, points: 0, reason: 'already_done' };
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(clientRef);
+    if (!snap.exists) throw new HttpsError('not-found', 'Client profile not found');
+    const data = snap.data() || {};
+    const current = data.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
+    if (current.lastDate === today) return { ok: true, points: 0, reason: 'already_done' };
 
-  const gap = daysBetweenCairo(current.lastDate, today);
-  const streak = gap === 1 ? Number(current.streak || 0) + 1 : 1;
-  const bonus = streak % POINTS.drivingManual.streakEvery === 0 ? POINTS.drivingManual.streakBonus : 0;
-  const total = base + bonus;
+    const gap = daysBetweenCairo(current.lastDate, today);
+    const streak = gap === 1 ? Number(current.streak || 0) + 1 : 1;
+    const bonus = streak % POINTS.drivingManual.streakEvery === 0 ? POINTS.drivingManual.streakBonus : 0;
+    const awardedPoints = POINTS.drivingManual.points + bonus;
 
-  return creditPoints(uid, 'safe_driving', total,
-    'الالتزام بقيادة آمنة اليوم', 'Committed to safe driving today',
-    ({ data }) => ({
+    tx.set(clientRef, {
+      insuraPoints: admin.firestore.FieldValue.increment(awardedPoints),
+      insuraPointsLifetime: admin.firestore.FieldValue.increment(awardedPoints),
       drivingData: {
         streak,
         lastDate: today,
         totalDays: Number(current.totalDays || 0) + 1
       }
-    }));
+    }, { merge: true });
+
+    tx.set(db.collection('pointsLog').doc(), {
+      clientId: uid,
+      clientName: clientDisplayName(data),
+      category: 'safe_driving',
+      points: awardedPoints,
+      descriptionAr: 'الالتزام بقيادة آمنة اليوم',
+      descriptionEn: 'Committed to safe driving today',
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    return { ok: true, points: awardedPoints };
+  });
 });
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
@@ -419,15 +432,26 @@ exports.redeemPoints = onCall(async (request) => {
   return { ok: true, ...result };
 });
 
-exports.onDocumentUploaded = onDocumentCreated('documents/{docId}', async (event) => {
-  const snap = event.data;
-  if (!snap) return;
-  const doc = snap.data() || {};
+exports.onDocumentUploaded = onDocumentUpdated('documents/{docId}', async (event) => {
+  const before = event.data?.before;
+  const after = event.data?.after;
+  if (!before || !after) return;
+
+  const previous = before.data() || {};
+  const doc = after.data() || {};
+
+  // Award only when an admin-side review moves the document into an
+  // approved/verified state. Client-created pending documents never earn points.
+  const wasVerified = ['verified', 'approved'].includes(String(previous.verificationStatus || '').toLowerCase())
+    || ['verified', 'approved'].includes(String(previous.reviewStatus || '').toLowerCase());
+  const isVerified = ['verified', 'approved'].includes(String(doc.verificationStatus || '').toLowerCase())
+    || ['verified', 'approved'].includes(String(doc.reviewStatus || '').toLowerCase());
+
+  if (wasVerified || !isVerified) return;
+
   const uid = String(doc.clientId || '');
   const url = String(doc.downloadURL || doc.fileUrl || '');
-
   if (!uid || doc.storageMode !== 'cloudinary' || !url.startsWith('https://res.cloudinary.com/' + CLOUDINARY_CLOUD_NAME + '/')) return;
-  if (doc.verificationStatus !== 'pending' || doc.reviewStatus !== 'pending' || doc.submittedForAdminReview !== true) return;
 
   const clientRef = db.collection('clients').doc(uid);
   await db.runTransaction(async (tx) => {
@@ -454,9 +478,9 @@ exports.onDocumentUploaded = onDocumentCreated('documents/{docId}', async (event
       clientName: clientDisplayName(data),
       category: 'insurance_habit',
       points: POINTS.documentUpload,
-      descriptionAr: 'رفع مستند تأميني',
-      descriptionEn: 'Uploaded an insurance document',
-      eventId: snap.id,
+      descriptionAr: 'اعتماد مستند تأميني',
+      descriptionEn: 'Verified insurance document',
+      eventId: after.id,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
   });
