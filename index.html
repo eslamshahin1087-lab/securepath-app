@@ -554,6 +554,10 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .feature-card.is-visible:hover {
+            transform: translateY(-10px);
+        }
         .feature-card:nth-child(2),
         .step-card:nth-child(2),
         .stat-item:nth-child(2) { transition-delay: 90ms; }
@@ -754,7 +758,11 @@
         .footer .sep { color: var(--gold); margin: 0 8px; opacity: 0.6; }
 
         /* ===== RESPONSIVE ===== */
+
         @media (max-width: 900px) {
+            .hero-visual::after { width: 360px; height: 360px; }
+            .hero-visual::before { width: 300px; height: 300px; }
+
             .hero-section {
                 flex-direction: column;
                 text-align: center;
@@ -798,6 +806,11 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+            .feature-card, .step-card, .stat-item, .download-section {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
