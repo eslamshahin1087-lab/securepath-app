@@ -30,6 +30,7 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js">
     </script>
+    <script src="js/securepath-backend.js"></script>
 
     <style>
         /* ===== ROOT VARIABLES ===== */
@@ -11526,11 +11527,13 @@ function hrT(key, vars) {
         // RENDER ALL                                                    //
         // ============================================================ //
         // ============================================================ //
-        // INSURA POINTS — insurance & healthy-habits loyalty system     //
-        // ============================================================ //
+        // INSURA POINTS — insurance & healthy-habits loyalty system
+        // Point balances and reward issuance are handled by the SecurePath
+        // Cloudflare Worker. The browser only submits authenticated events.
+
         var POINTS_CONFIG = {
-            perDiscountPercent: 100, // كل 100 نقطة = 1% خصم
-            maxDiscountPercent: 15, // أقصى خصم قابل للاستبدال من النقاط
+            perDiscountPercent: 100,
+            maxDiscountPercent: 15,
             insurance: {
                 assessment: { points: 30, cooldownDays: 30 },
                 docUpload: { points: 10, dailyCap: 3 },
@@ -11559,11 +11562,11 @@ function hrT(key, vars) {
             }
         };
 
-        function todayStr() { return new Date().toISOString().split('T')[0]; }
+        function todayStr() { return new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' }); }
 
         function daysBetweenDates(a, b) {
             if (!a || !b) return 9999;
-            return Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 86400000);
+            return Math.round((new Date(b + 'T00:00:00+02:00') - new Date(a + 'T00:00:00+02:00')) / 86400000);
         }
 
         function ensurePointsData(u) {
@@ -11577,7 +11580,7 @@ function hrT(key, vars) {
                 u.habitData[k] = u.habitData[k] || { streak: 0, lastDate: '', totalDays: 0 };
             });
             u.drivingData = u.drivingData || { streak: 0, lastDate: '', totalDays: 0 };
-            u.gpsDrivingData = u.gpsDrivingData || { streak: 0, lastDate: '', totalTrips: 0 };
+            u.gpsDrivingData = u.gpsDrivingData || { streak: 0, lastDate: '', totalTrips: 0, recentTripHashes: [] };
             return u;
         }
 
@@ -11601,120 +11604,91 @@ function hrT(key, vars) {
             el._t = setTimeout(function() { el.classList.remove('show'); }, 2600);
         }
 
-        // Central awarding function: persists to Firestore (clients doc + pointsLog), updates local state & UI.
-        function awardInsuraPoints(points, category, descAr, descEn, flagUpdates) {
-            if (!STATE.currentUser || !points) return;
-            var u = ensurePointsData(STATE.userData || {});
-            u.insuraPoints += points;
-            u.insuraPointsLifetime += points;
-            if (flagUpdates) {
-                Object.keys(flagUpdates).forEach(function(k) {
-                    if (k === 'habitData' || k === 'drivingData' || k === 'gpsDrivingData') { u[k] = flagUpdates[k]; } else { u.pointsFlags[k] = flagUpdates[k]; }
-                });
-            }
-            STATE.userData = u;
-
-            db.collection('clients').doc(STATE.currentUser.uid).set({
-                insuraPoints: firebase.firestore.FieldValue.increment(points),
-                insuraPointsLifetime: firebase.firestore.FieldValue.increment(points),
-                pointsFlags: u.pointsFlags,
-                habitData: u.habitData,
-                drivingData: u.drivingData,
-                gpsDrivingData: u.gpsDrivingData
-            }, { merge: true }).catch(function(e) { console.warn('Points save failed', e); });
-
-            db.collection('pointsLog').add({
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name || '',
-                category: category,
-                points: points,
-                descriptionAr: descAr,
-                descriptionEn: descEn,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).catch(function(e) { console.warn('Points log failed', e); });
-
-            showPointsToast(points, descAr, descEn);
-            renderPointsWidget();
-            if (isCorporateHRUser()) renderCorporateHRDashboard();
-            var hub = document.getElementById('pointsHub');
-            if (hub && hub.classList.contains('active')) renderPointsHub();
+        function refreshPointsLocal() {
+            if (!STATE.currentUser || !db) return Promise.resolve();
+            return db.collection('clients').doc(STATE.currentUser.uid).get().then(function(snap) {
+                if (snap.exists) STATE.userData = ensurePointsData(snap.data() || {});
+                renderPointsWidget();
+                var hub = document.getElementById('pointsHub');
+                if (hub && hub.classList.contains('active')) renderPointsHub();
+            });
         }
 
-        // ---- Insurance-behavior triggers (called from existing app flows) ----
+        function callSecurePoints(payload, descAr, descEn) {
+            return securePathApiCall('/v1/points', payload).then(function(result) {
+                if (result && result.points > 0) showPointsToast(result.points, descAr || 'تحديث النقاط', descEn || 'Points updated');
+                return refreshPointsLocal().then(function() { return result; });
+            });
+        }
+
+        function reportPointsError(error) {
+            console.warn('SecurePath points backend error:', error);
+            var lang = STATE.language || 'ar';
+            alert(lang === 'ar'
+                ? 'تعذر تسجيل النقاط الآن. تأكد من الاتصال ثم حاول مرة أخرى.'
+                : 'Points could not be recorded now. Check your connection and try again.');
+        }
+
+        // Kept as a compatibility shim so legacy callers cannot directly mutate points.
+        function awardInsuraPoints() {
+            console.warn('Direct point mutation is disabled. Use the SecurePath backend event APIs.');
+        }
+
         function maybeAwardAssessmentPoints() {
             if (!STATE.currentUser) return;
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr(),
-                last = u.pointsFlags.lastAssessmentAwardAt;
-            if (last && daysBetweenDates(last, today) < POINTS_CONFIG.insurance.assessment.cooldownDays) return;
-            awardInsuraPoints(POINTS_CONFIG.insurance.assessment.points, 'insurance_habit',
-                'إتمام تقييم الحماية الشامل', 'Completed the full protection assessment',
-                { lastAssessmentAwardAt: today });
+            callSecurePoints({ event: 'assessment' },
+                'إتمام تقييم الحماية الشامل', 'Completed the full protection assessment')
+                .catch(reportPointsError);
         }
 
+        // Document rewards are issued by the admin-only verification workflow.
         function maybeAwardDocUploadPoints() {
-            if (!STATE.currentUser) return;
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr(),
-                count = (u.pointsFlags.docUploadAwardDate === today) ? (u.pointsFlags.docUploadAwardCount || 0) : 0;
-            if (count >= POINTS_CONFIG.insurance.docUpload.dailyCap) return;
-            awardInsuraPoints(POINTS_CONFIG.insurance.docUpload.points, 'insurance_habit',
-                'رفع وتوثيق مستند تأميني', 'Uploaded an insurance document',
-                { docUploadAwardDate: today, docUploadAwardCount: count + 1 });
+            return Promise.resolve({ ok: true, points: 0, reason: 'awaiting_admin_verification' });
         }
 
         function checkInsuranceDiversification() {
             if (!STATE.currentUser) return;
             var u = ensurePointsData(STATE.userData || {}),
                 uid = STATE.currentUser.uid,
-                pol = (STATE.policies || []).filter(function(p) { return p.clientId === uid; }),
-                types = {};
-            pol.forEach(function(p) { var t = (p.type || p.typeName || p.category || '').trim(); if (t) types[canonicalPolicyType(t)] = t; });
-            var earned = u.pointsFlags.diversifyTypes || [],
-                newKeys = Object.keys(types).filter(function(k) { return earned.indexOf(k) === -1; });
-            if (!newKeys.length) return;
-            var key = newKeys[0],
-                label = types[key],
-                updated = earned.concat([key]);
-            awardInsuraPoints(POINTS_CONFIG.insurance.diversify.points, 'insurance_habit',
-                'تنويع التغطية التأمينية: ' + label, 'Diversified insurance coverage: ' + label,
-                { diversifyTypes: updated });
+                earned = Array.isArray(u.pointsFlags.diversifyTypes) ? u.pointsFlags.diversifyTypes : [],
+                policies = (STATE.policies || []).filter(function(p) { return p.clientId === uid; }),
+                selected = null;
+
+            for (var i = 0; i < policies.length; i++) {
+                var typeName = (policies[i].type || policies[i].typeName || policies[i].category || '').trim();
+                var key = canonicalPolicyType(typeName);
+                if (typeName && earned.indexOf(key) === -1 && (policies[i].id || policies[i].policyId)) {
+                    selected = policies[i];
+                    break;
+                }
+            }
+            if (!selected) return;
+            callSecurePoints({ event: 'diversification', policyId: selected.id || selected.policyId },
+                'تنويع التغطية التأمينية', 'Diversified insurance coverage')
+                .catch(reportPointsError);
         }
 
         function maybeAwardRenewalPoints(policyId) {
             if (!STATE.currentUser || !policyId) return;
-            var u = ensurePointsData(STATE.userData || {}),
-                list = u.pointsFlags.renewedPolicyIds || [];
-            if (list.indexOf(policyId) !== -1) return;
-            awardInsuraPoints(POINTS_CONFIG.insurance.renewal.points, 'insurance_habit',
-                'طلب تجديد الوثيقة قبل انتهائها', 'Requested renewal before policy expiry',
-                { renewedPolicyIds: list.concat([policyId]) });
+            callSecurePoints({ event: 'renewal', policyId: policyId },
+                'طلب تجديد الوثيقة قبل انتهائها', 'Requested renewal before policy expiry')
+                .catch(reportPointsError);
         }
 
         function maybeAwardProfileCompletionPoints() {
             if (!STATE.currentUser) return;
-            var u = ensurePointsData(STATE.userData || {});
-            if (u.pointsFlags.profileCompleteAwarded) return;
-            var fields = ['fullName', 'birthDate', 'gender', 'phone', 'occupation', 'clientType'],
-                complete = fields.every(function(k) { return String(u[k] || '').trim() !== ''; });
-            if (!complete) return;
-            awardInsuraPoints(POINTS_CONFIG.insurance.profileComplete.points, 'insurance_habit',
-                'استكمال بيانات الملف الشخصي', 'Completed profile information',
-                { profileCompleteAwarded: true });
+            callSecurePoints({ event: 'profileComplete' },
+                'استكمال بيانات الملف الشخصي', 'Completed profile information')
+                .catch(function() {});
         }
 
         function maybeAwardReferralSharePoints() {
             if (!STATE.currentUser) return;
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr(),
-                last = u.pointsFlags.lastReferralShareAwardAt;
-            if (last && daysBetweenDates(last, today) < POINTS_CONFIG.insurance.referralShare.cooldownDays) return;
-            awardInsuraPoints(POINTS_CONFIG.insurance.referralShare.points, 'insurance_habit',
-                'مشاركة رابط دعوة صديق', 'Shared the referral link',
-                { lastReferralShareAwardAt: today });
+            callSecurePoints({ event: 'referralShare' },
+                'مشاركة رابط دعوة صديق', 'Shared the referral link')
+                .catch(reportPointsError);
         }
 
-        // ---- Healthy-habit & safe-driving daily check-ins ----
         function habitDoneToday(key) {
             var u = ensurePointsData(STATE.userData || {});
             return u.habitData[key] && u.habitData[key].lastDate === todayStr();
@@ -11724,20 +11698,8 @@ function hrT(key, vars) {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
             var cfg = POINTS_CONFIG.habits[key];
             if (!cfg) return;
-            var u = ensurePointsData(STATE.userData || {}),
-                h = u.habitData[key],
-                today = todayStr();
-            if (h.lastDate === today) return;
-            var gap = daysBetweenDates(h.lastDate, today),
-                newStreak = (gap === 1) ? (h.streak || 0) + 1 : 1,
-                bonus = (cfg.streakEvery && newStreak % cfg.streakEvery === 0) ? cfg.streakBonus : 0,
-                total = cfg.points + bonus,
-                newHabitData = {};
-            Object.keys(u.habitData).forEach(function(k) { newHabitData[k] = u.habitData[k]; });
-            newHabitData[key] = { streak: newStreak, lastDate: today, totalDays: (h.totalDays || 0) + 1 };
-            var descAr = cfg.ar + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
-                descEn = cfg.en + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
-            awardInsuraPoints(total, 'health_habit', descAr, descEn, { habitData: newHabitData });
+            callSecurePoints({ event: 'habit', habit: key },
+                cfg.ar, cfg.en).catch(reportPointsError);
         }
 
         function drivingDoneToday() {
@@ -11747,26 +11709,22 @@ function hrT(key, vars) {
 
         function checkInSafeDriving() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr();
+            var today = todayStr(),
+                u = ensurePointsData(STATE.userData || {});
             if (u.drivingData.lastDate === today) return;
+
             var c1 = document.getElementById('drivingCheckSpeed'),
                 c2 = document.getElementById('drivingCheckPhone');
             if (!(c1 && c1.checked) || !(c2 && c2.checked)) {
                 alert(STATE.language === 'ar' ? 'يرجى تأكيد الالتزام بكل بنود القيادة الآمنة اليوم أولاً.' : 'Please confirm every safe-driving item for today first.');
                 return;
             }
-            var gap = daysBetweenDates(u.drivingData.lastDate, today),
-                newStreak = (gap === 1) ? (u.drivingData.streak || 0) + 1 : 1,
-                bonus = (newStreak % POINTS_CONFIG.driving.streakEvery === 0) ? POINTS_CONFIG.driving.streakBonus : 0,
-                total = POINTS_CONFIG.driving.points + bonus,
-                newDriving = { streak: newStreak, lastDate: today, totalDays: (u.drivingData.totalDays || 0) + 1 };
-            var descAr = 'الالتزام بقيادة آمنة اليوم' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
-                descEn = 'Committed to safe driving today' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
-            awardInsuraPoints(total, 'safe_driving', descAr, descEn, { drivingData: newDriving });
+
+            callSecurePoints({ event: 'drivingManual' },
+                'الالتزام بقيادة آمنة اليوم', 'Committed to safe driving today')
+                .catch(reportPointsError);
         }
 
-        // ---- GPS-tracked driving trip (rewards compliance with speed limits) ----
         var GPS_TRIP = null;
 
         function gpsTripDoneToday() {
@@ -11828,8 +11786,23 @@ function hrT(key, vars) {
         function startGpsTrip(roadKey) {
             var cfg = POINTS_CONFIG.gpsDriving.roadTypes[roadKey];
             if (!cfg) return;
-            GPS_TRIP = { roadKey: roadKey, limitKmh: cfg.limitKmh, startTime: Date.now(), lastPos: null, lastSpeedKmh: null, totalSamples: 0, compliantSamples: 0, watchId: null, timerId: null };
-            GPS_TRIP.watchId = navigator.geolocation.watchPosition(handleGpsPosition, handleGpsError, { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 });
+            GPS_TRIP = {
+                roadKey: roadKey,
+                limitKmh: cfg.limitKmh,
+                startTime: Date.now(),
+                lastPos: null,
+                lastSpeedKmh: null,
+                totalSamples: 0,
+                compliantSamples: 0,
+                samples: [],
+                watchId: null,
+                timerId: null
+            };
+            GPS_TRIP.watchId = navigator.geolocation.watchPosition(handleGpsPosition, handleGpsError, {
+                enableHighAccuracy: true,
+                maximumAge: 2000,
+                timeout: 15000
+            });
             GPS_TRIP.timerId = setInterval(renderGpsTripModal, 1000);
             renderGpsTripModal();
         }
@@ -11846,10 +11819,18 @@ function hrT(key, vars) {
             } else {
                 speedKmh = 0;
             }
+
             GPS_TRIP.lastPos = { lat: pos.coords.latitude, lon: pos.coords.longitude, t: pos.timestamp };
             GPS_TRIP.lastSpeedKmh = speedKmh;
             GPS_TRIP.totalSamples++;
             if (speedKmh <= GPS_TRIP.limitKmh + POINTS_CONFIG.gpsDriving.speedToleranceKmh) GPS_TRIP.compliantSamples++;
+            GPS_TRIP.samples.push({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                t: pos.timestamp,
+                accuracy: typeof pos.coords.accuracy === 'number' ? pos.coords.accuracy : 0
+            });
+            if (GPS_TRIP.samples.length > 600) GPS_TRIP.samples.shift();
             renderGpsTripModal();
         }
 
@@ -11863,41 +11844,42 @@ function hrT(key, vars) {
             var s = GPS_TRIP;
             if (s.watchId != null) navigator.geolocation.clearWatch(s.watchId);
             if (s.timerId) clearInterval(s.timerId);
-            var elapsedSec = Math.floor((Date.now() - s.startTime) / 1000),
-                compliance = s.totalSamples ? Math.round((s.compliantSamples / s.totalSamples) * 100) : 0;
+
+            var elapsedSec = Math.floor((Date.now() - s.startTime) / 1000);
+            var samples = s.samples.slice();
             GPS_TRIP = null;
             var lang = STATE.language || 'ar';
+
             if (silent) { closeModal('gpsTripModal'); return; }
-            var cfg = POINTS_CONFIG.gpsDriving;
-            if (elapsedSec < cfg.minDurationSec) {
+
+            if (elapsedSec < POINTS_CONFIG.gpsDriving.minDurationSec) {
                 alert(lang === 'ar' ? 'الرحلة قصيرة جداً — جرّب رحلة أطول من دقيقة على الأقل.' : 'Trip too short — try a trip of at least a minute.');
                 renderGpsTripModal();
                 return;
             }
-            var u = ensurePointsData(STATE.userData || {}),
-                today = todayStr();
-            if (u.gpsDrivingData.lastDate === today) {
-                closeModal('gpsTripModal');
-                alert(lang === 'ar' ? 'تم بالفعل تسجيل رحلة GPS اليوم — حاول غداً.' : 'You already logged a GPS trip today — try again tomorrow.');
-                return;
-            }
-            if (compliance < cfg.minCompliancePct) {
-                alert(lang === 'ar' ? ('لم تحقق نسبة التزام كافية بحد السرعة (' + compliance + '%). حاول مرة أخرى.') : ('Your speed compliance was too low (' + compliance + '%). Try again.'));
+
+            if (!samples.length) {
+                alert(lang === 'ar' ? 'لم يتم تسجيل بيانات GPS كافية.' : 'Not enough GPS samples were recorded.');
                 renderGpsTripModal();
                 return;
             }
-            var gap = daysBetweenDates(u.gpsDrivingData.lastDate, today),
-                newStreak = (gap === 1) ? (u.gpsDrivingData.streak || 0) + 1 : 1,
-                bonus = (newStreak % cfg.streakEvery === 0) ? cfg.streakBonus : 0,
-                total = cfg.points + bonus,
-                newGps = { streak: newStreak, lastDate: today, totalTrips: (u.gpsDrivingData.totalTrips || 0) + 1 };
-            var descAr = 'رحلة قيادة بتتبع GPS بنسبة التزام ' + compliance + '%' + (bonus ? (' (تتابع ' + newStreak + ' يوم + مكافأة)') : ''),
-                descEn = 'GPS-tracked trip with ' + compliance + '% speed compliance' + (bonus ? (' (' + newStreak + '-day streak bonus)') : '');
+
             closeModal('gpsTripModal');
-            awardInsuraPoints(total, 'safe_driving_gps', descAr, descEn, { gpsDrivingData: newGps });
+            callSecurePoints({
+                event: 'gpsDriving',
+                roadKey: s.roadKey,
+                samples: samples
+            }, 'رحلة قيادة بتتبع GPS', 'GPS-tracked safe-driving trip')
+                .then(function(result) {
+                    if (result && result.compliancePct != null && result.points === 0 && result.reason === 'speed_violations') {
+                        alert(lang === 'ar'
+                            ? 'لم تحقق نسبة التزام كافية بحد السرعة (' + result.compliancePct + '%). لم تُحتسب نقاط لهذه الرحلة.'
+                            : 'Speed compliance was too low (' + result.compliancePct + '%). No points were awarded.');
+                    }
+                })
+                .catch(reportPointsError);
         }
 
-        // ---- Redemption: convert points into a purchase discount ----
         function openRedeemModal() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
             var u = ensurePointsData(STATE.userData || {}),
@@ -11908,13 +11890,15 @@ function hrT(key, vars) {
             slider.max = maxRedeemable;
             slider.step = POINTS_CONFIG.perDiscountPercent;
             slider.value = maxRedeemable;
+
             var lang = STATE.language || 'ar';
-            setText('redeemModalTitle', ''); // icon stays, title text set below via child span not needed (static ok)
+            setText('redeemModalTitle', '');
             document.getElementById('redeemModalTitle').innerHTML = '<span class="icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM2 7h20v3H2z"/><path d="M12 7v13M12 7c-4 0-6-2-4-4 2-2 4 1 4 4Zm0 0c4 0 6-2 4-4-2-2-4 1-4 4Z"/></svg></span></span> ' + (lang === 'ar' ? 'استبدال النقاط بخصم' : 'Redeem points for a discount');
             setText('redeemModalSub', lang === 'ar' ? 'اختر عدد النقاط التي تريد استبدالها بخصم عند طلب عرض سعر' : 'Choose how many points to redeem for a discount on your next quote');
             setText('redeemPtsLabel', lang === 'ar' ? 'النقاط المستخدمة' : 'Points used');
             setText('redeemDiscountLabel', lang === 'ar' ? 'قيمة الخصم' : 'Discount value');
-            setText('redeemConfirmBtn', ''); document.getElementById('redeemConfirmBtn').innerHTML = '<span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span> ' + (lang === 'ar' ? 'تأكيد ومتابعة طلب العرض' : 'Confirm & continue to quote');
+            setText('redeemConfirmBtn', '');
+            document.getElementById('redeemConfirmBtn').innerHTML = '<span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span> ' + (lang === 'ar' ? 'تأكيد ومتابعة طلب العرض' : 'Confirm & continue to quote');
             setText('redeemDisclaimerText', lang === 'ar' ? 'نظام نقاط الأمان هو برنامج ولاء مقدم من وسيط التأمين عبر منصة SecurePath، وليس خصماً من قسط التأمين الرسمي الصادر عن الشركة. سيتم تفعيل الخصم كجزء من خدمة الوساطة عند تواصل فريقنا معك لإتمام الطلب.' : 'InsuraPoints is a loyalty program offered by your broker via the SecurePath platform, not a discount on the insurer\'s official premium. It is applied as part of the brokerage service once our team follows up on your request.');
             updateRedeemPreview();
             openModal('redeemPointsModal');
@@ -11932,53 +11916,38 @@ function hrT(key, vars) {
                 pts = parseInt(slider.value, 10) || 0,
                 lang = STATE.language || 'ar';
             if (pts <= 0) { closeModal('redeemPointsModal'); return; }
-            var u = ensurePointsData(STATE.userData || {});
-            if (pts > u.insuraPoints) pts = u.insuraPoints;
-            var discountPct = currentDiscountPercent(pts);
-            u.insuraPoints -= pts;
-            u.insuraPointsRedeemed = (u.insuraPointsRedeemed || 0) + pts;
-            STATE.userData = u;
 
-            db.collection('clients').doc(STATE.currentUser.uid).set({
-                insuraPoints: firebase.firestore.FieldValue.increment(-pts),
-                insuraPointsRedeemed: firebase.firestore.FieldValue.increment(pts)
-            }, { merge: true }).catch(function(e) { console.warn('Redeem save failed', e); });
+            var btn = document.getElementById('redeemConfirmBtn');
+            if (btn) btn.disabled = true;
 
-            db.collection('pointsLog').add({
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name || '',
-                category: 'redemption',
-                points: -pts,
-                descriptionAr: 'استبدال نقاط بخصم ' + discountPct + '%',
-                descriptionEn: 'Redeemed points for a ' + discountPct + '% discount',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).catch(function(e) {});
-
-            db.collection('leads').add({
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name || '',
-                clientPhone: (STATE.userData && STATE.userData.phone) || '',
-                source: 'points_redemption',
-                pointsUsed: pts,
-                discountPercent: discountPct,
-                status: 'new',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).catch(function(e) {});
-
-            closeModal('redeemPointsModal');
-            renderPointsWidget();
-            renderPointsHub();
-
-            var note = lang === 'ar' ? ('طلب خصم بنقاط الأمان: ' + discountPct + '% (' + pts + ' نقطة)') : ('InsuraPoints discount request: ' + discountPct + '% (' + pts + ' pts)');
-            try {
-                var url = new URL(SECUREPATH_GOOGLE_FORM_URL);
-                url.searchParams.set('utm_source', 'securepath_app');
-                url.searchParams.set('utm_medium', 'app');
-                url.searchParams.set('utm_content', 'points_redemption');
-                url.searchParams.set('points_note', note);
-                window.open(url.toString(), '_blank', 'noopener,noreferrer');
-            } catch (e) { window.open(SECUREPATH_GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer'); }
-            alert(lang === 'ar' ? '✅ تم حجز خصمك! سيتواصل معك فريقنا لإتمام طلبك بالخصم المستحق.' : '✅ Your discount is reserved! Our team will contact you to complete your request.');
+            callSecurePoints({ event: 'noop' }).catch(function() {}); // no-op warmup avoided below
+            securePathApiCall('/v1/redeem', { points: pts })
+                .then(function(result) {
+                    return refreshPointsLocal().then(function() { return result; });
+                })
+                .then(function(result) {
+                    closeModal('redeemPointsModal');
+                    var note = lang === 'ar'
+                        ? ('طلب خصم بنقاط الأمان: ' + result.discountPercent + '% (' + result.pointsUsed + ' نقطة)')
+                        : ('InsuraPoints discount request: ' + result.discountPercent + '% (' + result.pointsUsed + ' pts)');
+                    try {
+                        var url = new URL(SECUREPATH_GOOGLE_FORM_URL);
+                        url.searchParams.set('utm_source', 'securepath_app');
+                        url.searchParams.set('utm_medium', 'app');
+                        url.searchParams.set('utm_content', 'points_redemption');
+                        url.searchParams.set('points_note', note);
+                        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                    } catch (e) {
+                        window.open(SECUREPATH_GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+                    }
+                    alert(lang === 'ar'
+                        ? '✅ تم حجز خصمك! سيتواصل معك فريقنا لإتمام طلبك بالخصم المستحق.'
+                        : '✅ Your discount is reserved! Our team will contact you to complete your request.');
+                })
+                .catch(reportPointsError)
+                .finally(function() {
+                    if (btn) btn.disabled = false;
+                });
         }
 
         // ---- Rendering ----
