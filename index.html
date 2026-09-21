@@ -227,7 +227,21 @@
         .hero-content {
             flex: 1;
             min-width: 300px;
+            max-width: 650px;
             text-align: right;
+            position: relative;
+        }
+        .hero-content::before {
+            content: '';
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            top: -85px;
+            right: -70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(242,189,99,0.055), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
         }
         html[dir="ltr"] .hero-content { text-align: left; }
 
@@ -245,6 +259,19 @@
             margin-bottom: 24px;
             border: 1px solid rgba(242, 189, 99, 0.28);
             backdrop-filter: blur(6px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 12px 28px -22px rgba(242,189,99,0.7);
+            position: relative;
+        }
+        .badge::after {
+            content: '✦';
+            color: var(--gold);
+            font-size: 9px;
+            margin-inline-start: 2px;
+            animation: badgeSpark 2.8s ease-in-out infinite;
+        }
+        @keyframes badgeSpark {
+            0%,100% { transform: scale(0.8) rotate(0); opacity: 0.35; }
+            50% { transform: scale(1.1) rotate(10deg); opacity: 1; }
         }
         .badge .dot {
             width: 6px; height: 6px;
@@ -260,12 +287,47 @@
 
         h1 {
             font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
-            font-size: 48px;
+            font-size: clamp(42px, 5vw, 58px);
             font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 18px;
+            letter-spacing: -0.8px;
+            text-wrap: balance;
         }
+        .hero-trustline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 7px;
+            margin: -6px 0 22px;
+            color: #8995AA;
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+        .trust-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.065);
+            background: rgba(255,255,255,0.022);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        .mini-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 9px rgba(242,189,99,0.65);
+        }
+        .cta-note {
+            margin-top: 11px;
+            color: #6F7C93;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+        .cta-note strong { color: #A5AFBF; }
         h1 .highlight {
             background: var(--gradient-gold);
             -webkit-background-clip: text;
@@ -342,10 +404,142 @@
 
         /* ===== PHONE MOCKUP ===== */
         .hero-visual {
-            flex: 0 0 320px;
+            flex: 0 0 370px;
+            min-height: 520px;
             display: flex;
+            align-items: center;
             justify-content: center;
             position: relative;
+            isolation: isolate;
+        }
+        .hero-float-card {
+            position: absolute;
+            z-index: 8;
+            min-width: 152px;
+            padding: 11px 12px;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: 34px 1fr;
+            gap: 9px;
+            align-items: center;
+            background: rgba(7,18,39,0.78);
+            border: 1px solid rgba(242,189,99,0.16);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 24px 44px -24px rgba(0,0,0,0.95);
+            animation: floatInfo 5.8s ease-in-out infinite;
+        }
+        .hero-float-card.top { top: 14%; right: -4px; }
+        .hero-float-card.bottom { bottom: 13%; left: -8px; animation-delay: -2.2s; }
+        .hero-float-card .mini-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(242,189,99,0.09);
+            border: 1px solid rgba(242,189,99,0.14);
+        }
+        .hero-float-card .mini-icon svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .hero-float-card small {
+            display: block;
+            color: #6F7D95;
+            font-size: 8px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .hero-float-card strong {
+            display: block;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .hero-float-card .card-pulse {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            right: 10px;
+            top: 10px;
+            background: var(--gold);
+            box-shadow: 0 0 9px rgba(242,189,99,0.7);
+            animation: miniPulse 2.2s ease-in-out infinite;
+        }
+        @keyframes floatInfo {
+            0%,100% { transform: translate3d(0,0,0) rotate(0); }
+            50% { transform: translate3d(0,-9px,0) rotate(-1deg); }
+        }
+        @keyframes miniPulse {
+            0%,100% { transform: scale(0.7); opacity: 0.45; }
+            50% { transform: scale(1.25); opacity: 1; }
+        }
+        .hero-assistant {
+            position: absolute;
+            z-index: 9;
+            right: -8px;
+            bottom: 8%;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: var(--gradient-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 18px 34px -13px rgba(242,189,99,0.75);
+            animation: botFloat 4.2s ease-in-out infinite;
+        }
+        .hero-assistant::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 20px;
+            border: 1px solid rgba(242,189,99,0.18);
+            animation: botRing 2.8s ease-in-out infinite;
+        }
+        .hero-assistant svg {
+            width: 24px; height: 24px;
+            stroke: var(--navy-3);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .hero-assistant-label {
+            position: absolute;
+            right: 56px;
+            bottom: 0;
+            white-space: nowrap;
+            padding: 7px 10px;
+            border-radius: 11px;
+            background: rgba(6,16,36,0.85);
+            border: 1px solid rgba(242,189,99,0.13);
+            color: #B0B9C9;
+            font-size: 9px;
+            font-weight: 800;
+            opacity: 0;
+            transform: translateX(5px);
+            transition: opacity .3s ease, transform .3s ease;
+        }
+        .hero-visual:hover .hero-assistant-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        @keyframes botFloat {
+            0%,100% { transform: translate3d(0,0,0) rotate(0); }
+            50% { transform: translate3d(0,-8px,0) rotate(3deg); }
+        }
+        @keyframes botRing {
+            0%,100% { transform: scale(.96); opacity: .3; }
+            50% { transform: scale(1.07); opacity: .85; }
         }
 
         .hero-visual::before,
@@ -821,6 +1015,11 @@
         /* ===== RESPONSIVE ===== */
 
         @media (max-width: 900px) {
+            .nav-container { border-radius: 17px; }
+            .hero-visual { flex-basis: 100%; min-height: 510px; }
+            .hero-float-card.top { right: 2%; }
+            .hero-float-card.bottom { left: 2%; }
+            .hero-assistant { right: 3%; }
             .hero-visual::after { width: 360px; height: 360px; }
             .hero-visual::before { width: 300px; height: 300px; }
 
@@ -838,6 +1037,17 @@
         }
         @media (max-width: 600px) {
             body { padding: 0; }
+            .navbar { padding: 10px 10px; }
+            .nav-container { min-height: 52px; padding: 7px 8px; border-radius: 15px; }
+            .nav-logo { font-size: 17px; }
+            .hero-section { padding-top: 100px; }
+            .hero-trustline { justify-content: center; font-size: 9px; gap: 5px; }
+            .trust-chip { padding: 4px 7px; }
+            .hero-float-card { min-width: 126px; transform: scale(.9); }
+            .hero-float-card.top { top: 12%; right: -2%; }
+            .hero-float-card.bottom { bottom: 10%; left: -2%; }
+            .hero-assistant { right: 0; bottom: 5%; transform: scale(.9); }
+            .hero-assistant-label { display: none; }
             h1 { font-size: 30px; line-height: 1.25; }
             .sub-text { font-size: 14.5px; padding: 0 10px; }
             .section-title h2 { font-size: 26px; }
@@ -867,6 +1077,15 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+            .hero-float-card,
+            .hero-assistant,
+            .hero-orbit,
+            .hero-visual::before,
+            .hero-visual::after,
+            .nav-logo .icon::after,
+            .badge::after {
+                animation: none !important;
+            }
             .feature-card, .step-card, .stat-item, .download-section {
                 opacity: 1 !important;
                 transform: none !important;
@@ -913,15 +1132,38 @@
             </div>
             <h1 id="headline"></h1>
             <p class="sub-text" id="subText"></p>
+            <div class="hero-trustline" aria-label="SecurePath trust highlights">
+                <span class="trust-chip"><span class="mini-dot"></span><span id="trustOne">وضوح قبل القرار</span></span>
+                <span class="trust-chip"><span class="mini-dot"></span><span id="trustTwo">متابعة في مكان واحد</span></span>
+                <span class="trust-chip"><span class="mini-dot"></span><span id="trustThree">تجربة رقمية</span></span>
+            </div>
             <div class="cta-buttons">
                 <a href="wathiqati-app.html" class="btn-primary" id="ctaPrimary">🚀 ابدأ الآن مجاناً</a>
                 <a href="#download" class="btn-secondary" id="ctaSecondary">📥 تحميل التطبيق</a>
             </div>
+            <div class="cta-note" id="ctaNote">بدون تعقيد — ابدأ مجانًا واكتشف مسارك التأميني.</div>
         </div>
         <div class="hero-visual" id="heroVisual">
             <span class="hero-orbit one"></span>
             <span class="hero-orbit two"></span>
             <span class="hero-orbit three"></span>
+            <div class="hero-float-card top">
+                <span class="card-pulse"></span>
+                <span class="mini-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
+                </span>
+                <span><small id="heroCardTopLabel">حماية</small><strong id="heroCardTopValue">مؤشر حماية نشط</strong></span>
+            </div>
+            <div class="hero-float-card bottom">
+                <span class="mini-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2v20M17 6.5A5 5 0 0 0 12 4c-2.8 0-5 1.6-5 4s2.2 4 5 4 5 1.6 5 4-2.2 4-5 4a5 5 0 0 1-5-2.5"/><path d="M19 7h2M3 17h2"/></svg>
+                </span>
+                <span><small id="heroCardBottomLabel">مكافآت</small><strong id="heroCardBottomValue">+ نقاط يومية</strong></span>
+            </div>
+            <div class="hero-assistant" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="11" rx="3"/><path d="M9 7V5h6v2M12 2v3M9 12h.01M15 12h.01M9 16c1.7 1.2 3.3 1.2 6 0"/></svg>
+                <span class="hero-assistant-label" id="heroAssistantLabel">SecureBot يشرح لك الخطوات</span>
+            </div>
             <div class="phone-mockup" id="heroPhone">
                 <div class="phone-screen">
                     <div class="phone-header">
@@ -1091,6 +1333,15 @@
                 stat3Label: 'أقصى خصم بالنقاط',
                 ctaPrimary: '🚀 ابدأ الآن مجاناً',
                 ctaSecondary: '📥 تحميل التطبيق',
+                ctaNote: 'بدون تعقيد — ابدأ مجانًا واكتشف مسارك التأميني.',
+                trustOne: 'وضوح قبل القرار',
+                trustTwo: 'متابعة في مكان واحد',
+                trustThree: 'تجربة رقمية',
+                heroCardTopLabel: 'حماية',
+                heroCardTopValue: 'مؤشر حماية نشط',
+                heroCardBottomLabel: 'مكافآت',
+                heroCardBottomValue: '+ نقاط يومية',
+                heroAssistantLabel: 'SecureBot يشرح لك الخطوات',
                 navFeatures: 'المميزات',
                 navHow: 'كيف يعمل',
                 navDownload: 'تحميل التطبيق',
@@ -1126,6 +1377,15 @@
                 stat3Label: 'Max reward discount',
                 ctaPrimary: '🚀 Start Free Now',
                 ctaSecondary: '📥 Download App',
+                ctaNote: 'Simple, clear, and free to start your insurance journey.',
+                trustOne: 'Clarity before decisions',
+                trustTwo: 'Everything in one place',
+                trustThree: 'Digital experience',
+                heroCardTopLabel: 'Protection',
+                heroCardTopValue: 'Protection score active',
+                heroCardBottomLabel: 'Rewards',
+                heroCardBottomValue: '+ daily points',
+                heroAssistantLabel: 'SecureBot guides you through the steps',
                 navFeatures: 'Features',
                 navHow: 'How it Works',
                 navDownload: 'Download',
@@ -1192,6 +1452,15 @@
             setText('stat3Label', T.stat3Label);
             setHTML('ctaPrimary', T.ctaPrimary);
             setHTML('ctaSecondary', T.ctaSecondary);
+            setText('ctaNote', T.ctaNote);
+            setText('trustOne', T.trustOne);
+            setText('trustTwo', T.trustTwo);
+            setText('trustThree', T.trustThree);
+            setText('heroCardTopLabel', T.heroCardTopLabel);
+            setText('heroCardTopValue', T.heroCardTopValue);
+            setText('heroCardBottomLabel', T.heroCardBottomLabel);
+            setText('heroCardBottomValue', T.heroCardBottomValue);
+            setText('heroAssistantLabel', T.heroAssistantLabel);
             setText('navFeatures', T.navFeatures);
             setText('navHow', T.navHow);
             setText('navDownload', T.navDownload);
@@ -1256,6 +1525,26 @@
                 revealItems.forEach(function(item) { revealObserver.observe(item); });
             } else {
                 revealItems.forEach(function(item) { item.classList.add('is-visible'); });
+            }
+
+            // Active navigation follows the section currently in view.
+            var navMap = [
+                { link: document.getElementById('navFeatures'), section: document.getElementById('features') },
+                { link: document.getElementById('navHow'), section: document.getElementById('how-it-works') },
+                { link: document.getElementById('navDownload'), section: document.getElementById('download') }
+            ];
+            if ('IntersectionObserver' in window) {
+                var navObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (!entry.isIntersecting) return;
+                        navMap.forEach(function(item) {
+                            if (item.link) item.link.classList.toggle('active', item.section === entry.target);
+                        });
+                    });
+                }, { rootMargin: '-35% 0px -52% 0px', threshold: 0 });
+                navMap.forEach(function(item) {
+                    if (item.section) navObserver.observe(item.section);
+                });
             }
 
             // Lightweight desktop pointer parallax for the phone mockup.
