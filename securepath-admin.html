@@ -10,6 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/securepath-backend.js"></script>
 
   <style>
     /* ================================================================
@@ -3499,7 +3500,26 @@
     }
 
     async function verifyDocument(id, status) {
-      await updateDocument('documents', id, { verificationStatus: status, verifiedAt: firebase.firestore.FieldValue.serverTimestamp(), verifiedBy: APP_STATE.currentUser?.uid });
+      await updateDocument('documents', id, {
+        verificationStatus: status,
+        verifiedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        verifiedBy: APP_STATE.currentUser?.uid
+      });
+
+      // On approval, award the document points through the admin-authenticated
+      // Cloudflare Worker. Rejection never issues points.
+      if (status === 'approved' || status === 'verified') {
+        try {
+          const result = await securePathApiCall('/v1/document/verified', { docId: id });
+          if (result && result.points > 0) {
+            toast('✅ تم اعتماد المستند وإضافة ' + result.points + ' نقاط');
+          }
+        } catch (e) {
+          console.warn('Verified-document points request failed:', e);
+          toast('⚠️ تم اعتماد المستند، لكن تعذر تسجيل نقاطه الآن', true);
+        }
+      }
+
       await refreshCollection('documents');
       toast(status === 'approved' ? '✅ تم الاعتماد' : '✅ تم الرفض');
     }
