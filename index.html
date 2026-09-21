@@ -1707,10 +1707,10 @@
 
         var SECUREBOT_TARGETS = [
             { selector: '#ctaPrimary', target: '#ctaPrimary', section: null, tilt: -5 },
-            { selector: '#how-it-works .step-card:nth-child(1)', target: '#how-it-works', section: '#how-it-works', tilt: 4 },
-            { selector: '#features .feature-card:nth-child(1)', target: '#features', section: '#features', tilt: -4 },
+            { selector: '#heroPhone', target: '#heroPhone', section: '.hero-section', tilt: 4 },
+            { selector: '#how-it-works .step-card:nth-child(2)', target: '#how-it-works', section: '#how-it-works', tilt: -4 },
             { selector: '#features .feature-card:nth-child(2)', target: '#features', section: '#features', tilt: 4 },
-            { selector: '#download', target: '#download', section: '#download', tilt: -4 }
+            { selector: '#features .feature-card:nth-child(3)', target: '#features', section: '#features', tilt: -4 }
         ];
 
         var SECUREBOT_STEP = 0;
@@ -1865,7 +1865,7 @@
             moveSecureBotToTarget(false, SECUREBOT_STEP);
         }
 
-        function secureBotAdvance() {
+        function secureBotAdvance(fromUser) {
             var total = SECUREBOT_STEPS[LANDING_LANG].length;
             SECUREBOT_STEP = (SECUREBOT_STEP + 1) % total;
             renderSecureBotGuide();
@@ -1875,9 +1875,9 @@
             var rect = section ? section.getBoundingClientRect() : null;
             var visible = rect && rect.bottom > 80 && rect.top < window.innerHeight - 80;
 
-            // Clicking the bot may guide the user into the relevant section,
-            // but automatic cycling never hijacks the user's scroll position.
-            if (section && !visible) {
+            // A user click may smoothly bring the relevant section into view.
+            // Automatic tutorial rotation never takes control of the user's scroll position.
+            if (fromUser && section && !visible) {
                 section.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 window.setTimeout(function() {
                     moveSecureBotToTarget(true, SECUREBOT_STEP);
@@ -1936,16 +1936,18 @@
 
                     // Advance the tutorial without forcing the page to scroll.
                     window.setInterval(function() {
-                        secureBotAdvance();
+                        secureBotAdvance(false);
                     }, 5200);
                 }
 
-                secureBot.addEventListener('click', secureBotAdvance);
+                secureBot.addEventListener('click', function() {
+                    secureBotAdvance(true);
+                });
 
                 secureBot.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        secureBotAdvance();
+                        secureBotAdvance(true);
                     }
                 });
             }
