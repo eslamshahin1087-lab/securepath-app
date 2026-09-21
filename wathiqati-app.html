@@ -11920,7 +11920,6 @@ function hrT(key, vars) {
             var btn = document.getElementById('redeemConfirmBtn');
             if (btn) btn.disabled = true;
 
-            callSecurePoints({ event: 'noop' }).catch(function() {}); // no-op warmup avoided below
             securePathApiCall('/v1/redeem', { points: pts })
                 .then(function(result) {
                     return refreshPointsLocal().then(function() { return result; });
@@ -14078,21 +14077,29 @@ function hrT(key, vars) {
         }
 
         function uploadToCloudinary(file, onProgress) {
-            return new Promise(function(resolve, reject) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
-                xhr.upload.onprogress = function(e) { if (onProgress && e.lengthComputable) onProgress(Math.round(e.loaded / e.total * 100)); };
-                xhr.onload = function() {
-                    var res = null;
-                    try { res = JSON.parse(xhr.responseText); } catch (parseErr) {}
-                    if (xhr.status >= 200 && xhr.status < 300 && res && res.secure_url) resolve(res);
-                    else reject(new Error((res && res.error && res.error.message) || ('Cloudinary upload failed (' + xhr.status + ')')));
-                };
-                xhr.onerror = function() { reject(new Error('Network error during upload')); };
-                var fd = new FormData();
-                fd.append('file', file);
-                fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-                xhr.send(fd);
+            return securePathApiCall('/v1/cloudinary/sign', {}).then(function(sig) {
+                return new Promise(function(resolve, reject) {
+                    var xhr = new XMLHttpRequest();
+                    var uploadUrl = 'https://api.cloudinary.com/v1_1/' + sig.cloudName + '/auto/upload';
+                    xhr.open('POST', uploadUrl, true);
+                    xhr.upload.onprogress = function(e) {
+                        if (onProgress && e.lengthComputable) onProgress(Math.round(e.loaded / e.total * 100));
+                    };
+                    xhr.onload = function() {
+                        var res = null;
+                        try { res = JSON.parse(xhr.responseText); } catch (parseErr) {}
+                        if (xhr.status >= 200 && xhr.status < 300 && res && res.secure_url) resolve(res);
+                        else reject(new Error((res && res.error && res.error.message) || ('Cloudinary upload failed (' + xhr.status + ')')));
+                    };
+                    xhr.onerror = function() { reject(new Error('Network error during upload')); };
+                    var fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('api_key', sig.apiKey);
+                    fd.append('timestamp', String(sig.timestamp));
+                    fd.append('folder', sig.folder);
+                    fd.append('signature', sig.signature);
+                    xhr.send(fd);
+                });
             });
         }
 
