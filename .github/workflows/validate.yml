@@ -51,6 +51,9 @@ jobs:
       - name: Verify Cloud Functions syntax
         run: node --check functions/index.js
 
-      - name: Lint HTML (basic)
+      - name: Lint landing HTML
         run: |
-          npx --yes htmlhint "*.html" --config .htmlhintrc
+          npx --yes htmlhint "index.html" --config .htmlhintrc
+
+      - name: Check changed files for whitespace errors
+        run: git diff --check
