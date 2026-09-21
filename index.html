@@ -1018,6 +1018,23 @@
         }
         .footer .sep { color: var(--gold); margin: 0 8px; opacity: 0.6; }
 
+        .securebot-highlight {
+            position: relative;
+            z-index: 4;
+            border-color: rgba(242,189,99,0.72) !important;
+            box-shadow:
+                0 0 0 3px rgba(242,189,99,0.07),
+                0 18px 42px -18px rgba(242,189,99,0.42) !important;
+            animation: secureTargetPulse 1.8s ease-in-out infinite;
+        }
+        .btn-primary.securebot-highlight {
+            transform: translateY(-2px);
+        }
+        @keyframes secureTargetPulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(242,189,99,0.04), 0 18px 42px -18px rgba(242,189,99,0.28); }
+            50% { box-shadow: 0 0 0 6px rgba(242,189,99,0.10), 0 22px 48px -18px rgba(242,189,99,0.52); }
+        }
+
         /* ===== FLYING SECUREBOT GUIDE ===== */
         .securebot-guide {
             position: fixed;
@@ -1322,6 +1339,9 @@
             .securebot-guide {
                 animation: none !important;
                 transition: none !important;
+            }
+            .securebot-highlight {
+                animation: none !important;
             }
             .securebot-guide *,
             .securebot-guide::after {
@@ -1684,6 +1704,15 @@
                 'Explore offers and alerts, and manage your insurance journey in one place.'
             ]
         };
+
+        var SECUREBOT_TARGETS = [
+            { selector: '#ctaPrimary', target: '#ctaPrimary', section: null, tilt: -5 },
+            { selector: '#how-it-works .step-card:nth-child(1)', target: '#how-it-works', section: '#how-it-works', tilt: 4 },
+            { selector: '#features .feature-card:nth-child(1)', target: '#features', section: '#features', tilt: -4 },
+            { selector: '#features .feature-card:nth-child(2)', target: '#features', section: '#features', tilt: 4 },
+            { selector: '#download', target: '#download', section: '#download', tilt: -4 }
+        ];
+
         var SECUREBOT_STEP = 0;
 
         function detectInitialLanguage() {
@@ -1771,6 +1800,7 @@
             textEl.textContent = steps[SECUREBOT_STEP];
             stepEl.textContent = (SECUREBOT_STEP + 1) + ' / ' + steps.length;
             if (titleEl) titleEl.textContent = 'SecureBot';
+
             dotsEl.innerHTML = steps.map(function(_, i) {
                 return '<i class="' + (i === SECUREBOT_STEP ? 'active' : '') + '"></i>';
             }).join('');
@@ -1778,28 +1808,83 @@
             if (botEl) {
                 botEl.setAttribute(
                     'aria-label',
-                    (LANDING_LANG === 'ar' ? 'SecureBot — ' : 'SecureBot — ') + steps[SECUREBOT_STEP]
+                    'SecureBot — ' + steps[SECUREBOT_STEP]
                 );
             }
         }
 
-        function moveSecureBot() {
+        function getSecureBotTarget(index) {
+            var meta = SECUREBOT_TARGETS[index];
+            if (!meta) return null;
+            return document.querySelector(meta.target);
+        }
+
+        function moveSecureBotToTarget(force, index) {
             var botEl = document.getElementById('secureBotGuide');
-            if (!botEl) return;
+            var meta = SECUREBOT_TARGETS[index == null ? SECUREBOT_STEP : index];
+            if (!botEl || !meta) return;
 
-            var maxX = Math.max(72, window.innerWidth - 44);
-            var maxY = Math.max(140, window.innerHeight - 80);
-            var minX = Math.min(90, maxX - 120);
-            var minY = 150;
-            var x = minX + Math.random() * Math.max(90, maxX - minX);
-            var y = minY + Math.random() * Math.max(80, maxY - minY);
+            var target = getSecureBotTarget(index == null ? SECUREBOT_STEP : index);
+            if (!target) return;
 
-            var currentX = botEl._secureBotX || (window.innerWidth * 0.22);
-            var tilt = x >= currentX ? 4 : -4;
+            var rect = target.getBoundingClientRect();
+            var visible = rect.bottom > 90 && rect.top < window.innerHeight - 70;
+            if (!visible && !force && meta.section) {
+                return;
+            }
+
+            var padding = window.innerWidth < 601 ? 52 : 72;
+            var x = Math.min(
+                Math.max(rect.left + rect.width * 0.72, padding),
+                window.innerWidth - padding
+            );
+            var y = Math.min(
+                Math.max(rect.top + Math.min(rect.height * 0.24, 70), 120),
+                window.innerHeight - 92
+            );
+
+            // Keep the speech bubble away from the top edge.
+            if (y < 185) y = Math.min(window.innerHeight - 92, 205);
+
             botEl.style.left = x + 'px';
             botEl.style.top = y + 'px';
-            botEl.style.transform = 'translate3d(-50%, -50%, 0) rotate(' + tilt + 'deg)';
-            botEl._secureBotX = x;
+            botEl.style.transform = 'translate3d(-50%, -50%, 0) rotate(' + (meta.tilt || 0) + 'deg)';
+            botEl._secureBotTarget = meta.selector;
+
+            document.querySelectorAll('.securebot-highlight').forEach(function(el) {
+                el.classList.remove('securebot-highlight');
+            });
+            var highlight = document.querySelector(meta.selector);
+            if (highlight && visible) {
+                highlight.classList.add('securebot-highlight');
+            }
+        }
+
+        function moveSecureBot() {
+            // The bot now flies toward the element it is explaining.
+            moveSecureBotToTarget(false, SECUREBOT_STEP);
+        }
+
+        function secureBotAdvance() {
+            var total = SECUREBOT_STEPS[LANDING_LANG].length;
+            SECUREBOT_STEP = (SECUREBOT_STEP + 1) % total;
+            renderSecureBotGuide();
+
+            var meta = SECUREBOT_TARGETS[SECUREBOT_STEP];
+            var section = meta && meta.section ? document.querySelector(meta.section) : null;
+            var rect = section ? section.getBoundingClientRect() : null;
+            var visible = rect && rect.bottom > 80 && rect.top < window.innerHeight - 80;
+
+            // Clicking the bot may guide the user into the relevant section,
+            // but automatic cycling never hijacks the user's scroll position.
+            if (section && !visible) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                window.setTimeout(function() {
+                    moveSecureBotToTarget(true, SECUREBOT_STEP);
+                }, 650);
+            } else {
+                moveSecureBotToTarget(true, SECUREBOT_STEP);
+            }
         }
 
         function toggleLang() {
@@ -1841,27 +1926,33 @@
             var secureBot = document.getElementById('secureBotGuide');
             var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (secureBot) {
+                moveSecureBotToTarget(true, SECUREBOT_STEP);
+
                 if (!reducedMotion) {
-                    moveSecureBot();
-                    window.setTimeout(moveSecureBot, 350);
-                    window.setInterval(moveSecureBot, 4200);
+                    // Re-align with the explained element as the user scrolls/resizes.
+                    window.setInterval(function() {
+                        moveSecureBotToTarget(false, SECUREBOT_STEP);
+                    }, 900);
+
+                    // Advance the tutorial without forcing the page to scroll.
+                    window.setInterval(function() {
+                        secureBotAdvance();
+                    }, 5200);
                 }
 
-                secureBot.addEventListener('click', function() {
-                    SECUREBOT_STEP = (SECUREBOT_STEP + 1) % SECUREBOT_STEPS[LANDING_LANG].length;
-                    renderSecureBotGuide();
-                    if (!reducedMotion) moveSecureBot();
-                });
+                secureBot.addEventListener('click', secureBotAdvance);
 
                 secureBot.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        SECUREBOT_STEP = (SECUREBOT_STEP + 1) % SECUREBOT_STEPS[LANDING_LANG].length;
-                        renderSecureBotGuide();
-                        if (!reducedMotion) moveSecureBot();
+                        secureBotAdvance();
                     }
                 });
             }
+
+            window.addEventListener('resize', function() {
+                if (!reducedMotion) moveSecureBotToTarget(false, SECUREBOT_STEP);
+            }, { passive: true });
 
             // Navbar scroll effect
             var navbar = document.getElementById('navbar');
