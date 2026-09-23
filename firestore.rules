@@ -45,17 +45,31 @@ service cloud.firestore {
     }
 
     // ---------- identity / access ----------
-    match /clients/{clientId} {
-      allow read: if isOwner(clientId) || isAdmin();
+    function isSameClientRecord(data) {
+      return isSignedIn()
+        && (
+          data.get('uid', '') == request.auth.uid
+          || data.get('email', '') == request.auth.token.email
+        );
+    }
 
-      allow create: if isOwner(clientId)
+    match /clients/{clientId} {
+      // Backward compatibility for legacy client documents whose Firestore
+      // document ID is not the Firebase Auth UID. Access is still limited to
+      // the authenticated user's own UID/email; nothing becomes public.
+      allow read: if isOwner(clientId)
+        || (resource != null && isSameClientRecord(resource.data))
+        || isAdmin();
+
+      allow create: if (isOwner(clientId) || isSameClientRecord(request.resource.data))
         && request.resource.data.role == 'client'
         && request.resource.data.get('insuraPoints', 0) == 0
         && request.resource.data.get('insuraPointsLifetime', 0) == 0
         && request.resource.data.get('insuraPointsRedeemed', 0) == 0;
 
       allow update: if isAdmin()
-        || (isOwner(clientId) && !touchesProtectedFields());
+        || ((isOwner(clientId) || isSameClientRecord(resource.data))
+            && !touchesProtectedFields());
 
       allow delete: if isAdmin();
     }
