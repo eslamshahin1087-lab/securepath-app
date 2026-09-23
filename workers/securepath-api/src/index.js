@@ -653,15 +653,171 @@ async function handleDocumentVerified(env, uid, data, claims) {
     { pointsFlags: flags });
 }
 
-async function handleCloudinarySign(env) {
+function textInput(value, max, fallback = '') {
+  const v = String(value ?? fallback).trim();
+  if (v.length > max) throw new Error('Input is too long');
+  return v;
+}
+
+function requireIdempotencyKey(data) {
+  const key = textInput(data?.idempotencyKey, 120);
+  if (!/^[A-Za-z0-9._:-]{8,120}$/.test(key)) throw new Error('Invalid idempotency key');
+  return key;
+}
+
+async function stableActionId(uid, action, key) {
+  const hash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(uid + ':' + action + ':' + key)
+  );
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 40);
+}
+
+async function handleClientAction(env, uid, action, data) {
+  if (!uid) throw new Error('Authentication required');
+  const key = requireIdempotencyKey(data);
+  const id = await stableActionId(uid, action, key);
+  const now = new Date().toISOString();
+
+  if (action === 'appointment') {
+    const type = textInput(data?.type, 40, 'consultation');
+    const date = textInput(data?.date, 20);
+    const time = textInput(data?.time, 20);
+    const notes = textInput(data?.notes, 600);
+    if (!date || !time) throw new Error('Appointment date and time are required');
+    if (!['consultation', 'renewal', 'claim', 'review'].includes(type)) throw new Error('Invalid appointment type');
+
+    return commitWrites(env, [
+      makeCreateWrite('appointments', id, {
+        clientId: uid, type, date, time, notes, status: 'pending', createdAt: now, updatedAt: now
+      }),
+      makeCreateWrite('notifications', await stableActionId(uid, 'appointment-notification', key), {
+        clientId: uid,
+        title: 'حجز موعد جديد',
+        body: 'تم استلام طلب حجز الموعد وسيتم التواصل معك لتأكيده.',
+        type: 'appointment_request',
+        appointmentId: id,
+        read: false,
+        createdAt: now
+      })
+    ]).then(() => ({ ok: true, id }));
+  }
+
+  if (action === 'complaint') {
+    const type = textInput(data?.type, 40);
+    const subject = textInput(data?.subject, 180);
+    const details = textInput(data?.details, 2000);
+    const policyNumber = textInput(data?.policyNumber, 100);
+    if (!type || !subject || !details) throw new Error('Complaint fields are required');
+
+    const leadId = await stableActionId(uid, 'complaint-lead', key);
+    return commitWrites(env, [
+      makeCreateWrite('complaints', id, {
+        clientId: uid, type, subject, details, policyNumber,
+        status: 'pending', createdAt: now, updatedAt: now
+      }),
+      makeCreateWrite('notifications', await stableActionId(uid, 'complaint-notification', key), {
+        clientId: uid,
+        title: 'تم استلام الشكوى',
+        body: 'تم استلام شكواك وسيتم التعامل معها ومتابعتها من فريق SecurePath.',
+        type: 'complaint',
+        complaintId: id,
+        read: false,
+        createdAt: now
+      }),
+      makeCreateWrite('leads', leadId, {
+        clientId: uid,
+        source: 'complaint',
+        message: subject,
+        complaintId: id,
+        status: 'new',
+        createdAt: now,
+        updatedAt: now
+      })
+    ]).then(() => ({ ok: true, id }));
+  }
+
+  if (action === 'renewal') {
+    const policyId = textInput(data?.policyId, 128);
+    if (!policyId) throw new Error('Policy is required');
+    const policy = await getDoc(env, 'policies', policyId);
+    if (!policy || policy.clientId !== uid) throw new Error('Policy not found');
+
+    const requestNumber = 'SP-R-' + new Date().getFullYear() + '-' + id.slice(0, 8).toUpperCase();
+    return commitWrites(env, [
+      makeCreateWrite('renewals', id, {
+        clientId: uid,
+        policyId,
+        policyNumber: textInput(policy.policyNumber, 100),
+        policyType: textInput(policy.type || policy.typeName, 100),
+        company: textInput(policy.company || policy.companyName, 160),
+        currentStatus: textInput(policy.status, 40, 'active'),
+        renewalStatus: 'pending',
+        requestedBy: 'client',
+        requestNumber,
+        createdAt: now,
+        updatedAt: now
+      }),
+      makeCreateWrite('notifications', await stableActionId(uid, 'renewal-notification', key), {
+        clientId: uid,
+        title: 'طلب تجديد الوثيقة',
+        body: 'تم استلام طلب تجديد الوثيقة وسيتم التواصل معك.',
+        type: 'renewal_request',
+        renewalId: id,
+        policyId,
+        read: false,
+        createdAt: now
+      })
+    ]).then(() => ({ ok: true, id, requestNumber }));
+  }
+
+  if (action === 'advice') {
+    const message = textInput(data?.message, 1200);
+    if (!message) throw new Error('Message is required');
+
+    return commitWrites(env, [
+      makeCreateWrite('messages', id, {
+        clientId: uid,
+        uid,
+        sender: 'client',
+        text: message,
+        type: 'advice_request',
+        createdAt: now,
+        readByAdmin: false
+      }),
+      makeCreateWrite('notifications', await stableActionId(uid, 'advice-notification', key), {
+        clientId: uid,
+        title: 'طلب نصيحة جديد',
+        body: 'تم إرسال طلب النصيحة وسيتم الرد عليك من فريق SecurePath.',
+        type: 'advice_request',
+        read: false,
+        createdAt: now
+      })
+    ]).then(() => ({ ok: true, id }));
+  }
+
+  throw new Error('Unknown client action');
+}
+
+async function handleCloudinarySign(env, uid) {
   const secret = String(env.CLOUDINARY_API_SECRET || '');
   if (!secret) throw new Error('CLOUDINARY_API_SECRET is not configured');
+  if (!uid) throw new Error('Authenticated user required');
+
   const timestamp = Math.floor(Date.now() / 1000);
-  const folder = 'securepath_docs';
-  const signatureBase = 'folder=' + folder + '&timestamp=' + timestamp;
+  const folder = 'securepath_docs/' + uid;
+  const publicId = 'doc_' + Date.now() + '_' + crypto.randomUUID().replace(/-/g, '').slice(0, 12);
+  const signatureBase = 'folder=' + folder + '&public_id=' + publicId + '&timestamp=' + timestamp;
   const hash = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(signatureBase + secret));
   const signature = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return { cloudName: CLOUDINARY_CLOUD_NAME, apiKey: CLOUDINARY_API_KEY, timestamp, folder, signature };
+  return {
+    cloudName: CLOUDINARY_CLOUD_NAME,
+    apiKey: CLOUDINARY_API_KEY,
+    timestamp,
+    folder,
+    publicId,
+    signature
+  };
 }
 
 async function route(request, env) {
@@ -679,7 +835,11 @@ async function route(request, env) {
 
   if (path === '/v1/points') return json(await handlePoints(env, uid, data));
   if (path === '/v1/redeem') return json(await handleRedeem(env, uid, data));
-  if (path === '/v1/cloudinary/sign') return json(await handleCloudinarySign(env));
+  if (path === '/v1/cloudinary/sign') return json(await handleCloudinarySign(env, uid));
+  if (path === '/v1/client/appointment') return json(await handleClientAction(env, uid, 'appointment', data));
+  if (path === '/v1/client/complaint') return json(await handleClientAction(env, uid, 'complaint', data));
+  if (path === '/v1/client/renewal') return json(await handleClientAction(env, uid, 'renewal', data));
+  if (path === '/v1/client/advice') return json(await handleClientAction(env, uid, 'advice', data));
   if (path === '/v1/document/verified') return json(await handleDocumentVerified(env, uid, data, claims));
   return json({ ok: false, error: 'Not found' }, 404);
 }
