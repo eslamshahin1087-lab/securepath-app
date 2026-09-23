@@ -10555,16 +10555,21 @@ function hrT(key, vars) {
         function isVerificationExemptUser(user) {
             if (!user) return Promise.resolve(false);
 
-            var email = String(user.email || '').trim().toLowerCase();
-            var at = email.lastIndexOf('@');
-            var legacyDomainExempt = at > 0 && VERIFICATION_EXEMPT_DOMAINS.indexOf(email.slice(at + 1)) !== -1;
+            // Refresh the Firebase user first so emailVerified is current.
+            // Then force-refresh the ID token so newly assigned
+            // securepathTest claims are visible immediately.
+            return user.reload().catch(function() {}).then(function() {
+                var email = String(user.email || '').trim().toLowerCase();
+                var at = email.lastIndexOf('@');
+                var legacyDomainExempt = at > 0 && VERIFICATION_EXEMPT_DOMAINS.indexOf(email.slice(at + 1)) !== -1;
 
-            if (legacyDomainExempt) return Promise.resolve(true);
+                if (legacyDomainExempt) return true;
 
-            return user.getIdTokenResult(false).then(function(result) {
-                return result && result.claims && result.claims.securepathTest === true;
-            }).catch(function() {
-                return false;
+                return user.getIdTokenResult(true).then(function(result) {
+                    return result && result.claims && result.claims.securepathTest === true;
+                }).catch(function() {
+                    return false;
+                });
             });
         }
 
