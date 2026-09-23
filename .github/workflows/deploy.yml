@@ -27,7 +27,9 @@ jobs:
         run: |
           mkdir -p _site
           rsync -av --exclude='.git' --exclude='.github' --exclude='functions' \
-                --exclude='scripts' --exclude='node_modules' ./ _site/
+                --exclude='workers' --exclude='scripts' --exclude='node_modules' \
+                --exclude='securepath-admin.html' --exclude='test-firebase.html' \
+                --exclude='securepath-firebase-migration.js' ./ _site/
           touch _site/.nojekyll
 
       - name: Upload artifact

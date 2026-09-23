@@ -35,10 +35,10 @@
 |                       |                                                                 |
 | --------------------- | --------------------------------------------------------------- |
 | **النوع**             | Progressive Web App (PWA) — بدون إطار عمل (Vanilla JS/HTML/CSS) |
-| **قاعدة البيانات**    | Firebase Firestore                                              |
+| **قاعدة البيانات**    | Firebase Firestore مع قواعد وصول، وSecurePath Worker كمالك للعمليات الحساسة |
 | **المصادقة**          | Firebase Authentication (بريد إلكتروني/كلمة مرور)               |
-| **تخزين المستندات**   | Cloudinary (Unsigned Upload Presets)                            |
-| **الاستضافة**         | GitHub Pages (رابط GitHub Pages الافتراضي — بدون دومين مخصص)    |
+| **تخزين المستندات**   | Cloudinary عبر توقيع server-side من SecurePath Worker |
+| **الاستضافة**        | GitHub Pages للواجهة/PWA، مع SecurePath Worker كطبقة API موثوقة |
 | **النشر على أندرويد** | APK مبني من الـ PWA — يُوزَّع عبر GitHub Releases (غير متتبَّع في المستودع نفسه) |
 | **اللغة**             | عربي (افتراضي، RTL) / إنجليزي — تبديل فوري داخل التطبيق         |
 

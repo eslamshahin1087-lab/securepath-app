@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Corporate HR Hub: browser-side Excel analysis -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <!-- SheetJS is lazy-loaded only when Corporate HR Hub is opened. -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js">
@@ -2182,6 +2182,42 @@
             content: '';
             display: block;
         }
+
+        /* ===== NEXT ACTION ===== */
+        .next-action-card {
+            margin: 14px 16px 4px;
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(242,189,99,.28);
+            background: linear-gradient(135deg, rgba(242,189,99,.12), rgba(14,42,92,.05));
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+        .next-action-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: rgba(242,189,99,.48); }
+        .next-action-card .na-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--gradient-gold);
+            color: var(--navy);
+            flex: 0 0 44px;
+            box-shadow: 0 12px 24px -12px rgba(242,189,99,.75);
+        }
+        .next-action-card .na-copy { min-width: 0; flex: 1; }
+        .next-action-card .na-kicker { display:block; font-size:9px; font-weight:900; color:var(--muted); letter-spacing:.4px; margin-bottom:2px; }
+        .next-action-card .na-title { display:block; font-size:13px; font-weight:900; color:var(--slate); line-height:1.45; }
+        .next-action-card .na-sub { display:block; font-size:10px; color:var(--muted); line-height:1.55; margin-top:2px; }
+        .next-action-card .na-cta { flex:0 0 auto; font-size:10px; font-weight:900; color:var(--navy-2); background:var(--card); border:1px solid var(--line); padding:7px 9px; border-radius:10px; }
+        html.dark-mode .next-action-card { background: linear-gradient(135deg, rgba(242,189,99,.10), rgba(255,255,255,.02)); }
+        html.dark-mode .next-action-card .na-cta { color: var(--gold-2); background: #141A28; border-color: #2A3344; }
 
         /* ===== QUICK ACCESS ===== */
         .quick-section {
@@ -6756,6 +6792,16 @@ html.dark-mode .hr-control-value{color:var(--gold)}
                 </div>
             </div>
 
+            <div class="next-action-card" id="nextActionCard" role="button" tabindex="0" aria-live="polite">
+                <div class="na-icon icon-gold"><span class="app-icon animated float"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><path d="m17 7 4 5-4 5"/></svg></span></div>
+                <div class="na-copy">
+                    <span class="na-kicker" id="nextActionKicker">WHAT'S NEXT</span>
+                    <span class="na-title" id="nextActionTitle">جاري تحديد الخطوة التالية…</span>
+                    <span class="na-sub" id="nextActionSub">سأقترح عليك أهم إجراء مفيد الآن.</span>
+                </div>
+                <span class="na-cta" id="nextActionCta">ابدأ</span>
+            </div>
+
             <div class="points-widget home-points" id="pointsWidget" onclick="showScreen('pointsHub')">
                 <div class="points-widget-top">
                     <div class="points-widget-title">
@@ -7330,7 +7376,7 @@ html.dark-mode .hr-control-value{color:var(--gold)}
                 </div>
 
                 <div class="field"><label id="profileEditFullNameLabel">الاسم الرباعي <span class="required">*</span></label><input type="text" id="editFullName" placeholder="الاسم الكامل"></div>
-                <div class="field"><label id="profileEditEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="editEmail" placeholder="name@domain.com"></div>
+                <div class="field"><label id="profileEditEmailLabel">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="editEmail" readonly aria-readonly="true" title="يتم إدارة البريد من حساب تسجيل الدخول" placeholder="name@domain.com"></div>
                 <div class="field"><label id="profileEditPhoneLabel">رقم الهاتف <span class="required">*</span></label><input type="tel" id="editPhone" placeholder="01012345678"></div>
                 <div class="field"><label id="profileEditOccupationLabel">الوظيفة / المهنة <span class="required">*</span></label><input type="text" id="editOccupation" placeholder="مهندس، طبيب، محاسب"></div>
                 <div class="field"><label id="profileEditClientTypeLabel">نوع العميل</label>
@@ -9999,6 +10045,20 @@ function hrT(key, vars) {
         // ============================================================ //
         // SCREEN NAVIGATION                                             //
         // ============================================================ //
+        function ensureXLSX() {
+            if (window.XLSX) return Promise.resolve(window.XLSX);
+            if (window.__securepathXLSXPromise) return window.__securepathXLSXPromise;
+            window.__securepathXLSXPromise = new Promise(function(resolve, reject) {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+                s.async = true;
+                s.onload = function(){ resolve(window.XLSX); };
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+            return window.__securepathXLSXPromise;
+        }
+
         function showScreen(id) {
             var target = document.getElementById(id);
             if (!target) return;
@@ -10038,7 +10098,7 @@ function hrT(key, vars) {
             if (id === 'referral') renderReferralScreen();
             if (id === 'pointsHub') renderPointsHub();
             if (id === 'corporateHRHub') {
-                loadCorporateHRData();
+                ensureXLSX().then(function(){ loadCorporateHRData(); }).catch(function(e){ console.warn('SheetJS lazy-load failed', e); loadCorporateHRData(); });
                 setTimeout(function(){ try { updateHRTexts(); } catch(e) {} }, 0);
             }
             if (id === 'login') {
@@ -10475,13 +10535,16 @@ function hrT(key, vars) {
         // SECURITY NOTE: only ever list domains you fully control
         // end-to-end. Anyone who signs up with an email ending in one
         // of these domains skips real email verification automatically.
-        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
-
-        function isVerificationExemptEmail(email) {
-            var e = String(email || '').trim().toLowerCase();
-            var at = e.lastIndexOf('@');
-            if (at < 0) return false;
-            return VERIFICATION_EXEMPT_DOMAINS.indexOf(e.slice(at + 1)) !== -1;
+        // Production access must never rely on a free-form email domain.
+        // Test/placeholder accounts are explicitly marked by the server-side
+        // migration tool with the securepathTest custom claim.
+        function isVerificationExemptUser(user) {
+            if (!user) return Promise.resolve(false);
+            return user.getIdTokenResult(false).then(function(result) {
+                return result && result.claims && result.claims.securepathTest === true;
+            }).catch(function() {
+                return false;
+            });
         }
 
         // SECURITY: shared by both the manual-login flow (finishClientLogin)
@@ -10533,10 +10596,12 @@ function hrT(key, vars) {
         // a persisted session is not itself proof the account was ever
         // allowed through the manual-login verification gate.
         function resumeClientSession(user) {
-            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
-                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
-            }
-            return resolveClientProfileForUser(user).then(function(profile) {
+            return isVerificationExemptUser(user).then(function(exempt) {
+                if (!user.emailVerified && !exempt) {
+                    return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
+                }
+                return resolveClientProfileForUser(user);
+            }).then(function(profile) {
                 STATE.userData = Object.assign({}, profile.data || {});
                 STATE.currentUser = { uid: user.uid, name: displayClientName(STATE.userData, (user.email || '').split('@')[0]), email: user.email || STATE.userData.email || STATE.userData.loginEmail || '' };
                 if (STATE.userData.language === 'ar' || STATE.userData.language === 'en') STATE.language = STATE.userData.language;
@@ -10548,10 +10613,12 @@ function hrT(key, vars) {
         function finishClientLogin(credential, identifier) {
             var user = credential && credential.user;
             if (!user) return Promise.reject({ code: 'auth/no-user', message: 'Firebase did not return a user.' });
-            if (!user.emailVerified && !isVerificationExemptEmail(user.email)) {
-                return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
-            }
-            return resolveClientProfileForUser(user).then(function(profile) {
+            return isVerificationExemptUser(user).then(function(exempt) {
+                if (!user.emailVerified && !exempt) {
+                    return Promise.reject({ code: 'auth/email-not-verified', message: 'Please verify your email address before logging in.' });
+                }
+                return resolveClientProfileForUser(user);
+            }).then(function(profile) {
                 var name = verifyClientIdentity(profile, user, identifier);
                 STATE.userData = Object.assign({}, profile.data || {});
                 STATE.currentUser = { uid: user.uid, name: name, email: user.email || STATE.userData.email || STATE.userData.loginEmail || '' };
@@ -10673,20 +10740,24 @@ function hrT(key, vars) {
                 return db.collection('clients').doc(cred.user.uid).set(data, { merge: true }).then(function() { return cred; });
             }).then(function(cred) {
                 if (refCode) {
-                    db.collection('leads').add({
-                        source: 'referral', status: 'new', referredCode: refCode,
-                        clientId: cred.user.uid, clientName: fullName, phone: phone,
-                        message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق دعوة' : 'New signup via referral',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    securePathApiCall('/v1/client/lead', {
+                        idempotencyKey: makeActionKey('signup-referral'),
+                        source: 'referral',
+                        details: {
+                            referredCode: refCode,
+                            message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق دعوة' : 'New signup via referral'
+                        }
                     }).catch(function() {});
                 }
                 if (STATE.offerReferralId) {
-                    db.collection('leads').add({
-                        source: 'offer_referral', status: 'new', offerId: STATE.offerReferralId,
-                        offerName: STATE.offerReferralName || '',
-                        clientId: cred.user.uid, clientName: fullName, phone: phone,
-                        message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق عرض' : 'New signup via offer referral',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    securePathApiCall('/v1/client/lead', {
+                        idempotencyKey: makeActionKey('signup-offer'),
+                        source: 'offer_referral',
+                        details: {
+                            offerId: STATE.offerReferralId,
+                            offerName: STATE.offerReferralName || '',
+                            message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق عرض' : 'New signup via offer referral'
+                        }
                     }).catch(function() {});
                     try {
                         sessionStorage.removeItem('SecurePath_offer_ref');
@@ -10878,8 +10949,8 @@ function hrT(key, vars) {
                 succ = document.getElementById('forgotSuccess');
             err.style.display = 'none';
             succ.style.display = 'none';
-            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-                err.textContent = STATE.language === 'ar' ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email';
+            if (!email) {
+                err.textContent = STATE.language === 'ar' ? 'تعذر تحديد البريد المرتبط بالحساب.' : 'Unable to determine the account email.';
                 err.style.display = 'block';
                 return;
             }
@@ -11007,7 +11078,7 @@ function hrT(key, vars) {
 
         function saveProfile() {
             var fullName = document.getElementById('editFullName').value.trim();
-            var email = document.getElementById('editEmail').value.trim();
+            var email = (STATE.currentUser && STATE.currentUser.email) || '';
             var phone = document.getElementById('editPhone').value.trim();
             var occupation = document.getElementById('editOccupation').value.trim();
             var clientType = document.getElementById('editClientType').value;
@@ -11030,7 +11101,6 @@ function hrT(key, vars) {
             }
             var updates = {
                 fullName: fullName,
-                email: email,
                 phone: phone,
                 occupation: occupation,
                 clientType: clientType,
@@ -11045,7 +11115,7 @@ function hrT(key, vars) {
             db.collection('clients').doc(STATE.currentUser.uid).set(updates, { merge: true }).then(function() {
                 STATE.userData = Object.assign({}, STATE.userData, updates);
                 STATE.currentUser.name = fullName;
-                STATE.currentUser.email = email;
+                STATE.currentUser.email = STATE.currentUser.email;
                 updateUserUI(STATE.userData);
                 hideLoading('profileSaveBtn');
                 succ.textContent = STATE.language === 'ar' ? '✅ تم تحديث الملف الشخصي بنجاح' : '✅ Profile updated successfully';
@@ -11147,26 +11217,21 @@ function hrT(key, vars) {
                 err.style.display = 'block';
                 return;
             }
-            var apptData = {
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name,
+            showLoading('appointmentBtn', STATE.language === 'ar' ? 'جاري الحجز...' : 'Booking...');
+            securePathApiCall('/v1/client/appointment', {
+                idempotencyKey: makeActionKey('appointment'),
                 type: type,
                 date: date,
                 time: time,
-                notes: notes,
-                status: 'pending',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            showLoading('appointmentBtn', STATE.language === 'ar' ? 'جاري الحجز...' : 'Booking...');
-            db.collection('appointments').add(apptData).then(function(ref) {
+                notes: notes
+            }).then(function(result) {
                 hideLoading('appointmentBtn');
                 closeModal('newAppointmentModal');
                 alert(STATE.language === 'ar' ? '✅ تم حجز الموعد بنجاح' : '✅ Appointment booked successfully');
-                STATE.appointments.push({ id: ref.id, ...apptData });
-                renderAppointments();
+                return loadUserData(STATE.currentUser.uid);
             }).catch(function(e) {
                 hideLoading('appointmentBtn');
-                err.textContent = (STATE.language === 'ar' ? 'فشل حجز الموعد: ' : 'Failed to book appointment: ') + friendlyFirebaseError(e);
+                err.textContent = (STATE.language === 'ar' ? 'فشل حجز الموعد: ' : 'Failed to book appointment: ') + (e.message || friendlyFirebaseError(e));
                 err.style.display = 'block';
             });
         }
@@ -12075,6 +12140,83 @@ function hrT(key, vars) {
             });
         }
 
+        function renderNextAction() {
+            var card = document.getElementById('nextActionCard');
+            if (!card || !STATE.currentUser) return;
+
+            var lang = STATE.language || 'ar';
+            var uid = STATE.currentUser.uid;
+            var pol = (STATE.policies || []).filter(function(p) { return p.clientId === uid; });
+            var docs = (STATE.documents || []).filter(function(d) { return d.clientId === uid; });
+            var expiring = pol.filter(function(p) { var d = daysUntil(p.endDate); return d >= 0 && d <= RENEWAL_WINDOW_DAYS; })
+                .sort(function(a,b) { return daysUntil(a.endDate) - daysUntil(b.endDate); })[0];
+            var pendingDoc = docs.find(function(d) {
+                var s = String(d.verificationStatus || d.reviewStatus || '').toLowerCase();
+                return s === 'pending' || s === 'submitted' || s === 'under_review';
+            });
+            var verified = docs.filter(function(d) {
+                var s = String(d.verificationStatus || '').toLowerCase();
+                return s === 'approved' || s === 'verified';
+            });
+            var calc = calculateProtectionScore(STATE.userData || {}, pol, verified);
+            var profileComplete = ['fullName','birthDate','gender','phone','occupation','clientType'].every(function(k) {
+                return String((STATE.userData || {})[k] || '').trim() !== '';
+            });
+
+            var action = null;
+            if (expiring) {
+                var days = daysUntil(expiring.endDate);
+                action = {
+                    title: lang === 'ar' ? 'جدّد وثيقتك قبل موعد الاستحقاق' : 'Renew your policy before it expires',
+                    sub: lang === 'ar' ? ('وثيقة ' + (expiring.policyNumber || expiring.type || 'التأمين') + ' تنتهي خلال ' + days + ' يوم.') : ('Policy ' + (expiring.policyNumber || expiring.type || 'insurance') + ' expires in ' + days + ' days.'),
+                    cta: lang === 'ar' ? 'جدّد الآن' : 'Renew now',
+                    run: function(){ requestRenewalQuote(expiring.id); }
+                };
+            } else if (pendingDoc) {
+                action = {
+                    title: lang === 'ar' ? 'تابع مستندك قيد المراجعة' : 'Check your document review',
+                    sub: lang === 'ar' ? 'يوجد مستند أرسلته ولم يُعتمد بعد.' : 'You have a document waiting for review.',
+                    cta: lang === 'ar' ? 'عرض المستندات' : 'View documents',
+                    run: function(){ showScreen('documents'); }
+                };
+            } else if (!profileComplete) {
+                action = {
+                    title: lang === 'ar' ? 'أكمل ملفك الشخصي' : 'Complete your profile',
+                    sub: lang === 'ar' ? 'إكمال البيانات يجعل تقييم الحماية والتوصيات أدق.' : 'A complete profile improves protection scoring and recommendations.',
+                    cta: lang === 'ar' ? 'أكمل الآن' : 'Complete now',
+                    run: function(){ showScreen('profileEdit'); }
+                };
+            } else if (calc.score < 56) {
+                action = {
+                    title: lang === 'ar' ? 'ابدأ تقييم الحماية الشامل' : 'Run your full protection assessment',
+                    sub: lang === 'ar' ? 'للتعرف على أهم فجوات التغطية لديك.' : 'See the most important gaps in your protection.',
+                    cta: lang === 'ar' ? 'ابدأ التقييم' : 'Start assessment',
+                    run: function(){ runFullAssessment(); }
+                };
+            } else if (!pol.length) {
+                action = {
+                    title: lang === 'ar' ? 'أضف وثائقك الحالية' : 'Add your current policies',
+                    sub: lang === 'ar' ? 'ابدأ ببناء ملف تأميني موحد داخل SecurePath.' : 'Build your unified insurance profile in SecurePath.',
+                    cta: lang === 'ar' ? 'ابدأ الآن' : 'Get started',
+                    run: function(){ openUploadDocModal(); }
+                };
+            } else {
+                action = {
+                    title: lang === 'ar' ? 'اكسب المزيد من نقاط الأمان' : 'Earn more InsuraPoints',
+                    sub: lang === 'ar' ? 'استخدم العادات الآمنة والميزات المتاحة داخل التطبيق.' : 'Use safe habits and available in-app actions.',
+                    cta: lang === 'ar' ? 'شاهد النقاط' : 'View points',
+                    run: function(){ showScreen('pointsHub'); }
+                };
+            }
+
+            setText('nextActionKicker', lang === 'ar' ? 'ماذا بعد؟' : 'WHAT\'S NEXT');
+            setText('nextActionTitle', action.title);
+            setText('nextActionSub', action.sub);
+            setText('nextActionCta', action.cta);
+            card.onclick = function(){ try { action.run(); } catch(e) { console.warn('Next action failed', e); } };
+            card.onkeydown = function(e){ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } };
+        }
+
         function renderAll() {
             if (!STATE.currentUser) return;
             var uid = STATE.currentUser.uid,
@@ -12091,6 +12233,7 @@ function hrT(key, vars) {
             setText('statActiveCount', active.length);
             setText('statExpiringCount', pol.filter(function(p) { var d = daysUntil(p.endDate); return d > 0 && d <= RENEWAL_WINDOW_DAYS; }).length);
             setText('statDocsCount', verified.length);
+            renderNextAction();
             renderPoliciesList('homePoliciesList', pol.slice(0, 2));
             renderPoliciesList('fullPoliciesList', pol);
             renderProductsList();
@@ -12428,17 +12571,17 @@ function hrT(key, vars) {
 
         function logLead(source, details) {
             if (!STATE.currentUser) return Promise.resolve();
-            var name = displayClientName(STATE.userData || {}, (STATE.currentUser.email || '').split('@')[0]);
-            var payload = Object.assign({
-                clientId: STATE.currentUser.uid,
-                clientName: name || '—',
-                phone: (STATE.userData && STATE.userData.phone) || '',
+            var safeDetails = Object.assign({}, details || {});
+            delete safeDetails.clientId;
+            delete safeDetails.clientName;
+            delete safeDetails.phone;
+            delete safeDetails.createdAt;
+            delete safeDetails.updatedAt;
+            return securePathApiCall('/v1/client/lead', {
+                idempotencyKey: makeActionKey('lead'),
                 source: source,
-                status: 'new',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, details || {});
-            return db.collection('leads').add(payload).catch(function(e) { console.warn('Lead log failed', e); });
+                details: safeDetails
+            }).catch(function(e) { console.warn('Lead log failed', e); });
         }
 
         function openBrokerWhatsApp(message, leadSource, leadDetails) {
@@ -12534,21 +12677,13 @@ function hrT(key, vars) {
             }
 
             showLoading('submitComplaintBtn', STATE.language === 'ar' ? 'جاري الإرسال...' : 'Submitting...');
-            var complaintData = {
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name,
-                clientEmail: STATE.currentUser.email || '',
-                clientPhone: (STATE.userData && STATE.userData.phone) || '',
+            securePathApiCall('/v1/client/complaint', {
+                idempotencyKey: makeActionKey('complaint'),
                 type: type,
                 subject: subject,
                 details: details,
-                policyNumber: policy || '',
-                status: 'pending',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection('complaints').add(complaintData).then(function(ref) {
+                policyNumber: policy
+            }).then(function() {
                 hideLoading('submitComplaintBtn');
                 succ.textContent = getText('complaintSuccess');
                 succ.style.display = 'block';
@@ -12556,24 +12691,13 @@ function hrT(key, vars) {
                 document.getElementById('complaintDetails').value = '';
                 document.getElementById('complaintPolicy').value = '';
                 updateComplaintCharCount();
-                logLead('complaint', { complaintType: type, subject: subject, complaintId: ref.id });
-                db.collection('notifications').add({
-                    clientId: STATE.currentUser.uid,
-                    clientName: STATE.currentUser.name,
-                    title: STATE.language === 'ar' ? '📩 شكوى جديدة من ' + STATE.currentUser.name : '📩 New complaint from ' + STATE.currentUser.name,
-                    body: STATE.language === 'ar' ? 'نوع: ' + type + ' | الموضوع: ' + subject : 'Type: ' + type + ' | Subject: ' + subject,
-                    type: 'complaint',
-                    complaintId: ref.id,
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(function() {});
                 setTimeout(function() {
                     succ.style.display = 'none';
                     closeModal('complaintsModal');
                 }, 4000);
             }).catch(function(e) {
                 hideLoading('submitComplaintBtn');
-                err.textContent = getText('complaintErrorGeneric') + ' (' + friendlyFirebaseError(e) + ')';
+                err.textContent = getText('complaintErrorGeneric') + ' (' + (e.message || friendlyFirebaseError(e)) + ')';
                 err.style.display = 'block';
             });
         }
@@ -12692,38 +12816,16 @@ function hrT(key, vars) {
 
         function createRenewalRequest(policy) {
             if (!STATE.currentUser || !policy) return Promise.reject(new Error('Invalid renewal request'));
-            var req = {
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name || '',
-                policyId: policy.id || '',
-                policyNumber: policy.policyNumber || '',
-                policyType: policy.type || policy.typeName || '',
-                company: policy.company || policy.companyName || '',
-                currentStatus: policy.status || 'active',
-                renewalStatus: 'pending',
-                requestedBy: 'client',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            return db.collection('renewals').add(req).then(function(ref) {
-                return db.collection('notifications').add({
-                    clientId: STATE.currentUser.uid,
-                    clientName: STATE.currentUser.name || '',
-                    title: STATE.language === 'ar' ? 'طلب تجديد الوثيقة' : 'Policy Renewal Request',
-                    body: STATE.language === 'ar' ? 'تم استلام طلب تجديد الوثيقة رقم ' + (policy.policyNumber || '--') + ' وسيتم التواصل معك.' :
-                        'Renewal request received for policy ' + (policy.policyNumber || '--') + '.',
-                    type: 'renewal_request',
-                    renewalId: ref.id,
-                    policyId: policy.id || '',
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+            return securePathApiCall('/v1/client/renewal', {
+                idempotencyKey: makeActionKey('renewal'),
+                policyId: policy.id || ''
+            }).then(function(result) {
+                maybeAwardRenewalPoints(policy.id || '');
+                return result;
             });
         }
 
-        // ============================================================ //
-        // RENEWAL NOTIFICATIONS                                         //
-        // ============================================================ //
+
         function renewalReminderKey(policy) { return 'renewal_45_' + policy.id + '_' + String(policy.endDate || ''); }
 
         function ensureRenewalNotifications(uid) {
@@ -14097,10 +14199,15 @@ function hrT(key, vars) {
                     fd.append('api_key', sig.apiKey);
                     fd.append('timestamp', String(sig.timestamp));
                     fd.append('folder', sig.folder);
+                    fd.append('public_id', sig.publicId);
                     fd.append('signature', sig.signature);
                     xhr.send(fd);
                 });
             });
+        }
+
+        function makeActionKey(prefix) {
+            return String(prefix || 'action') + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
         }
 
         function processDocUpload() {
@@ -14268,24 +14375,9 @@ function hrT(key, vars) {
                 return;
             }
             showLoading('adviceSubmitBtn', STATE.language === 'ar' ? 'جاري الإرسال...' : 'Sending...');
-            var message = {
-                clientId: STATE.currentUser.uid,
-                sender: 'client',
-                text: text,
-                type: 'advice_request',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                readByAdmin: false
-            };
-            db.collection('messages').add(message).then(function() {
-                return db.collection('notifications').add({
-                    clientId: STATE.currentUser.uid,
-                    clientName: STATE.currentUser.name,
-                    title: STATE.language === 'ar' ? '💡 طلب نصيحة جديدة' : '💡 New Advice Request',
-                    body: (STATE.language === 'ar' ? 'قام العميل ' : 'Client ') + STATE.currentUser.name + (STATE.language === 'ar' ? ' بطلب نصيحة تأمينية' : ' requested insurance advice'),
-                    type: 'advice_request',
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+            securePathApiCall('/v1/client/advice', {
+                idempotencyKey: makeActionKey('advice'),
+                message: text
             }).then(function() {
                 hideLoading('adviceSubmitBtn');
                 document.getElementById('adviceForm').style.display = 'none';
@@ -14293,20 +14385,10 @@ function hrT(key, vars) {
                 return refreshNotifications(STATE.currentUser.uid);
             }).catch(function(e) {
                 hideLoading('adviceSubmitBtn');
-                alert((STATE.language === 'ar' ? 'فشل إرسال الطلب: ' : 'Failed to send request: ') + friendlyFirebaseError(e));
+                alert((STATE.language === 'ar' ? 'فشل إرسال الطلب: ' : 'Failed to send request: ') + (e.message || friendlyFirebaseError(e)));
             });
         }
 
-        // ============================================================ //
-        // WHEEL                                                        //
-        // ============================================================ //
-        var wheelPrizes = [
-            { text: '🍀 حظ سعيد', icon: '🍀', color: '#4CAF50' },
-            { text: '💳 كارت خصم طبي', icon: '💳', color: '#2196F3' },
-            { text: '🔻 10% خصم', icon: '🔻', color: '#FF9800' },
-            { text: '💬 استشارة مجانية', icon: '💬', color: '#9C27B0' },
-            { text: '📚 يوم توعية مجاني', icon: '📚', color: '#E91E63' }
-        ];
 
         function openWheelModal() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
@@ -14499,12 +14581,10 @@ function hrT(key, vars) {
             appendChatMessage({ sender: 'client', text: text, createdAt: new Date() });
             input.value = '';
             if (c) c.scrollTop = c.scrollHeight;
-            db.collection('messages').add({
-                clientId: STATE.currentUser.uid,
-                sender: 'client',
-                text: text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                readByAdmin: false
+            securePathApiCall('/v1/client/message', {
+                idempotencyKey: makeActionKey('chat'),
+                message: text,
+                type: 'chat'
             }).catch(function(e) {
                 console.warn('Message send failed', e);
                 alert(STATE.language === 'ar' ? 'تعذر إرسال الرسالة. تحقق من الاتصال.' : 'Message could not be sent. Check your connection.');
@@ -15696,17 +15776,17 @@ function updateHRTexts() {
                 STATE.products = []; }));
             p.push(loadCompanyDirectory().then(function(rows) { STATE.companies = rows; }).catch(function(e) { console.warn('Company directory load failed', e);
                 STATE.companies = []; }));
-            p.push(db.collection('offers').get().then(function(s) {
+            p.push(db.collection('offers').where('status', '==', 'active').limit(50).get().then(function(s) {
                 STATE.offers = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Offers load failed', e);
                 STATE.offers = []; }));
-            p.push(db.collection('companyAds').get().then(function(s) {
+            p.push(db.collection('companyAds').where('status', '==', 'active').limit(50).get().then(function(s) {
                 STATE.companyAds = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Company ads load failed', e);
                 STATE.companyAds = []; }));
-            p.push(db.collection('awarenessVideos').get().then(function(s) {
+            p.push(db.collection('awarenessVideos').where('active', '==', true).limit(30).get().then(function(s) {
                 STATE.awarenessVideos = s.docs.map(function(d) { var x = d.data() || {};
                     x.id = d.id; return x; });
             }).catch(function(e) { console.warn('Awareness videos load failed', e);
