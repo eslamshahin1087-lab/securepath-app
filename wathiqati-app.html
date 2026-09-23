@@ -10750,12 +10750,14 @@ function hrT(key, vars) {
                     }).catch(function() {});
                 }
                 if (STATE.offerReferralId) {
-                    db.collection('leads').add({
-                        source: 'offer_referral', status: 'new', offerId: STATE.offerReferralId,
-                        offerName: STATE.offerReferralName || '',
-                        clientId: cred.user.uid, clientName: fullName, phone: phone,
-                        message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق عرض' : 'New signup via offer referral',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    securePathApiCall('/v1/client/lead', {
+                        idempotencyKey: makeActionKey('signup-offer'),
+                        source: 'offer_referral',
+                        details: {
+                            offerId: STATE.offerReferralId,
+                            offerName: STATE.offerReferralName || '',
+                            message: STATE.language === 'ar' ? 'تسجيل جديد عن طريق عرض' : 'New signup via offer referral'
+                        }
                     }).catch(function() {});
                     try {
                         sessionStorage.removeItem('SecurePath_offer_ref');
@@ -14373,24 +14375,9 @@ function hrT(key, vars) {
                 return;
             }
             showLoading('adviceSubmitBtn', STATE.language === 'ar' ? 'جاري الإرسال...' : 'Sending...');
-            var message = {
-                clientId: STATE.currentUser.uid,
-                sender: 'client',
-                text: text,
-                type: 'advice_request',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                readByAdmin: false
-            };
-            db.collection('messages').add(message).then(function() {
-                return db.collection('notifications').add({
-                    clientId: STATE.currentUser.uid,
-                    clientName: STATE.currentUser.name,
-                    title: STATE.language === 'ar' ? '💡 طلب نصيحة جديدة' : '💡 New Advice Request',
-                    body: (STATE.language === 'ar' ? 'قام العميل ' : 'Client ') + STATE.currentUser.name + (STATE.language === 'ar' ? ' بطلب نصيحة تأمينية' : ' requested insurance advice'),
-                    type: 'advice_request',
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+            securePathApiCall('/v1/client/advice', {
+                idempotencyKey: makeActionKey('advice'),
+                message: text
             }).then(function() {
                 hideLoading('adviceSubmitBtn');
                 document.getElementById('adviceForm').style.display = 'none';
@@ -14398,20 +14385,10 @@ function hrT(key, vars) {
                 return refreshNotifications(STATE.currentUser.uid);
             }).catch(function(e) {
                 hideLoading('adviceSubmitBtn');
-                alert((STATE.language === 'ar' ? 'فشل إرسال الطلب: ' : 'Failed to send request: ') + friendlyFirebaseError(e));
+                alert((STATE.language === 'ar' ? 'فشل إرسال الطلب: ' : 'Failed to send request: ') + (e.message || friendlyFirebaseError(e)));
             });
         }
 
-        // ============================================================ //
-        // WHEEL                                                        //
-        // ============================================================ //
-        var wheelPrizes = [
-            { text: '🍀 حظ سعيد', icon: '🍀', color: '#4CAF50' },
-            { text: '💳 كارت خصم طبي', icon: '💳', color: '#2196F3' },
-            { text: '🔻 10% خصم', icon: '🔻', color: '#FF9800' },
-            { text: '💬 استشارة مجانية', icon: '💬', color: '#9C27B0' },
-            { text: '📚 يوم توعية مجاني', icon: '📚', color: '#E91E63' }
-        ];
 
         function openWheelModal() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
@@ -14604,12 +14581,10 @@ function hrT(key, vars) {
             appendChatMessage({ sender: 'client', text: text, createdAt: new Date() });
             input.value = '';
             if (c) c.scrollTop = c.scrollHeight;
-            db.collection('messages').add({
-                clientId: STATE.currentUser.uid,
-                sender: 'client',
-                text: text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                readByAdmin: false
+            securePathApiCall('/v1/client/message', {
+                idempotencyKey: makeActionKey('chat'),
+                message: text,
+                type: 'chat'
             }).catch(function(e) {
                 console.warn('Message send failed', e);
                 alert(STATE.language === 'ar' ? 'تعذر إرسال الرسالة. تحقق من الاتصال.' : 'Message could not be sent. Check your connection.');
