@@ -10466,27 +10466,41 @@ function hrT(key, vars) {
         // ============================================================ //
         function normalizeLoginIdentifier(value) { return (value || '').trim().toLowerCase(); }
 
-        function resolveLoginEmail(identifier) {
+        function resolveLoginEmails(identifier) {
             identifier = normalizeLoginIdentifier(identifier);
-            if (identifier.indexOf('@') > 0) return Promise.resolve(identifier);
-            if (!identifier) return Promise.reject({ code: 'auth/invalid-identifier', message: 'Missing username.' });
-            return db.collection('clients').where('username', '==', identifier).limit(2).get()
-                .then(function(snap) {
-                    if (snap.size > 1) throw { code: 'auth/username-ambiguous', message: 'Username is assigned to more than one client.' };
-                    if (!snap.size) throw { code: 'auth/username-not-found', message: 'Username is not registered.' };
-                    var data = snap.docs[0].data() || {};
-                    var email = String(data.email || data.loginEmail || data.authEmail || '').trim().toLowerCase();
-                    if (!email || email.indexOf('@') < 1) {
-                        throw { code: 'auth/username-email-missing', message: 'This client record does not contain its Firebase login email.' };
+            if (!identifier) return Promise.reject({ code: 'auth/invalid-identifier', message: 'Missing username or email.' });
+            if (identifier.indexOf('@') > 0) return Promise.resolve([identifier]);
+
+            // Legacy SecurePath placeholder accounts have historically used
+            // both @securepath and @securepath.com. Do not query clients before
+            // authentication: Firestore rules intentionally deny that lookup.
+            return Promise.resolve([
+                identifier + '@securepath.com',
+                identifier + '@securepath'
+            ]);
+        }
+
+        function signInWithLoginIdentifier(identifier, password) {
+            return resolveLoginEmails(identifier).then(function(candidates) {
+                var tryNext = function(index, lastError) {
+                    if (index >= candidates.length) {
+                        throw lastError || { code: 'auth/user-not-found', message: 'Account not found.' };
                     }
-                    return email;
-                })
-                .catch(function(e) {
-                    if (e && (e.code === 'permission-denied' || e.code === 'firestore/permission-denied')) {
-                        throw { code: 'auth/username-lookup-blocked', message: 'Firestore rules deny the unauthenticated username lookup. Log in with the full email address instead.' };
-                    }
-                    throw e;
-                });
+                    return auth.signInWithEmailAndPassword(candidates[index], password)
+                        .catch(function(e) {
+                            // For username-based legacy aliases, try the next
+                            // historical domain only when the current candidate
+                            // clearly does not exist.
+                            if (String(identifier).indexOf('@') < 0
+                                && e && (e.code === 'auth/user-not-found'
+                                    || e.code === 'auth/invalid-email')) {
+                                return tryNext(index + 1, e);
+                            }
+                            throw e;
+                        });
+                };
+                return tryNext(0, null);
+            });
         }
 
         function getClientProfile(uid, email) {
@@ -10536,7 +10550,7 @@ function hrT(key, vars) {
         //   securepath.com domain must continue to work so existing client
         //   records are not locked out by the migration.
         // New production accounts should use real verified email addresses.
-        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com', 'securepath'];
 
         function isVerificationExemptUser(user) {
             if (!user) return Promise.resolve(false);
@@ -10653,11 +10667,9 @@ function hrT(key, vars) {
             }
             LOGIN_IN_PROGRESS = true;
             showLoading('loginBtn', STATE.language === 'ar' ? 'جاري التحقق من الحساب...' : 'Verifying account...');
-            AUTH_READY.then(function() {
+            (AUTH_READY || Promise.resolve()).then(function() {
                 resetState();
-                return resolveLoginEmail(identifier);
-            }).then(function(email) {
-                return auth.signInWithEmailAndPassword(email, pass);
+                return signInWithLoginIdentifier(identifier, pass);
             }).then(function(credential) {
                 return finishClientLogin(credential, identifier);
             }).catch(function(e) {
