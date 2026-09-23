@@ -1,7 +1,8 @@
 // sw.js - نسخة محسنة احترافية
 
-const CACHE_NAME = 'securepath-v3';   // تغيير الإصدار عند التحديث
+const CACHE_NAME = 'securepath-v4';   // تغيير الإصدار عند التحديث
 const SHELL = [
+  './index.html',
   './wathiqati-app.html',
   './manifest.json',
   './icon-192.png',
@@ -87,8 +88,10 @@ self.addEventListener('fetch', (event) => {
           return caches.match(request)
             .then((cached) => {
               if (cached) return cached;
-              // وإلا نقدم الصفحة الرئيسية كحل احتياطي
-              return caches.match('./wathiqati-app.html');
+              const fallback = url.pathname.endsWith('/wathiqati-app.html')
+                ? './wathiqati-app.html'
+                : './index.html';
+              return caches.match(fallback);
             });
         })
     );
