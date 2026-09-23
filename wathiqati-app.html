@@ -10475,8 +10475,8 @@ function hrT(key, vars) {
             // both @securepath and @securepath.com. Do not query clients before
             // authentication: Firestore rules intentionally deny that lookup.
             return Promise.resolve([
-                identifier + '@securepath.com',
-                identifier + '@securepath'
+                identifier + '@securepath',
+                identifier + '@securepath.com'
             ]);
         }
 
@@ -10493,7 +10493,9 @@ function hrT(key, vars) {
                             // clearly does not exist.
                             if (String(identifier).indexOf('@') < 0
                                 && e && (e.code === 'auth/user-not-found'
-                                    || e.code === 'auth/invalid-email')) {
+                                    || e.code === 'auth/invalid-email'
+                                    || e.code === 'auth/invalid-credential'
+                                    || e.code === 'auth/invalid-login-credentials')) {
                                 return tryNext(index + 1, e);
                             }
                             throw e;
