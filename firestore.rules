@@ -84,14 +84,17 @@ service cloud.firestore {
 
     // ---------- leads / conversions ----------
     match /leads/{leadId} {
+      // Client lead creation is now server-owned by the SecurePath Worker.
+      // This prevents arbitrary lead/source fields from being written directly.
       allow read: if isAdmin();
-      allow create: if ownsAsClient() && request.resource.data.source != 'points_redemption';
+      allow create: if isAdmin();
       allow update, delete: if isAdmin();
     }
 
     match /renewals/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
+      // Created by the trusted Worker after validating policy ownership.
+      allow create: if isAdmin();
       allow update, delete: if isAdmin();
     }
 
@@ -159,19 +162,22 @@ service cloud.firestore {
     // ---------- appointments / complaints ----------
     match /appointments/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
+      // Created by the trusted Worker.
+      allow create: if isAdmin();
       allow update, delete: if isAdmin();
     }
     match /complaints/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if ownsAsClient();
+      // Created by the trusted Worker.
+      allow create: if isAdmin();
       allow update, delete: if isAdmin();
     }
 
     // ---------- messaging / notifications ----------
     match /messages/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
-      allow create: if (ownsAsClient() && request.resource.data.sender == 'client') || isAdmin();
+      // Client messages now go through the trusted Worker.
+      allow create: if isAdmin();
       allow update, delete: if isAdmin();    }
     match /notifications/{id} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin());
