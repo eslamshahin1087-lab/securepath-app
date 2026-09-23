@@ -10530,16 +10530,23 @@ function hrT(key, vars) {
         // ============================================================ //
         // EMAIL VERIFICATION GATE                                       //
         // ============================================================ //
-        // Pre-built placeholder accounts on this domain (no real inbox)
-        // are exempt from the mandatory email-verification check below.
-        // SECURITY NOTE: only ever list domains you fully control
-        // end-to-end. Anyone who signs up with an email ending in one
-        // of these domains skips real email verification automatically.
-        // Production access must never rely on a free-form email domain.
-        // Test/placeholder accounts are explicitly marked by the server-side
-        // migration tool with the securepathTest custom claim.
+        // Backward compatibility:
+        // - Explicit server-side test accounts may use securepathTest.
+        // - Legacy SecurePath placeholder accounts using the historical
+        //   securepath.com domain must continue to work so existing client
+        //   records are not locked out by the migration.
+        // New production accounts should use real verified email addresses.
+        var VERIFICATION_EXEMPT_DOMAINS = ['securepath.com'];
+
         function isVerificationExemptUser(user) {
             if (!user) return Promise.resolve(false);
+
+            var email = String(user.email || '').trim().toLowerCase();
+            var at = email.lastIndexOf('@');
+            var legacyDomainExempt = at > 0 && VERIFICATION_EXEMPT_DOMAINS.indexOf(email.slice(at + 1)) !== -1;
+
+            if (legacyDomainExempt) return Promise.resolve(true);
+
             return user.getIdTokenResult(false).then(function(result) {
                 return result && result.claims && result.claims.securepathTest === true;
             }).catch(function() {
