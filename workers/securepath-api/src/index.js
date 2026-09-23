@@ -771,6 +771,24 @@ async function handleClientAction(env, uid, action, data) {
     ]).then(() => ({ ok: true, id, requestNumber }));
   }
 
+  if (action === 'message') {
+    const message = textInput(data?.message, 1200);
+    const type = textInput(data?.type, 40, 'chat');
+    if (!message) throw new Error('Message is required');
+
+    return commitWrites(env, [
+      makeCreateWrite('messages', id, {
+        clientId: uid,
+        uid,
+        sender: 'client',
+        text: message,
+        type,
+        createdAt: now,
+        readByAdmin: false
+      })
+    ]).then(() => ({ ok: true, id }));
+  }
+
   if (action === 'lead') {
     const source = textInput(data?.source, 40);
     const allowedSources = ['offer', 'company_ad', 'assessment', 'renewal', 'referral', 'offer_referral', 'complaint'];
@@ -867,6 +885,7 @@ async function route(request, env) {
   if (path === '/v1/client/complaint') return json(await handleClientAction(env, uid, 'complaint', data));
   if (path === '/v1/client/renewal') return json(await handleClientAction(env, uid, 'renewal', data));
   if (path === '/v1/client/advice') return json(await handleClientAction(env, uid, 'advice', data));
+  if (path === '/v1/client/message') return json(await handleClientAction(env, uid, 'message', data));
   if (path === '/v1/client/lead') return json(await handleClientAction(env, uid, 'lead', data));
   if (path === '/v1/document/verified') return json(await handleDocumentVerified(env, uid, data, claims));
   return json({ ok: false, error: 'Not found' }, 404);
