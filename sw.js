@@ -1,6 +1,6 @@
 // sw.js - نسخة محسنة احترافية
 
-const CACHE_NAME = 'securepath-v4';   // تغيير الإصدار عند التحديث
+const CACHE_NAME = 'securepath-v5-auth-fix';   // تغيير الإصدار عند التحديث
 const SHELL = [
   './index.html',
   './wathiqati-app.html',
