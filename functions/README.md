@@ -1,16 +1,29 @@
-# ⚠️ غير مُفعّل حاليًا — Not currently deployed
+# SecurePath Functions — Deprecated / Shadow Backend
 
-الكود في هذا الفولدر (`index.js`) **لا يُنشر ولا يُستخدم في الإنتاج حاليًا**. المشروع باقٍ على خطة
-Firebase **Spark** (مجانية)، ومنطق نقاط الأمان بالكامل بيشتغل مباشرة من `wathiqati-app.html` عبر
-كتابات محمية بقواعد `firestore.rules` (شوف `VALID_POINT_DELTAS` هناك).
+> **Production source of truth:** Cloudflare Worker at `workers/securepath-api/src/index.js`.
 
-هذا الكود متسيب هنا **كمسار ترقية مستقبلي فقط**: لو قررت يومًا ترقّي لخطة **Blaze** (بطاقة ائتمان
-مربوطة، حصة مجانية سخية)، الفنكشنز دي بتدي حماية أقوى (تحسب صحة الرحلة GPS بنفسها بدل ما تصدّق رقم
-جاي من المتصفح، وتمنع أي تلاعب محلي بالكامل). لو عايز تنشرها وقتها:
+هذا المجلد لم يعد مصدر التنفيذ الأساسي. تم توحيد منطق الـbackend في SecurePath Worker لتفادي تشغيل نسختين مختلفتين من:
+- النقاط والاستبدال
+- GPS
+- Cloudinary signing
+- إجراءات العميل (مواعيد، شكاوى، تجديدات، رسائل، Leads)
 
-1. رجّع `"functions": { "source": "functions" }` جوه `firebase.json` في جذر المستودع.
-2. `firebase deploy --only functions` (بعد ما تكون رقّيت الخطة فعليًا من Firebase Console).
-3. بدّل نداءات `awardInsuraPoints()` / `confirmRedeemPoints()` في `wathiqati-app.html` بنداءات
-   `httpsCallable('checkInHabit')` وما شابه، بدل الكتابة المباشرة على Firestore.
+لا تقم بنشر `functions/index.js` بالتوازي مع الـWorker. وجود نسختين قيد التشغيل قد يؤدي إلى تكرار rewards أو اختلاف قواعد العمل.
 
-من غير الخطوات دي، الملف مش هيتنشر ومش هيأثر على حاجة.
+## الانتقال
+
+1. انشر Worker من `workers/securepath-api`.
+2. انشر `firestore.rules`.
+3. حدّث PWA/APK إلى النسخة الموجودة في هذا الفرع.
+4. تحقق من:
+   - تسجيل الدخول
+   - رفع مستند
+   - طلب موعد
+   - شكوى
+   - طلب تجديد
+   - طلب نصيحة
+   - إنشاء Lead
+   - النقاط والاستبدال
+5. بعد التحقق، عطّل أي Cloud Functions قديمة كانت منشورة يدويًا من مشروع Firebase.
+
+البيانات الحالية لا تحتاج حذفًا أو إعادة بناء. التغيير هنا هو نقل ملكية منطق الأعمال الحساسة إلى backend واحد موثوق.
