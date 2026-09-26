@@ -673,6 +673,14 @@ async function stableActionId(uid, action, key) {
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 40);
 }
 
+const WHEEL_PRIZES = [
+            { text: '🍀 حظ سعيد', icon: '🍀', color: '#4CAF50' },
+            { text: '💳 كارت خصم طبي', icon: '💳', color: '#2196F3' },
+            { text: '🔻 10% خصم', icon: '🔻', color: '#FF9800' },
+            { text: '💬 استشارة مجانية', icon: '💬', color: '#9C27B0' },
+            { text: '📚 يوم توعية مجاني', icon: '📚', color: '#E91E63' }
+        ];
+
 async function handleClientAction(env, uid, action, data) {
   if (!uid) throw new Error('Authentication required');
   const key = requireIdempotencyKey(data);
@@ -771,6 +779,131 @@ async function handleClientAction(env, uid, action, data) {
     ]).then(() => ({ ok: true, id, requestNumber }));
   }
 
+  if (action === 'renewalReminder') {
+    const policyId = textInput(data?.policyId, 128);
+    if (!policyId) throw new Error('Policy is required');
+    const policy = await getDoc(env, 'policies', policyId);
+    if (!policy || policy.clientId !== uid) throw new Error('Policy not found');
+
+    const endDateValue = String(policy.endDate || '').trim();
+    const endDateKey = endDateValue.slice(0, 10);
+    const days = daysBetweenCairo(todayKey(), endDateKey);
+    if (!Number.isInteger(days) || days <= 0 || days > 45) return { ok: true, created: false, reason: 'outside_window' };
+
+    const reminderKey = 'renewal_45_' + policyId + '_' + endDateValue;
+    const notificationId = await stableActionId(uid, 'renewal-reminder', reminderKey);
+    if (await getDoc(env, 'notifications', notificationId)) return { ok: true, created: false, reason: 'already_exists', id: notificationId };
+
+    const now = new Date().toISOString();
+    await commitWrites(env, [
+      makeCreateWrite('notifications', notificationId, {
+        clientId: uid,
+        title: 'Policy renewal is approaching',
+        body: 'Policy ' + (textInput(policy.policyNumber, 100, textInput(policy.type || policy.typeName, 100, 'insurance'))) + ' expires in ' + days + ' days.',
+        type: 'renewal_45_day',
+        renewalKey: reminderKey,
+        policyId,
+        policyNumber: textInput(policy.policyNumber, 100, ''),
+        endDate: endDateValue,
+        read: false,
+        createdAt: now
+      })
+    ]);
+    return { ok: true, created: true, id: notificationId };
+  }
+
+  if (action === 'wheelSpin') {
+    const client = await getDoc(env, 'clients', uid);
+    if (!client) throw new Error('Client record not found');
+
+    const last = String(client.wheelLastSpin || '').trim();
+    const lastMs = last ? Date.parse(last) : NaN;
+    if (Number.isFinite(lastMs) && (Date.now() - lastMs) < (30 * 86400000)) {
+      const err = new Error('wheel_not_eligible');
+      err.code = 'wheel_not_eligible';
+      throw err;
+    }
+
+    const guardId = await stableActionId(uid, 'wheel-period', last || 'never');
+    const existingGuard = await getDoc(env, 'wheelSpins', guardId);
+    if (existingGuard) {
+      return {
+        ok: true,
+        alreadyExists: true,
+        id: guardId,
+        wheelLastSpin: existingGuard.wheelLastSpin,
+        prizeIndex: Number(existingGuard.prizeIndex),
+        prize: existingGuard.prize && typeof existingGuard.prize === 'object'
+          ? existingGuard.prize
+          : WHEEL_PRIZES[Number(existingGuard.prizeIndex)]
+      };
+    }
+
+    const randomValues = new Uint32Array(1);
+    crypto.getRandomValues(randomValues);
+    const prizeIndex = randomValues[0] % WHEEL_PRIZES.length;
+    const prize = WHEEL_PRIZES[prizeIndex];
+    const wheelLastSpin = new Date().toISOString();
+    const notificationId = await stableActionId(uid, 'wheel-notification', guardId);
+
+    const writes = [
+      makeCreateWrite('wheelSpins', guardId, {
+        clientId: uid,
+        requestId: id,
+        wheelLastSpin,
+        prizeIndex,
+        prize,
+        createdAt: now
+      }),
+      makeUpdateWrite('clients', uid, {
+        wheelLastSpin,
+        wheelResult: prize.text,
+        wheelPrizeIndex: prizeIndex
+      }, client.__updateTime),
+      makeCreateWrite('notifications', notificationId, {
+        clientId: uid,
+        title: 'Wheel reward',
+        body: 'You won ' + prize.text + ' from the wheel!',
+        type: 'wheel_win',
+        wheelSpinId: guardId,
+        read: false,
+        createdAt: wheelLastSpin
+      })
+    ];
+
+    try {
+      await commitWrites(env, writes);
+    } catch (e) {
+      const racedGuard = await getDoc(env, 'wheelSpins', guardId);
+      if (racedGuard) {
+        return {
+          ok: true,
+          alreadyExists: true,
+          id: guardId,
+          wheelLastSpin: racedGuard.wheelLastSpin,
+          prizeIndex: Number(racedGuard.prizeIndex),
+          prize: racedGuard.prize && typeof racedGuard.prize === 'object'
+            ? racedGuard.prize
+            : WHEEL_PRIZES[Number(racedGuard.prizeIndex)]
+        };
+      }
+      throw e;
+    }
+
+    return {
+      ok: true,
+      id: guardId,
+      alreadyExists: false,
+      wheelLastSpin,
+      prizeIndex,
+      prize
+    };
+  }
+
+
+  if (action === 'wheelNotification') {
+    throw new Error('Wheel notifications are generated by wheelSpin');
+  }
   if (action === 'message') {
     const message = textInput(data?.message, 1200);
     const type = textInput(data?.type, 40, 'chat');
@@ -844,6 +977,70 @@ async function handleClientAction(env, uid, action, data) {
   throw new Error('Unknown client action');
 }
 
+async function handleAssessmentAdminNotification(env, uid, data) {
+  if (!uid) throw new Error('Authentication required');
+
+  const assessmentId = textInput(data?.assessmentId, 128);
+  if (!assessmentId) throw new Error('Assessment ID is required');
+
+  const assessment = await getDoc(env, 'protectionAssessments', assessmentId);
+  if (!assessment || String(assessment.clientId || '') !== String(uid)) {
+    throw new Error('Assessment not found');
+  }
+
+  const recommendations = assessment.recommendations && typeof assessment.recommendations === 'object'
+    ? assessment.recommendations
+    : {};
+
+  const riskScore = Number(assessment.riskScore);
+  const priority = Number.isFinite(riskScore) && riskScore >= 70 ? 'HIGH' : 'NORMAL';
+
+  const notificationId = await stableActionId(
+    uid,
+    'assessment-admin-notification',
+    assessmentId
+  );
+
+  const existing = await getDoc(env, 'adminNotifications', notificationId);
+  if (existing) {
+    return { ok: true, id: notificationId, alreadyExists: true };
+  }
+
+  const now = new Date().toISOString();
+
+  await commitWrites(env, [
+    makeCreateWrite('adminNotifications', notificationId, {
+      type: 'NEW_ASSESSMENT',
+      priority,
+      clientId: uid,
+      clientName: textInput(assessment.clientName, 200, ''),
+      assessmentId,
+      productRecommendation: textInput(
+        recommendations.primaryRecommendationAr ||
+          recommendations.primaryRecommendation ||
+          '',
+        500,
+        ''
+      ),
+      riskLevel: textInput(
+        assessment.riskLevel ||
+          recommendations.riskLevel ||
+          '',
+        80,
+        ''
+      ),
+      read: false,
+      createdAt: now
+    })
+  ]);
+
+  return {
+    ok: true,
+    id: notificationId,
+    alreadyExists: false
+  };
+}
+
 async function handleCloudinarySign(env, uid) {
   const secret = String(env.CLOUDINARY_API_SECRET || '');
   if (!secret) throw new Error('CLOUDINARY_API_SECRET is not configured');
@@ -885,8 +1082,12 @@ async function route(request, env) {
   if (path === '/v1/client/complaint') return json(await handleClientAction(env, uid, 'complaint', data));
   if (path === '/v1/client/renewal') return json(await handleClientAction(env, uid, 'renewal', data));
   if (path === '/v1/client/advice') return json(await handleClientAction(env, uid, 'advice', data));
+  if (path === '/v1/client/renewal-reminder') return json(await handleClientAction(env, uid, 'renewalReminder', data));
+  if (path === '/v1/client/wheel-spin') return json(await handleClientAction(env, uid, 'wheelSpin', data));
+  if (path === '/v1/client/wheel-notification') return json(await handleClientAction(env, uid, 'wheelNotification', data));
   if (path === '/v1/client/message') return json(await handleClientAction(env, uid, 'message', data));
   if (path === '/v1/client/lead') return json(await handleClientAction(env, uid, 'lead', data));
+  if (path === '/v1/client/assessment') return json(await handleAssessmentAdminNotification(env, uid, data));
   if (path === '/v1/document/verified') return json(await handleDocumentVerified(env, uid, data, claims));
   return json({ ok: false, error: 'Not found' }, 404);
 }

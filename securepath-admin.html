@@ -1844,11 +1844,27 @@
 
     function startNotificationsListener() {
       if (listeners.notifications) listeners.notifications();
-      listeners.notifications = db.collection('notifications').limit(200).onSnapshot(snap => {
-        APP_STATE.notifications = snap.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
+      let regularNotifications = [];
+      let adminNotifications = [];
+      let unsubRegular = null;
+      let unsubAdmin = null;
+      const render = () => {
+        APP_STATE.notifications = regularNotifications.concat(adminNotifications).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
         renderNotifications();
         updateBadge();
+      };
+      unsubRegular = db.collection('notifications').limit(200).onSnapshot(snap => {
+        regularNotifications = snap.docs.map(d => ({ ...d.data(), id: d.id, _collection: 'notifications' }));
+        render();
       });
+      unsubAdmin = db.collection('adminNotifications').limit(200).onSnapshot(snap => {
+        adminNotifications = snap.docs.map(d => { const n=d.data(); return { ...n, id:d.id, _collection:'adminNotifications', type:n.type || 'admin_notification', title:n.title || (n.type === 'NEW_ASSESSMENT' ? 'New Smart Assessment' : 'Notification'), body:n.body || (n.type === 'NEW_ASSESSMENT' ? ('Client assessment received. Risk: ' + (n.riskLevel || '-') + ' - Recommendation: ' + (n.productRecommendation || '-')) : '') }; });
+        render();
+      });
+      listeners.notifications = () => {
+        if (unsubRegular) unsubRegular();
+        if (unsubAdmin) unsubAdmin();
+      };
     }
 
     // Live listener for documents - catches uploads from client app instantly
@@ -3543,7 +3559,7 @@
         const cred = await clientAuth.createUserWithEmailAndPassword(email, pass);
         const user = cred.user;
         await db.collection('users').doc(user.uid).set({ email, uid: user.uid, role: 'user', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        await db.collection('clients').doc(user.uid).set({ fullName: name, email, phone, username: email.split('@')[0], uid: user.uid, client: true, status: 'active', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await db.collection('clients').doc(user.uid).set({ fullName: name, email, phone, username: email.split('@')[0], uid: user.uid, client: true, role: 'client', status: 'active', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (user.sendEmailVerification) user.sendEmailVerification().catch(() => {});
         await clientAuth.signOut();
         await refreshCollection('clients');

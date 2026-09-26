@@ -39,7 +39,7 @@ service cloud.firestore {
     function touchesProtectedFields() {
       let protectedKeys = [
         'insuraPoints', 'insuraPointsLifetime', 'insuraPointsRedeemed',
-        'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData', 'role'
+        'pointsFlags', 'habitData', 'drivingData', 'gpsDrivingData', 'role', 'companyId', 'wheelLastSpin', 'wheelResult', 'wheelPrizeIndex'
       ];
       return request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedKeys);
     }
@@ -70,6 +70,10 @@ service cloud.firestore {
       allow update: if isAdmin()
         || ((isOwner(clientId) || isSameClientRecord(resource.data))
             && !touchesProtectedFields());
+
+      allow update: if (isOwner(clientId) || isSameClientRecord(resource.data))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['companyId'])
+        && ownsCompany(request.resource.data.companyId);
 
       allow delete: if isAdmin();
     }
@@ -292,7 +296,8 @@ service cloud.firestore {
 
     match /corporateMedicalAnalyses/{id} {
       allow read: if isAdmin() || ownsCompany(resource.data.companyId);
-      allow create, update: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      allow create: if isAdmin() || ownsCompany(request.resource.data.companyId);
+      allow update: if isAdmin() || (ownsCompany(resource.data.companyId) && request.resource.data.companyId == resource.data.companyId);
       allow delete: if isAdmin();
     }
 

@@ -12857,31 +12857,13 @@ function hrT(key, vars) {
         function ensureRenewalNotifications(uid) {
             var candidates = STATE.policies.filter(function(p) { var d = daysUntil(p.endDate); return p.clientId === uid && d > 0 && d <= RENEWAL_WINDOW_DAYS; });
             if (!candidates.length) return Promise.resolve();
-            return db.collection('notifications').where('clientId', '==', uid).get().then(function(snap) {
-                var existing = {};
-                snap.forEach(function(d) { var x = d.data() || {}; if (x.renewalKey) existing[x.renewalKey] = true; });
-                var writes = [];
-                candidates.forEach(function(p) {
-                    var key = renewalReminderKey(p);
-                    if (existing[key]) return;
-                    var d = daysUntil(p.endDate);
-                    writes.push(db.collection('notifications').add({
-                        clientId: uid,
-                        clientName: STATE.currentUser.name,
-                        title: STATE.language === 'ar' ? '⚠️ موعد تجديد وثيقتك قريب' : '⚠️ Policy renewal is approaching',
-                        body: STATE.language === 'ar' ? 'وثيقة ' + (p.policyNumber || p.type || 'التأمين') + ' تنتهي خلال ' + d + ' يوم.' :
-                            'Policy ' + (p.policyNumber || p.type || 'insurance') + ' expires in ' + d + ' days.',
-                        type: 'renewal_45_day',
-                        renewalKey: key,
-                        policyId: p.id,
-                        policyNumber: p.policyNumber || '',
-                        endDate: p.endDate,
-                        read: false,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }));
+            return Promise.all(candidates.map(function(p) {
+                var key = renewalReminderKey(p);
+                return securePathApiCall('/v1/client/renewal-reminder', {
+                    idempotencyKey: key,
+                    policyId: p.id
                 });
-                return Promise.all(writes);
-            });
+            }));
         }
 
         function refreshNotifications(uid) {
@@ -14416,6 +14398,19 @@ function hrT(key, vars) {
         }
 
 
+
+
+        // ============================================================ //
+        // WHEEL                                                        //
+        // ============================================================ //
+        var wheelPrizes = [
+            { text: '🍀 حظ سعيد', icon: '🍀', color: '#4CAF50' },
+            { text: '💳 كارت خصم طبي', icon: '💳', color: '#2196F3' },
+            { text: '🔻 10% خصم', icon: '🔻', color: '#FF9800' },
+            { text: '💬 استشارة مجانية', icon: '💬', color: '#9C27B0' },
+            { text: '📚 يوم توعية مجاني', icon: '📚', color: '#E91E63' }
+        ];
+
         function openWheelModal() {
             if (!STATE.currentUser) { alert(STATE.language === 'ar' ? 'يرجى تسجيل الدخول أولاً' : 'Please login first'); return; }
             var uid = STATE.currentUser.uid;
@@ -14490,46 +14485,42 @@ function hrT(key, vars) {
                 btn = document.getElementById('wheelSpinBtn');
             if (!canvas || !result || !STATE.currentUser || btn.disabled) return;
             if (STATE.wheelLastSpin && Date.now() - dateMillis(STATE.wheelLastSpin) < 30 * 86400000) return;
+
             var lock = 'securepath_wheel_lock';
             if (sessionStorage.getItem(lock) === '1') return;
             sessionStorage.setItem(lock, '1');
             btn.disabled = true;
-            var uid = STATE.currentUser.uid,
-                clientRef = db.collection('clients').doc(uid);
-            var idx = Math.floor(Math.random() * wheelPrizes.length),
-                prize = wheelPrizes[idx];
-            db.runTransaction(function(tx) {
-                return tx.get(clientRef).then(function(doc) {
-                    var d = doc.exists ? (doc.data() || {}) : {};
-                    var last = d.wheelLastSpin;
-                    if (last && Date.now() - dateMillis(last) < 30 * 86400000) {
-                        var err = new Error('wheel_not_eligible');
-                        err.code = 'wheel_not_eligible';
-                        throw err;
-                    }
-                    var nowIso = new Date().toISOString();
-                    tx.set(clientRef, { wheelLastSpin: nowIso, wheelResult: prize.text, wheelPrizeIndex: idx }, { merge: true });
-                    return nowIso;
-                });
-            }).then(function(nowIso) {
+
+            var requestKey = makeActionKey('wheel');
+            securePathApiCall('/v1/client/wheel-spin', {
+                idempotencyKey: requestKey
+            }).then(function(payload) {
+                var idx = Number(payload.prizeIndex),
+                    prize = payload.prize;
+
+                if (!Number.isInteger(idx) || idx < 0 || idx >= wheelPrizes.length || !prize) {
+                    throw new Error('Invalid wheel result');
+                }
+
                 var target = 360 - (idx * (360 / wheelPrizes.length) + (360 / wheelPrizes.length) / 2),
                     total = 720 + Math.random() * 360 + target;
+
                 canvas.style.transform = 'rotate(' + total + 'deg)';
                 setTimeout(function() {
                     result.className = 'wheel-result wheel-result-success';
-                    result.innerHTML = '<span class="result-icon">' + prize.icon + '</span><span class="result-text">🎉 ' + esc(prize.text) + ' 🎉</span>';
-                    STATE.wheelResult = prize.text;
-                    STATE.wheelLastSpin = nowIso;
+                    result.innerHTML = '<span class="result-icon">' + esc(prize.icon || wheelPrizes[idx].icon) + '</span><span class="result-text">🎉 ' + esc(prize.text || wheelPrizes[idx].text) + ' 🎉</span>';
+                    STATE.wheelResult = prize.text || wheelPrizes[idx].text;
+                    STATE.wheelLastSpin = payload.wheelLastSpin || new Date().toISOString();
                     STATE.wheelPrizeIndex = idx;
-                    sendWheelNotification(prize);
                     showCelebration(prize);
                     sessionStorage.removeItem(lock);
+                    btn.disabled = false;
                 }, 4200);
             }).catch(function(e) {
                 sessionStorage.removeItem(lock);
                 btn.disabled = false;
-                if (e && e.code === 'wheel_not_eligible') {
-                    result.textContent = STATE.language === 'ar' ? 'لقد جربت حظك بالفعل هذا الشهر.' : 'You have already spun this month.';
+                if (e && (e.code === 'wheel_not_eligible' || String(e.message || '').indexOf('wheel_not_eligible') !== -1)) {
+                    result.textContent = STATE.language === 'ar' ? 'لقد جربت حظك بالفعل خلال آخر 30 يومًا.' : 'You have already spun within the last 30 days.';
                 } else {
                     console.warn('Wheel spin failed', e);
                     result.textContent = STATE.language === 'ar' ? 'تعذر إتمام العملية، حاول مرة أخرى.' : 'Could not complete the spin, please try again.';
@@ -14556,23 +14547,6 @@ function hrT(key, vars) {
             el.appendChild(txt);
             document.body.appendChild(el);
             setTimeout(function() { el.remove(); }, 4000);
-        }
-
-        function sendWheelNotification(prize) {
-            if (!STATE.currentUser) return;
-            var msg = (STATE.language === 'ar' ? '🎉 تهانينا! لقد ربحت "' : '🎉 Congratulations! You won "') + prize.text + '" ' + (STATE.language === 'ar' ? 'من عجلة حظك!' : 'from the wheel!');
-            db.collection('notifications').add({
-                clientId: STATE.currentUser.uid,
-                clientName: STATE.currentUser.name,
-                title: '🎰 ' + (STATE.language === 'ar' ? 'جرب حظك' : 'Try Your Luck'),
-                body: msg,
-                type: 'wheel_win',
-                read: false,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(function() { return refreshNotifications(STATE.currentUser.uid); }).catch(function() {});
-            if ('Notification' in window && Notification.permission === 'granted') {
-                try { new Notification('🎰 ' + (STATE.language === 'ar' ? 'جرب حظك' : 'Try Your Luck'), { body: msg }); } catch (e) {}
-            }
         }
 
         // ============================================================ //
@@ -16458,16 +16432,7 @@ const SmartEngine = (() => {
         },{merge:true});
       }
 
-      await db.collection('adminNotifications').add({
-        type:'NEW_ASSESSMENT',
-        priority:assessment.recommendations.riskLevel === 'مرتفع' ? 'HIGH' : 'NORMAL',
-        clientName:assessment.clientName,
-        assessmentId:ref.id,
-        productRecommendation:assessment.recommendations.primaryRecommendationAr,
-        riskLevel:assessment.recommendations.riskLevel,
-        read:false,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
+      await securePathApiCall('/v1/client/assessment', { assessmentId: ref.id });
 
       return ref.id;
     } catch(e) {
