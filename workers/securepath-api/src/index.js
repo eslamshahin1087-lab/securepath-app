@@ -853,7 +853,7 @@ async function handleClientAction(env, uid, action, data) {
         wheelLastSpin,
         prizeIndex,
         prize,
-        createdAt: now
+        createdAt: wheelLastSpin
       }),
       makeUpdateWrite('clients', uid, {
         wheelLastSpin,
