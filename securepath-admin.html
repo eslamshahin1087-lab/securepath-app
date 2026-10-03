@@ -689,6 +689,38 @@
       src="https://js-de.sentry-cdn.com/ea08d2d7fd21e377ae5a783f67fa0f6a.min.js"
       crossorigin="anonymous"
     ></script>
+<style id="sp-admin-icon-skin">
+/* SecurePath Admin - Soft 3D icon skin (matches Wathiqati client app). Visual-only; delete this block to revert. */
+.sidebar .nav button .icon{width:34px;height:34px;border-radius:12px;font-size:14px;position:relative;overflow:hidden;
+ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.35),inset 0 -3px 6px rgba(0,0,0,.22),0 6px 12px -6px rgba(0,0,0,.5)}
+.sidebar .nav button .icon::before{content:"";position:absolute;inset:0;pointer-events:none;
+ background:radial-gradient(70% 55% at 28% 10%,rgba(255,255,255,.4),transparent 70%)}
+.sidebar .nav button{border-radius:16px;padding:6px 9px}
+.sidebar .nav button.active{background:linear-gradient(135deg,#FFE4A8,#F2BD63);box-shadow:0 10px 22px -10px rgba(242,189,99,.8),inset 0 1px 0 rgba(255,255,255,.7)}
+.sidebar .nav button.active .icon{background:linear-gradient(150deg,#fff,#FFF0CF);color:var(--navy);box-shadow:inset 0 1.5px 0 #fff,0 6px 12px -6px rgba(14,42,92,.5)}
+.brand-icon{border-radius:16px!important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.5),0 8px 16px -6px rgba(0,0,0,.5)}
+.stat-card{border-radius:22px;border:none;box-shadow:0 14px 30px -16px rgba(14,42,92,.35),inset 0 1px 0 #fff}
+.stat-card .stat-icon{width:52px;height:52px;border-radius:18px;position:relative;overflow:hidden;
+ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -3px 6px rgba(14,42,92,.12),0 8px 16px -8px rgba(14,42,92,.35)}
+.stat-card .stat-icon::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 55% at 28% 10%,rgba(255,255,255,.85),transparent 70%)}
+.page-icon{border-radius:14px!important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.9),0 6px 12px -6px rgba(14,42,92,.4)}
+.card{border-radius:20px}
+.btn{border-radius:14px}
+.topbar{background:rgba(255,255,255,.72);backdrop-filter:blur(18px) saturate(1.4)}
+[data-theme="dark"] .topbar{background:rgba(14,20,36,.72)}
+[data-theme="dark"] .stat-card{box-shadow:0 14px 30px -16px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.05)}
+[data-theme="dark"] .stat-card .stat-icon::before{background:radial-gradient(70% 55% at 28% 10%,rgba(255,255,255,.16),transparent 70%)}
+/* new admin pages */
+.sp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:16px}
+.sp-kpi{display:flex;gap:12px;align-items:center;padding:14px;border-radius:20px;background:var(--white);box-shadow:var(--shadow-md)}
+.sp-kpi .t{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;font-size:18px;position:relative;overflow:hidden;
+ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -3px 6px rgba(14,42,92,.12)}
+.sp-kpi b{display:block;font-size:13px}.sp-kpi small{color:var(--muted);font-size:11px}
+.sp-ok{background:var(--green-light);color:var(--green)}.sp-warn{background:var(--gold-soft);color:#9A6A10}.sp-bad{background:var(--red-light);color:var(--red)}.sp-info{background:var(--blue-light);color:var(--blue)}
+.sp-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:13px}
+.sp-row:last-child{border:none}
+[data-theme="dark"] .sp-kpi{background:#141A28}
+</style>
 </head>
 <body>
 
@@ -757,6 +789,9 @@
           <button data-view="notifications" onclick="showView('notifications',this)"><span class="icon"><i class="fas fa-bell"></i></span><span class="label">الإشعارات</span></button>
           <button data-view="activity" onclick="showView('activity',this)"><span class="icon"><i class="fas fa-history"></i></span><span class="label">سجل النشاط</span></button>
           <button data-view="compliance" onclick="showView('compliance',this)"><span class="icon"><i class="fas fa-check-circle"></i></span><span class="label">الامتثال</span></button>
+          <div class="nav-section">الإدارة المتقدمة</div>
+          <button data-view="integration" onclick="showView('integration',this)"><span class="icon"><i class="fas fa-plug-circle-check"></i></span><span class="label">مركز الربط والتكامل</span></button>
+          <button data-view="exportCenter" onclick="showView('exportCenter',this)"><span class="icon"><i class="fas fa-file-export"></i></span><span class="label">مركز التصدير والنسخ</span></button>
         </nav>
         <div class="footer"><span id="userEmail">—</span><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button><span class="copy">Secure PATH © 2026</span></div>
       </aside>
@@ -1080,6 +1115,23 @@
               <div class="toolbar points-toolbar"><div class="search"><input id="pointsLogSearch" oninput="renderPointsAdmin()" placeholder="ابحث باسم العميل أو وصف العملية أو التصنيف"></div></div>
               <div class="card-body p-0"><div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>العميل</th><th>التصنيف</th><th>النقاط</th><th>الوصف</th></tr></thead><tbody id="pointsLogBody"></tbody></table></div></div>
             </div>
+          </div>
+
+          <!-- Integration Center -->
+          <div id="v-integration" class="view">
+            <div class="sp-grid" id="spHealthKpis"></div>
+            <div class="card"><div class="card-header"><h3>فحوصات سلامة البيانات</h3><button class="btn btn-outline btn-sm" onclick="spRenderIntegration()"><i class="fas fa-rotate"></i> إعادة الفحص</button></div><div class="card-body" id="spChecks"></div></div>
+            <div class="card" style="margin-top:16px"><div class="card-header"><h3>خريطة الربط مع تطبيق العميل</h3><button class="btn btn-primary btn-sm" onclick="spTestAll()"><i class="fas fa-bolt"></i> اختبار الاتصال الحي</button></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>المجموعة</th><th>سجلات محمّلة</th><th>مصدر الكتابة</th><th>شاشة الأدمن</th><th>اختبار حي</th></tr></thead><tbody id="spMapBody"></tbody></table></div></div></div>
+          </div>
+          <!-- Export Center -->
+          <div id="v-exportCenter" class="view">
+            <div class="card"><div class="card-header"><h3>تصدير البيانات</h3></div><div class="card-body">
+              <div class="toolbar"><select id="spExpColl" class="field"></select>
+              <button class="btn btn-primary" onclick="spExportCSV()"><i class="fas fa-file-csv"></i> تصدير CSV (Excel)</button>
+              <button class="btn btn-dark" onclick="spExportJSON(false)"><i class="fas fa-file-code"></i> JSON للمجموعة</button>
+              <button class="btn btn-outline" onclick="spExportJSON(true)"><i class="fas fa-database"></i> نسخة احتياطية كاملة</button></div>
+              <p id="spExpInfo" style="color:var(--muted);font-size:12px;margin-top:10px"></p></div></div>
           </div>
 
           <!-- Compliance -->
@@ -4481,6 +4533,80 @@
        });
     });
   </script>
+})();
+</script>
+<script>
+/* SecurePath Admin - Integration & Export centers (read-only; uses APP_STATE already loaded by the admin) */
+(function(){
+  var NEW={integration:['مركز الربط والتكامل','فحص الاتصال وسلامة البيانات مع تطبيق العميل','fa-plug-circle-check','c-green'],
+           exportCenter:['مركز التصدير والنسخ','تصدير CSV وJSON ونسخة احتياطية','fa-file-export','c-purple']};
+  /* collection -> [writer, admin view] ; writer = who creates the records */
+  var MAP={clients:['العميل + الأدمن','clients'],policies:['الأدمن','policies'],payments:['الأدمن','payments'],claims:['الأدمن','claims'],
+    documents:['العميل (API)','documents'],appointments:['العميل (API)','appointments'],complaints:['العميل (API)','complaints'],
+    leads:['العميل (API)','leads'],messages:['العميل (API) + الأدمن','messages'],notifications:['النظام + الأدمن','notifications'],
+    pointsLog:['الخادم (API)','points'],assessments:['العميل','assessments'],offers:['الأدمن','offers'],companyAds:['الأدمن','companyAds'],
+    awarenessVideos:['الأدمن','videos'],products:['الأدمن','products'],companies:['الأدمن','companies'],types:['الأدمن','types'],
+    corporateCompanies:['العميل (HR Hub)','corporateHR'],corporateEmployees:['العميل (HR Hub)','corporateHR'],corporateDocuments:['العميل (HR Hub)','corporateHR'],
+    corporateRequests:['العميل (HR Hub)','corporateHR'],corporateMedicalAnalyses:['العميل (HR Hub)','لا توجد شاشة مخصصة'],corporateAuditLogs:['العميل (HR Hub)','لا توجد شاشة مخصصة']};
+  var COLL={assessments:'insuranceAssessments',types:'insuranceTypes',leads:'leads'};
+  function S(){return (typeof APP_STATE!=='undefined')?APP_STATE:{};}
+  function dt(v){try{return v?(v.toDate?v.toDate():new Date(v)):null}catch(e){return null}}
+  function cid(x){return x.clientId||x.uid||x.userId||x.client_id||''}
+
+  var _show=window.showView;
+  window.showView=function(view,el){
+    _show.apply(this,arguments);
+    var m=NEW[view]; if(!m) return;
+    document.getElementById('title').textContent=m[0];
+    document.getElementById('pageSub').textContent=m[1];
+    document.getElementById('pageIcon').innerHTML='<i class="fas '+m[2]+'"></i>';
+    document.getElementById('pageIcon').className='page-icon '+m[3];
+    if(view==='integration') spRenderIntegration(); else spFillExport();
+  };
+
+  window.spRenderIntegration=function(){
+    var st=S(), clients=st.clients||[], ids={}; clients.forEach(function(c){ids[c.id||c.uid]=1;});
+    var proto=location.protocol, backendOk=typeof window.securePathApiCall==='function';
+    var user=(typeof auth!=='undefined'&&auth.currentUser)?auth.currentUser.email:'غير مسجّل';
+    var kp=[
+      [proto==='file:'?'sp-bad':'sp-ok','fa-globe','بيئة التشغيل',proto==='file:'?'file:// — شغّله عبر http/https':proto],
+      [user==='غير مسجّل'?'sp-bad':'sp-ok','fa-user-shield','جلسة الأدمن',user],
+      [backendOk?'sp-ok':'sp-warn','fa-server','سكربت الـ Backend',backendOk?'محمّل (securePathApiCall)':'js/securepath-backend.js غير محمّل'],
+      [st.loaded?'sp-ok':'sp-warn','fa-database','تحميل البيانات',st.loaded?'اكتمل':'جارٍ/لم يكتمل']];
+    document.getElementById('spHealthKpis').innerHTML=kp.map(function(k){return '<div class="sp-kpi"><span class="t '+k[0]+'"><i class="fas '+k[1]+'"></i></span><div><b>'+k[2]+'</b><small>'+esc(k[3])+'</small></div></div>';}).join('');
+    var now=new Date(), soon=new Date(now.getTime()+30*864e5), checks=[];
+    function orph(key,label,view){var n=(st[key]||[]).filter(function(x){var c=cid(x);return c&&!ids[c];}).length;checks.push([n?'sp-bad':'sp-ok','سجلات '+label+' مرتبطة بعميل غير موجود',n,view]);}
+    orph('policies','الوثائق','policies');orph('payments','المدفوعات','payments');orph('claims','المطالبات','claims');
+    orph('documents','المستندات','documents');orph('appointments','المواعيد','appointments');orph('complaints','الشكاوى','complaints');
+    var noMail=clients.filter(function(c){return !(c.email||c.loginEmail);}).length;checks.push([noMail?'sp-warn':'sp-ok','عملاء بلا بريد إلكتروني (لن يستطيعوا الدخول)',noMail,'clients']);
+    var seen={},dup=0;clients.forEach(function(c){var e=String(c.email||'').toLowerCase();if(!e)return;if(seen[e])dup++;seen[e]=1;});checks.push([dup?'sp-bad':'sp-ok','بريد إلكتروني مكرر بين العملاء',dup,'clients']);
+    var exp=0,soonN=0;(st.policies||[]).forEach(function(p){var d=dt(p.endDate);if(!d)return;if(d<now)exp++;else if(d<soon)soonN++;});
+    checks.push([exp?'sp-warn':'sp-ok','وثائق منتهية',exp,'renewals']);checks.push([soonN?'sp-warn':'sp-ok','وثائق تنتهي خلال 30 يوماً',soonN,'renewals']);
+    var noDate=0;['policies','claims','complaints','appointments','leads'].forEach(function(k){noDate+=(st[k]||[]).filter(function(x){return !x.createdAt;}).length;});
+    checks.push([noDate?'sp-warn':'sp-ok','سجلات بلا createdAt (تؤثر على الترتيب والتقارير)',noDate,'dashboard']);
+    document.getElementById('spChecks').innerHTML=checks.map(function(c){return '<div class="sp-row"><span>'+c[1]+'</span><span><span class="badge '+c[0]+'" style="margin-left:8px">'+c[2]+'</span><button class="btn btn-outline btn-sm" onclick="showView(\''+c[3]+'\')">فتح</button></span></div>';}).join('');
+    document.getElementById('spMapBody').innerHTML=Object.keys(MAP).map(function(k){var n=(st[k]||[]).length,v=MAP[k][1],has=document.getElementById('v-'+v);
+      return '<tr><td><code>'+(COLL[k]||k)+'</code></td><td>'+n+'</td><td>'+MAP[k][0]+'</td><td>'+(has?'<a href="#" onclick="showView(\''+v+'\');return false">فتح</a>':'<span class="badge sp-warn">'+v+'</span>')+'</td><td id="spT-'+k+'">—</td></tr>';}).join('');
+  };
+  window.spTestAll=function(){
+    Object.keys(MAP).forEach(function(k){var c=document.getElementById('spT-'+k),t0=Date.now();if(!c)return;c.textContent='...';
+      db.collection(COLL[k]||k).limit(1).get().then(function(){c.innerHTML='<span class="badge sp-ok">'+(Date.now()-t0)+' ms</span>';})
+        .catch(function(e){c.innerHTML='<span class="badge sp-bad">'+esc((e&&e.code)||'خطأ')+'</span>';});});
+  };
+  function flat(o){var r={};Object.keys(o||{}).forEach(function(k){var v=o[k];if(v&&v.toDate)v=v.toDate().toISOString();else if(v&&typeof v==='object')v=JSON.stringify(v);r[k]=v;});return r;}
+  function dl(name,mime,txt){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:mime}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}
+  window.spFillExport=function(){var st=S(),sel=document.getElementById('spExpColl');
+    sel.innerHTML=Object.keys(st).filter(function(k){return Array.isArray(st[k]);}).map(function(k){return '<option value="'+k+'">'+k+' ('+st[k].length+')</option>';}).join('');
+    document.getElementById('spExpInfo').textContent='التصدير يشمل البيانات المحمّلة حالياً في اللوحة فقط. ملف CSV بترميز UTF-8 يفتح بالعربية في Excel. الملفات تحتوي بيانات عملاء حساسة: احفظها في مكان آمن.';};
+  window.spExportCSV=function(){var k=document.getElementById('spExpColl').value,rows=(S()[k]||[]).map(flat);
+    if(!rows.length){toast('لا توجد بيانات للتصدير',true);return;}
+    var cols=[];rows.forEach(function(r){Object.keys(r).forEach(function(c){if(cols.indexOf(c)<0)cols.push(c);});});
+    var q=function(v){v=v==null?'':String(v);return '"'+v.replace(/"/g,'""')+'"';};
+    dl(k+'-'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8','\ufeff'+[cols.map(q).join(',')].concat(rows.map(function(r){return cols.map(function(c){return q(r[c]);}).join(',');})).join('\r\n'));
+    toast('تم تصدير '+rows.length+' سجل');};
+  window.spExportJSON=function(all){var st=S(),out={},k=document.getElementById('spExpColl').value;
+    (all?Object.keys(st).filter(function(x){return Array.isArray(st[x]);}):[k]).forEach(function(x){out[x]=st[x].map(flat);});
+    dl((all?'securepath-backup-':k+'-')+new Date().toISOString().slice(0,10)+'.json','application/json',JSON.stringify(out,null,2));toast('تم التصدير');};
 })();
 </script>
 </body>
