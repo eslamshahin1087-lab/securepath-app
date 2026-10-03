@@ -31,6 +31,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js">
     </script>
     <script src="js/securepath-backend.js"></script>
+    <script>
+    /* Fallback: if js/securepath-backend.js failed to load, define a stub that REJECTS
+       (never fakes success) so features that need the backend fail cleanly instead of
+       throwing a ReferenceError that breaks login. Remove once the real file is deployed. */
+    if (typeof window.securePathApiCall !== 'function') {
+        console.warn('js/securepath-backend.js not loaded - backend API calls are disabled');
+        window.securePathApiCall = function () {
+            return Promise.reject({ code: 'backend/script-missing', message: 'securepath-backend.js was not loaded.' });
+        };
+    }
+    </script>
 
     <style>
         /* ===== ROOT VARIABLES ===== */
@@ -17088,6 +17099,143 @@ html.dark-mode .hr-subcard{background:rgba(255,255,255,.025)}
 @media(max-width:420px){.hr-portfolio-two-col{grid-template-columns:1fr}.hr-cockpit-actions{flex-wrap:wrap;justify-content:flex-end}.hr-cockpit-actions .hr-head-action{font-size:7px;padding:5px 6px}.hr-portfolio-kpi-value{font-size:16px}}
 @media(max-width:360px){#home .hr-home-quick{min-height:76px}.hr-portfolio-kpis{grid-template-columns:1fr}.hr-audit-legend{display:none}}
 </style>
+
+<style id="wathiqati-icon-skin">
+/* ============================================================
+   Wathiqati — Soft 3D Icon Skin (inspired by e& app tiles)
+   Visual-only layer: no markup / JS / logic changes.
+   Brand kept: Navy #0E2A5C + Gold #F2BD63 + semantic accents.
+   To revert: delete this <style> block.
+   ============================================================ */
+:root{
+  --sk-navy-a:#EAF1FC; --sk-navy-b:#D3E1F6; --sk-navy-ink:#0E2A5C; --sk-navy-glow:rgba(22,62,122,.22);
+  --sk-gold-a:#FFF6E2; --sk-gold-b:#FBE3B2; --sk-gold-ink:#9A6A10; --sk-gold-glow:rgba(242,189,99,.38);
+  --sk-green-a:#E9F8F1; --sk-green-b:#C9EBDB; --sk-green-ink:#16805B; --sk-green-glow:rgba(22,128,91,.22);
+  --sk-purple-a:#F3EEFF; --sk-purple-b:#DED3F7; --sk-purple-ink:#7255B7; --sk-purple-glow:rgba(114,85,183,.22);
+  --sk-orange-a:#FFF3E6; --sk-orange-b:#FCDDBB; --sk-orange-ink:#CF6F14; --sk-orange-glow:rgba(230,126,34,.25);
+  --sk-red-a:#FFF0ED; --sk-red-b:#FAD3CB; --sk-red-ink:#C9543E; --sk-red-glow:rgba(201,84,62,.22);
+}
+
+/* ---------- Duotone line icons: soft fill on closed shapes only ---------- */
+.app-icon svg{stroke-width:1.85}
+.app-icon svg circle,.app-icon svg rect,
+.app-icon svg path[d$="z"],.app-icon svg path[d$="Z"]{fill:currentColor;fill-opacity:.13}
+
+/* ---------- Tile base (shared by all colour variants) ---------- */
+.quick-card .qicon,.acc-card .ac-icon,
+.advice-option .option-icon,.nav-item .nav-icon{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:linear-gradient(150deg,var(--t-a,var(--sk-navy-a)),var(--t-b,var(--sk-navy-b)));
+  color:var(--t-ink,var(--sk-navy-ink));
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,.95),
+    inset 0 -3px 6px var(--t-glow,var(--sk-navy-glow)),
+    0 8px 16px -6px var(--t-glow,var(--sk-navy-glow));
+}
+/* glossy highlight + depth blob, like the 3D tiles in the reference */
+.quick-card .qicon::before,.acc-card .ac-icon::before,.advice-option .option-icon::before{
+  content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;
+  background:
+    radial-gradient(70% 55% at 28% 12%,rgba(255,255,255,.85),transparent 70%),
+    radial-gradient(60% 60% at 85% 100%,var(--t-glow,var(--sk-navy-glow)),transparent 70%);
+}
+.quick-card .qicon .app-icon,.acc-card .ac-icon .app-icon,.advice-option .option-icon .app-icon{
+  color:var(--t-ink,var(--sk-navy-ink))!important;
+  filter:drop-shadow(0 3px 3px var(--t-glow,var(--sk-navy-glow)));
+}
+
+/* ---------- Colour variants ---------- */
+.qicon.navy,.ac-icon.navy,.option-icon.icon-navy{--t-a:var(--sk-navy-a);--t-b:var(--sk-navy-b);--t-ink:var(--sk-navy-ink);--t-glow:var(--sk-navy-glow)}
+.qicon.gold,.ac-icon.gold{--t-a:var(--sk-gold-a);--t-b:var(--sk-gold-b);--t-ink:var(--sk-gold-ink);--t-glow:var(--sk-gold-glow)}
+.qicon.green,.ac-icon.green,.option-icon.icon-green{--t-a:var(--sk-green-a);--t-b:var(--sk-green-b);--t-ink:var(--sk-green-ink);--t-glow:var(--sk-green-glow)}
+.qicon.purple,.ac-icon.purple{--t-a:var(--sk-purple-a);--t-b:var(--sk-purple-b);--t-ink:var(--sk-purple-ink);--t-glow:var(--sk-purple-glow)}
+.qicon.orange,.ac-icon.orange{--t-a:var(--sk-orange-a);--t-b:var(--sk-orange-b);--t-ink:var(--sk-orange-ink);--t-glow:var(--sk-orange-glow)}
+.ac-icon.red{--t-a:var(--sk-red-a);--t-b:var(--sk-red-b);--t-ink:var(--sk-red-ink);--t-glow:var(--sk-red-glow)}
+
+/* ---------- Home quick-access cards: pastel card + glossy tile ---------- */
+#home .quick-card:not(.hr-home-quick){
+  position:relative;border:none;border-radius:20px;min-height:92px;padding:11px 3px 9px;gap:7px;
+  background:linear-gradient(165deg,var(--c-a,#F4F7FC),var(--c-b,#E9EFF8));
+  box-shadow:0 10px 22px -12px var(--t-glow,var(--sk-navy-glow)),inset 0 1px 0 rgba(255,255,255,.9);
+}
+#home .quick-card:has(.qicon.navy){--c-a:#F1F6FE;--c-b:#E4EDFA;--t-glow:var(--sk-navy-glow)}
+#home .quick-card:has(.qicon.gold){--c-a:#FFF9EC;--c-b:#FEF0D3;--t-glow:var(--sk-gold-glow)}
+#home .quick-card:has(.qicon.green){--c-a:#F0FAF5;--c-b:#DFF3EA;--t-glow:var(--sk-green-glow)}
+#home .quick-card:has(.qicon.orange){--c-a:#FFF6EC;--c-b:#FDE9D2;--t-glow:var(--sk-orange-glow)}
+#home .quick-card:has(.qicon.purple){--c-a:#F6F2FF;--c-b:#E9E1FA;--t-glow:var(--sk-purple-glow)}
+#home .quick-card:not(.hr-home-quick):hover{border:none;transform:translateY(-2px)}
+#home .quick-card:not(.hr-home-quick) .qicon{width:46px;height:46px;flex:0 0 46px;border-radius:16px}
+#home .quick-card:not(.hr-home-quick) .qicon .app-icon{width:24px;height:24px}
+#home .quick-card .quick-label{color:var(--navy-3);font-weight:800}
+
+/* ---------- Account cards & advice options ---------- */
+.acc-card .ac-icon{width:44px;height:44px;border-radius:15px}
+.acc-card .ac-icon .app-icon{width:22px;height:22px}
+.advice-option .option-icon{border-radius:16px}
+
+/* ---------- Floating glass nav bar with pill highlight ---------- */
+.navbar{
+  left:10px;right:10px;bottom:calc(8px + var(--safe-area-bottom));
+  height:62px;padding:5px 6px;border:none;border-radius:26px;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:0 14px 34px -10px rgba(14,42,92,.30),0 2px 6px rgba(14,42,92,.06),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.navbar .nav-item{border-radius:20px;gap:2px;transition:background .25s ease,color .25s ease}
+.navbar .nav-item .nav-icon{
+  width:auto;height:auto;background:none;box-shadow:none;overflow:visible;isolation:auto;
+  font-size:inherit;transform:none!important;
+}
+.navbar .nav-item .nav-icon .app-icon{width:23px;height:23px;color:#8C99B0!important;filter:none}
+.navbar .nav-item span{color:#8C99B0;font-size:9.5px}
+.navbar .nav-item.on{
+  background:linear-gradient(160deg,#EEF3FC,#DCE7F8);
+  box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(14,42,92,.45);
+}
+.navbar .nav-item.on .nav-icon .app-icon{color:var(--navy)!important}
+.navbar .nav-item.on .nav-icon .app-icon svg circle,
+.navbar .nav-item.on .nav-icon .app-icon svg rect,
+.navbar .nav-item.on .nav-icon .app-icon svg path[d$="z"],
+.navbar .nav-item.on .nav-icon .app-icon svg path[d$="Z"]{fill:var(--gold);fill-opacity:.55}
+.navbar .nav-item.on span{color:var(--navy);font-weight:800}
+.navbar .nav-item.on::after{display:none}
+
+/* ---------- Dark mode ---------- */
+html.dark-mode{
+  --sk-navy-a:#1B2A47;--sk-navy-b:#12203A;--sk-navy-ink:#A9C0E8;--sk-navy-glow:rgba(0,0,0,.45);
+  --sk-gold-a:#33291A;--sk-gold-b:#241C10;--sk-gold-ink:#F2BD63;--sk-gold-glow:rgba(0,0,0,.45);
+  --sk-green-a:#163226;--sk-green-b:#0F2219;--sk-green-ink:#5CCB9F;--sk-green-glow:rgba(0,0,0,.45);
+  --sk-purple-a:#2A1F45;--sk-purple-b:#1B1330;--sk-purple-ink:#B79BF0;--sk-purple-glow:rgba(0,0,0,.45);
+  --sk-orange-a:#3A2512;--sk-orange-b:#291A0C;--sk-orange-ink:#F2A04F;--sk-orange-glow:rgba(0,0,0,.45);
+  --sk-red-a:#3A1B16;--sk-red-b:#281210;--sk-red-ink:#EE8A76;--sk-red-glow:rgba(0,0,0,.45);
+}
+html.dark-mode .quick-card .qicon,html.dark-mode .acc-card .ac-icon,
+html.dark-mode .advice-option .option-icon{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -3px 6px rgba(0,0,0,.35),0 8px 16px -8px rgba(0,0,0,.7);
+}
+html.dark-mode .quick-card .qicon::before,html.dark-mode .acc-card .ac-icon::before,
+html.dark-mode .advice-option .option-icon::before{
+  background:radial-gradient(70% 55% at 28% 12%,rgba(255,255,255,.14),transparent 70%);
+}
+html.dark-mode #home .quick-card:not(.hr-home-quick){
+  background:linear-gradient(165deg,#18233A,#121B2D);
+  box-shadow:0 10px 22px -12px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+}
+html.dark-mode #home .quick-card .quick-label{color:#EAF0FA}
+html.dark-mode .navbar{background:rgba(16,22,38,.82);box-shadow:0 14px 34px -10px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06)}
+html.dark-mode .navbar .nav-item .nav-icon .app-icon,html.dark-mode .navbar .nav-item span{color:#7F8DA8!important}
+html.dark-mode .navbar .nav-item.on{background:linear-gradient(160deg,#1E2C4A,#16223B)}
+html.dark-mode .navbar .nav-item.on .nav-icon .app-icon,html.dark-mode .navbar .nav-item.on span{color:var(--gold-2)!important}
+
+/* ---------- Small screens ---------- */
+@media(max-width:360px){
+  #home .quick-card:not(.hr-home-quick) .qicon{width:38px;height:38px;flex-basis:38px;border-radius:13px}
+  #home .quick-card:not(.hr-home-quick) .qicon .app-icon{width:20px;height:20px}
+  #home .quick-card:not(.hr-home-quick){min-height:84px}
+}
+@media(prefers-reduced-motion:reduce){.navbar .nav-item{transition:none}}
+</style>
+
 
 <script>
 /* ============================================================
