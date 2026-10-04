@@ -1491,7 +1491,7 @@
     let selectedFile = null;
     const SELECTED_CLIENT_IDS = new Set();
     const SELECTED_LEAD_IDS = new Set();
-    let listeners = { messages: null, activity: null, notifications: null, documents: null, corporateRequests: null };
+    let listeners = { clients: null, messages: null, activity: null, notifications: null, documents: null, corporateRequests: null };
 
     // ================================================================
     // 3. UTILITY FUNCTIONS
@@ -1729,9 +1729,13 @@
     }
 
     function logout() {
+      if (listeners.clients) listeners.clients();
       if (listeners.messages) listeners.messages();
       if (listeners.activity) listeners.activity();
       if (listeners.notifications) listeners.notifications();
+      if (listeners.documents) listeners.documents();
+      if (listeners.corporateRequests) listeners.corporateRequests();
+      listeners.clients = null;
       toast('🔒 جاري تسجيل الخروج...');
       auth.signOut().then(() => setTimeout(() => location.reload(), 500));
     }
@@ -1850,6 +1854,7 @@
       if (APP_STATE.syncErrors.length) {
         showDataLoadError(APP_STATE.syncErrors.map(function(e) { return 'تحميل ' + e.collection + ': ' + e.message; }));
       }
+      startClientsListener();
       startMessagesListener();
       startActivityListener();
       startNotificationsListener();
@@ -1873,6 +1878,37 @@
     // ================================================================
     // 8. REAL-TIME LISTENERS
     // ================================================================
+    // Live listener for clients - keeps newly registered accounts visible in the admin panel
+    // without requiring a page refresh. The existing 500-record cap is retained
+    // to protect Firebase free-plan reads; refresh/pagination can be used for larger datasets.
+    function startClientsListener() {
+      if (listeners.clients) listeners.clients();
+      listeners.clients = db.collection('clients').limit(500).onSnapshot(snap => {
+        APP_STATE.clients = snap.docs.map(d => {
+          const data = d.data();
+          data.id = d.id;
+          if (!data.uid) data.uid = d.id;
+          return data;
+        }).sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
+
+        const visibleIds = new Set(APP_STATE.clients.map(c => c.id || c.uid));
+        Array.from(SELECTED_CLIENT_IDS).forEach(id => {
+          if (!visibleIds.has(id)) SELECTED_CLIENT_IDS.delete(id);
+        });
+
+        APP_STATE.lastSyncAt = new Date();
+        setConnectionState('online', 'متصل');
+        renderClients();
+        renderDashboard();
+        refreshAllSelects();
+        updateBadge();
+      }, error => {
+        console.error('❌ Clients listener error:', error);
+        APP_STATE.syncErrors.push({ collection: 'clients', message: error.message });
+        setConnectionState('offline', 'تعذر مزامنة العملاء');
+      });
+    }
+
     function startMessagesListener() {
       if (listeners.messages) listeners.messages();
       listeners.messages = db.collection('messages').limit(500).onSnapshot(snap => {
