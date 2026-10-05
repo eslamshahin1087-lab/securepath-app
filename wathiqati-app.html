@@ -10480,11 +10480,17 @@ function hrT(key, vars) {
         function resolveLoginEmails(identifier) {
             identifier = normalizeLoginIdentifier(identifier);
             if (!identifier) return Promise.reject({ code: 'auth/invalid-identifier', message: 'Missing username or email.' });
+
+            // Production accounts created by the signup page use their real
+            // email address in Firebase Authentication. Never try to invent
+            // an email domain for a new username because that can authenticate
+            // against the wrong account and Firestore intentionally blocks
+            // unauthenticated username lookups.
             if (identifier.indexOf('@') > 0) return Promise.resolve([identifier]);
 
-            // Legacy SecurePath placeholder accounts have historically used
-            // both @securepath and @securepath.com. Do not query clients before
-            // authentication: Firestore rules intentionally deny that lookup.
+            // Legacy SecurePath placeholder accounts historically used these
+            // two synthetic email domains. Keep this fallback for backward
+            // compatibility only.
             return Promise.resolve([
                 identifier + '@securepath',
                 identifier + '@securepath.com'
@@ -10499,9 +10505,10 @@ function hrT(key, vars) {
                     }
                     return auth.signInWithEmailAndPassword(candidates[index], password)
                         .catch(function(e) {
-                            // For username-based legacy aliases, try the next
-                            // historical domain only when the current candidate
-                            // clearly does not exist.
+                            // For legacy username aliases, try the next
+                            // historical domain when Firebase reports that the
+                            // candidate does not exist. For production accounts
+                            // the identifier is already the real email address.
                             if (String(identifier).indexOf('@') < 0
                                 && e && (e.code === 'auth/user-not-found'
                                     || e.code === 'auth/invalid-email'
